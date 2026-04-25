@@ -8,7 +8,7 @@ import { DropZone } from "./upload/DropZone";
 import { FileQueue } from "./upload/FileQueue";
 import { PhotoCard } from "./analysis/PhotoCard";
 import { ExportButtons } from "./report/ExportButtons";
-import { Shield, Fingerprint } from "lucide-react";
+import { Shield } from "lucide-react";
 
 let nextId = 0;
 function genId() {
@@ -123,28 +123,19 @@ export function ForensicAnalyzer() {
     .map((e) => e.analysis!);
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b border-surface-200 bg-surface-50">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-accent/10 p-2">
-              <Fingerprint className="h-6 w-6 text-accent" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-100 font-mono tracking-tight">
-                CertiFoto <span className="text-accent">Forensic</span>
-              </h1>
-              <p className="text-xs text-muted">
-                Analisis forense de metadata de imagenes digitales
-              </p>
-            </div>
-          </div>
+    <div>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-100 font-mono tracking-tight">
+            Verificar evidencia
+          </h1>
+          <p className="text-sm text-muted mt-1">
+            Analisis forense de metadata para verificar la autenticidad de imagenes.
+            Util para validar fotos antes o despues de cargarlas a un acta.
+          </p>
         </div>
-      </header>
 
-      {/* Main content */}
-      <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+        <div className="space-y-6">
         <DropZone
           onFilesSelected={handleFiles}
           disabled={entries.some(
@@ -192,17 +183,8 @@ export function ForensicAnalyzer() {
             </p>
           </div>
         )}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-surface-200 mt-12">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <p className="text-xs text-muted text-center">
-            CertiFoto Forensic — Todas las imagenes se procesan localmente.
-            Ningun archivo se sube a servidores externos.
-          </p>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

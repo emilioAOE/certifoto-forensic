@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AppShell } from "@/components/layout/AppShell";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,9 +15,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CertiFoto Forensic — Analisis de Metadata de Imagenes",
+  title: "CertiFoto — Actas Digitales con respaldo forense",
   description:
-    "Herramienta forense para extraer, analizar y verificar la metadata completa de fotografias digitales.",
+    "Crea actas de entrega, devolucion e inspeccion de propiedades con fotos, IA y firma digital. Cada foto tiene respaldo forense de metadata.",
 };
 
 export default function RootLayout({
@@ -26,10 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

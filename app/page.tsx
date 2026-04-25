@@ -1,5 +1,5 @@
-import { ForensicAnalyzer } from "@/components/ForensicAnalyzer";
+import { Dashboard } from "@/components/dashboard/Dashboard";
 
 export default function HomePage() {
-  return <ForensicAnalyzer />;
+  return <Dashboard />;
 }
