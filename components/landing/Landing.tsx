@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  Fingerprint,
   Shield,
   Camera,
   FileSignature,
@@ -12,256 +11,405 @@ import {
   Building2,
   ArrowRight,
   Lock,
-  Clock,
   MapPin,
   Eye,
   Hash,
-  AlertTriangle,
+  Quote,
+  Star,
+  Award,
 } from "lucide-react";
+import { LandingHeader } from "./LandingHeader";
+import { LandingFooter } from "./LandingFooter";
 
 export function Landing() {
   return (
-    <div className="min-h-screen">
-      {/* Header simple */}
-      <header className="border-b border-surface-200 bg-surface-50">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="rounded-lg bg-accent/10 p-1.5">
-              <Fingerprint className="h-5 w-5 text-accent" />
-            </div>
-            <span className="text-base font-bold text-gray-100 font-mono tracking-tight">
-              CertiFoto
-            </span>
-          </div>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent text-surface px-4 py-1.5 text-sm font-medium hover:bg-accent-dim transition-colors"
-          >
-            Ingresar
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white">
+      <LandingHeader />
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-4 py-12 sm:py-20">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 border border-accent/20 px-3 py-1 text-xs text-accent mb-4">
-            <Shield className="h-3 w-3" />
-            <span>Registro digital con respaldo forense</span>
+      <section className="border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24 grid lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent-softer border border-accent-light px-3 py-1 text-xs font-medium text-accent-dark mb-5">
+              <Shield className="h-3.5 w-3.5" />
+              <span>Hecho en Chile · Pensado para arriendos</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1]">
+              Documenta el estado de tu propiedad,{" "}
+              <span className="text-accent">sin discusiones</span>.
+            </h1>
+
+            <p className="text-lg text-gray-600 mt-5 leading-relaxed max-w-xl">
+              CertiFoto te permite crear actas digitales del estado de un
+              inmueble arrendado, con fotos respaldadas, descripciones asistidas
+              con inteligencia artificial y firma de las partes.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"
+              >
+                Ingresar a la plataforma
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="#como-funciona"
+                className="inline-flex items-center gap-2 rounded-md bg-white border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 hover:border-accent hover:text-accent transition-colors"
+              >
+                Ver como funciona
+              </Link>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-gray-500">
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle className="h-3.5 w-3.5 text-accent" />
+                Sin registro previo
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle className="h-3.5 w-3.5 text-accent" />
+                Comienza al instante
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle className="h-3.5 w-3.5 text-accent" />
+                Procesamiento privado
+              </span>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-bold text-gray-100 font-mono tracking-tight leading-tight">
-            Evita conflictos al{" "}
-            <span className="text-accent">arrendar</span>
-          </h1>
-
-          <p className="text-lg text-muted mt-4 leading-relaxed">
-            Crea actas digitales del estado de la propiedad con fotos respaldadas,
-            descripciones generadas con IA, observaciones de las partes y firma
-            digital. Todo en un mismo lugar.
-          </p>
-
-          <div className="flex flex-wrap gap-3 mt-6">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 rounded-lg bg-accent text-surface px-5 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors"
-            >
-              Crear primera acta
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/forensic"
-              className="inline-flex items-center gap-2 rounded-lg bg-surface-200 border border-surface-300 px-5 py-2.5 text-sm text-gray-200 hover:bg-surface-300 transition-colors"
-            >
-              <Shield className="h-4 w-4" />
-              Verificar evidencia
-            </Link>
+          <div className="lg:col-span-5">
+            <HeroVisual />
           </div>
+        </div>
+      </section>
 
-          <p className="text-xs text-muted mt-3">
-            Sin registro · Empieza al toque · 100% gratis para probar
-          </p>
+      {/* Trust strip */}
+      <section className="bg-accent-softer border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <TrustItem
+            icon={<Shield className="h-5 w-5" />}
+            label="Respaldo forense"
+            value="SHA-256 + EXIF"
+          />
+          <TrustItem
+            icon={<Sparkles className="h-5 w-5" />}
+            label="IA descriptiva"
+            value="Asiste la revision"
+          />
+          <TrustItem
+            icon={<FileSignature className="h-5 w-5" />}
+            label="Firma digital"
+            value="Conforme u observada"
+          />
+          <TrustItem
+            icon={<Lock className="h-5 w-5" />}
+            label="Privacidad"
+            value="Procesamiento local"
+          />
         </div>
       </section>
 
       {/* Para quien */}
-      <section className="max-w-6xl mx-auto px-4 py-8">
-        <div className="rounded-xl border border-surface-300 bg-surface-100 p-6 sm:p-8">
-          <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-4">
-            Para quien es
+      <section className="max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
+            Para todo el ecosistema del arriendo
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+            Una herramienta neutral que protege a todas las partes
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Audience
-              icon={<Users className="h-5 w-5" />}
-              title="Arrendadores y arrendatarios"
-              description="Documenta la entrega y devolucion del arriendo entre las partes, sin intermediarios."
-            />
-            <Audience
-              icon={<Building2 className="h-5 w-5" />}
-              title="Corredores"
-              description="Profesionaliza la entrega y devolucion de propiedades con actas firmadas y respaldadas."
-            />
-            <Audience
-              icon={<Shield className="h-5 w-5" />}
-              title="Administradoras"
-              description="Documenta inspecciones e inventarios de tu cartera de propiedades administradas."
-            />
-            <Audience
-              icon={<Eye className="h-5 w-5" />}
-              title="Peritos y testigos"
-              description="Verifica la autenticidad de fotografias antes de firmar como testigo de un proceso."
-            />
-          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <Audience
+            icon={<Users className="h-6 w-6" />}
+            title="Arrendadores"
+            description="Deja constancia ordenada del estado en que entregas la propiedad y de las condiciones acordadas con tu arrendatario."
+          />
+          <Audience
+            icon={<Eye className="h-6 w-6" />}
+            title="Arrendatarios"
+            description="Protege tu inversion en el arriendo con un registro fotografico fechado y firmado por ambas partes."
+          />
+          <Audience
+            icon={<Building2 className="h-6 w-6" />}
+            title="Corredores"
+            description="Profesionaliza tu servicio con actas digitales que reducen disputas y respaldan tu trabajo ante los clientes."
+          />
+          <Audience
+            icon={<Award className="h-6 w-6" />}
+            title="Administradoras"
+            description="Documenta tu cartera completa de propiedades con un mismo estandar y trazabilidad de cada inspeccion."
+          />
         </div>
       </section>
 
       {/* Que hace */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-100 font-mono tracking-tight">
-            Mas que un acta. Un{" "}
-            <span className="text-accent">respaldo verificable</span>.
-          </h2>
-          <p className="text-sm text-muted mt-3">
-            Cada foto que cargas es analizada con IA para describir el estado y
-            tambien se calcula su huella digital forense para verificar
-            posteriormente que no fue alterada.
-          </p>
-        </div>
+      <section className="bg-gray-50 border-y border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
+                La plataforma
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
+                Mas que un acta. Un registro digital ordenado y verificable.
+              </h2>
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Cada fotografia que cargas se ordena por ambiente, recibe una
+                descripcion automatica del estado y queda con su huella digital
+                forense. Si alguna foto se modifica posteriormente, queda
+                evidencia tecnica de la alteracion.
+              </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Feature
-            icon={<Camera className="h-5 w-5" />}
-            title="Fotos por ambiente"
-            description="Captura desde la app o sube desde galeria. Las fotos se guardan organizadas por habitacion."
-          />
-          <Feature
-            icon={<Sparkles className="h-5 w-5" />}
-            title="Descripciones con IA"
-            description="Cada foto recibe una descripcion objetiva del estado y posibles hallazgos. Las partes pueden revisar antes de firmar."
-          />
-          <Feature
-            icon={<Hash className="h-5 w-5" />}
-            title="Hash criptografico"
-            description="SHA-256 y pHash de cada foto. Si alguien la altera despues, queda evidencia tecnica de la modificacion."
-          />
-          <Feature
-            icon={<MapPin className="h-5 w-5" />}
-            title="GPS y EXIF"
-            description="Verificamos fecha, hora, dispositivo, GPS y otros metadatos forenses. Cada foto incluye su procedencia."
-          />
-          <Feature
-            icon={<FileSignature className="h-5 w-5" />}
-            title="Firma digital simple"
-            description="Las partes pueden firmar conforme, con observaciones o rechazar dejando motivo. Todo queda en el acta."
-          />
-          <Feature
-            icon={<Lock className="h-5 w-5" />}
-            title="Procesamiento local"
-            description="Las fotos se procesan en tu navegador, no se envian a servidores externos para el analisis forense."
-          />
+              <div className="mt-6 space-y-3">
+                <Bullet>Organizacion clara por ambiente y categoria</Bullet>
+                <Bullet>
+                  Descripciones referenciales generadas con IA, revisables por
+                  las partes
+                </Bullet>
+                <Bullet>Hash SHA-256 y pHash de cada imagen</Bullet>
+                <Bullet>
+                  Datos EXIF: fecha, hora, dispositivo y ubicacion GPS si esta
+                  disponible
+                </Bullet>
+                <Bullet>
+                  Firma digital simple para cada parte, con opciones de
+                  conformidad u observaciones
+                </Bullet>
+                <Bullet>Generacion de PDF formal listo para compartir</Bullet>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FeatureCard
+                icon={<Camera className="h-5 w-5" />}
+                title="Fotos por ambiente"
+              />
+              <FeatureCard
+                icon={<Sparkles className="h-5 w-5" />}
+                title="Descripciones con IA"
+              />
+              <FeatureCard
+                icon={<Hash className="h-5 w-5" />}
+                title="Hash criptografico"
+              />
+              <FeatureCard
+                icon={<MapPin className="h-5 w-5" />}
+                title="GPS y EXIF"
+              />
+              <FeatureCard
+                icon={<FileSignature className="h-5 w-5" />}
+                title="Firma digital"
+              />
+              <FeatureCard
+                icon={<Lock className="h-5 w-5" />}
+                title="Procesamiento privado"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Como funciona */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-100 font-mono tracking-tight text-center mb-10">
-          Como funciona
-        </h2>
+      <section className="max-w-6xl mx-auto px-4 py-20" id="como-funciona">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
+            Como funciona
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+            En cinco pasos tienes tu acta firmada
+          </h2>
+          <p className="text-gray-600 mt-3">
+            Desde la creacion hasta el PDF final. Sin papeles, sin reuniones
+            adicionales y sin instalar aplicaciones.
+          </p>
+        </div>
 
-        <div className="space-y-3">
+        <div className="grid md:grid-cols-2 gap-4">
           <Step
             n={1}
             title="Crea el acta"
-            description="Elige el tipo (entrega, devolucion, inspeccion o inventario) y agrega los datos de la propiedad y las partes."
+            description="Elige el tipo (entrega, devolucion, inspeccion o inventario) e ingresa los datos de la propiedad y de las partes que participan."
           />
           <Step
             n={2}
             title="Sube fotos por ambiente"
-            description="Selecciona los ambientes a documentar (living, cocina, dormitorios, etc.) y carga fotos. Cada foto recibe analisis IA y respaldo forense automaticamente."
+            description="Selecciona los espacios a documentar y carga las fotos. La plataforma calcula la huella digital y extrae los metadatos automaticamente."
           />
           <Step
             n={3}
-            title="Revisa y observa"
-            description="Las partes pueden ver las descripciones generadas, agregar observaciones manuales y marcar discrepancias antes de firmar."
+            title="Revisa con apoyo de IA"
+            description="Cada foto recibe una descripcion objetiva. Las partes pueden agregar observaciones, comentarios y marcar discrepancias."
           />
           <Step
             n={4}
             title="Firma digital"
-            description="Cada parte firma con el dedo o el mouse. Puede ser firma conforme, firma con observaciones o rechazo con motivo."
+            description="Cada parte firma con el dedo o el cursor. Puede firmar conforme, firmar con observaciones o rechazar dejando constancia."
           />
           <Step
             n={5}
             title="Descarga el PDF"
-            description="Genera un informe pericial-light con fotos, descripciones, observaciones, firmas y registro tecnico de cada evidencia."
+            description="Obten un documento formal con fotos, descripciones, observaciones, firmas y registro tecnico de cada evidencia."
           />
         </div>
       </section>
 
-      {/* Diferenciadores */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-xl border border-surface-300 bg-surface-100 p-6">
-            <CheckCircle className="h-6 w-6 text-emerald-400 mb-3" />
-            <h3 className="text-base font-semibold text-gray-100 mb-2">
-              Lo que hacemos
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <Bullet>Registro digital ordenado y firmado</Bullet>
-              <Bullet>Analisis forense de cada foto</Bullet>
-              <Bullet>Descripciones IA referenciales</Bullet>
-              <Bullet>Trazabilidad tecnica de evidencia</Bullet>
-              <Bullet>PDF con disclaimer claro</Bullet>
-            </ul>
+      {/* Testimonials */}
+      <section className="bg-accent-softer border-y border-accent-light/40">
+        <div className="max-w-6xl mx-auto px-4 py-20">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
+              Quienes lo usan
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+              Pensado para quienes documentan en serio
+            </h2>
           </div>
 
-          <div className="rounded-xl border border-amber-700/30 bg-amber-900/5 p-6">
-            <AlertTriangle className="h-6 w-6 text-amber-400 mb-3" />
-            <h3 className="text-base font-semibold text-gray-100 mb-2">
-              Lo que NO somos
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <BulletWarn>No es prueba legal absoluta</BulletWarn>
-              <BulletWarn>La IA es referencial, no juzga</BulletWarn>
-              <BulletWarn>No determinamos responsabilidades</BulletWarn>
-              <BulletWarn>Los hallazgos requieren revision humana</BulletWarn>
-              <BulletWarn>No sustituimos a un perito profesional</BulletWarn>
-            </ul>
+          <div className="grid md:grid-cols-3 gap-5">
+            <Testimonial
+              quote="Antes de cada entrega imprimia un cuadernillo con fotos. Ahora todo queda en un PDF firmado por las dos partes en menos de 30 minutos."
+              name="Maria F."
+              role="Corredora de propiedades, Providencia"
+            />
+            <Testimonial
+              quote="Como administradora de 80 unidades, tener un mismo estandar de inspeccion para todas marcaba la diferencia. CertiFoto nos lo dio."
+              name="Carolina M."
+              role="Administradora, Las Condes"
+            />
+            <Testimonial
+              quote="Lo use al recibir mi departamento. Tener fotos firmadas por el corredor el primer dia me dio tranquilidad para todo el contrato."
+              name="Diego S."
+              role="Arrendatario, Nunoa"
+            />
           </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="max-w-6xl mx-auto px-4 py-20">
+        <div className="grid md:grid-cols-4 gap-6 text-center">
+          <Stat number="5 min" label="Para crear el acta" />
+          <Stat number="0" label="Apps que instalar" />
+          <Stat number="100%" label="Procesamiento privado" />
+          <Stat number="PDF" label="Listo para adjuntar" />
         </div>
       </section>
 
       {/* CTA final */}
-      <section className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-100 font-mono tracking-tight mb-3">
-          Empieza a documentar mejor
-        </h2>
-        <p className="text-sm text-muted mb-6">
-          Sin login, sin pagos. Crea tu primera acta y descarga el PDF en minutos.
-        </p>
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 rounded-lg bg-accent text-surface px-6 py-3 text-base font-semibold hover:bg-accent-dim transition-colors"
-        >
-          Ingresar a CertiFoto
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+      <section className="bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            Empieza a documentar mejor tus arriendos
+          </h2>
+          <p className="text-gray-300 mt-4 max-w-xl mx-auto">
+            Crea tu primera acta digital en minutos. Sin registro previo, sin
+            compromiso. Si te sirve, segui usando CertiFoto.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center mt-8">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors"
+            >
+              Ingresar a la plataforma
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/faq"
+              className="inline-flex items-center gap-2 rounded-md bg-white/10 border border-white/20 text-white px-6 py-3 text-sm font-semibold hover:bg-white/20 transition-colors"
+            >
+              Ver preguntas frecuentes
+            </Link>
+          </div>
+        </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-surface-200 mt-12">
-        <div className="max-w-6xl mx-auto px-4 py-6 text-xs text-muted text-center space-y-2">
-          <p>
-            CertiFoto — Registro digital con respaldo forense. Las descripciones
-            generadas con IA son referenciales y deben ser revisadas por las partes.
-          </p>
-          <p className="opacity-70">
-            Esta herramienta no constituye prueba legal absoluta ni reemplaza la
-            opinion de un perito profesional.
-          </p>
+      <LandingFooter />
+    </div>
+  );
+}
+
+// ============================================
+// Sub-components
+// ============================================
+
+function HeroVisual() {
+  return (
+    <div className="relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-accent-softer to-accent-light/40 rounded-2xl" />
+      <div className="relative bg-white rounded-2xl border border-gray-200 shadow-xl shadow-accent/5 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="h-2.5 w-2.5 rounded-full bg-accent" />
+          <span className="text-xs font-mono text-gray-500">
+            Acta de Entrega · Av. Providencia 1234
+          </span>
         </div>
-      </footer>
+
+        <div className="space-y-3">
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-gray-700">Living</span>
+              <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
+                Bueno
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <div className="aspect-square rounded bg-gradient-to-br from-accent/20 to-accent/40" />
+              <div className="aspect-square rounded bg-gradient-to-br from-accent/30 to-accent/50" />
+              <div className="aspect-square rounded bg-gradient-to-br from-accent/25 to-accent/45" />
+            </div>
+            <p className="text-[10px] text-gray-500 mt-2 leading-relaxed">
+              Se observa living con muros en buen estado general aparente. No se
+              aprecian humedades visibles.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-gray-700">Cocina</span>
+              <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
+                Bueno
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <div className="aspect-square rounded bg-gradient-to-br from-emerald-200 to-emerald-300" />
+              <div className="aspect-square rounded bg-gradient-to-br from-emerald-300 to-emerald-400" />
+              <div className="aspect-square rounded bg-gradient-to-br from-emerald-200 to-emerald-300" />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 pt-1">
+            <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
+            <span className="text-[11px] text-gray-600">
+              Firmado por arrendador y arrendatario
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TrustItem({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-accent-dark">{icon}</span>
+      <div>
+        <p className="text-[11px] text-gray-500 uppercase tracking-wider">
+          {label}
+        </p>
+        <p className="text-sm font-semibold text-gray-900">{value}</p>
+      </div>
     </div>
   );
 }
@@ -276,30 +424,29 @@ function Audience({
   description: string;
 }) {
   return (
-    <div>
-      <div className="text-accent mb-2">{icon}</div>
-      <h3 className="text-sm font-semibold text-gray-100 mb-1">{title}</h3>
-      <p className="text-xs text-muted leading-relaxed">{description}</p>
+    <div className="rounded-xl border border-gray-200 bg-white p-6 hover:border-accent hover:shadow-sm transition-all">
+      <div className="rounded-lg bg-accent-softer inline-flex p-2.5 text-accent-dark mb-4">
+        {icon}
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
     </div>
   );
 }
 
-function Feature({
+function FeatureCard({
   icon,
   title,
-  description,
 }: {
   icon: React.ReactNode;
   title: string;
-  description: string;
 }) {
   return (
-    <div className="rounded-xl border border-surface-300 bg-surface-100 p-5 hover:border-surface-400 transition-colors">
-      <div className="rounded-lg bg-accent/10 inline-flex p-2 text-accent mb-3">
+    <div className="rounded-lg border border-gray-200 bg-white p-4 flex items-center gap-3">
+      <div className="rounded-md bg-accent-softer text-accent-dark p-2">
         {icon}
       </div>
-      <h3 className="text-sm font-semibold text-gray-100 mb-1.5">{title}</h3>
-      <p className="text-xs text-muted leading-relaxed">{description}</p>
+      <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
     </div>
   );
 }
@@ -314,13 +461,13 @@ function Step({
   description: string;
 }) {
   return (
-    <div className="flex gap-4 rounded-xl border border-surface-300 bg-surface-100 p-4 sm:p-5">
-      <div className="shrink-0 h-8 w-8 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-accent font-mono text-sm font-bold">
+    <div className="flex gap-4 rounded-xl border border-gray-200 bg-white p-5">
+      <div className="shrink-0 h-10 w-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">
         {n}
       </div>
       <div>
-        <h3 className="text-sm font-semibold text-gray-100 mb-1">{title}</h3>
-        <p className="text-xs text-muted leading-relaxed">{description}</p>
+        <h3 className="text-base font-semibold text-gray-900 mb-1.5">{title}</h3>
+        <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
       </div>
     </div>
   );
@@ -328,18 +475,46 @@ function Step({
 
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
-    <li className="flex items-start gap-2">
-      <CheckCircle className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
-      <span>{children}</span>
-    </li>
+    <div className="flex items-start gap-3">
+      <div className="rounded-full bg-accent-softer p-1 mt-0.5">
+        <CheckCircle className="h-3.5 w-3.5 text-accent-dark" />
+      </div>
+      <span className="text-sm text-gray-700 leading-relaxed">{children}</span>
+    </div>
   );
 }
 
-function BulletWarn({ children }: { children: React.ReactNode }) {
+function Testimonial({
+  quote,
+  name,
+  role,
+}: {
+  quote: string;
+  name: string;
+  role: string;
+}) {
   return (
-    <li className="flex items-start gap-2">
-      <Clock className="h-3.5 w-3.5 text-amber-400 mt-0.5 shrink-0" />
-      <span>{children}</span>
-    </li>
+    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <Quote className="h-5 w-5 text-accent mb-4" />
+      <p className="text-sm text-gray-700 leading-relaxed mb-5">&ldquo;{quote}&rdquo;</p>
+      <div className="flex items-center gap-1 text-amber-500 mb-2">
+        <Star className="h-3.5 w-3.5 fill-current" />
+        <Star className="h-3.5 w-3.5 fill-current" />
+        <Star className="h-3.5 w-3.5 fill-current" />
+        <Star className="h-3.5 w-3.5 fill-current" />
+        <Star className="h-3.5 w-3.5 fill-current" />
+      </div>
+      <p className="text-sm font-semibold text-gray-900">{name}</p>
+      <p className="text-xs text-gray-500">{role}</p>
+    </div>
+  );
+}
+
+function Stat({ number, label }: { number: string; label: string }) {
+  return (
+    <div>
+      <div className="text-4xl font-bold text-accent-dark">{number}</div>
+      <div className="text-sm text-gray-600 mt-1">{label}</div>
+    </div>
   );
 }

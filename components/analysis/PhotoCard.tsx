@@ -22,7 +22,7 @@ export function PhotoCard({ entry, onToggle }: PhotoCardProps) {
         <div className="flex items-center gap-3">
           <AlertCircle className="h-5 w-5 text-danger shrink-0" />
           <div>
-            <p className="text-sm text-gray-200">{entry.file.name}</p>
+            <p className="text-sm text-gray-800">{entry.file.name}</p>
             <p className="text-xs text-danger">{error || "Error al analizar"}</p>
           </div>
         </div>
@@ -36,7 +36,7 @@ export function PhotoCard({ entry, onToggle }: PhotoCardProps) {
         <div className="flex items-center gap-3">
           <Spinner />
           <div>
-            <p className="text-sm text-gray-200">{entry.file.name}</p>
+            <p className="text-sm text-gray-800">{entry.file.name}</p>
             <p className="text-xs text-muted">
               {status === "parsing" ? "Leyendo metadata..." : "Analizando imagen..."}
             </p>
@@ -54,7 +54,7 @@ export function PhotoCard({ entry, onToggle }: PhotoCardProps) {
         className="w-full flex items-start gap-4 text-left"
       >
         {/* Thumbnail preview */}
-        <div className="shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-surface-200 border border-surface-300">
+        <div className="shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={analysis.previewUrl}
@@ -67,7 +67,7 @@ export function PhotoCard({ entry, onToggle }: PhotoCardProps) {
         <div className="flex-1 min-w-0 space-y-1.5">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <p className="text-sm font-medium text-gray-100 truncate">
+              <p className="text-sm font-medium text-gray-900 truncate">
                 {analysis.file.name}
               </p>
               <p className="text-xs text-muted">

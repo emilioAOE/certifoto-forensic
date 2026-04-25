@@ -78,7 +78,7 @@ export function Dashboard() {
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
       {/* Hero */}
       <section className="text-center sm:text-left">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-100 font-mono tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 font-mono tracking-tight">
           Actas Digitales con respaldo forense
         </h1>
         <p className="text-muted text-sm mt-2 max-w-2xl">
@@ -90,14 +90,14 @@ export function Dashboard() {
         <div className="flex flex-wrap gap-2 mt-4">
           <Link
             href="/actas/nueva"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent text-surface px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
           >
             <Plus className="h-4 w-4" />
             Crear nueva acta
           </Link>
           <Link
             href="/forensic"
-            className="inline-flex items-center gap-2 rounded-lg bg-surface-200 border border-surface-300 px-4 py-2 text-sm text-gray-200 hover:bg-surface-300 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-gray-100 border border-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 transition-colors"
           >
             <Shield className="h-4 w-4" />
             Verificar evidencia
@@ -105,7 +105,7 @@ export function Dashboard() {
           <button
             onClick={handleSeedMockData}
             disabled={seeding}
-            className="inline-flex items-center gap-2 rounded-lg bg-purple-900/30 border border-purple-700/40 text-purple-300 px-4 py-2 text-sm hover:bg-purple-900/50 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 px-4 py-2 text-sm hover:bg-purple-100 transition-colors disabled:opacity-50"
             title="Crea 3 actas de ejemplo (entrega, devolucion, inspeccion) con fotos y analisis IA"
           >
             {seeding ? (
@@ -139,19 +139,19 @@ export function Dashboard() {
                 stats.pendingReview +
                 stats.pendingSignatures
               }
-              color="text-amber-400"
+              color="text-amber-600"
             />
             <StatCard
               icon={<CheckCircle className="h-4 w-4" />}
               label="Firmadas"
               value={stats.signed + stats.closed}
-              color="text-emerald-400"
+              color="text-emerald-600"
             />
             <StatCard
               icon={<Camera className="h-4 w-4" />}
               label="Fotos"
               value={stats.totalPhotos}
-              color="text-blue-400"
+              color="text-blue-600"
             />
           </div>
         </section>
@@ -226,12 +226,12 @@ function StatCard({
   color: string;
 }) {
   return (
-    <div className="rounded-lg border border-surface-300 bg-surface-100 p-3">
+    <div className="rounded-lg border border-gray-200 bg-white p-3">
       <div className={cn("flex items-center gap-1.5 text-xs", color)}>
         {icon}
         <span className="font-medium">{label}</span>
       </div>
-      <div className="text-2xl font-bold text-gray-100 mt-1">{value}</div>
+      <div className="text-2xl font-bold text-gray-900 mt-1">{value}</div>
     </div>
   );
 }
@@ -246,9 +246,9 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="rounded-lg border border-surface-300 bg-surface-100 p-4">
+    <div className="rounded-lg border border-gray-200 bg-white p-4">
       <div className="text-accent mb-2">{icon}</div>
-      <h3 className="text-sm font-semibold text-gray-100 mb-1">{title}</h3>
+      <h3 className="text-sm font-semibold text-gray-900 mb-1">{title}</h3>
       <p className="text-xs text-muted leading-relaxed">{description}</p>
     </div>
   );
@@ -258,12 +258,12 @@ function ActaListItem({ acta }: { acta: ActaSummary }) {
   return (
     <Link
       href={`/actas/${acta.id}`}
-      className="block rounded-lg border border-surface-300 bg-surface-100 p-3 hover:border-surface-400 transition-colors"
+      className="block rounded-lg border border-gray-200 bg-white p-3 hover:border-gray-300 transition-colors"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-gray-100">
+            <span className="text-sm font-medium text-gray-900">
               {ACTA_TYPE_LABEL[acta.type]}
             </span>
             <span
@@ -302,16 +302,16 @@ function EmptyState({
   seeding: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-dashed border-surface-300 bg-surface-50 py-10 px-4 text-center">
-      <Building2 className="h-10 w-10 text-surface-300 mx-auto mb-3" />
-      <p className="text-sm text-gray-300">Aun no tienes actas creadas</p>
+    <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 py-10 px-4 text-center">
+      <Building2 className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+      <p className="text-sm text-gray-700">Aun no tienes actas creadas</p>
       <p className="text-xs text-muted mt-1 mb-5">
         Crea tu primera acta o carga datos de ejemplo para explorar el flujo
       </p>
       <div className="flex flex-wrap gap-2 justify-center">
         <Link
           href="/actas/nueva"
-          className="inline-flex items-center gap-2 rounded-lg bg-accent text-surface px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
         >
           <Plus className="h-4 w-4" />
           Crear primera acta
@@ -319,7 +319,7 @@ function EmptyState({
         <button
           onClick={onSeedMock}
           disabled={seeding}
-          className="inline-flex items-center gap-2 rounded-lg bg-purple-900/30 border border-purple-700/40 text-purple-300 px-4 py-2 text-sm hover:bg-purple-900/50 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 px-4 py-2 text-sm hover:bg-purple-100 transition-colors disabled:opacity-50"
         >
           {seeding ? (
             <Loader2 className="h-4 w-4 animate-spin" />

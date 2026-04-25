@@ -208,10 +208,10 @@ export function ActaWizard() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-gray-100">Nueva Acta</h1>
+            <h1 className="text-xl font-bold text-gray-900">Nueva Acta</h1>
             <button
               onClick={handleAutoFill}
-              className="inline-flex items-center gap-1 rounded-md bg-purple-900/30 border border-purple-700/40 text-purple-300 px-2 py-1 text-[11px] hover:bg-purple-900/50 transition-colors"
+              className="inline-flex items-center gap-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 px-2 py-1 text-[11px] hover:bg-purple-100 transition-colors"
               title="Llena el wizard con datos de ejemplo y salta a la revision"
             >
               <Sparkles className="h-3 w-3" />
@@ -233,7 +233,7 @@ export function ActaWizard() {
                     ? "bg-accent"
                     : s.id === step
                     ? "bg-accent/50"
-                    : "bg-surface-300"
+                    : "bg-gray-200"
                 )}
               />
               {i === STEPS.length - 1 && null}
@@ -257,7 +257,7 @@ export function ActaWizard() {
       </div>
 
       {/* Step content */}
-      <div className="rounded-lg border border-surface-300 bg-surface-100 p-4 sm:p-6 mb-4 min-h-[400px]">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 mb-4 min-h-[400px]">
         {step === 1 && (
           <StepTipo
             value={data.type}
@@ -301,7 +301,7 @@ export function ActaWizard() {
         <button
           onClick={goPrev}
           disabled={step === 1}
-          className="inline-flex items-center gap-1 rounded-lg bg-surface-200 border border-surface-300 px-3 py-2 text-sm text-gray-200 hover:bg-surface-300 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-2 text-sm text-gray-800 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="h-4 w-4" />
           Anterior
@@ -311,7 +311,7 @@ export function ActaWizard() {
           <button
             onClick={goNext}
             disabled={!canGoNext()}
-            className="inline-flex items-center gap-1 rounded-lg bg-accent text-surface px-4 py-2 text-sm font-medium hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1 rounded-lg bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Siguiente
             <ChevronRight className="h-4 w-4" />
@@ -319,7 +319,7 @@ export function ActaWizard() {
         ) : (
           <button
             onClick={handleCreate}
-            className="inline-flex items-center gap-1 rounded-lg bg-accent text-surface px-4 py-2 text-sm font-medium hover:bg-accent-dim"
+            className="inline-flex items-center gap-1 rounded-lg bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim"
           >
             <Check className="h-4 w-4" />
             Crear acta

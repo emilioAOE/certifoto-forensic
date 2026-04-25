@@ -18,15 +18,15 @@ export function PartiesSummary({ parties, signatures }: PartiesSummaryProps) {
         return (
           <div
             key={party.id}
-            className="flex items-center gap-3 rounded-md bg-surface-50 border border-surface-200 px-3 py-2"
+            className="flex items-center gap-3 rounded-md bg-gray-50 border border-gray-200 px-3 py-2"
           >
             <div className="shrink-0">
               {!party.canSign ? (
                 <span className="text-muted text-[10px]">—</span>
               ) : sig?.status === "signed_conformity" ? (
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
               ) : sig?.status === "signed_with_observations" ? (
-                <AlertTriangle className="h-4 w-4 text-amber-400" />
+                <AlertTriangle className="h-4 w-4 text-amber-600" />
               ) : sig?.status === "rejected" ? (
                 <XCircle className="h-4 w-4 text-danger" />
               ) : (
@@ -35,7 +35,7 @@ export function PartiesSummary({ parties, signatures }: PartiesSummaryProps) {
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="text-sm text-gray-100 truncate">
+              <div className="text-sm text-gray-900 truncate">
                 {party.name || (
                   <span className="italic text-muted">(sin nombre)</span>
                 )}
@@ -75,10 +75,10 @@ function Badge({
     <span
       className={cn(
         "text-[10px] font-mono px-1.5 py-0.5 rounded border",
-        variant === "info" && "bg-blue-900/40 text-blue-400 border-blue-700/50",
+        variant === "info" && "bg-blue-50 text-blue-600 border-blue-200",
         variant === "success" &&
-          "bg-emerald-900/40 text-emerald-400 border-emerald-700/50",
-        variant === "muted" && "bg-surface-200 text-muted border-surface-300"
+          "bg-emerald-50 text-emerald-600 border-emerald-200",
+        variant === "muted" && "bg-gray-100 text-muted border-gray-200"
       )}
     >
       {label}

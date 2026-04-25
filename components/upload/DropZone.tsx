@@ -47,7 +47,7 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
         "relative border-2 border-dashed rounded-xl p-8 md:p-12 transition-all duration-200 text-center",
         dragOver
           ? "border-accent bg-accent/5 scale-[1.01]"
-          : "border-surface-300 hover:border-surface-400 bg-surface-50",
+          : "border-gray-200 hover:border-gray-300 bg-gray-50",
         disabled && "opacity-50 pointer-events-none"
       )}
       onDragOver={(e) => {
@@ -73,7 +73,7 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
         <div
           className={cn(
             "rounded-full p-4 transition-colors",
-            dragOver ? "bg-accent/20" : "bg-surface-200"
+            dragOver ? "bg-accent/20" : "bg-gray-100"
           )}
         >
           {dragOver ? (
@@ -84,7 +84,7 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
         </div>
 
         <div>
-          <p className="text-gray-200 font-medium">
+          <p className="text-gray-800 font-medium">
             Arrastra fotos aqui o{" "}
             <button
               type="button"

@@ -144,11 +144,11 @@ function SignatureRow({
   return (
     <div
       className={cn(
-        "rounded-lg border bg-surface-50",
-        signature?.status === "signed_conformity" && "border-emerald-700/40",
-        signature?.status === "signed_with_observations" && "border-amber-700/40",
-        signature?.status === "rejected" && "border-red-700/40",
-        !signature && "border-surface-300",
+        "rounded-lg border bg-gray-50",
+        signature?.status === "signed_conformity" && "border-emerald-200",
+        signature?.status === "signed_with_observations" && "border-amber-200",
+        signature?.status === "rejected" && "border-red-200",
+        !signature && "border-gray-200",
         isSigning && "border-accent/50"
       )}
     >
@@ -156,9 +156,9 @@ function SignatureRow({
       <div className="flex items-center gap-3 p-3">
         <div className="shrink-0">
           {signature?.status === "signed_conformity" ? (
-            <CheckCircle className="h-5 w-5 text-emerald-400" />
+            <CheckCircle className="h-5 w-5 text-emerald-600" />
           ) : signature?.status === "signed_with_observations" ? (
-            <AlertTriangle className="h-5 w-5 text-amber-400" />
+            <AlertTriangle className="h-5 w-5 text-amber-600" />
           ) : signature?.status === "rejected" ? (
             <XCircle className="h-5 w-5 text-danger" />
           ) : (
@@ -167,7 +167,7 @@ function SignatureRow({
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="text-sm text-gray-100">{party.name}</div>
+          <div className="text-sm text-gray-900">{party.name}</div>
           <div className="text-xs text-muted">
             {PARTY_ROLE_LABEL[party.role]}
             {signature && ` · firmado ${new Date(signature.signedAt).toLocaleString("es-CL")}`}
@@ -177,7 +177,7 @@ function SignatureRow({
         {!signature && !isSigning && !readOnly && (
           <button
             onClick={onStartSigning}
-            className="inline-flex items-center gap-1 rounded-md bg-accent text-surface px-3 py-1 text-xs font-medium hover:bg-accent-dim"
+            className="inline-flex items-center gap-1 rounded-md bg-accent text-white px-3 py-1 text-xs font-medium hover:bg-accent-dim"
           >
             <PenTool className="h-3 w-3" />
             Firmar
@@ -187,7 +187,7 @@ function SignatureRow({
         {signature && !readOnly && !isSigning && (
           <button
             onClick={onStartSigning}
-            className="text-xs text-muted hover:text-gray-200"
+            className="text-xs text-muted hover:text-gray-800"
           >
             Volver a firmar
           </button>
@@ -201,16 +201,16 @@ function SignatureRow({
           <img
             src={signature.signatureImageDataUrl}
             alt="Firma"
-            className="h-16 bg-surface-100 rounded border border-surface-200 px-3"
+            className="h-16 bg-white rounded border border-gray-200 px-3"
           />
           {signature.observations && (
-            <p className="text-xs text-amber-300">
+            <p className="text-xs text-amber-700">
               <span className="text-muted">Observaciones:</span>{" "}
               {signature.observations}
             </p>
           )}
           {signature.rejectionReason && (
-            <p className="text-xs text-red-300">
+            <p className="text-xs text-red-700">
               <span className="text-muted">Motivo de rechazo:</span>{" "}
               {signature.rejectionReason}
             </p>
@@ -220,9 +220,9 @@ function SignatureRow({
 
       {/* Sign form */}
       {isSigning && (
-        <div className="px-3 pb-3 space-y-3 border-t border-surface-200 pt-3">
-          <div className="rounded-md bg-surface-100 border border-surface-200 p-2.5">
-            <p className="text-xs text-gray-400 leading-relaxed">
+        <div className="px-3 pb-3 space-y-3 border-t border-gray-200 pt-3">
+          <div className="rounded-md bg-white border border-gray-200 p-2.5">
+            <p className="text-xs text-gray-600 leading-relaxed">
               {STANDARD_ACCEPTANCE_TEXT}
             </p>
           </div>
@@ -237,7 +237,7 @@ function SignatureRow({
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
               rows={2}
-              className="w-full bg-surface-100 border border-surface-300 rounded-md px-2.5 py-1.5 text-sm text-gray-200 resize-none focus:outline-none focus:border-accent/50"
+              className="w-full bg-white border border-gray-200 rounded-md px-2.5 py-1.5 text-sm text-gray-800 resize-none focus:outline-none focus:border-accent/50"
               placeholder="Indica aqui cualquier observacion o discrepancia..."
             />
           </div>
@@ -249,7 +249,7 @@ function SignatureRow({
               onChange={(e) => setAccepted(e.target.checked)}
               className="mt-0.5 accent-accent"
             />
-            <span className="text-xs text-gray-300">
+            <span className="text-xs text-gray-700">
               He leido el contenido de esta acta y acepto firmarla.
             </span>
           </label>
@@ -282,7 +282,7 @@ function SignatureRow({
                   onSign("", "rejected", "", reason);
                 }
               }}
-              className="inline-flex items-center gap-1 rounded-md bg-surface-200 border border-surface-300 hover:border-danger/50 hover:text-danger text-muted px-3 py-1.5 text-xs"
+              className="inline-flex items-center gap-1 rounded-md bg-gray-100 border border-gray-200 hover:border-danger/50 hover:text-danger text-muted px-3 py-1.5 text-xs"
             >
               <XCircle className="h-3 w-3" />
               Rechazar
@@ -295,7 +295,7 @@ function SignatureRow({
                 setRejectionReason("");
                 setAccepted(false);
               }}
-              className="ml-auto text-xs text-muted hover:text-gray-300"
+              className="ml-auto text-xs text-muted hover:text-gray-700"
             >
               Cancelar
             </button>

@@ -15,9 +15,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CertiFoto — Actas Digitales con respaldo forense",
+  title: "CertiFoto — Actas digitales para arriendos en Chile",
   description:
-    "Crea actas de entrega, devolucion e inspeccion de propiedades con fotos, IA y firma digital. Cada foto tiene respaldo forense de metadata.",
+    "Documenta el estado de propiedades arrendadas con fotos respaldadas, descripciones asistidas con IA y firma digital. Diseñado para arrendadores, arrendatarios, corredores y administradoras.",
 };
 
 export default function RootLayout({
@@ -26,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
+    <html lang="es">
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans bg-white text-gray-900`}>
         <AppShell>{children}</AppShell>
       </body>
     </html>

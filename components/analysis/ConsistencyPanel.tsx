@@ -24,10 +24,10 @@ export function ConsistencyPanel({ checks, compact }: ConsistencyPanelProps) {
       {checks.map((c) => (
         <div
           key={c.id}
-          className="flex items-start gap-3 rounded-lg bg-surface-50 border border-surface-200 px-3 py-2"
+          className="flex items-start gap-3 rounded-lg bg-gray-50 border border-gray-200 px-3 py-2"
         >
           <Badge status={c.status} label={c.label} />
-          <span className="text-sm text-gray-300 leading-relaxed">
+          <span className="text-sm text-gray-700 leading-relaxed">
             {c.detail}
           </span>
         </div>

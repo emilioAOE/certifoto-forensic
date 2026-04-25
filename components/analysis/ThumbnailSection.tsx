@@ -35,7 +35,7 @@ export function ThumbnailSection({ thumbnail, previewUrl }: ThumbnailSectionProp
           <p className="text-xs text-muted uppercase tracking-wider">
             Thumbnail EXIF
           </p>
-          <div className="rounded-lg border border-surface-300 overflow-hidden bg-surface-200">
+          <div className="rounded-lg border border-gray-200 overflow-hidden bg-gray-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={thumbnail.dataUrl}
@@ -54,7 +54,7 @@ export function ThumbnailSection({ thumbnail, previewUrl }: ThumbnailSectionProp
           <p className="text-xs text-muted uppercase tracking-wider">
             Imagen real
           </p>
-          <div className="rounded-lg border border-surface-300 overflow-hidden bg-surface-200">
+          <div className="rounded-lg border border-gray-200 overflow-hidden bg-gray-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={previewUrl}

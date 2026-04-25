@@ -126,7 +126,7 @@ export function ForensicAnalyzer() {
     <div>
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-100 font-mono tracking-tight">
+          <h1 className="text-2xl font-bold text-gray-900 font-mono tracking-tight">
             Verificar evidencia
           </h1>
           <p className="text-sm text-muted mt-1">
@@ -151,7 +151,7 @@ export function ForensicAnalyzer() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-accent" />
-                <h2 className="text-sm font-semibold text-gray-200 uppercase tracking-wider">
+                <h2 className="text-sm font-semibold text-gray-800 uppercase tracking-wider">
                   Resultados ({completedAnalyses.length} de {entries.length})
                 </h2>
               </div>
@@ -176,7 +176,7 @@ export function ForensicAnalyzer() {
         {/* Empty state */}
         {entries.length === 0 && (
           <div className="text-center py-12">
-            <Shield className="h-12 w-12 text-surface-300 mx-auto mb-4" />
+            <Shield className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <p className="text-muted text-sm">
               Sube una o mas fotos para analizar su metadata, verificar su
               autenticidad y generar un informe pericial.

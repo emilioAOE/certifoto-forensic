@@ -22,7 +22,7 @@ export function StepTipo({ value, onChange }: StepTipoProps) {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-100 mb-1">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">
         ¿Que tipo de acta vas a crear?
       </h2>
       <p className="text-sm text-muted mb-5">
@@ -38,7 +38,7 @@ export function StepTipo({ value, onChange }: StepTipoProps) {
               "rounded-lg border p-4 text-left transition-all",
               value === type
                 ? "border-accent bg-accent/10"
-                : "border-surface-300 bg-surface-50 hover:border-surface-400"
+                : "border-gray-200 bg-gray-50 hover:border-gray-300"
             )}
           >
             <div
@@ -49,7 +49,7 @@ export function StepTipo({ value, onChange }: StepTipoProps) {
             >
               {ICONS[type]}
             </div>
-            <div className="text-sm font-semibold text-gray-100">
+            <div className="text-sm font-semibold text-gray-900">
               {ACTA_TYPE_LABEL[type]}
             </div>
             <div className="text-xs text-muted mt-1 leading-relaxed">

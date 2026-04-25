@@ -17,14 +17,14 @@ export function C2paSection({ data }: C2paSectionProps) {
       />
 
       {data.detected ? (
-        <div className="rounded-lg border border-emerald-700/50 bg-emerald-900/20 p-3 space-y-2">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 space-y-2">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            <span className="text-sm font-medium text-emerald-300">
+            <ShieldCheck className="h-5 w-5 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-700">
               Content Credentials detectados
             </span>
           </div>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-600">
             Se encontraron {data.markers.length} marcadores JUMBF/C2PA en el archivo.
             Esto indica que la imagen contiene firma de procedencia digital.
           </p>
@@ -32,7 +32,7 @@ export function C2paSection({ data }: C2paSectionProps) {
             {data.markers.map((m, i) => (
               <div
                 key={i}
-                className="text-xs font-mono text-gray-400 bg-surface-100 rounded px-2 py-1"
+                className="text-xs font-mono text-gray-600 bg-white rounded px-2 py-1"
               >
                 [{m.label}] offset: 0x{m.offset.toString(16).toUpperCase()}, {m.length} bytes
               </div>
@@ -40,10 +40,10 @@ export function C2paSection({ data }: C2paSectionProps) {
           </div>
         </div>
       ) : (
-        <div className="rounded-lg border border-surface-300 bg-surface-50 p-3">
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
           <div className="flex items-center gap-2">
             <ShieldX className="h-5 w-5 text-muted" />
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-gray-600">
               Sin firma de procedencia C2PA
             </span>
           </div>

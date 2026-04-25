@@ -6,27 +6,31 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/**/*.ts",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {
+        // Surface = grises muy claros / blancos para fondos
         surface: {
-          DEFAULT: "#0a0e17",
-          50: "#0d1220",
-          100: "#0f1520",
-          200: "#151d2e",
-          300: "#1c2740",
-          400: "#243352",
+          DEFAULT: "#ffffff",
+          50: "#fbfbfa",
+          100: "#ffffff",
+          200: "#f5f6f5",
+          300: "#e7eae7",
+          400: "#d2d6d2",
         },
+        // Verde formal (no neon)
         accent: {
-          DEFAULT: "#00ff88",
-          dim: "#00cc6a",
-          muted: "#00994f",
+          DEFAULT: "#16a34a",   // green-600
+          dim: "#15803d",       // green-700
+          dark: "#166534",      // green-800
+          muted: "#22c55e",     // green-500
+          light: "#dcfce7",     // green-100
+          softer: "#f0fdf4",    // green-50
         },
-        warn: "#ffaa00",
-        danger: "#ff4444",
-        info: "#44aaff",
-        muted: "#6b7b95",
+        warn: "#d97706",
+        danger: "#dc2626",
+        info: "#0284c7",
+        muted: "#6b7280",     // gray-500
       },
       fontFamily: {
         mono: ["var(--font-geist-mono)", "monospace"],

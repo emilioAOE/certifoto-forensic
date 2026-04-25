@@ -232,7 +232,7 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
     <div className="flex flex-wrap gap-2">
       <button
         onClick={downloadJson}
-        className="inline-flex items-center gap-2 rounded-lg bg-surface-200 border border-surface-300 px-4 py-2 text-sm text-gray-200 hover:bg-surface-300 transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-gray-100 border border-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 transition-colors"
       >
         <FileJson className="h-4 w-4" />
         Descargar JSON

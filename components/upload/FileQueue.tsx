@@ -17,10 +17,10 @@ export function FileQueue({ entries }: FileQueueProps) {
       {pending.map((entry) => (
         <div
           key={entry.id}
-          className="flex items-center gap-2 rounded-lg bg-surface-100 border border-surface-300 px-3 py-1.5 text-sm"
+          className="flex items-center gap-2 rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-sm"
         >
           <FileImage className="h-4 w-4 text-muted" />
-          <span className="text-gray-300 max-w-[200px] truncate">
+          <span className="text-gray-700 max-w-[200px] truncate">
             {entry.file.name}
           </span>
           {entry.status === "parsing" && (
@@ -34,7 +34,7 @@ export function FileQueue({ entries }: FileQueueProps) {
             </span>
           )}
           {entry.status === "complete" && (
-            <CheckCircle className="h-4 w-4 text-emerald-400" />
+            <CheckCircle className="h-4 w-4 text-emerald-600" />
           )}
           {entry.status === "error" && (
             <AlertCircle className="h-4 w-4 text-danger" />

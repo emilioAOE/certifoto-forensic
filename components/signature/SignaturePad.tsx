@@ -54,7 +54,7 @@ export function SignaturePad({ onChange }: SignaturePadProps) {
 
   return (
     <div>
-      <div className="rounded-md border border-surface-300 bg-surface-50 overflow-hidden">
+      <div className="rounded-md border border-gray-200 bg-gray-50 overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full block touch-none"
@@ -68,7 +68,7 @@ export function SignaturePad({ onChange }: SignaturePadProps) {
         <button
           onClick={clear}
           disabled={isEmpty}
-          className="inline-flex items-center gap-1 text-xs text-muted hover:text-gray-300 disabled:opacity-30"
+          className="inline-flex items-center gap-1 text-xs text-muted hover:text-gray-700 disabled:opacity-30"
         >
           <Eraser className="h-3 w-3" />
           Borrar

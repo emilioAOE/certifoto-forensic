@@ -25,7 +25,7 @@ export function StepPropiedad({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-100 mb-1">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">
         Datos de la propiedad
       </h2>
       <p className="text-sm text-muted mb-5">
@@ -172,19 +172,19 @@ export function StepPropiedad({
       <style jsx>{`
         .input {
           width: 100%;
-          background-color: rgb(15 21 32);
-          border: 1px solid rgb(28 39 64);
+          background-color: white;
+          border: 1px solid rgb(229 231 235);
           border-radius: 0.5rem;
           padding: 0.5rem 0.75rem;
           font-size: 0.875rem;
-          color: rgb(229 231 235);
+          color: rgb(31 41 55);
         }
         .input::placeholder {
-          color: rgb(107 123 149);
+          color: rgb(156 163 175);
         }
         .input:focus {
           outline: none;
-          border-color: rgba(0 255 136 / 0.5);
+          border-color: rgb(22 163 74);
         }
       `}</style>
     </div>
@@ -228,7 +228,7 @@ function Checkbox({
         onChange={(e) => onChange(e.target.checked)}
         className="h-4 w-4 accent-accent"
       />
-      <span className="text-sm text-gray-300">{label}</span>
+      <span className="text-sm text-gray-700">{label}</span>
     </label>
   );
 }

@@ -152,7 +152,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
         <AlertCircle className="h-10 w-10 text-muted mx-auto mb-3" />
-        <h2 className="text-lg text-gray-200">Acta no encontrada</h2>
+        <h2 className="text-lg text-gray-800">Acta no encontrada</h2>
         <p className="text-sm text-muted mt-1 mb-4">
           El acta que buscas no existe o fue eliminada.
         </p>
@@ -178,7 +178,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       <div>
         <Link
           href="/actas"
-          className="inline-flex items-center gap-1 text-xs text-muted hover:text-gray-200"
+          className="inline-flex items-center gap-1 text-xs text-muted hover:text-gray-800"
         >
           <ArrowLeft className="h-3 w-3" />
           Volver a actas
@@ -189,7 +189,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       <header className="flex items-start justify-between gap-4 flex-wrap">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-bold text-gray-100 font-mono tracking-tight">
+            <h1 className="text-2xl font-bold text-gray-900 font-mono tracking-tight">
               {ACTA_TYPE_LABEL[acta.type]}
             </h1>
             <span
@@ -225,7 +225,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           {!isReadOnly && (
             <button
               onClick={handleDelete}
-              className="inline-flex items-center gap-1 rounded-lg bg-surface-200 border border-surface-300 px-3 py-1.5 text-xs text-muted hover:text-danger hover:border-danger/30"
+              className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-1.5 text-xs text-muted hover:text-danger hover:border-danger/30"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Eliminar
@@ -234,7 +234,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           <button
             onClick={handleGeneratePdf}
             disabled={generatingPdf}
-            className="inline-flex items-center gap-1 rounded-lg bg-surface-200 border border-surface-300 px-3 py-1.5 text-xs text-gray-300 hover:bg-surface-300 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-200 disabled:opacity-50"
           >
             <FileDown className="h-3.5 w-3.5" />
             {generatingPdf ? "Generando..." : "Descargar PDF"}
@@ -243,7 +243,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       </header>
 
       {/* Progress + actions */}
-      <section className="rounded-lg border border-surface-300 bg-surface-100 p-4">
+      <section className="rounded-lg border border-gray-200 bg-white p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-muted uppercase tracking-wider">
             Progreso
@@ -252,7 +252,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             {progress.percentComplete}%
           </span>
         </div>
-        <div className="h-1.5 rounded-full bg-surface-300 overflow-hidden mb-3">
+        <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden mb-3">
           <div
             className="h-full bg-accent transition-all"
             style={{ width: `${progress.percentComplete}%` }}
@@ -288,13 +288,13 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         </div>
 
         {/* Action buttons based on status */}
-        <div className="mt-4 pt-3 border-t border-surface-200 flex flex-wrap gap-2">
+        <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap gap-2">
           {(acta.status === "evidence_collection" || acta.status === "review") &&
             !isReadOnly && (
               <button
                 onClick={handleRequestSignatures}
                 disabled={!validation.valid}
-                className="inline-flex items-center gap-1 rounded-lg bg-accent text-surface px-3 py-1.5 text-xs font-medium hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-1 rounded-lg bg-accent text-white px-3 py-1.5 text-xs font-medium hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <Send className="h-3.5 w-3.5" />
                 Solicitar firmas
@@ -313,7 +313,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             )}
 
           {!validation.valid && acta.status !== "closed" && (
-            <div className="text-xs text-amber-400 flex items-start gap-1">
+            <div className="text-xs text-amber-600 flex items-start gap-1">
               <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
               <div>
                 <span className="font-medium">Pendiente:</span>{" "}
@@ -326,7 +326,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
 
       {/* Property info */}
       {property && (
-        <section className="rounded-lg border border-surface-300 bg-surface-100 p-4">
+        <section className="rounded-lg border border-gray-200 bg-white p-4">
           <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" />
             Propiedad
@@ -357,7 +357,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             />
           </div>
           {property.observations && (
-            <div className="mt-3 pt-3 border-t border-surface-200 text-sm text-gray-300">
+            <div className="mt-3 pt-3 border-t border-gray-200 text-sm text-gray-700">
               <p className="text-xs text-muted mb-1">Observaciones generales:</p>
               {property.observations}
             </div>
@@ -366,7 +366,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       )}
 
       {/* Parties */}
-      <section className="rounded-lg border border-surface-300 bg-surface-100 p-4">
+      <section className="rounded-lg border border-gray-200 bg-white p-4">
         <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
           <Users className="h-3.5 w-3.5" />
           Partes ({acta.parties.length})
@@ -399,7 +399,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         acta.status === "signed_with_conformity" ||
         acta.status === "signed_with_observations" ||
         acta.status === "closed") && (
-        <section className="rounded-lg border border-surface-300 bg-surface-100 p-4">
+        <section className="rounded-lg border border-gray-200 bg-white p-4">
           <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <FileSignature className="h-3.5 w-3.5" />
             Firmas
@@ -414,15 +414,15 @@ export function ActaDetail({ actaId }: { actaId: string }) {
 
       {/* Disclaimer */}
       <div className="rounded-lg border border-info/30 bg-info/5 p-3">
-        <p className="text-[11px] text-gray-400 leading-relaxed">
+        <p className="text-[11px] text-gray-600 leading-relaxed">
           {PDF_DISCLAIMER}
         </p>
       </div>
 
       {/* Audit log */}
       {acta.auditLog.length > 0 && (
-        <details className="rounded-lg border border-surface-300 bg-surface-100">
-          <summary className="cursor-pointer p-3 text-xs text-muted uppercase tracking-wider hover:text-gray-300">
+        <details className="rounded-lg border border-gray-200 bg-white">
+          <summary className="cursor-pointer p-3 text-xs text-muted uppercase tracking-wider hover:text-gray-700">
             Registro de actividad ({acta.auditLog.length})
           </summary>
           <div className="px-3 pb-3 space-y-1">
@@ -437,7 +437,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
                   <span className="font-mono text-[10px]">
                     {new Date(entry.createdAt).toLocaleString("es-CL")}
                   </span>
-                  <span className="text-gray-300">{entry.action}</span>
+                  <span className="text-gray-700">{entry.action}</span>
                   <span>· {entry.actorName}</span>
                 </div>
               ))}
@@ -465,7 +465,7 @@ function ProgressStat({
         {icon}
         <span>{label}</span>
       </div>
-      <div className="text-sm text-gray-100 font-mono mt-0.5">{value}</div>
+      <div className="text-sm text-gray-900 font-mono mt-0.5">{value}</div>
       {sub && <div className="text-[10px] text-muted">{sub}</div>}
     </div>
   );
@@ -475,7 +475,7 @@ function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <div className="text-xs text-muted">{label}</div>
-      <div className="text-sm text-gray-200">{value}</div>
+      <div className="text-sm text-gray-800">{value}</div>
     </div>
   );
 }

@@ -67,7 +67,7 @@ export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-100 mb-1">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">
         Datos de las partes
       </h2>
       <p className="text-sm text-muted mb-5">
@@ -82,7 +82,7 @@ export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
             <button
               key={role}
               onClick={() => addParty(role)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-surface-200 border border-surface-300 hover:border-accent/50 hover:text-accent px-3 py-1.5 text-xs text-gray-300 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 border border-gray-200 hover:border-accent/50 hover:text-accent px-3 py-1.5 text-xs text-gray-700 transition-colors"
             >
               <Plus className="h-3 w-3" />
               Agregar {PARTY_ROLE_LABEL[role]}
@@ -94,7 +94,7 @@ export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
       {/* Parties list */}
       <div className="space-y-2">
         {parties.length === 0 && (
-          <div className="rounded-lg border border-dashed border-surface-300 bg-surface-50 py-6 px-4 text-center text-sm text-muted">
+          <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 py-6 px-4 text-center text-sm text-muted">
             Agrega al menos una parte usando los botones arriba.
           </div>
         )}
@@ -113,7 +113,7 @@ export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
       </div>
 
       {/* Add other roles */}
-      <div className="mt-4 pt-4 border-t border-surface-200">
+      <div className="mt-4 pt-4 border-t border-gray-200">
         <p className="text-xs text-muted mb-2">Agregar otra parte:</p>
         <div className="flex flex-wrap gap-2">
           {(Object.keys(PARTY_ROLE_LABEL) as PartyRole[])
@@ -122,7 +122,7 @@ export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
               <button
                 key={role}
                 onClick={() => addParty(role)}
-                className="inline-flex items-center gap-1 rounded-md bg-surface-200 border border-surface-300 px-2 py-1 text-[11px] text-muted hover:text-gray-200 transition-colors"
+                className="inline-flex items-center gap-1 rounded-md bg-gray-100 border border-gray-200 px-2 py-1 text-[11px] text-muted hover:text-gray-800 transition-colors"
               >
                 <Plus className="h-2.5 w-2.5" />
                 {PARTY_ROLE_LABEL[role]}
@@ -150,8 +150,8 @@ function PartyRow({
   return (
     <div
       className={cn(
-        "rounded-lg border bg-surface-50 transition-colors",
-        isEditing ? "border-accent/50" : "border-surface-300"
+        "rounded-lg border bg-gray-50 transition-colors",
+        isEditing ? "border-accent/50" : "border-gray-200"
       )}
     >
       {/* Summary row */}
@@ -161,7 +161,7 @@ function PartyRow({
       >
         <User className="h-4 w-4 text-muted" />
         <div className="flex-1 min-w-0">
-          <div className="text-sm text-gray-100">
+          <div className="text-sm text-gray-900">
             {party.name || (
               <span className="text-muted italic">(sin nombre)</span>
             )}
@@ -184,7 +184,7 @@ function PartyRow({
 
       {/* Edit form */}
       {isEditing && (
-        <div className="px-3 pb-3 space-y-2 border-t border-surface-200 pt-3">
+        <div className="px-3 pb-3 space-y-2 border-t border-gray-200 pt-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input
               type="text"
@@ -256,19 +256,19 @@ function PartyRow({
       <style jsx>{`
         .input {
           width: 100%;
-          background-color: rgb(10 14 23);
-          border: 1px solid rgb(28 39 64);
+          background-color: white;
+          border: 1px solid rgb(229 231 235);
           border-radius: 0.375rem;
           padding: 0.375rem 0.625rem;
           font-size: 0.8125rem;
-          color: rgb(229 231 235);
+          color: rgb(31 41 55);
         }
         .input::placeholder {
-          color: rgb(107 123 149);
+          color: rgb(156 163 175);
         }
         .input:focus {
           outline: none;
-          border-color: rgba(0 255 136 / 0.5);
+          border-color: rgb(22 163 74);
         }
       `}</style>
     </div>
@@ -292,7 +292,7 @@ function Checkbox({
         onChange={(e) => onChange(e.target.checked)}
         className="h-3.5 w-3.5 accent-accent"
       />
-      <span className="text-gray-300">{label}</span>
+      <span className="text-gray-700">{label}</span>
     </label>
   );
 }

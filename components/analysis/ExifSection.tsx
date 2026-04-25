@@ -31,7 +31,7 @@ export function ExifSection({ temporal, device, capture, image }: ExifSectionPro
     <div>
       <SectionHeader icon={<Camera className="h-4 w-4" />} title="EXIF" />
 
-      <div className="flex gap-1 mb-3 bg-surface-50 rounded-lg p-1">
+      <div className="flex gap-1 mb-3 bg-gray-50 rounded-lg p-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -39,8 +39,8 @@ export function ExifSection({ temporal, device, capture, image }: ExifSectionPro
             className={cn(
               "flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors",
               activeTab === tab.id
-                ? "bg-surface-300 text-gray-100"
-                : "text-muted hover:text-gray-300"
+                ? "bg-gray-200 text-gray-900"
+                : "text-muted hover:text-gray-700"
             )}
           >
             {tab.label}

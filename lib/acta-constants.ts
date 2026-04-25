@@ -41,16 +41,16 @@ export const ACTA_STATUS_LABEL: Record<ActaStatus, string> = {
 };
 
 export const ACTA_STATUS_COLOR: Record<ActaStatus, string> = {
-  draft: "bg-gray-700/40 text-gray-300 border-gray-600/50",
-  evidence_collection: "bg-blue-900/40 text-blue-400 border-blue-700/50",
-  ai_processing: "bg-purple-900/40 text-purple-400 border-purple-700/50",
-  review: "bg-amber-900/40 text-amber-400 border-amber-700/50",
-  pending_signatures: "bg-orange-900/40 text-orange-400 border-orange-700/50",
-  signed_with_conformity: "bg-emerald-900/40 text-emerald-400 border-emerald-700/50",
-  signed_with_observations: "bg-yellow-900/40 text-yellow-400 border-yellow-700/50",
-  rejected: "bg-red-900/40 text-red-400 border-red-700/50",
-  closed: "bg-emerald-900/40 text-emerald-400 border-emerald-700/50",
-  archived: "bg-gray-800/40 text-gray-500 border-gray-700/50",
+  draft: "bg-gray-100 text-gray-700 border-gray-200",
+  evidence_collection: "bg-blue-50 text-blue-700 border-blue-200",
+  ai_processing: "bg-purple-50 text-purple-700 border-purple-200",
+  review: "bg-amber-50 text-amber-700 border-amber-200",
+  pending_signatures: "bg-orange-50 text-orange-700 border-orange-200",
+  signed_with_conformity: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  signed_with_observations: "bg-yellow-50 text-yellow-700 border-yellow-200",
+  rejected: "bg-red-50 text-red-700 border-red-200",
+  closed: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  archived: "bg-gray-100 text-gray-500 border-gray-200",
 };
 
 export const PROPERTY_TYPE_LABEL: Record<PropertyType, string> = {
@@ -79,10 +79,10 @@ export const CONDITION_LABEL: Record<ConditionLevel, string> = {
 };
 
 export const CONDITION_COLOR: Record<ConditionLevel, string> = {
-  excelente: "text-emerald-400",
-  bueno: "text-green-400",
-  regular: "text-amber-400",
-  malo: "text-red-400",
+  excelente: "text-emerald-600",
+  bueno: "text-green-600",
+  regular: "text-amber-600",
+  malo: "text-red-600",
   no_evaluado: "text-muted",
 };
 
@@ -145,11 +145,11 @@ export const DAMAGE_SEVERITY_LABEL: Record<DamageSeverity, string> = {
 };
 
 export const DAMAGE_SEVERITY_COLOR: Record<DamageSeverity, string> = {
-  none: "text-emerald-400",
-  minor: "text-yellow-400",
-  moderate: "text-amber-400",
-  severe: "text-red-400",
-  review_required: "text-blue-400",
+  none: "text-emerald-600",
+  minor: "text-yellow-600",
+  moderate: "text-amber-600",
+  severe: "text-red-600",
+  review_required: "text-blue-600",
 };
 
 // ============================================

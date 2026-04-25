@@ -238,10 +238,10 @@ export function RoomEvidenceSection({
   return (
     <div
       className={cn(
-        "rounded-lg border bg-surface-100",
+        "rounded-lg border bg-white",
         isMissingRequired
-          ? "border-amber-700/50"
-          : "border-surface-300"
+          ? "border-amber-200"
+          : "border-gray-200"
       )}
     >
       {/* Header */}
@@ -251,14 +251,14 @@ export function RoomEvidenceSection({
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h4 className="text-sm font-semibold text-gray-100">{room.name}</h4>
+            <h4 className="text-sm font-semibold text-gray-900">{room.name}</h4>
             {room.required && (
               <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border bg-accent/10 text-accent border-accent/20">
                 Obligatorio
               </span>
             )}
             {isMissingRequired && (
-              <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border bg-amber-900/40 text-amber-400 border-amber-700/50">
+              <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border bg-amber-50 text-amber-600 border-amber-200">
                 Sin fotos
               </span>
             )}
@@ -281,7 +281,7 @@ export function RoomEvidenceSection({
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-4 border-t border-surface-200 pt-4">
+        <div className="px-4 pb-4 space-y-4 border-t border-gray-200 pt-4">
           {/* Photos grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {photos.map((photo) => (
@@ -297,7 +297,7 @@ export function RoomEvidenceSection({
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="aspect-square rounded-lg border-2 border-dashed border-surface-300 hover:border-accent/50 bg-surface-50 flex flex-col items-center justify-center gap-1 text-muted hover:text-accent transition-colors disabled:opacity-50"
+                className="aspect-square rounded-lg border-2 border-dashed border-gray-200 hover:border-accent/50 bg-gray-50 flex flex-col items-center justify-center gap-1 text-muted hover:text-accent transition-colors disabled:opacity-50"
               >
                 {uploading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
@@ -323,14 +323,14 @@ export function RoomEvidenceSection({
 
           {/* AI summary */}
           {room.aiSummary && (
-            <div className="rounded-md bg-purple-900/10 border border-purple-700/30 p-3">
-              <div className="flex items-center gap-1.5 mb-1 text-xs text-purple-300">
+            <div className="rounded-md bg-purple-50 border border-purple-200 p-3">
+              <div className="flex items-center gap-1.5 mb-1 text-xs text-purple-700">
                 <Sparkles className="h-3 w-3" />
                 <span className="uppercase tracking-wider font-medium">
                   Resumen IA
                 </span>
               </div>
-              <p className="text-xs text-gray-300 leading-relaxed">
+              <p className="text-xs text-gray-700 leading-relaxed">
                 {room.aiSummary}
               </p>
             </div>
@@ -347,7 +347,7 @@ export function RoomEvidenceSection({
               onChange={(e) =>
                 updateRoomCondition(e.target.value as ConditionLevel)
               }
-              className="w-full bg-surface-50 border border-surface-300 rounded-md px-3 py-1.5 text-sm text-gray-200 disabled:opacity-50"
+              className="w-full bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5 text-sm text-gray-800 disabled:opacity-50"
             >
               <option value="no_evaluado">Sin evaluar</option>
               <option value="excelente">Excelente</option>
@@ -368,7 +368,7 @@ export function RoomEvidenceSection({
               onChange={(e) => updateRoomObservations(e.target.value)}
               rows={2}
               placeholder="Cualquier observacion, contexto o nota relevante para este ambiente..."
-              className="w-full bg-surface-50 border border-surface-300 rounded-md px-3 py-1.5 text-sm text-gray-200 placeholder-muted resize-none focus:outline-none focus:border-accent/50 disabled:opacity-50"
+              className="w-full bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5 text-sm text-gray-800 placeholder-muted resize-none focus:outline-none focus:border-accent/50 disabled:opacity-50"
             />
           </div>
         </div>
@@ -390,7 +390,7 @@ function PhotoCard({
 
   return (
     <>
-      <div className="group relative aspect-square rounded-lg overflow-hidden border border-surface-300 bg-surface-200">
+      <div className="group relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={photo.dataUrl}
@@ -402,23 +402,23 @@ function PhotoCard({
         {/* Badges */}
         <div className="absolute top-1 left-1 flex flex-wrap gap-1">
           {photo.aiStatus === "processing" && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-900/80 text-purple-200 backdrop-blur-sm flex items-center gap-1">
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-600 text-purple-700 backdrop-blur-sm flex items-center gap-1">
               <Loader2 className="h-2 w-2 animate-spin" />
               IA
             </span>
           )}
           {photo.aiStatus === "complete" && photo.aiAnalysis && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-900/80 text-purple-200 backdrop-blur-sm">
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-600 text-purple-700 backdrop-blur-sm">
               <Sparkles className="h-2 w-2 inline" /> IA
             </span>
           )}
           {photo.evidenceStrength === "fuerte" && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-900/80 text-emerald-200 backdrop-blur-sm">
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-600 text-emerald-700 backdrop-blur-sm">
               <Shield className="h-2 w-2 inline" /> Fuerte
             </span>
           )}
           {photo.warnings.length > 0 && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-900/80 text-amber-200 backdrop-blur-sm">
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-600 text-amber-700 backdrop-blur-sm">
               <AlertTriangle className="h-2 w-2 inline" />
             </span>
           )}
@@ -427,7 +427,7 @@ function PhotoCard({
         {/* Damage findings indicator */}
         {photo.aiAnalysis && photo.aiAnalysis.damageFindings.length > 0 && (
           <div className="absolute bottom-1 left-1 right-1">
-            <div className="text-[9px] bg-red-900/80 text-red-200 px-1.5 py-0.5 rounded backdrop-blur-sm truncate">
+            <div className="text-[9px] bg-red-600 text-red-700 px-1.5 py-0.5 rounded backdrop-blur-sm truncate">
               {photo.aiAnalysis.damageFindings.length} hallazgo(s)
             </div>
           </div>
@@ -465,16 +465,16 @@ function PhotoDetailModal({
       onClick={onClose}
     >
       <div
-        className="max-w-3xl w-full bg-surface-100 border border-surface-300 rounded-lg overflow-hidden my-4"
+        className="max-w-3xl w-full bg-white border border-gray-200 rounded-lg overflow-hidden my-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-3 border-b border-surface-200">
-          <h3 className="text-sm font-semibold text-gray-100 truncate">
+        <div className="flex items-center justify-between p-3 border-b border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-900 truncate">
             {photo.fileName}
           </h3>
           <button
             onClick={onClose}
-            className="text-muted hover:text-gray-200 text-xl leading-none"
+            className="text-muted hover:text-gray-800 text-xl leading-none"
           >
             ×
           </button>
@@ -495,20 +495,20 @@ function PhotoDetailModal({
           <div className="space-y-3 text-sm">
             {/* AI */}
             {photo.aiAnalysis && (
-              <div className="rounded-md bg-purple-900/10 border border-purple-700/30 p-3">
-                <div className="flex items-center gap-1 mb-1.5 text-xs text-purple-300 uppercase tracking-wider">
+              <div className="rounded-md bg-purple-50 border border-purple-200 p-3">
+                <div className="flex items-center gap-1 mb-1.5 text-xs text-purple-700 uppercase tracking-wider">
                   <Sparkles className="h-3 w-3" />
                   Analisis IA
                 </div>
-                <p className="text-gray-300 leading-relaxed mb-2">
+                <p className="text-gray-700 leading-relaxed mb-2">
                   {photo.aiAnalysis.caption}
                 </p>
                 <p className="text-xs text-muted">
                   Estado: {photo.aiAnalysis.conditionSummary}
                 </p>
                 {photo.aiAnalysis.damageFindings.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-purple-700/20 space-y-1">
-                    <p className="text-xs text-purple-300 uppercase tracking-wider mb-1">
+                  <div className="mt-2 pt-2 border-t border-purple-100 space-y-1">
+                    <p className="text-xs text-purple-700 uppercase tracking-wider mb-1">
                       Hallazgos
                     </p>
                     {photo.aiAnalysis.damageFindings.map((f) => (
@@ -516,7 +516,7 @@ function PhotoDetailModal({
                         <span className={cn("font-medium", DAMAGE_SEVERITY_COLOR[f.severity])}>
                           [{DAMAGE_SEVERITY_LABEL[f.severity]}]
                         </span>{" "}
-                        <span className="text-gray-400">
+                        <span className="text-gray-600">
                           {DAMAGE_TYPE_LABEL[f.type]}
                         </span>
                         <p className="text-muted mt-0.5">{f.description}</p>
@@ -529,7 +529,7 @@ function PhotoDetailModal({
 
             {/* Forensic summary */}
             {photo.forensic && (
-              <div className="rounded-md bg-surface-50 border border-surface-200 p-3">
+              <div className="rounded-md bg-gray-50 border border-gray-200 p-3">
                 <div className="flex items-center gap-1 mb-2 text-xs text-accent uppercase tracking-wider">
                   <Shield className="h-3 w-3" />
                   Respaldo forense
@@ -563,12 +563,12 @@ function PhotoDetailModal({
 
             {/* Warnings */}
             {photo.warnings.length > 0 && (
-              <div className="rounded-md bg-amber-900/10 border border-amber-700/30 p-3">
-                <div className="flex items-center gap-1 mb-1 text-xs text-amber-300 uppercase tracking-wider">
+              <div className="rounded-md bg-amber-50 border border-amber-200 p-3">
+                <div className="flex items-center gap-1 mb-1 text-xs text-amber-700 uppercase tracking-wider">
                   <AlertTriangle className="h-3 w-3" />
                   Advertencias
                 </div>
-                <ul className="text-xs text-gray-400 space-y-0.5">
+                <ul className="text-xs text-gray-600 space-y-0.5">
                   {photo.warnings.map((w) => (
                     <li key={w}>· {w.replace(/_/g, " ")}</li>
                   ))}
@@ -599,7 +599,7 @@ function KV({
   return (
     <div className="flex justify-between gap-2">
       <span className="text-muted">{label}</span>
-      <span className={cn("text-gray-300 truncate", mono && "font-mono")}>
+      <span className={cn("text-gray-700 truncate", mono && "font-mono")}>
         {value}
       </span>
     </div>

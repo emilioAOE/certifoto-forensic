@@ -15,7 +15,7 @@ interface StepConfirmacionProps {
 export function StepConfirmacion({ data }: StepConfirmacionProps) {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-100 mb-1">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">
         Revisa antes de crear
       </h2>
       <p className="text-sm text-muted mb-5">
@@ -25,13 +25,13 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
 
       <div className="space-y-3">
         <Section icon={<Check className="h-4 w-4" />} title="Tipo">
-          <p className="text-sm text-gray-200">
+          <p className="text-sm text-gray-800">
             {data.type ? ACTA_TYPE_LABEL[data.type] : "—"}
           </p>
         </Section>
 
         <Section icon={<MapPin className="h-4 w-4" />} title="Propiedad">
-          <p className="text-sm text-gray-200">
+          <p className="text-sm text-gray-800">
             {data.property.address}
             {data.property.unit && ` · ${data.property.unit}`}
           </p>
@@ -47,7 +47,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
           icon={<Calendar className="h-4 w-4" />}
           title="Fecha de inspeccion"
         >
-          <p className="text-sm text-gray-200">
+          <p className="text-sm text-gray-800">
             {new Date(data.inspectionDate).toLocaleDateString("es-CL", {
               weekday: "long",
               year: "numeric",
@@ -64,7 +64,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
           <div className="space-y-1">
             {data.parties.map((p) => (
               <div key={p.tempId} className="text-sm">
-                <span className="text-gray-200">{p.name || "(sin nombre)"}</span>
+                <span className="text-gray-800">{p.name || "(sin nombre)"}</span>
                 <span className="text-muted text-xs ml-2">
                   · {PARTY_ROLE_LABEL[p.role]}
                   {p.canSign && " · firma"}
@@ -82,7 +82,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
             {data.rooms.map((r) => (
               <span
                 key={r.tempId}
-                className="text-xs bg-surface-200 text-gray-300 px-2 py-0.5 rounded"
+                className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded"
               >
                 {r.name}
                 {r.required && (
@@ -98,7 +98,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
       </div>
 
       <div className="mt-5 rounded-lg border border-info/30 bg-info/5 p-3">
-        <p className="text-xs text-gray-300 leading-relaxed">
+        <p className="text-xs text-gray-700 leading-relaxed">
           Despues de crear el acta podras subir fotos por ambiente, agregar
           observaciones y solicitar firmas. El acta se guardara en estado{" "}
           <span className="text-accent font-medium">recopilando evidencia</span>.
@@ -118,7 +118,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg bg-surface-50 border border-surface-200 p-3">
+    <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
       <div className="flex items-center gap-2 mb-2 text-xs text-muted uppercase tracking-wider">
         {icon}
         {title}

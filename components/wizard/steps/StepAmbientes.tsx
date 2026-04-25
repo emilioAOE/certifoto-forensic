@@ -82,7 +82,7 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-100 mb-1">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">
         Selecciona los ambientes a documentar
       </h2>
       <p className="text-sm text-muted mb-5">
@@ -100,10 +100,10 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
             {rooms.map((room) => (
               <div
                 key={room.tempId}
-                className="flex items-center gap-2 rounded-lg border border-surface-300 bg-surface-50 px-3 py-2"
+                className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
               >
                 <GripVertical className="h-3 w-3 text-muted shrink-0" />
-                <span className="text-sm text-gray-200 flex-1 truncate">
+                <span className="text-sm text-gray-800 flex-1 truncate">
                   {room.name}
                 </span>
                 <label className="inline-flex items-center gap-1 text-xs text-muted cursor-pointer">
@@ -125,7 +125,7 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
                     onChange={(e) =>
                       updateMinPhotos(room.tempId, parseInt(e.target.value) || 1)
                     }
-                    className="w-10 bg-surface-100 border border-surface-300 rounded px-1 py-0.5 text-center text-xs"
+                    className="w-10 bg-white border border-gray-200 rounded px-1 py-0.5 text-center text-xs"
                   />
                 </div>
                 <button
@@ -161,7 +161,7 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
                         "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs transition-colors",
                         added
                           ? "border-accent/30 bg-accent/10 text-accent cursor-default"
-                          : "border-surface-300 bg-surface-50 text-gray-300 hover:border-accent/50"
+                          : "border-gray-200 bg-gray-50 text-gray-700 hover:border-accent/50"
                       )}
                     >
                       {!added && <Plus className="h-3 w-3" />}
@@ -176,7 +176,7 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
       </div>
 
       {/* Custom room */}
-      <div className="mt-5 pt-4 border-t border-surface-200">
+      <div className="mt-5 pt-4 border-t border-gray-200">
         <p className="text-xs text-muted mb-2">Agregar ambiente personalizado:</p>
         <div className="flex gap-2">
           <input
@@ -185,12 +185,12 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
             onChange={(e) => setCustomName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addCustom()}
             placeholder="Ej: Sala de juegos"
-            className="flex-1 bg-surface-50 border border-surface-300 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-accent/50"
+            className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-accent/50"
           />
           <button
             onClick={addCustom}
             disabled={!customName.trim()}
-            className="rounded-lg bg-surface-200 border border-surface-300 px-3 py-2 text-sm text-gray-200 hover:bg-surface-300 disabled:opacity-30"
+            className="rounded-lg bg-gray-100 border border-gray-200 px-3 py-2 text-sm text-gray-800 hover:bg-gray-200 disabled:opacity-30"
           >
             <Plus className="h-4 w-4" />
           </button>

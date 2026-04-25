@@ -39,13 +39,13 @@ export function IptcXmpSection({ iptc, xmp }: IptcXmpSectionProps) {
           <DataRow label="Ciudad" value={iptc.city} />
           <DataRow label="Pais" value={iptc.country} />
           {iptc.keywords.length > 0 && (
-            <div className="flex justify-between gap-4 py-1.5 border-b border-surface-200">
+            <div className="flex justify-between gap-4 py-1.5 border-b border-gray-200">
               <span className="text-muted text-sm shrink-0">Keywords</span>
               <div className="flex flex-wrap gap-1 justify-end">
                 {iptc.keywords.map((kw, i) => (
                   <span
                     key={i}
-                    className="text-xs bg-surface-200 text-gray-300 px-2 py-0.5 rounded"
+                    className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded"
                   >
                     {kw}
                   </span>
@@ -73,10 +73,10 @@ export function IptcXmpSection({ iptc, xmp }: IptcXmpSectionProps) {
                 {xmp.history.map((entry, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 text-xs bg-surface-50 border border-surface-200 rounded-md px-3 py-2"
+                    className="flex items-start gap-3 text-xs bg-gray-50 border border-gray-200 rounded-md px-3 py-2"
                   >
                     <div className="flex flex-col gap-0.5 min-w-0">
-                      <span className="text-gray-200 font-medium">
+                      <span className="text-gray-800 font-medium">
                         {entry.action}
                       </span>
                       {entry.softwareAgent && (

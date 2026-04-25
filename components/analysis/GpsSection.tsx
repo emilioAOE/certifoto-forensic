@@ -10,7 +10,7 @@ import { formatCoordinate } from "@/lib/format";
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-64 w-full rounded-lg bg-surface-200 animate-pulse flex items-center justify-center">
+    <div className="h-64 w-full rounded-lg bg-gray-100 animate-pulse flex items-center justify-center">
       <span className="text-muted text-sm">Cargando mapa...</span>
     </div>
   ),
@@ -34,7 +34,7 @@ export function GpsSection({ data }: GpsSectionProps) {
     <div>
       <SectionHeader icon={<MapPin className="h-4 w-4" />} title="GPS" />
 
-      <div className="mb-3 rounded-lg overflow-hidden border border-surface-300">
+      <div className="mb-3 rounded-lg overflow-hidden border border-gray-200">
         <LeafletMap lat={data.latitude} lng={data.longitude} />
       </div>
 
