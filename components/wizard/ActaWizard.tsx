@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type {
   ActaType,
@@ -19,6 +19,7 @@ import type {
 import { ROOM_TEMPLATES } from "@/lib/acta-constants";
 import { saveActa, saveProperty, generateId, getCurrentUser } from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
+import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
 import { StepModalidad } from "./steps/StepModalidad";
 import { StepPropiedad } from "./steps/StepPropiedad";
@@ -85,6 +86,19 @@ export function ActaWizard() {
 
   const updateData = (patch: Partial<WizardData>) =>
     setData((prev) => ({ ...prev, ...patch }));
+
+  const handleAutoFill = () => {
+    const mock = getWizardMockData();
+    setData({
+      type: mock.type,
+      modality: mock.modality,
+      property: mock.property,
+      parties: mock.parties,
+      rooms: mock.rooms,
+      inspectionDate: mock.inspectionDate,
+    });
+    setStep(6); // jump to confirmation
+  };
 
   const canGoNext = (): boolean => {
     switch (step) {
@@ -192,8 +206,18 @@ export function ActaWizard() {
     <div className="max-w-3xl mx-auto px-4 py-6">
       {/* Stepper */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-xl font-bold text-gray-100">Nueva Acta</h1>
+        <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-gray-100">Nueva Acta</h1>
+            <button
+              onClick={handleAutoFill}
+              className="inline-flex items-center gap-1 rounded-md bg-purple-900/30 border border-purple-700/40 text-purple-300 px-2 py-1 text-[11px] hover:bg-purple-900/50 transition-colors"
+              title="Llena el wizard con datos de ejemplo y salta a la revision"
+            >
+              <Sparkles className="h-3 w-3" />
+              Auto-llenar
+            </button>
+          </div>
           <span className="text-xs text-muted">
             Paso {step} de {STEPS.length}
           </span>

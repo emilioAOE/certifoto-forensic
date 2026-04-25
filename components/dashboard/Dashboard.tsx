@@ -11,6 +11,8 @@ import {
   Camera,
   Building2,
   TrendingUp,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import {
   listActaSummaries,
@@ -23,15 +25,16 @@ import {
   ACTA_STATUS_LABEL,
   ACTA_STATUS_COLOR,
 } from "@/lib/acta-constants";
+import { seedSampleData } from "@/lib/mock-data";
 import { cn } from "@/lib/cn";
 
 export function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [actas, setActas] = useState<ActaSummary[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
+  const refresh = () => {
     setStats(getDashboardStats());
     setActas(
       listActaSummaries().sort(
@@ -39,7 +42,29 @@ export function Dashboard() {
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )
     );
+  };
+
+  useEffect(() => {
+    setMounted(true);
+    refresh();
   }, []);
+
+  const handleSeedMockData = async () => {
+    if (seeding) return;
+    setSeeding(true);
+    try {
+      await seedSampleData();
+      refresh();
+    } catch (err) {
+      console.error("Seed error:", err);
+      alert(
+        "Error al cargar datos de ejemplo: " +
+          (err instanceof Error ? err.message : "desconocido")
+      );
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   if (!mounted) {
     return (
@@ -77,6 +102,19 @@ export function Dashboard() {
             <Shield className="h-4 w-4" />
             Verificar evidencia
           </Link>
+          <button
+            onClick={handleSeedMockData}
+            disabled={seeding}
+            className="inline-flex items-center gap-2 rounded-lg bg-purple-900/30 border border-purple-700/40 text-purple-300 px-4 py-2 text-sm hover:bg-purple-900/50 transition-colors disabled:opacity-50"
+            title="Crea 3 actas de ejemplo (entrega, devolucion, inspeccion) con fotos y analisis IA"
+          >
+            {seeding ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="h-4 w-4" />
+            )}
+            {seeding ? "Generando..." : "Cargar datos de ejemplo"}
+          </button>
         </div>
       </section>
 
@@ -136,7 +174,10 @@ export function Dashboard() {
         </div>
 
         {actas.length === 0 ? (
-          <EmptyState />
+          <EmptyState
+            onSeedMock={handleSeedMockData}
+            seeding={seeding}
+          />
         ) : (
           <div className="space-y-2">
             {actas.slice(0, 5).map((acta) => (
@@ -253,21 +294,45 @@ function ActaListItem({ acta }: { acta: ActaSummary }) {
   );
 }
 
-function EmptyState() {
+function EmptyState({
+  onSeedMock,
+  seeding,
+}: {
+  onSeedMock: () => void;
+  seeding: boolean;
+}) {
   return (
     <div className="rounded-lg border border-dashed border-surface-300 bg-surface-50 py-10 px-4 text-center">
       <Building2 className="h-10 w-10 text-surface-300 mx-auto mb-3" />
       <p className="text-sm text-gray-300">Aun no tienes actas creadas</p>
-      <p className="text-xs text-muted mt-1 mb-4">
-        Crea tu primera acta de entrega, devolucion o inspeccion
+      <p className="text-xs text-muted mt-1 mb-5">
+        Crea tu primera acta o carga datos de ejemplo para explorar el flujo
       </p>
-      <Link
-        href="/actas/nueva"
-        className="inline-flex items-center gap-2 rounded-lg bg-accent text-surface px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
-      >
-        <Plus className="h-4 w-4" />
-        Crear primera acta
-      </Link>
+      <div className="flex flex-wrap gap-2 justify-center">
+        <Link
+          href="/actas/nueva"
+          className="inline-flex items-center gap-2 rounded-lg bg-accent text-surface px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
+        >
+          <Plus className="h-4 w-4" />
+          Crear primera acta
+        </Link>
+        <button
+          onClick={onSeedMock}
+          disabled={seeding}
+          className="inline-flex items-center gap-2 rounded-lg bg-purple-900/30 border border-purple-700/40 text-purple-300 px-4 py-2 text-sm hover:bg-purple-900/50 transition-colors disabled:opacity-50"
+        >
+          {seeding ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="h-4 w-4" />
+          )}
+          {seeding ? "Generando..." : "Cargar datos de ejemplo"}
+        </button>
+      </div>
+      <p className="text-[10px] text-muted mt-3">
+        Los datos de ejemplo crean 3 actas con fotos placeholder, IA simulada y
+        analisis forense para explorar todo el flujo.
+      </p>
     </div>
   );
 }

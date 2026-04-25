@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Fingerprint, FileSignature, Shield, Home } from "lucide-react";
+import { Fingerprint, FileSignature, Shield, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Inicio", icon: Home },
+  { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
   { href: "/actas", label: "Actas", icon: FileSignature },
   { href: "/forensic", label: "Verificar evidencia", icon: Shield },
 ];
@@ -14,12 +14,19 @@ const NAV_ITEMS = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  // La landing tiene su propio header, no le agregamos el nav de la app
+  const isLanding = pathname === "/";
+
+  if (isLanding) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       {/* Header */}
       <header className="border-b border-surface-200 bg-surface-50 sticky top-0 z-30 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
+          <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
             <div className="rounded-lg bg-accent/10 p-1.5">
               <Fingerprint className="h-5 w-5 text-accent" />
             </div>
@@ -31,10 +38,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <nav className="flex items-center gap-1 overflow-x-auto ml-auto">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
-              const active =
-                item.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.href);
+              const active = pathname.startsWith(item.href);
               return (
                 <Link
                   key={item.href}
