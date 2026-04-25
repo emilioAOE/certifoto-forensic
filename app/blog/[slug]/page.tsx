@@ -14,12 +14,31 @@ export function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
+
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
-  if (!post) return { title: "Articulo no encontrado - CertiFoto" };
+  if (!post) return { title: "Articulo no encontrado" };
   return {
-    title: `${post.title} - CertiFoto`,
+    title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      url: `${SITE_URL}/blog/${post.slug}`,
+      publishedTime: post.date,
+      authors: [post.author],
+      tags: [post.category],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
   };
 }
 
@@ -28,8 +47,39 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   if (!post) notFound();
   const related = getRelatedPosts(params.slug);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      "@type": "Organization",
+      name: post.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "CertiFoto",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/icon.svg`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${post.slug}`,
+    },
+    articleSection: post.category,
+    inLanguage: "es-CL",
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <LandingHeader />
 
       <article className="max-w-3xl mx-auto px-4 py-12 sm:py-16">

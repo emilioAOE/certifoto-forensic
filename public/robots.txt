@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Privadas: no indexar
+Disallow: /dashboard
+Disallow: /actas
+Disallow: /api
+Disallow: /forensic
+
+Sitemap: https://certifoto.cl/sitemap.xml

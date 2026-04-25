@@ -49,19 +49,22 @@ export function ForensicAnalyzer() {
           if (res.ok) {
             const serverData = await res.json();
 
-            // Merge server data
+            // El servidor puede responder ok=true con warnings parciales
+            // (por ejemplo si pHash fallo pero metadata si)
+            const sd = serverData.ok ? serverData : null;
+
+            // Merge server data — solo si vino algo util
             const merged: PhotoAnalysis = {
               ...analysis,
               file: {
                 ...analysis.file,
-                phash: serverData.phash ?? analysis.file.phash,
-                width: serverData.width ?? analysis.file.width,
-                height: serverData.height ?? analysis.file.height,
+                phash: sd?.phash ?? analysis.file.phash,
+                width: sd?.width ?? analysis.file.width,
+                height: sd?.height ?? analysis.file.height,
               },
               thumbnail: {
                 ...analysis.thumbnail,
-                dataUrl:
-                  analysis.thumbnail.dataUrl ?? serverData.thumbnailBase64,
+                dataUrl: analysis.thumbnail.dataUrl ?? sd?.thumbnailBase64 ?? null,
               },
             };
 
