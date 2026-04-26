@@ -24,6 +24,8 @@ import {
   downloadBlob,
 } from "@/lib/export-import";
 import { StorageIndicator } from "@/components/dashboard/StorageIndicator";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { cn } from "@/lib/cn";
 
 type Tab = "perfil" | "branding" | "datos";
@@ -298,6 +300,8 @@ function BrandingTab() {
 // ============================================
 
 function DataTab() {
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -309,10 +313,11 @@ function DataTab() {
     try {
       const result = await exportAllAsZip();
       downloadBlob(result.blob, result.fileName);
+      toast.success("Backup descargado");
     } catch (err) {
-      alert(
-        "Error al exportar: " +
-          (err instanceof Error ? err.message : "desconocido")
+      toast.error(
+        "No se pudo exportar",
+        err instanceof Error ? err.message : "Error desconocido"
       );
     } finally {
       setExporting(false);
@@ -324,24 +329,26 @@ function DataTab() {
     if (!file) return;
     e.target.value = "";
 
-    if (
-      !confirm(
-        "Importar reemplazara TODOS los datos actuales (actas, propiedades, contactos, configuracion). Continuar?"
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: "Reemplazar todos los datos",
+      message:
+        "Importar reemplazara TODAS las actas, propiedades, contactos y configuracion actuales con las del archivo. Esta accion no se puede deshacer.",
+      variant: "warn",
+      confirmLabel: "Si, reemplazar",
+    });
+    if (!ok) return;
 
     setImporting(true);
     try {
       const result = await importFromZip(file);
-      alert(
-        `Importacion exitosa:\n${result.imported.actas} actas, ${result.imported.properties} propiedades, ${result.imported.organizations} organizaciones.`
+      toast.success(
+        "Importacion exitosa",
+        `${result.imported.actas} actas, ${result.imported.properties} propiedades, ${result.imported.organizations} organizaciones.`
       );
     } catch (err) {
-      alert(
-        "Error al importar: " +
-          (err instanceof Error ? err.message : "desconocido")
+      toast.error(
+        "No se pudo importar",
+        err instanceof Error ? err.message : "Error desconocido"
       );
     } finally {
       setImporting(false);
@@ -350,28 +357,28 @@ function DataTab() {
 
   const handleClearAll = async () => {
     if (clearing) return;
-    if (
-      !confirm(
-        "ATENCION: Esto eliminara TODAS tus actas, propiedades, contactos y configuracion permanentemente. Estas seguro?"
-      )
-    )
-      return;
-    if (
-      !confirm(
-        "Ultima confirmacion: una vez eliminados, los datos no se pueden recuperar. Continuar?"
-      )
-    )
-      return;
+
+    const ok = await confirm({
+      title: "Eliminar todos los datos",
+      message:
+        "Esto eliminara TODAS tus actas, propiedades, contactos y configuracion permanentemente. Considera exportar primero.\n\nEsta accion NO se puede deshacer.",
+      variant: "danger",
+      confirmLabel: "Eliminar permanentemente",
+      requireConfirmText: "ELIMINAR",
+    });
+    if (!ok) return;
 
     setClearing(true);
     try {
       await clearAllData();
-      alert("Todos los datos fueron eliminados");
-      window.location.href = "/dashboard";
+      toast.success("Todos los datos fueron eliminados");
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 800);
     } catch (err) {
-      alert(
-        "Error al eliminar: " +
-          (err instanceof Error ? err.message : "desconocido")
+      toast.error(
+        "Error al eliminar",
+        err instanceof Error ? err.message : "Error desconocido"
       );
     } finally {
       setClearing(false);

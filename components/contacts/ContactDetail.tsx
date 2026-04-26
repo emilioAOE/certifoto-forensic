@@ -34,9 +34,13 @@ import {
   ACTA_STATUS_COLOR,
 } from "@/lib/acta-constants";
 import { cn } from "@/lib/cn";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 
 export function ContactDetail({ contactId }: { contactId: string }) {
   const router = useRouter();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [contact, setContact] = useState<Contact | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [actas, setActas] = useState<Acta[]>([]);
@@ -92,16 +96,20 @@ export function ContactDetail({ contactId }: { contactId: string }) {
     if (!draft) return;
     saveContact(draft);
     setEditing(false);
+    toast.success("Contacto actualizado");
   };
 
-  const handleDelete = () => {
-    if (
-      !confirm(
-        "Eliminar este contacto de tu agenda? Las actas existentes mantienen sus datos."
-      )
-    )
-      return;
+  const handleDelete = async () => {
+    const ok = await confirm({
+      title: "Eliminar contacto",
+      message:
+        "Se eliminara este contacto de tu agenda. Las actas existentes mantienen sus datos.",
+      variant: "warn",
+      confirmLabel: "Eliminar",
+    });
+    if (!ok) return;
     deleteContact(contactId);
+    toast.info("Contacto eliminado");
     router.push("/contactos");
   };
 

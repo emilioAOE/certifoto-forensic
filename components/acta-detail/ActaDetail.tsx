@@ -37,13 +37,29 @@ import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
 import { SignaturesPanel } from "./SignaturesPanel";
 import { generateActaPdf } from "@/lib/acta-pdf";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
+import {
+  ValidationModal,
+  type ValidationItem,
+} from "@/components/ui/ValidationModal";
+
+interface ValidationModalState {
+  title: string;
+  items: ValidationItem[];
+  onContinue?: () => void;
+}
 
 export function ActaDetail({ actaId }: { actaId: string }) {
   const router = useRouter();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [acta, setActa] = useState<Acta | null>(null);
   const [property, setProperty] = useState<Property | null>(null);
   const [mounted, setMounted] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [validationModal, setValidationModal] =
+    useState<ValidationModalState | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -68,21 +84,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     setActa(updated);
   };
 
-  const handleRequestSignatures = () => {
+  const proceedRequestSignatures = () => {
     if (!acta) return;
-    const validation = validateActaForReview(acta);
-    if (!validation.valid) {
-      alert("No se puede solicitar firmas:\n\n" + validation.errors.join("\n"));
-      return;
-    }
-    if (validation.warnings.length > 0) {
-      const proceed = confirm(
-        "Advertencias:\n\n" +
-          validation.warnings.join("\n") +
-          "\n\n¿Continuar de todas formas?"
-      );
-      if (!proceed) return;
-    }
     updateActa((a) =>
       appendAuditLog(
         { ...a, status: "pending_signatures" },
@@ -93,13 +96,42 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         { partiesCount: a.parties.filter((p) => p.canSign).length }
       )
     );
+    toast.success("Firmas solicitadas", "El acta esta lista para que las partes firmen.");
+  };
+
+  const handleRequestSignatures = () => {
+    if (!acta) return;
+    const validation = validateActaForReview(acta);
+
+    if (!validation.valid || validation.warnings.length > 0) {
+      const items: ValidationItem[] = [
+        ...validation.errors.map((m) => ({ level: "error" as const, message: m })),
+        ...validation.warnings.map((m) => ({ level: "warning" as const, message: m })),
+      ];
+      setValidationModal({
+        title: validation.valid
+          ? "Hay advertencias antes de solicitar firmas"
+          : "No se puede solicitar firmas",
+        items,
+        onContinue: validation.valid ? proceedRequestSignatures : undefined,
+      });
+      return;
+    }
+    proceedRequestSignatures();
   };
 
   const handleCloseActa = async () => {
     if (!acta) return;
     const validation = validateActaForClosing(acta);
     if (!validation.valid) {
-      alert("No se puede cerrar el acta:\n\n" + validation.errors.join("\n"));
+      const items: ValidationItem[] = validation.errors.map((m) => ({
+        level: "error",
+        message: m,
+      }));
+      setValidationModal({
+        title: "No se puede cerrar el acta",
+        items,
+      });
       return;
     }
     const hash = await computeDocumentHash(acta);
@@ -121,6 +153,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         { documentHash: hash, conformity: allConformity }
       )
     );
+    toast.success("Acta cerrada", "El documento quedo congelado y firmado.");
   };
 
   const handleGeneratePdf = async () => {
@@ -131,18 +164,30 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       updateActa((a) =>
         appendAuditLog(a, a.createdByName, a.createdByRole, null, "pdf_generated", {})
       );
+      toast.success("PDF generado", "Se descargo el archivo a tu equipo.");
     } catch (err) {
       console.error(err);
-      alert("Error al generar PDF: " + (err as Error).message);
+      toast.error(
+        "No se pudo generar el PDF",
+        err instanceof Error ? err.message : "Error desconocido"
+      );
     } finally {
       setGeneratingPdf(false);
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!acta) return;
-    if (!confirm("¿Eliminar este acta? Esta accion no se puede deshacer.")) return;
+    const ok = await confirm({
+      title: "Eliminar acta",
+      message:
+        "Esta accion no se puede deshacer. Las fotos, observaciones y firmas se borraran.",
+      variant: "danger",
+      confirmLabel: "Si, eliminar",
+    });
+    if (!ok) return;
     deleteActa(actaId);
+    toast.info("Acta eliminada");
     router.push("/actas");
   };
 
@@ -443,6 +488,15 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               ))}
           </div>
         </details>
+      )}
+
+      {validationModal && (
+        <ValidationModal
+          title={validationModal.title}
+          items={validationModal.items}
+          onClose={() => setValidationModal(null)}
+          onContinue={validationModal.onContinue}
+        />
       )}
     </div>
   );

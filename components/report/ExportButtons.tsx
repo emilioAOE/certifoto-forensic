@@ -4,12 +4,14 @@ import { useState } from "react";
 import type { PhotoAnalysis } from "@/lib/types";
 import { FileJson, FileText } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner";
+import { useToast } from "@/components/ui/Toast";
 
 interface ExportButtonsProps {
   analyses: PhotoAnalysis[];
 }
 
 export function ExportButtons({ analyses }: ExportButtonsProps) {
+  const toast = useToast();
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
   const downloadJson = () => {
@@ -220,9 +222,13 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
       }
 
       doc.save(`certifoto-informe-${new Date().toISOString().slice(0, 10)}.pdf`);
+      toast.success("PDF descargado");
     } catch (err) {
       console.error("PDF error:", err);
-      alert("Error al generar el PDF. Intenta descargar el JSON como alternativa.");
+      toast.error(
+        "No se pudo generar el PDF",
+        "Intenta descargar el JSON como alternativa."
+      );
     } finally {
       setGeneratingPdf(false);
     }

@@ -35,9 +35,13 @@ import {
   downloadBlob,
 } from "@/lib/export-import";
 import { StorageIndicator } from "./StorageIndicator";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { cn } from "@/lib/cn";
 
 export function Dashboard() {
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [actas, setActas] = useState<ActaSummary[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -69,11 +73,12 @@ export function Dashboard() {
     try {
       await seedSampleData();
       refresh();
+      toast.success("Datos de ejemplo cargados", "Se crearon 3 actas con fotos.");
     } catch (err) {
       console.error("Seed error:", err);
-      alert(
-        "Error al cargar datos de ejemplo: " +
-          (err instanceof Error ? err.message : "desconocido")
+      toast.error(
+        "No se pudieron cargar los datos de ejemplo",
+        err instanceof Error ? err.message : "Error desconocido"
       );
     } finally {
       setSeeding(false);
@@ -86,9 +91,13 @@ export function Dashboard() {
     try {
       const result = await exportAllAsZip();
       downloadBlob(result.blob, result.fileName);
+      toast.success("Backup descargado");
     } catch (err) {
       console.error("Export error:", err);
-      alert("Error al exportar: " + (err instanceof Error ? err.message : "desconocido"));
+      toast.error(
+        "No se pudo exportar",
+        err instanceof Error ? err.message : "Error desconocido"
+      );
     } finally {
       setExporting(false);
     }
@@ -103,25 +112,28 @@ export function Dashboard() {
     if (!file) return;
     e.target.value = "";
 
-    if (
-      !confirm(
-        "Importar reemplazara TODOS los datos actuales (actas, propiedades, configuracion). ¿Continuar?"
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: "Reemplazar todos los datos",
+      message:
+        "Importar reemplazara TODAS las actas, propiedades y configuracion actuales con las del archivo. Esta accion no se puede deshacer.",
+      variant: "warn",
+      confirmLabel: "Si, reemplazar",
+    });
+    if (!ok) return;
 
     setImporting(true);
     try {
       const result = await importFromZip(file);
       refresh();
-      alert(
-        `Importacion exitosa:\n${result.imported.actas} actas, ${result.imported.properties} propiedades, ${result.imported.organizations} organizaciones.`
+      toast.success(
+        "Importacion exitosa",
+        `${result.imported.actas} actas, ${result.imported.properties} propiedades.`
       );
     } catch (err) {
       console.error("Import error:", err);
-      alert(
-        "Error al importar: " + (err instanceof Error ? err.message : "desconocido")
+      toast.error(
+        "No se pudo importar",
+        err instanceof Error ? err.message : "Error desconocido"
       );
     } finally {
       setImporting(false);

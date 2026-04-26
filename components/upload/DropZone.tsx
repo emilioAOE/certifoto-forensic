@@ -5,6 +5,7 @@ import { Upload, ImagePlus } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE_BYTES } from "@/lib/constants";
 import { formatBytes } from "@/lib/format";
+import { useToast } from "@/components/ui/Toast";
 
 interface DropZoneProps {
   onFilesSelected: (files: File[]) => void;
@@ -12,6 +13,7 @@ interface DropZoneProps {
 }
 
 export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
+  const toast = useToast();
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -19,17 +21,24 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
     (fileList: FileList | null) => {
       if (!fileList || disabled) return;
       const files: File[] = [];
+      const oversized: string[] = [];
       for (let i = 0; i < fileList.length; i++) {
         const f = fileList[i];
         if (f.size > MAX_FILE_SIZE_BYTES) {
-          alert(`${f.name} excede el limite de ${formatBytes(MAX_FILE_SIZE_BYTES)}`);
+          oversized.push(f.name);
           continue;
         }
         files.push(f);
       }
+      if (oversized.length > 0) {
+        toast.warn(
+          `${oversized.length} archivo(s) descartado(s)`,
+          `Exceden el limite de ${formatBytes(MAX_FILE_SIZE_BYTES)}: ${oversized.join(", ")}`
+        );
+      }
       if (files.length > 0) onFilesSelected(files);
     },
-    [onFilesSelected, disabled]
+    [onFilesSelected, disabled, toast]
   );
 
   const onDrop = useCallback(

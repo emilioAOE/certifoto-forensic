@@ -34,6 +34,7 @@ import { parseClientSide } from "@/lib/parse-client";
 import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
 import { compressImage, shouldCompress } from "@/lib/image-compression";
 import { cn } from "@/lib/cn";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 
 // Helpers locales
 function fileToDataUrl(file: File | Blob): Promise<string> {
@@ -69,6 +70,7 @@ export function RoomEvidenceSection({
   readOnly,
   onUpdate,
 }: RoomEvidenceSectionProps) {
+  const { confirm } = useConfirm();
   const [expanded, setExpanded] = useState(true);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -251,8 +253,15 @@ export function RoomEvidenceSection({
     }
   };
 
-  const removePhoto = (photoId: string) => {
-    if (!confirm("¿Eliminar esta foto?")) return;
+  const removePhoto = async (photoId: string) => {
+    const ok = await confirm({
+      title: "Eliminar foto",
+      message:
+        "Se eliminara esta foto y su analisis IA. Esta accion no se puede deshacer.",
+      variant: "warn",
+      confirmLabel: "Eliminar",
+    });
+    if (!ok) return;
     onUpdate((a) => ({
       ...a,
       photos: a.photos.filter((p) => p.id !== photoId),

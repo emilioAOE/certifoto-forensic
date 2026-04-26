@@ -34,6 +34,8 @@ import {
 } from "@/lib/acta-constants";
 import { formatCLP } from "@/lib/validators";
 import { cn } from "@/lib/cn";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
   ssr: false,
@@ -44,6 +46,8 @@ const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
 
 export function PropertyDetail({ propertyId }: { propertyId: string }) {
   const router = useRouter();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [property, setProperty] = useState<Property | null>(null);
   const [actas, setActas] = useState<Acta[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -98,14 +102,16 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
     );
   }
 
-  const handleDelete = () => {
-    if (
-      !confirm(
-        `Eliminar esta propiedad de tu lista? Las ${actas.length} acta(s) asociadas no se borraran.`
-      )
-    )
-      return;
+  const handleDelete = async () => {
+    const ok = await confirm({
+      title: "Eliminar propiedad",
+      message: `Se eliminara esta propiedad de tu lista. Las ${actas.length} acta(s) asociadas mantendran sus datos pero perderan el vinculo a la propiedad.`,
+      variant: "warn",
+      confirmLabel: "Eliminar",
+    });
+    if (!ok) return;
     deleteProperty(propertyId);
+    toast.info("Propiedad eliminada");
     router.push("/propiedades");
   };
 
