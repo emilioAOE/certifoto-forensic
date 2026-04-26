@@ -37,6 +37,7 @@ import { cn } from "@/lib/cn";
 import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
 import { SignaturesPanel } from "./SignaturesPanel";
+import { InventorySection } from "@/components/inventory/InventorySection";
 import { generateActaPdf } from "@/lib/acta-pdf";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
@@ -448,6 +449,18 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           ))}
         </div>
       </section>
+
+      {/* Inventario (si la propiedad es amoblada o el acta es de tipo inventario) */}
+      {(acta.type === "inventario" ||
+        property?.furnished === "yes" ||
+        property?.furnished === "partial" ||
+        acta.inventoryItems.length > 0) && (
+        <InventorySection
+          acta={acta}
+          readOnly={isReadOnly}
+          onUpdate={updateActa}
+        />
+      )}
 
       {/* Signatures */}
       {(acta.status === "pending_signatures" ||

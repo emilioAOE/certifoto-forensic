@@ -481,6 +481,68 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   }
 
   // ============================================
+  // INVENTARIO (si aplica)
+  // ============================================
+  if (acta.inventoryItems.length > 0) {
+    doc.addPage();
+    y = margin;
+    drawSectionTitle(`Inventario (${acta.inventoryItems.length} items)`);
+
+    const itemsByRoom = new Map<string, typeof acta.inventoryItems>();
+    for (const item of acta.inventoryItems) {
+      const list = itemsByRoom.get(item.roomId) ?? [];
+      list.push(item);
+      itemsByRoom.set(item.roomId, list);
+    }
+
+    for (const [roomId, items] of itemsByRoom) {
+      const room = acta.rooms.find((r) => r.id === roomId);
+      checkPage(8);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(40, 40, 40);
+      doc.text(`${room?.name ?? "(ambiente)"}`, margin, y);
+      y += 5;
+
+      for (const item of items) {
+        checkPage(10);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(40, 40, 40);
+        const head = `· ${item.name}${item.quantity > 1 ? ` (x${item.quantity})` : ""}`;
+        doc.text(head, margin + 3, y);
+        y += 4;
+
+        const details: string[] = [];
+        details.push(`Categoria: ${item.category}`);
+        details.push(`Estado: ${item.condition}`);
+        if (item.brand) details.push(`Marca: ${item.brand}`);
+        if (item.model) details.push(`Modelo: ${item.model}`);
+        if (item.serialNumber) details.push(`N/S: ${item.serialNumber}`);
+
+        doc.setFontSize(7);
+        doc.setTextColor(110, 110, 110);
+        doc.text(details.join("  ·  "), margin + 6, y);
+        y += 4;
+
+        if (item.manualObservations) {
+          const lines = doc.splitTextToSize(
+            `Obs: ${item.manualObservations}`,
+            contentW - 10
+          );
+          checkPage(lines.length * 4);
+          doc.setFontSize(7);
+          doc.setTextColor(80, 80, 80);
+          doc.text(lines, margin + 6, y);
+          y += lines.length * 3.5;
+        }
+        y += 2;
+      }
+      y += 2;
+    }
+  }
+
+  // ============================================
   // TECHNICAL APPENDIX
   // ============================================
   doc.addPage();
