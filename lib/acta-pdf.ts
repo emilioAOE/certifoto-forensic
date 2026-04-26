@@ -1,6 +1,15 @@
 /**
  * Generador de PDF para Actas Digitales.
  * Usa jspdf client-side. Estructura inspirada en informe pericial.
+ *
+ * Incluye:
+ * - Portada con datos basicos + QR de verificacion
+ * - Por ambiente: descripcion + fotos embebidas comprimidas + hallazgos
+ * - Inventario (si aplica)
+ * - Pagina de firmas con imagen + metadata
+ * - Anexo tecnico con hashes y trazabilidad
+ * - Disclaimer extendido
+ * - Footer con paginacion + ID acta
  */
 
 import type { Acta, Property } from "./acta-types";
@@ -14,6 +23,24 @@ import {
   DAMAGE_SEVERITY_LABEL,
   PDF_DISCLAIMER,
 } from "./acta-constants";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
+
+async function generateQrCodeDataUrl(text: string): Promise<string | null> {
+  try {
+    const QRCode = (await import("qrcode")).default;
+    return await QRCode.toDataURL(text, {
+      errorCorrectionLevel: "M",
+      width: 200,
+      margin: 1,
+      color: { dark: "#0a0e17", light: "#ffffff" },
+    });
+  } catch (err) {
+    console.warn("QR generation failed:", err);
+    return null;
+  }
+}
 
 export async function generateActaPdf(acta: Acta, property: Property): Promise<void> {
   const { default: jsPDF } = await import("jspdf");
@@ -82,7 +109,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   // ============================================
   // COVER PAGE
   // ============================================
-  doc.setFillColor(0, 204, 106);
+  doc.setFillColor(22, 163, 74); // accent green
   doc.rect(0, 0, pageW, 4, "F");
 
   y = 25;
@@ -97,8 +124,26 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   doc.setTextColor(110, 110, 110);
   doc.text("Registro digital con respaldo forense de evidencia", margin, y);
 
+  // QR de verificacion (esquina superior derecha)
+  const verifyHash = acta.documentHash ?? acta.id;
+  const verifyUrl = `${SITE_URL}/verificar?h=${verifyHash}`;
+  const qrDataUrl = await generateQrCodeDataUrl(verifyUrl);
+  if (qrDataUrl) {
+    try {
+      const qrSize = 28;
+      const qrX = pageW - margin - qrSize;
+      const qrY = 18;
+      doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+      doc.setFontSize(6);
+      doc.setTextColor(150, 150, 150);
+      doc.text("Verificacion", qrX + qrSize / 2, qrY + qrSize + 3, { align: "center" });
+    } catch (err) {
+      console.warn("Failed to embed QR:", err);
+    }
+  }
+
   y += 12;
-  doc.setDrawColor(0, 204, 106);
+  doc.setDrawColor(22, 163, 74);
   doc.setLineWidth(0.5);
   doc.line(margin, y, pageW - margin, y);
   y += 8;
@@ -644,11 +689,19 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   }
 
   // ============================================
-  // FOOTERS
+  // FOOTERS + HEADERS
   // ============================================
   const totalPages = doc.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
+
+    // Top accent stripe (skip cover, ya tiene una)
+    if (p > 1) {
+      doc.setFillColor(22, 163, 74);
+      doc.rect(0, 0, pageW, 1.5, "F");
+    }
+
+    // Footer line + content
     doc.setDrawColor(220, 220, 220);
     doc.setLineWidth(0.2);
     doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
@@ -656,10 +709,22 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
     doc.setFontSize(6.5);
     doc.setTextColor(150, 150, 150);
     doc.text(
-      `CertiFoto · ${ACTA_TYPE_LABEL[acta.type]} · ID ${acta.id}`,
+      `CertiFoto · ${ACTA_TYPE_LABEL[acta.type]} · ID ${acta.id.slice(0, 16)}`,
       margin,
       pageH - 8
     );
+
+    // Hash de documento si esta cerrado
+    if (acta.documentHash) {
+      doc.setFontSize(5.5);
+      doc.text(
+        `Hash: ${acta.documentHash.slice(0, 24)}...`,
+        margin,
+        pageH - 5
+      );
+    }
+
+    doc.setFontSize(6.5);
     doc.text(`Pagina ${p} de ${totalPages}`, pageW - margin - 25, pageH - 8);
   }
 

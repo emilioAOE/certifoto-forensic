@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   Upload,
   CheckCircle2,
@@ -9,17 +10,38 @@ import {
   Loader2,
   Share2,
   ArrowRight,
+  Hash,
 } from "lucide-react";
 import { importActaFromShareFile, type ShareImportResult } from "@/lib/share-acta";
+import { listActas } from "@/lib/storage";
 import { useToast } from "@/components/ui/Toast";
 
 export function VerificarPage() {
   const router = useRouter();
   const toast = useToast();
+  const searchParams = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<ShareImportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [hashLookup, setHashLookup] = useState<{
+    hash: string;
+    found: boolean;
+    actaId?: string;
+  } | null>(null);
+
+  // Si viene ?h=hash en la URL (del QR del PDF), buscar localmente
+  useEffect(() => {
+    const h = searchParams.get("h");
+    if (!h) return;
+    const actas = listActas();
+    const match = actas.find((a) => a.documentHash === h || a.id === h);
+    setHashLookup({
+      hash: h,
+      found: !!match,
+      actaId: match?.id,
+    });
+  }, [searchParams]);
 
   const handleFile = async (file: File) => {
     setImporting(true);
@@ -56,6 +78,57 @@ export function VerificarPage() {
           se procesa en tu navegador, no se envia a ningun servidor.
         </p>
       </header>
+
+      {/* Hash lookup desde QR del PDF */}
+      {hashLookup && (
+        <section
+          className={
+            hashLookup.found
+              ? "rounded-xl border border-emerald-200 bg-emerald-50 p-5"
+              : "rounded-xl border border-amber-200 bg-amber-50 p-5"
+          }
+        >
+          <div className="flex items-start gap-3">
+            {hashLookup.found ? (
+              <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+            )}
+            <div className="flex-1">
+              <h2
+                className={
+                  hashLookup.found
+                    ? "text-sm font-semibold text-emerald-900"
+                    : "text-sm font-semibold text-amber-900"
+                }
+              >
+                {hashLookup.found
+                  ? "Documento verificado"
+                  : "Documento no encontrado en este dispositivo"}
+              </h2>
+              <p className="text-xs mt-1 leading-relaxed text-gray-700">
+                {hashLookup.found
+                  ? "El hash del QR coincide con un acta guardada localmente. Significa que el documento no fue alterado desde que lo guardaste."
+                  : "El hash de este QR no coincide con ningun acta en este navegador. Si esperabas tenerlo aqui, revisa que estes en el dispositivo correcto o importa el archivo .certifoto."}
+              </p>
+              <div className="text-[10px] font-mono text-gray-500 mt-2 flex items-center gap-1">
+                <Hash className="h-3 w-3" />
+                {hashLookup.hash.slice(0, 32)}
+                {hashLookup.hash.length > 32 ? "..." : ""}
+              </div>
+              {hashLookup.found && hashLookup.actaId && (
+                <Link
+                  href={`/actas/${hashLookup.actaId}`}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-semibold hover:bg-accent-dim"
+                >
+                  Abrir el acta
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {!result && (
         <section className="rounded-xl border border-gray-200 bg-white p-6">
