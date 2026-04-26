@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { AppShell } from "@/components/layout/AppShell";
 import { CookieBanner } from "@/components/CookieBanner";
+import { StorageProvider } from "@/components/StorageProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -94,8 +95,10 @@ export default function RootLayout({
   return (
     <html lang="es-CL">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans bg-white text-gray-900`}>
-        <AppShell>{children}</AppShell>
-        <CookieBanner />
+        <StorageProvider>
+          <AppShell>{children}</AppShell>
+          <CookieBanner />
+        </StorageProvider>
         <Analytics />
       </body>
     </html>

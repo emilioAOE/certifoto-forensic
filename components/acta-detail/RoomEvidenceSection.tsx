@@ -32,7 +32,29 @@ import {
 } from "@/lib/acta-helpers";
 import { parseClientSide } from "@/lib/parse-client";
 import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
+import { compressImage, shouldCompress } from "@/lib/image-compression";
 import { cn } from "@/lib/cn";
+
+// Helpers locales
+function fileToDataUrl(file: File | Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error ?? new Error("FileReader failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function imageDimensionsFromDataUrl(
+  dataUrl: string
+): Promise<{ w: number; h: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = () => resolve({ w: 0, h: 0 });
+    img.src = dataUrl;
+  });
+}
 
 interface RoomEvidenceSectionProps {
   acta: Acta;
@@ -63,7 +85,7 @@ export function RoomEvidenceSection({
       for (const file of Array.from(files)) {
         const photoId = generateId("photo");
 
-        // 1. Forensic analysis (reuses existing module)
+        // 1. Analisis forense del archivo ORIGINAL (mantiene SHA-256 puro)
         let forensic = null;
         try {
           forensic = await parseClientSide(file, photoId);
@@ -71,20 +93,40 @@ export function RoomEvidenceSection({
           console.warn("Forensic parse failed:", err);
         }
 
-        // 2. Read file as data URL for storage
-        const dataUrl = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.readAsDataURL(file);
-        });
+        // 2. Comprimir si conviene (ahorra ~70% de espacio sin perdida visual)
+        let dataUrl: string;
+        let displayBytes = file.size;
+        let displayWidth: number | null = null;
+        let displayHeight: number | null = null;
+        let displayMime = file.type;
 
-        // 3. Get dimensions
-        const dims = await new Promise<{ w: number; h: number }>((resolve) => {
-          const img = new Image();
-          img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
-          img.onerror = () => resolve({ w: 0, h: 0 });
-          img.src = dataUrl;
-        });
+        if (shouldCompress(file)) {
+          try {
+            const compressed = await compressImage(file, {
+              maxWidth: 2000,
+              maxHeight: 2000,
+              quality: 0.85,
+            });
+            dataUrl = compressed.dataUrl;
+            displayBytes = compressed.bytes;
+            displayWidth = compressed.width;
+            displayHeight = compressed.height;
+            displayMime = compressed.format;
+          } catch (err) {
+            console.warn("Image compression failed, using original:", err);
+            // Fallback al archivo original sin comprimir
+            dataUrl = await fileToDataUrl(file);
+          }
+        } else {
+          dataUrl = await fileToDataUrl(file);
+        }
+
+        // 3. Obtener dimensiones del archivo si la compresion fallo
+        if (displayWidth === null || displayHeight === null) {
+          const dims = await imageDimensionsFromDataUrl(dataUrl);
+          displayWidth = dims.w || null;
+          displayHeight = dims.h || null;
+        }
 
         const photo: PhotoEvidence = {
           id: photoId,
@@ -95,10 +137,10 @@ export function RoomEvidenceSection({
           uploadedByRole: user.role,
           uploadedAt: new Date().toISOString(),
           fileName: file.name,
-          fileSize: file.size,
-          mimeType: file.type,
-          width: dims.w || null,
-          height: dims.h || null,
+          fileSize: displayBytes, // tamano del comprimido (lo que ocupa en storage)
+          mimeType: displayMime,
+          width: displayWidth,
+          height: displayHeight,
           dataUrl,
           thumbnailDataUrl: forensic?.thumbnail.dataUrl ?? null,
           forensic,

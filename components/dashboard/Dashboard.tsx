@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   FileSignature,
@@ -13,10 +13,13 @@ import {
   TrendingUp,
   Sparkles,
   Loader2,
+  Download,
+  Upload,
 } from "lucide-react";
 import {
   listActaSummaries,
   getDashboardStats,
+  subscribeToStorageChanges,
   type DashboardStats,
 } from "@/lib/storage";
 import type { ActaSummary } from "@/lib/acta-types";
@@ -26,6 +29,12 @@ import {
   ACTA_STATUS_COLOR,
 } from "@/lib/acta-constants";
 import { seedSampleData } from "@/lib/mock-data";
+import {
+  exportAllAsZip,
+  importFromZip,
+  downloadBlob,
+} from "@/lib/export-import";
+import { StorageIndicator } from "./StorageIndicator";
 import { cn } from "@/lib/cn";
 
 export function Dashboard() {
@@ -33,6 +42,9 @@ export function Dashboard() {
   const [actas, setActas] = useState<ActaSummary[]>([]);
   const [mounted, setMounted] = useState(false);
   const [seeding, setSeeding] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = () => {
     setStats(getDashboardStats());
@@ -47,6 +59,8 @@ export function Dashboard() {
   useEffect(() => {
     setMounted(true);
     refresh();
+    const unsub = subscribeToStorageChanges(refresh);
+    return unsub;
   }, []);
 
   const handleSeedMockData = async () => {
@@ -63,6 +77,54 @@ export function Dashboard() {
       );
     } finally {
       setSeeding(false);
+    }
+  };
+
+  const handleExport = async () => {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const result = await exportAllAsZip();
+      downloadBlob(result.blob, result.fileName);
+    } catch (err) {
+      console.error("Export error:", err);
+      alert("Error al exportar: " + (err instanceof Error ? err.message : "desconocido"));
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleImportClick = () => {
+    importInputRef.current?.click();
+  };
+
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+
+    if (
+      !confirm(
+        "Importar reemplazara TODOS los datos actuales (actas, propiedades, configuracion). ¿Continuar?"
+      )
+    ) {
+      return;
+    }
+
+    setImporting(true);
+    try {
+      const result = await importFromZip(file);
+      refresh();
+      alert(
+        `Importacion exitosa:\n${result.imported.actas} actas, ${result.imported.properties} propiedades, ${result.imported.organizations} organizaciones.`
+      );
+    } catch (err) {
+      console.error("Import error:", err);
+      alert(
+        "Error al importar: " + (err instanceof Error ? err.message : "desconocido")
+      );
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -115,6 +177,35 @@ export function Dashboard() {
             )}
             {seeding ? "Generando..." : "Cargar datos de ejemplo"}
           </button>
+
+          {stats && stats.totalActas > 0 && (
+            <button
+              onClick={handleExport}
+              disabled={exporting}
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-700 px-4 py-2 text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
+              title="Descarga un ZIP con todas tus actas, propiedades y configuracion"
+            >
+              {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+              {exporting ? "Exportando..." : "Exportar todo"}
+            </button>
+          )}
+
+          <button
+            onClick={handleImportClick}
+            disabled={importing}
+            className="inline-flex items-center gap-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-700 px-4 py-2 text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
+            title="Importa un ZIP previamente exportado de CertiFoto"
+          >
+            {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            {importing ? "Importando..." : "Importar"}
+          </button>
+          <input
+            ref={importInputRef}
+            type="file"
+            accept=".zip,application/zip"
+            className="hidden"
+            onChange={handleImportFile}
+          />
         </div>
       </section>
 
@@ -209,6 +300,11 @@ export function Dashboard() {
             description="SHA-256, pHash, deteccion C2PA y verificaciones de consistencia. Cada foto tiene huella digital verificable."
           />
         </div>
+      </section>
+
+      {/* Storage indicator */}
+      <section>
+        <StorageIndicator />
       </section>
     </div>
   );

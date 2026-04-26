@@ -1,59 +1,184 @@
 /**
- * Capa de persistencia.
+ * Capa de persistencia de CertiFoto.
  *
- * Para el MVP usa LocalStorage (client-side), pero la interfaz esta diseñada
- * para que se pueda swappear a Supabase/Postgres en produccion sin tocar
- * los componentes que la consumen.
+ * API SINCRONA — el cache se hidrata al inicio (ver hydrateStorage()).
+ * Los componentes consumen estas funciones sin async/await.
  *
- * Limitaciones de LocalStorage:
- * - ~5-10 MB por origen
- * - Las fotos se guardan como dataURL base64 (grandes)
- * - Para produccion las fotos deben ir a object storage
+ * Backend: IndexedDB via lib/storage-idb.ts. Migracion automatica desde
+ * LocalStorage la primera vez (datos viejos se trasladan).
  *
- * Convencion de keys: "certifoto:<entity>:<id>"
+ * Sincronizacion entre tabs: BroadcastChannel("certifoto") notifica cambios.
+ *
+ * Convencion: las escrituras son sincronas desde el punto de vista del caller
+ * (actualizan el cache inmediatamente) y persisten async (write-through a IDB).
+ * Si IDB falla, el cache sigue siendo source of truth en runtime y el usuario
+ * recibe un toast (manejado en una capa superior).
  */
 
 import type { Acta, ActaSummary, Property, Organization } from "./acta-types";
-
-const KEY_ACTAS = "certifoto:actas";
-const KEY_PROPERTIES = "certifoto:properties";
-const KEY_ORGANIZATIONS = "certifoto:organizations";
-const KEY_CURRENT_USER = "certifoto:currentUser";
+import {
+  idbBulkImport,
+  idbClearAll,
+  idbDeleteActa,
+  idbGetMeta,
+  idbLoadAllActas,
+  idbLoadAllOrganizations,
+  idbLoadAllProperties,
+  idbPutActa,
+  idbPutOrganization,
+  idbPutProperty,
+  idbSetMeta,
+  migrateFromLocalStorageIfNeeded,
+} from "./storage-idb";
 
 // ============================================
-// Helpers
+// Cache en memoria
 // ============================================
 
-function isClient(): boolean {
-  return typeof window !== "undefined" && typeof localStorage !== "undefined";
+interface MemoryCache {
+  actas: Acta[];
+  properties: Property[];
+  organizations: Organization[];
+  currentUser: CurrentUser | null;
+  hydrated: boolean;
+  hydrationError: string | null;
 }
 
-function readJSON<T>(key: string, fallback: T): T {
-  if (!isClient()) return fallback;
+const cache: MemoryCache = {
+  actas: [],
+  properties: [],
+  organizations: [],
+  currentUser: null,
+  hydrated: false,
+  hydrationError: null,
+};
+
+// ============================================
+// Sync entre tabs
+// ============================================
+
+type ChangeMessage =
+  | { type: "actas" }
+  | { type: "properties" }
+  | { type: "organizations" }
+  | { type: "currentUser" };
+
+let channel: BroadcastChannel | null = null;
+const listeners = new Set<() => void>();
+
+function getChannel(): BroadcastChannel | null {
+  if (typeof window === "undefined") return null;
+  if (typeof BroadcastChannel === "undefined") return null;
+  if (!channel) {
+    channel = new BroadcastChannel("certifoto");
+    channel.addEventListener("message", async (e) => {
+      const msg = e.data as ChangeMessage;
+      // Reload affected store from IDB
+      try {
+        if (msg.type === "actas") {
+          cache.actas = await idbLoadAllActas();
+        } else if (msg.type === "properties") {
+          cache.properties = await idbLoadAllProperties();
+        } else if (msg.type === "organizations") {
+          cache.organizations = await idbLoadAllOrganizations();
+        } else if (msg.type === "currentUser") {
+          cache.currentUser = await idbGetMeta<CurrentUser>("currentUser");
+        }
+        notifyListeners();
+      } catch (err) {
+        console.error("[storage] cross-tab refresh failed:", err);
+      }
+    });
+  }
+  return channel;
+}
+
+function broadcast(msg: ChangeMessage) {
   try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return fallback;
-    return JSON.parse(raw) as T;
-  } catch (err) {
-    console.error(`Storage read error for ${key}:`, err);
-    return fallback;
+    getChannel()?.postMessage(msg);
+  } catch {
+    // ignore
   }
 }
 
-function writeJSON<T>(key: string, value: T): void {
-  if (!isClient()) return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (err) {
-    console.error(`Storage write error for ${key}:`, err);
-    if (err instanceof DOMException && err.name === "QuotaExceededError") {
-      throw new Error(
-        "El almacenamiento local esta lleno. Algunas fotos no se guardaron. Considera reducir la cantidad o calidad de imagenes."
-      );
+function notifyListeners() {
+  for (const fn of listeners) {
+    try {
+      fn();
+    } catch (err) {
+      console.error("[storage] listener error:", err);
     }
-    throw err;
   }
 }
+
+/**
+ * Suscribirse a cambios de storage (proviene de otra tab via BroadcastChannel).
+ * Devuelve una funcion para cancelar la suscripcion.
+ */
+export function subscribeToStorageChanges(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+// ============================================
+// Hidratacion (carga inicial)
+// ============================================
+
+let hydrationPromise: Promise<void> | null = null;
+
+/**
+ * Hidrata el cache desde IndexedDB. Idempotente — segura de llamar varias veces.
+ * Llamarla en el StorageProvider antes de mostrar la app.
+ */
+export function hydrateStorage(): Promise<void> {
+  if (cache.hydrated) return Promise.resolve();
+  if (hydrationPromise) return hydrationPromise;
+
+  hydrationPromise = (async () => {
+    try {
+      // 1. Migrar desde LocalStorage si es la primera vez
+      await migrateFromLocalStorageIfNeeded();
+
+      // 2. Cargar todo en cache
+      const [actas, properties, organizations, currentUser] = await Promise.all([
+        idbLoadAllActas(),
+        idbLoadAllProperties(),
+        idbLoadAllOrganizations(),
+        idbGetMeta<CurrentUser>("currentUser"),
+      ]);
+
+      cache.actas = actas;
+      cache.properties = properties;
+      cache.organizations = organizations;
+      cache.currentUser = currentUser;
+      cache.hydrated = true;
+
+      // 3. Activar canal de sync
+      getChannel();
+    } catch (err) {
+      cache.hydrationError = err instanceof Error ? err.message : String(err);
+      console.error("[storage] hydration failed:", err);
+      // Aun asi marcamos como hidratado con cache vacio para no bloquear la UI
+      cache.hydrated = true;
+    }
+  })();
+
+  return hydrationPromise;
+}
+
+export function isStorageHydrated(): boolean {
+  return cache.hydrated;
+}
+
+export function getHydrationError(): string | null {
+  return cache.hydrationError;
+}
+
+// ============================================
+// IDs
+// ============================================
 
 export function generateId(prefix = "id"): string {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -72,9 +197,8 @@ export interface CurrentUser {
 }
 
 export function getCurrentUser(): CurrentUser {
-  const stored = readJSON<CurrentUser | null>(KEY_CURRENT_USER, null);
-  if (stored) return stored;
-  // Default user para MVP
+  if (cache.currentUser) return cache.currentUser;
+  // Default user para MVP — se persiste en la primera lectura
   const defaultUser: CurrentUser = {
     id: generateId("user"),
     name: "Usuario",
@@ -82,12 +206,21 @@ export function getCurrentUser(): CurrentUser {
     role: "broker",
     organizationId: null,
   };
-  writeJSON(KEY_CURRENT_USER, defaultUser);
+  cache.currentUser = defaultUser;
+  void idbSetMeta("currentUser", defaultUser).catch((err) =>
+    console.error("[storage] persist default user failed:", err)
+  );
+  broadcast({ type: "currentUser" });
   return defaultUser;
 }
 
 export function setCurrentUser(user: CurrentUser): void {
-  writeJSON(KEY_CURRENT_USER, user);
+  cache.currentUser = user;
+  void idbSetMeta("currentUser", user).catch((err) =>
+    console.error("[storage] setCurrentUser persist failed:", err)
+  );
+  broadcast({ type: "currentUser" });
+  notifyListeners();
 }
 
 // ============================================
@@ -95,34 +228,41 @@ export function setCurrentUser(user: CurrentUser): void {
 // ============================================
 
 export function listActas(): Acta[] {
-  return readJSON<Acta[]>(KEY_ACTAS, []);
+  return cache.actas;
 }
 
 export function getActa(id: string): Acta | null {
-  const actas = listActas();
-  return actas.find((a) => a.id === id) ?? null;
+  return cache.actas.find((a) => a.id === id) ?? null;
 }
 
 export function saveActa(acta: Acta): void {
-  const actas = listActas();
-  const existingIdx = actas.findIndex((a) => a.id === acta.id);
   const updated = { ...acta, updatedAt: new Date().toISOString() };
-  if (existingIdx >= 0) {
-    actas[existingIdx] = updated;
+  const idx = cache.actas.findIndex((a) => a.id === updated.id);
+  if (idx >= 0) {
+    cache.actas[idx] = updated;
   } else {
-    actas.push(updated);
+    cache.actas.push(updated);
   }
-  writeJSON(KEY_ACTAS, actas);
+  void idbPutActa(updated).catch((err) => {
+    console.error("[storage] saveActa persist failed:", err);
+    throw err;
+  });
+  broadcast({ type: "actas" });
+  notifyListeners();
 }
 
 export function deleteActa(id: string): void {
-  const actas = listActas().filter((a) => a.id !== id);
-  writeJSON(KEY_ACTAS, actas);
+  cache.actas = cache.actas.filter((a) => a.id !== id);
+  void idbDeleteActa(id).catch((err) =>
+    console.error("[storage] deleteActa persist failed:", err)
+  );
+  broadcast({ type: "actas" });
+  notifyListeners();
 }
 
 export function listActaSummaries(): ActaSummary[] {
-  return listActas().map((a): ActaSummary => {
-    const property = getProperty(a.propertyId);
+  return cache.actas.map((a): ActaSummary => {
+    const property = cache.properties.find((p) => p.id === a.propertyId) ?? null;
     return {
       id: a.id,
       type: a.type,
@@ -147,20 +287,23 @@ export function listActaSummaries(): ActaSummary[] {
 // ============================================
 
 export function listProperties(): Property[] {
-  return readJSON<Property[]>(KEY_PROPERTIES, []);
+  return cache.properties;
 }
 
 export function getProperty(id: string): Property | null {
-  return listProperties().find((p) => p.id === id) ?? null;
+  return cache.properties.find((p) => p.id === id) ?? null;
 }
 
 export function saveProperty(property: Property): void {
-  const props = listProperties();
-  const idx = props.findIndex((p) => p.id === property.id);
   const updated = { ...property, updatedAt: new Date().toISOString() };
-  if (idx >= 0) props[idx] = updated;
-  else props.push(updated);
-  writeJSON(KEY_PROPERTIES, props);
+  const idx = cache.properties.findIndex((p) => p.id === updated.id);
+  if (idx >= 0) cache.properties[idx] = updated;
+  else cache.properties.push(updated);
+  void idbPutProperty(updated).catch((err) =>
+    console.error("[storage] saveProperty persist failed:", err)
+  );
+  broadcast({ type: "properties" });
+  notifyListeners();
 }
 
 // ============================================
@@ -168,20 +311,23 @@ export function saveProperty(property: Property): void {
 // ============================================
 
 export function listOrganizations(): Organization[] {
-  return readJSON<Organization[]>(KEY_ORGANIZATIONS, []);
+  return cache.organizations;
 }
 
 export function getOrganization(id: string): Organization | null {
-  return listOrganizations().find((o) => o.id === id) ?? null;
+  return cache.organizations.find((o) => o.id === id) ?? null;
 }
 
 export function saveOrganization(org: Organization): void {
-  const orgs = listOrganizations();
-  const idx = orgs.findIndex((o) => o.id === org.id);
   const updated = { ...org, updatedAt: new Date().toISOString() };
-  if (idx >= 0) orgs[idx] = updated;
-  else orgs.push(updated);
-  writeJSON(KEY_ORGANIZATIONS, orgs);
+  const idx = cache.organizations.findIndex((o) => o.id === updated.id);
+  if (idx >= 0) cache.organizations[idx] = updated;
+  else cache.organizations.push(updated);
+  void idbPutOrganization(updated).catch((err) =>
+    console.error("[storage] saveOrganization persist failed:", err)
+  );
+  broadcast({ type: "organizations" });
+  notifyListeners();
 }
 
 // ============================================
@@ -201,7 +347,7 @@ export interface DashboardStats {
 }
 
 export function getDashboardStats(): DashboardStats {
-  const actas = listActas();
+  const actas = cache.actas;
   return {
     totalActas: actas.length,
     draft: actas.filter((a) => a.status === "draft" || a.status === "evidence_collection").length,
@@ -213,19 +359,55 @@ export function getDashboardStats(): DashboardStats {
     ).length,
     closed: actas.filter((a) => a.status === "closed").length,
     rejected: actas.filter((a) => a.status === "rejected").length,
-    totalProperties: listProperties().length,
+    totalProperties: cache.properties.length,
     totalPhotos: actas.reduce((sum, a) => sum + a.photos.length, 0),
   };
 }
 
 // ============================================
-// Limpieza (util para debugging)
+// Limpieza completa (uso en config / debugging)
 // ============================================
 
-export function clearAllData(): void {
-  if (!isClient()) return;
-  localStorage.removeItem(KEY_ACTAS);
-  localStorage.removeItem(KEY_PROPERTIES);
-  localStorage.removeItem(KEY_ORGANIZATIONS);
-  localStorage.removeItem(KEY_CURRENT_USER);
+export async function clearAllData(): Promise<void> {
+  cache.actas = [];
+  cache.properties = [];
+  cache.organizations = [];
+  cache.currentUser = null;
+  await idbClearAll();
+  broadcast({ type: "actas" });
+  broadcast({ type: "properties" });
+  broadcast({ type: "organizations" });
+  broadcast({ type: "currentUser" });
+  notifyListeners();
+}
+
+// ============================================
+// Bulk import (usado por la importacion ZIP)
+// ============================================
+
+export async function bulkReplace(data: {
+  actas: Acta[];
+  properties: Property[];
+  organizations?: Organization[];
+  currentUser?: CurrentUser;
+}): Promise<void> {
+  await idbBulkImport(data);
+  // Recargar cache
+  cache.actas = await idbLoadAllActas();
+  cache.properties = await idbLoadAllProperties();
+  cache.organizations = await idbLoadAllOrganizations();
+  cache.currentUser = (await idbGetMeta<CurrentUser>("currentUser")) ?? cache.currentUser;
+  broadcast({ type: "actas" });
+  broadcast({ type: "properties" });
+  broadcast({ type: "organizations" });
+  notifyListeners();
+}
+
+// Export para que el provider pueda forzar refresh tras un import
+export async function reloadCache(): Promise<void> {
+  cache.actas = await idbLoadAllActas();
+  cache.properties = await idbLoadAllProperties();
+  cache.organizations = await idbLoadAllOrganizations();
+  cache.currentUser = await idbGetMeta<CurrentUser>("currentUser");
+  notifyListeners();
 }
