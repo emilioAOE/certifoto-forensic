@@ -47,6 +47,7 @@ export interface Property {
   unit: string | null;
   city: string;
   commune: string;
+  region: string | null; // codigo de region (RM, VA, etc.) o nombre
   country: string;
   propertyType: PropertyType;
   furnished: FurnishedStatus;
@@ -57,6 +58,19 @@ export interface Property {
   observations: string | null;
   ownerId: string | null;
   organizationId: string | null;
+
+  // Datos del contrato (opcionales — se pueden autocompletar con el PDF)
+  contractMonthlyAmount: number | null; // CLP
+  contractStartDate: string | null; // YYYY-MM-DD
+  contractEndDate: string | null; // YYYY-MM-DD
+  contractDeposit: number | null; // mes(es) o monto en CLP
+  petsAllowed: boolean | null;
+  smokerAllowed: boolean | null;
+
+  // Coordenadas (opcionales — se llenan con autocomplete OSM)
+  latitude: number | null;
+  longitude: number | null;
+
   createdAt: string;
   updatedAt: string;
 }

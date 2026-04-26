@@ -2,6 +2,9 @@
 
 import type { Property, PropertyType, FurnishedStatus } from "@/lib/acta-types";
 import { PROPERTY_TYPE_LABEL } from "@/lib/acta-constants";
+import { formatCLP, parseCLP } from "@/lib/validators";
+import { AddressAutocomplete } from "../AddressAutocomplete";
+import { ComunaCombobox } from "../ComunaCombobox";
 
 type PropertyDraft = Omit<Property, "id" | "createdAt" | "updatedAt"> & {
   id?: string;
@@ -30,16 +33,27 @@ export function StepPropiedad({
       </h2>
       <p className="text-sm text-muted mb-5">
         Direccion y datos basicos del inmueble que estas documentando.
+        Si tienes el contrato en PDF, usa el boton &ldquo;Subir contrato&rdquo;
+        arriba para autollenar.
       </p>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <Field label="Direccion" required>
-          <input
-            type="text"
+          <AddressAutocomplete
             value={value.address}
-            onChange={(e) => update("address", e.target.value)}
+            onChange={(v) => update("address", v)}
+            onSelectSuggestion={(s) => {
+              // Aplicar todo el match en una sola actualizacion
+              onChangeProperty({
+                ...value,
+                address: s.address,
+                commune: s.commune ?? value.commune,
+                city: s.city ?? value.city,
+                latitude: s.lat,
+                longitude: s.lon,
+              });
+            }}
             placeholder="Av. Providencia 1234"
-            className="input"
           />
         </Field>
 
@@ -54,12 +68,16 @@ export function StepPropiedad({
             />
           </Field>
           <Field label="Comuna" required>
-            <input
-              type="text"
+            <ComunaCombobox
               value={value.commune}
-              onChange={(e) => update("commune", e.target.value)}
+              onChange={(comuna, region) => {
+                onChangeProperty({
+                  ...value,
+                  commune: comuna,
+                  region: region?.code ?? null,
+                });
+              }}
               placeholder="Providencia"
-              className="input"
             />
           </Field>
         </div>
@@ -127,6 +145,80 @@ export function StepPropiedad({
             onChange={(v) => update("storageUnit", v)}
           />
         </div>
+
+        {/* Datos del contrato (opcional pero recomendado) */}
+        <details className="rounded-lg border border-gray-200 bg-gray-50 group">
+          <summary className="cursor-pointer p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider hover:bg-gray-100 group-open:border-b group-open:border-gray-200">
+            Datos del contrato (opcional)
+          </summary>
+          <div className="p-3 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Renta mensual">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={
+                    value.contractMonthlyAmount
+                      ? formatCLP(value.contractMonthlyAmount)
+                      : ""
+                  }
+                  onChange={(e) =>
+                    update("contractMonthlyAmount", parseCLP(e.target.value))
+                  }
+                  placeholder="$ 450.000"
+                  className="input"
+                />
+              </Field>
+              <Field label="Garantia (meses o monto)">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={value.contractDeposit ?? ""}
+                  onChange={(e) => {
+                    const num = parseInt(e.target.value.replace(/\D/g, ""), 10);
+                    update("contractDeposit", isNaN(num) ? null : num);
+                  }}
+                  placeholder="1 (mes) o 450000"
+                  className="input"
+                />
+              </Field>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Inicio del contrato">
+                <input
+                  type="date"
+                  value={value.contractStartDate ?? ""}
+                  onChange={(e) =>
+                    update("contractStartDate", e.target.value || null)
+                  }
+                  className="input"
+                />
+              </Field>
+              <Field label="Termino del contrato">
+                <input
+                  type="date"
+                  value={value.contractEndDate ?? ""}
+                  onChange={(e) =>
+                    update("contractEndDate", e.target.value || null)
+                  }
+                  className="input"
+                />
+              </Field>
+            </div>
+            <div className="flex flex-wrap gap-4 pt-1">
+              <Checkbox
+                label="Mascotas permitidas"
+                checked={value.petsAllowed === true}
+                onChange={(v) => update("petsAllowed", v)}
+              />
+              <Checkbox
+                label="No fumadores"
+                checked={value.smokerAllowed === false}
+                onChange={(v) => update("smokerAllowed", v ? false : null)}
+              />
+            </div>
+          </div>
+        </details>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Field label="Codigo interno (opcional)">

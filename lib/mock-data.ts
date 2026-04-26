@@ -184,6 +184,7 @@ export interface WizardMockData {
     unit: string | null;
     city: string;
     commune: string;
+    region: string | null;
     country: string;
     propertyType: PropertyType;
     furnished: FurnishedStatus;
@@ -194,6 +195,14 @@ export interface WizardMockData {
     observations: string | null;
     ownerId: null;
     organizationId: null;
+    contractMonthlyAmount: number | null;
+    contractStartDate: string | null;
+    contractEndDate: string | null;
+    contractDeposit: number | null;
+    petsAllowed: boolean | null;
+    smokerAllowed: boolean | null;
+    latitude: number | null;
+    longitude: number | null;
   };
   parties: {
     tempId: string;
@@ -259,6 +268,7 @@ export function getWizardMockData(): WizardMockData {
       unit: sampleProp.unit,
       city: sampleProp.city,
       commune: sampleProp.commune,
+      region: "RM",
       country: "Chile",
       propertyType: sampleProp.propertyType,
       furnished: sampleProp.furnished,
@@ -270,6 +280,14 @@ export function getWizardMockData(): WizardMockData {
         "Propiedad recientemente pintada. Se entrega con todos los servicios al dia.",
       ownerId: null,
       organizationId: null,
+      contractMonthlyAmount: 450000,
+      contractStartDate: new Date().toISOString().slice(0, 10),
+      contractEndDate: null,
+      contractDeposit: 1,
+      petsAllowed: false,
+      smokerAllowed: false,
+      latitude: -33.4248,
+      longitude: -70.6195,
     },
     parties: [
       {

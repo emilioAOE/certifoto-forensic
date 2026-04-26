@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Check, Sparkles } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Sparkles,
+  FileText,
+} from "lucide-react";
 import { cn } from "@/lib/cn";
 import type {
   ActaType,
@@ -26,6 +32,8 @@ import { StepPropiedad } from "./steps/StepPropiedad";
 import { StepPartes } from "./steps/StepPartes";
 import { StepAmbientes } from "./steps/StepAmbientes";
 import { StepConfirmacion } from "./steps/StepConfirmacion";
+import { ContractUploader } from "./ContractUploader";
+import type { ContractExtraction } from "@/lib/contract-parser";
 
 interface WizardData {
   type: ActaType | null;
@@ -55,6 +63,7 @@ const initialData: WizardData = {
     unit: null,
     city: "",
     commune: "",
+    region: null,
     country: "Chile",
     propertyType: "apartment" as PropertyType,
     furnished: "no" as FurnishedStatus,
@@ -65,6 +74,14 @@ const initialData: WizardData = {
     observations: null,
     ownerId: null,
     organizationId: null,
+    contractMonthlyAmount: null,
+    contractStartDate: null,
+    contractEndDate: null,
+    contractDeposit: null,
+    petsAllowed: null,
+    smokerAllowed: null,
+    latitude: null,
+    longitude: null,
   },
   parties: [],
   rooms: [],
@@ -77,6 +94,7 @@ export function ActaWizard() {
   const [data, setData] = useState<WizardData>(initialData);
   const [creatorName, setCreatorName] = useState("Usuario");
   const [creatorRole, setCreatorRole] = useState<PartyRole>("broker");
+  const [showContractUploader, setShowContractUploader] = useState(false);
 
   useEffect(() => {
     const u = getCurrentUser();
@@ -98,6 +116,34 @@ export function ActaWizard() {
       inspectionDate: mock.inspectionDate,
     });
     setStep(6); // jump to confirmation
+  };
+
+  const handleContractExtracted = (extraction: ContractExtraction) => {
+    // Aplicar a la propiedad
+    setData((prev) => ({
+      ...prev,
+      property: {
+        ...prev.property,
+        address: extraction.property.address ?? prev.property.address,
+        unit: extraction.property.unit ?? prev.property.unit,
+        commune: extraction.property.commune ?? prev.property.commune,
+        region: extraction.property.region?.code ?? prev.property.region,
+        city: extraction.property.city ?? prev.property.city,
+        contractMonthlyAmount:
+          extraction.contract.monthlyAmount ?? prev.property.contractMonthlyAmount,
+        contractStartDate:
+          extraction.contract.startDate ?? prev.property.contractStartDate,
+        contractEndDate:
+          extraction.contract.endDate ?? prev.property.contractEndDate,
+        contractDeposit:
+          extraction.contract.deposit ?? prev.property.contractDeposit,
+      },
+      // Crear/actualizar partes con lo que extrajimos
+      parties: mergePartiesFromExtraction(prev.parties, extraction),
+    }));
+    setShowContractUploader(false);
+    // Si estabamos en el paso 1 o 2, saltar al 3 para mostrar lo extraido
+    if (step <= 2) setStep(3);
   };
 
   const canGoNext = (): boolean => {
@@ -204,11 +250,29 @@ export function ActaWizard() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
+      {/* Contract uploader (banner arriba) */}
+      {showContractUploader && (
+        <div className="mb-5">
+          <ContractUploader
+            onExtracted={handleContractExtracted}
+            onClose={() => setShowContractUploader(false)}
+          />
+        </div>
+      )}
+
       {/* Stepper */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold text-gray-900">Nueva Acta</h1>
+            <button
+              onClick={() => setShowContractUploader((s) => !s)}
+              className="inline-flex items-center gap-1 rounded-md bg-accent-softer border border-accent-light text-accent-dark px-2 py-1 text-[11px] font-medium hover:bg-accent-light/40 transition-colors"
+              title="Sube un PDF del contrato para autollenar los datos"
+            >
+              <FileText className="h-3 w-3" />
+              {showContractUploader ? "Ocultar" : "Subir contrato"}
+            </button>
             <button
               onClick={handleAutoFill}
               className="inline-flex items-center gap-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 px-2 py-1 text-[11px] hover:bg-purple-100 transition-colors"
@@ -333,3 +397,50 @@ export function ActaWizard() {
 export type { WizardData };
 export { ROOM_TEMPLATES };
 export type { RepresentsTarget };
+
+// ============================================
+// Helpers
+// ============================================
+
+function mergePartiesFromExtraction(
+  existing: WizardData["parties"],
+  extraction: ContractExtraction
+): WizardData["parties"] {
+  const updated = [...existing];
+
+  const ensureParty = (
+    role: PartyRole,
+    name: string | null,
+    rut: string | null
+  ) => {
+    if (!name && !rut) return;
+    const idx = updated.findIndex((p) => p.role === role);
+    if (idx >= 0) {
+      updated[idx] = {
+        ...updated[idx],
+        name: updated[idx].name || name || updated[idx].name,
+        documentId:
+          updated[idx].documentId || rut || updated[idx].documentId,
+      };
+    } else {
+      const tempId = `t_${Date.now()}_${Math.random().toString(36).slice(2, 6)}_${role}`;
+      updated.push({
+        tempId,
+        name: name ?? "",
+        email: null,
+        phone: null,
+        documentId: rut,
+        role,
+        represents: "self" as RepresentsTarget,
+        canUploadEvidence: false,
+        canComment: true,
+        canSign: true,
+      });
+    }
+  };
+
+  ensureParty("landlord", extraction.landlord.name, extraction.landlord.rut);
+  ensureParty("tenant", extraction.tenant.name, extraction.tenant.rut);
+
+  return updated;
+}
