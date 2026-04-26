@@ -10,21 +10,23 @@
  */
 
 import { openDB, type IDBPDatabase } from "idb";
-import type { Acta, Property, Organization } from "./acta-types";
+import type { Acta, Property, Organization, Contact } from "./acta-types";
 
 const DB_NAME = "certifoto";
-const DB_VERSION = 1;
+const DB_VERSION = 2; // bump al agregar contacts store
 
 // Stores
 const STORE_ACTAS = "actas";
 const STORE_PROPERTIES = "properties";
 const STORE_ORGANIZATIONS = "organizations";
+const STORE_CONTACTS = "contacts";
 const STORE_META = "meta"; // currentUser, settings
 
 interface CertiFotoDB {
   actas: { key: string; value: Acta };
   properties: { key: string; value: Property };
   organizations: { key: string; value: Organization };
+  contacts: { key: string; value: Contact };
   meta: { key: string; value: unknown };
 }
 
@@ -45,6 +47,9 @@ function getDB(): Promise<IDBPDatabase<CertiFotoDB>> {
         }
         if (!db.objectStoreNames.contains(STORE_ORGANIZATIONS)) {
           db.createObjectStore(STORE_ORGANIZATIONS, { keyPath: "id" });
+        }
+        if (!db.objectStoreNames.contains(STORE_CONTACTS)) {
+          db.createObjectStore(STORE_CONTACTS, { keyPath: "id" });
         }
         if (!db.objectStoreNames.contains(STORE_META)) {
           db.createObjectStore(STORE_META);
@@ -77,6 +82,12 @@ export async function idbLoadAllOrganizations(): Promise<Organization[]> {
   return tx.store.getAll() as Promise<Organization[]>;
 }
 
+export async function idbLoadAllContacts(): Promise<Contact[]> {
+  const db = await getDB();
+  const tx = db.transaction(STORE_CONTACTS, "readonly");
+  return tx.store.getAll() as Promise<Contact[]>;
+}
+
 export async function idbGetMeta<T>(key: string): Promise<T | null> {
   const db = await getDB();
   const value = await db.get(STORE_META, key);
@@ -102,9 +113,24 @@ export async function idbPutProperty(property: Property): Promise<void> {
   await db.put(STORE_PROPERTIES, property);
 }
 
+export async function idbDeleteProperty(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete(STORE_PROPERTIES, id);
+}
+
 export async function idbPutOrganization(org: Organization): Promise<void> {
   const db = await getDB();
   await db.put(STORE_ORGANIZATIONS, org);
+}
+
+export async function idbPutContact(contact: Contact): Promise<void> {
+  const db = await getDB();
+  await db.put(STORE_CONTACTS, contact);
+}
+
+export async function idbDeleteContact(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete(STORE_CONTACTS, id);
 }
 
 export async function idbSetMeta(key: string, value: unknown): Promise<void> {
@@ -122,6 +148,7 @@ export async function idbClearAll(): Promise<void> {
     db.clear(STORE_ACTAS),
     db.clear(STORE_PROPERTIES),
     db.clear(STORE_ORGANIZATIONS),
+    db.clear(STORE_CONTACTS),
     db.clear(STORE_META),
   ]);
 }
@@ -130,11 +157,18 @@ export async function idbBulkImport(data: {
   actas: Acta[];
   properties: Property[];
   organizations?: Organization[];
+  contacts?: Contact[];
   currentUser?: unknown;
 }): Promise<void> {
   const db = await getDB();
   const tx = db.transaction(
-    [STORE_ACTAS, STORE_PROPERTIES, STORE_ORGANIZATIONS, STORE_META],
+    [
+      STORE_ACTAS,
+      STORE_PROPERTIES,
+      STORE_ORGANIZATIONS,
+      STORE_CONTACTS,
+      STORE_META,
+    ],
     "readwrite"
   );
 
@@ -143,6 +177,7 @@ export async function idbBulkImport(data: {
     tx.objectStore(STORE_ACTAS).clear(),
     tx.objectStore(STORE_PROPERTIES).clear(),
     tx.objectStore(STORE_ORGANIZATIONS).clear(),
+    tx.objectStore(STORE_CONTACTS).clear(),
   ]);
 
   // Insertar
@@ -155,6 +190,11 @@ export async function idbBulkImport(data: {
   if (data.organizations) {
     for (const org of data.organizations) {
       await tx.objectStore(STORE_ORGANIZATIONS).put(org);
+    }
+  }
+  if (data.contacts) {
+    for (const c of data.contacts) {
+      await tx.objectStore(STORE_CONTACTS).put(c);
     }
   }
   if (data.currentUser) {
@@ -217,12 +257,10 @@ export async function migrateFromLocalStorageIfNeeded(): Promise<{
 
     await idbSetMeta(MIGRATION_FLAG_KEY, true);
 
-    // Opcional: limpiar localStorage para liberar espacio
     localStorage.removeItem(LS_KEYS.actas);
     localStorage.removeItem(LS_KEYS.properties);
     localStorage.removeItem(LS_KEYS.organizations);
-    // currentUser lo dejamos en LS por compatibilidad transitoria
-    // Tambien removemos el flag de migracion del LS si existe
+
     return {
       migrated: true,
       counts: {

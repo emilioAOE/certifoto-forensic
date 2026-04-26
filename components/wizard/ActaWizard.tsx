@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -23,8 +23,16 @@ import type {
   Acta,
 } from "@/lib/acta-types";
 import { ROOM_TEMPLATES } from "@/lib/acta-constants";
-import { saveActa, saveProperty, generateId, getCurrentUser } from "@/lib/storage";
+import {
+  saveActa,
+  saveProperty,
+  generateId,
+  getCurrentUser,
+  listActas,
+  getProperty,
+} from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
+import { syncContactsFromActa } from "@/lib/contacts";
 import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
 import { StepModalidad } from "./steps/StepModalidad";
@@ -82,6 +90,7 @@ const initialData: WizardData = {
     smokerAllowed: null,
     latitude: null,
     longitude: null,
+    tags: [],
   },
   parties: [],
   rooms: [],
@@ -90,16 +99,57 @@ const initialData: WizardData = {
 
 export function ActaWizard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardData>(initialData);
   const [creatorName, setCreatorName] = useState("Usuario");
   const [creatorRole, setCreatorRole] = useState<PartyRole>("broker");
   const [showContractUploader, setShowContractUploader] = useState(false);
+  const [linkedPropertyId, setLinkedPropertyId] = useState<string | null>(null);
 
   useEffect(() => {
     const u = getCurrentUser();
     setCreatorName(u.name);
     setCreatorRole(u.role as PartyRole);
+
+    // Si viene ?property=id en la URL, preseleccionar esa propiedad
+    const propId = searchParams.get("property");
+    if (propId) {
+      const prop = getProperty(propId);
+      if (prop) {
+        setLinkedPropertyId(prop.id);
+        setData((prev) => ({
+          ...prev,
+          property: {
+            address: prop.address,
+            unit: prop.unit,
+            city: prop.city,
+            commune: prop.commune,
+            region: prop.region,
+            country: prop.country,
+            propertyType: prop.propertyType,
+            furnished: prop.furnished,
+            parking: prop.parking,
+            storageUnit: prop.storageUnit,
+            internalCode: prop.internalCode,
+            rolSii: prop.rolSii,
+            observations: prop.observations,
+            ownerId: prop.ownerId,
+            organizationId: prop.organizationId,
+            contractMonthlyAmount: prop.contractMonthlyAmount,
+            contractStartDate: prop.contractStartDate,
+            contractEndDate: prop.contractEndDate,
+            contractDeposit: prop.contractDeposit,
+            petsAllowed: prop.petsAllowed,
+            smokerAllowed: prop.smokerAllowed,
+            latitude: prop.latitude,
+            longitude: prop.longitude,
+            tags: prop.tags ?? [],
+          },
+        }));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateData = (patch: Partial<WizardData>) =>
@@ -176,16 +226,45 @@ export function ActaWizard() {
   const handleCreate = () => {
     if (!data.type || !data.modality) return;
 
-    // 1. Save property
-    const propertyId = generateId("prop");
+    // 1. Save property — reusar si viene de ?property=id
     const now = new Date().toISOString();
-    const property: Property = {
-      ...data.property,
-      id: propertyId,
-      createdAt: now,
-      updatedAt: now,
-    };
-    saveProperty(property);
+    let propertyId: string;
+    if (linkedPropertyId) {
+      const existing = getProperty(linkedPropertyId);
+      if (existing) {
+        // Actualizar la propiedad existente con los datos del wizard (por si se editaron)
+        const updated: Property = {
+          ...existing,
+          ...data.property,
+          id: existing.id,
+          createdAt: existing.createdAt,
+          updatedAt: now,
+          tags: data.property.tags ?? existing.tags ?? [],
+        };
+        saveProperty(updated);
+        propertyId = existing.id;
+      } else {
+        propertyId = generateId("prop");
+        const property: Property = {
+          ...data.property,
+          tags: data.property.tags ?? [],
+          id: propertyId,
+          createdAt: now,
+          updatedAt: now,
+        };
+        saveProperty(property);
+      }
+    } else {
+      propertyId = generateId("prop");
+      const property: Property = {
+        ...data.property,
+        tags: data.property.tags ?? [],
+        id: propertyId,
+        createdAt: now,
+        updatedAt: now,
+      };
+      saveProperty(property);
+    }
 
     // 2. Build acta
     const partiesWithIds: Party[] = data.parties.map((p) => ({
@@ -204,6 +283,27 @@ export function ActaWizard() {
     }));
 
     const actaId = generateId("acta");
+
+    // Si es acta de devolucion, buscar la entrega mas reciente de la misma propiedad
+    let relatedEntregaActaId: string | null = null;
+    if (data.type === "devolucion") {
+      const allActas = listActas();
+      const entregaCandidates = allActas
+        .filter(
+          (a) =>
+            a.type === "entrega" &&
+            a.propertyId === propertyId &&
+            (a.status === "closed" ||
+              a.status === "signed_with_conformity" ||
+              a.status === "signed_with_observations")
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      relatedEntregaActaId = entregaCandidates[0]?.id ?? null;
+    }
+
     const acta: Acta = {
       id: actaId,
       type: data.type,
@@ -232,7 +332,8 @@ export function ActaWizard() {
       createdAt: now,
       updatedAt: now,
       closedAt: null,
-      relatedEntregaActaId: null,
+      relatedEntregaActaId,
+      tags: [],
     };
 
     const withAudit = appendAuditLog(
@@ -245,6 +346,8 @@ export function ActaWizard() {
     );
 
     saveActa(withAudit);
+    // Sincronizar partes con la agenda de contactos
+    syncContactsFromActa(withAudit);
     router.push(`/actas/${actaId}`);
   };
 
@@ -338,10 +441,46 @@ export function ActaWizard() {
           <StepPropiedad
             value={data.property}
             inspectionDate={data.inspectionDate}
+            linkedPropertyId={linkedPropertyId}
             onChangeProperty={(property) => updateData({ property })}
             onChangeInspectionDate={(inspectionDate) =>
               updateData({ inspectionDate })
             }
+            onSelectExistingProperty={(prop) => {
+              if (prop) {
+                setLinkedPropertyId(prop.id);
+                updateData({
+                  property: {
+                    address: prop.address,
+                    unit: prop.unit,
+                    city: prop.city,
+                    commune: prop.commune,
+                    region: prop.region,
+                    country: prop.country,
+                    propertyType: prop.propertyType,
+                    furnished: prop.furnished,
+                    parking: prop.parking,
+                    storageUnit: prop.storageUnit,
+                    internalCode: prop.internalCode,
+                    rolSii: prop.rolSii,
+                    observations: prop.observations,
+                    ownerId: prop.ownerId,
+                    organizationId: prop.organizationId,
+                    contractMonthlyAmount: prop.contractMonthlyAmount,
+                    contractStartDate: prop.contractStartDate,
+                    contractEndDate: prop.contractEndDate,
+                    contractDeposit: prop.contractDeposit,
+                    petsAllowed: prop.petsAllowed,
+                    smokerAllowed: prop.smokerAllowed,
+                    latitude: prop.latitude,
+                    longitude: prop.longitude,
+                    tags: prop.tags ?? [],
+                  },
+                });
+              } else {
+                setLinkedPropertyId(null);
+              }
+            }}
           />
         )}
         {step === 4 && (

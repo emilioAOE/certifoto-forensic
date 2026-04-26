@@ -71,6 +71,31 @@ export interface Property {
   latitude: number | null;
   longitude: number | null;
 
+  // Etiquetado libre para filtrar
+  tags: string[];
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============================================
+// Contact (agenda de personas con quienes trabajaste)
+// ============================================
+
+export interface Contact {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  documentId: string | null; // RUT
+  preferredRole: PartyRole; // rol mas usado (ej. "landlord")
+  rolesUsed: PartyRole[]; // todos los roles en los que ha figurado
+  notes: string | null;
+  // IDs vinculados (denormalizados para busqueda rapida; canonical en Acta)
+  propertyIds: string[];
+  actaIds: string[];
+  tags: string[];
+  organizationId: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -423,6 +448,9 @@ export interface Acta {
 
   // Para comparacion futura
   relatedEntregaActaId: string | null;
+
+  // Etiquetado libre
+  tags: string[];
 }
 
 // ============================================

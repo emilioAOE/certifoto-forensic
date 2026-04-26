@@ -15,16 +15,20 @@
  * recibe un toast (manejado en una capa superior).
  */
 
-import type { Acta, ActaSummary, Property, Organization } from "./acta-types";
+import type { Acta, ActaSummary, Property, Organization, Contact } from "./acta-types";
 import {
   idbBulkImport,
   idbClearAll,
   idbDeleteActa,
+  idbDeleteContact,
+  idbDeleteProperty,
   idbGetMeta,
   idbLoadAllActas,
+  idbLoadAllContacts,
   idbLoadAllOrganizations,
   idbLoadAllProperties,
   idbPutActa,
+  idbPutContact,
   idbPutOrganization,
   idbPutProperty,
   idbSetMeta,
@@ -39,6 +43,7 @@ interface MemoryCache {
   actas: Acta[];
   properties: Property[];
   organizations: Organization[];
+  contacts: Contact[];
   currentUser: CurrentUser | null;
   hydrated: boolean;
   hydrationError: string | null;
@@ -48,6 +53,7 @@ const cache: MemoryCache = {
   actas: [],
   properties: [],
   organizations: [],
+  contacts: [],
   currentUser: null,
   hydrated: false,
   hydrationError: null,
@@ -61,6 +67,7 @@ type ChangeMessage =
   | { type: "actas" }
   | { type: "properties" }
   | { type: "organizations" }
+  | { type: "contacts" }
   | { type: "currentUser" };
 
 let channel: BroadcastChannel | null = null;
@@ -81,6 +88,8 @@ function getChannel(): BroadcastChannel | null {
           cache.properties = await idbLoadAllProperties();
         } else if (msg.type === "organizations") {
           cache.organizations = await idbLoadAllOrganizations();
+        } else if (msg.type === "contacts") {
+          cache.contacts = await idbLoadAllContacts();
         } else if (msg.type === "currentUser") {
           cache.currentUser = await idbGetMeta<CurrentUser>("currentUser");
         }
@@ -142,16 +151,18 @@ export function hydrateStorage(): Promise<void> {
       await migrateFromLocalStorageIfNeeded();
 
       // 2. Cargar todo en cache
-      const [actas, properties, organizations, currentUser] = await Promise.all([
+      const [actas, properties, organizations, contacts, currentUser] = await Promise.all([
         idbLoadAllActas(),
         idbLoadAllProperties(),
         idbLoadAllOrganizations(),
+        idbLoadAllContacts(),
         idbGetMeta<CurrentUser>("currentUser"),
       ]);
 
       cache.actas = actas;
       cache.properties = properties;
       cache.organizations = organizations;
+      cache.contacts = contacts;
       cache.currentUser = currentUser;
       cache.hydrated = true;
 
@@ -306,6 +317,48 @@ export function saveProperty(property: Property): void {
   notifyListeners();
 }
 
+export function deleteProperty(id: string): void {
+  cache.properties = cache.properties.filter((p) => p.id !== id);
+  void idbDeleteProperty(id).catch((err) =>
+    console.error("[storage] deleteProperty persist failed:", err)
+  );
+  broadcast({ type: "properties" });
+  notifyListeners();
+}
+
+// ============================================
+// Contacts (agenda)
+// ============================================
+
+export function listContacts(): Contact[] {
+  return cache.contacts;
+}
+
+export function getContact(id: string): Contact | null {
+  return cache.contacts.find((c) => c.id === id) ?? null;
+}
+
+export function saveContact(contact: Contact): void {
+  const updated = { ...contact, updatedAt: new Date().toISOString() };
+  const idx = cache.contacts.findIndex((c) => c.id === updated.id);
+  if (idx >= 0) cache.contacts[idx] = updated;
+  else cache.contacts.push(updated);
+  void idbPutContact(updated).catch((err) =>
+    console.error("[storage] saveContact persist failed:", err)
+  );
+  broadcast({ type: "contacts" });
+  notifyListeners();
+}
+
+export function deleteContact(id: string): void {
+  cache.contacts = cache.contacts.filter((c) => c.id !== id);
+  void idbDeleteContact(id).catch((err) =>
+    console.error("[storage] deleteContact persist failed:", err)
+  );
+  broadcast({ type: "contacts" });
+  notifyListeners();
+}
+
 // ============================================
 // Organizations
 // ============================================
@@ -372,11 +425,13 @@ export async function clearAllData(): Promise<void> {
   cache.actas = [];
   cache.properties = [];
   cache.organizations = [];
+  cache.contacts = [];
   cache.currentUser = null;
   await idbClearAll();
   broadcast({ type: "actas" });
   broadcast({ type: "properties" });
   broadcast({ type: "organizations" });
+  broadcast({ type: "contacts" });
   broadcast({ type: "currentUser" });
   notifyListeners();
 }
@@ -389,6 +444,7 @@ export async function bulkReplace(data: {
   actas: Acta[];
   properties: Property[];
   organizations?: Organization[];
+  contacts?: Contact[];
   currentUser?: CurrentUser;
 }): Promise<void> {
   await idbBulkImport(data);
@@ -396,10 +452,12 @@ export async function bulkReplace(data: {
   cache.actas = await idbLoadAllActas();
   cache.properties = await idbLoadAllProperties();
   cache.organizations = await idbLoadAllOrganizations();
+  cache.contacts = await idbLoadAllContacts();
   cache.currentUser = (await idbGetMeta<CurrentUser>("currentUser")) ?? cache.currentUser;
   broadcast({ type: "actas" });
   broadcast({ type: "properties" });
   broadcast({ type: "organizations" });
+  broadcast({ type: "contacts" });
   notifyListeners();
 }
 
@@ -408,6 +466,7 @@ export async function reloadCache(): Promise<void> {
   cache.actas = await idbLoadAllActas();
   cache.properties = await idbLoadAllProperties();
   cache.organizations = await idbLoadAllOrganizations();
+  cache.contacts = await idbLoadAllContacts();
   cache.currentUser = await idbGetMeta<CurrentUser>("currentUser");
   notifyListeners();
 }

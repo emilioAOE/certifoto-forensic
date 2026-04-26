@@ -203,6 +203,7 @@ export interface WizardMockData {
     smokerAllowed: boolean | null;
     latitude: number | null;
     longitude: number | null;
+    tags: string[];
   };
   parties: {
     tempId: string;
@@ -288,6 +289,7 @@ export function getWizardMockData(): WizardMockData {
       smokerAllowed: false,
       latitude: -33.4248,
       longitude: -70.6195,
+      tags: [],
     },
     parties: [
       {
@@ -606,6 +608,7 @@ export async function seedSampleActa(
     updatedAt: now,
     closedAt: null,
     relatedEntregaActaId: null,
+    tags: [],
   };
 
   // Audit

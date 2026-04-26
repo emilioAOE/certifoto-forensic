@@ -5,6 +5,7 @@ import { PROPERTY_TYPE_LABEL } from "@/lib/acta-constants";
 import { formatCLP, parseCLP } from "@/lib/validators";
 import { AddressAutocomplete } from "../AddressAutocomplete";
 import { ComunaCombobox } from "../ComunaCombobox";
+import { PropertySelector } from "@/components/properties/PropertySelector";
 
 type PropertyDraft = Omit<Property, "id" | "createdAt" | "updatedAt"> & {
   id?: string;
@@ -13,15 +14,19 @@ type PropertyDraft = Omit<Property, "id" | "createdAt" | "updatedAt"> & {
 interface StepPropiedadProps {
   value: PropertyDraft;
   inspectionDate: string;
+  linkedPropertyId: string | null;
   onChangeProperty: (value: PropertyDraft) => void;
   onChangeInspectionDate: (value: string) => void;
+  onSelectExistingProperty: (property: Property | null) => void;
 }
 
 export function StepPropiedad({
   value,
   inspectionDate,
+  linkedPropertyId,
   onChangeProperty,
   onChangeInspectionDate,
+  onSelectExistingProperty,
 }: StepPropiedadProps) {
   const update = <K extends keyof PropertyDraft>(key: K, val: PropertyDraft[K]) =>
     onChangeProperty({ ...value, [key]: val });
@@ -36,6 +41,14 @@ export function StepPropiedad({
         Si tienes el contrato en PDF, usa el boton &ldquo;Subir contrato&rdquo;
         arriba para autollenar.
       </p>
+
+      {/* Selector de propiedad existente */}
+      <div className="mb-5">
+        <PropertySelector
+          selectedId={linkedPropertyId}
+          onSelect={onSelectExistingProperty}
+        />
+      </div>
 
       <div className="space-y-4">
         <Field label="Direccion" required>

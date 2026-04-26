@@ -10,6 +10,7 @@ import type {
 import { PARTY_ROLE_LABEL } from "@/lib/acta-constants";
 import { cn } from "@/lib/cn";
 import { Plus, Trash2, User } from "lucide-react";
+import { ContactSelector } from "@/components/contacts/ContactSelector";
 
 type PartyDraft = Omit<Party, "id" | "invitationToken" | "invitationStatus"> & {
   tempId: string;
@@ -185,14 +186,21 @@ function PartyRow({
       {/* Edit form */}
       {isEditing && (
         <div className="px-3 pb-3 space-y-2 border-t border-gray-200 pt-3">
+          <ContactSelector
+            value={party.name}
+            preferRole={party.role}
+            onTextChange={(name) => onUpdate({ name })}
+            onSelectContact={(c) => {
+              onUpdate({
+                name: c.name,
+                email: c.email ?? party.email,
+                phone: c.phone ?? party.phone,
+                documentId: c.documentId ?? party.documentId,
+              });
+            }}
+            placeholder="Nombre completo"
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input
-              type="text"
-              placeholder="Nombre completo"
-              value={party.name}
-              onChange={(e) => onUpdate({ name: e.target.value })}
-              className="input"
-            />
             <input
               type="email"
               placeholder="Email"
@@ -200,8 +208,6 @@ function PartyRow({
               onChange={(e) => onUpdate({ email: e.target.value || null })}
               className="input"
             />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input
               type="tel"
               placeholder="Telefono"
@@ -209,14 +215,14 @@ function PartyRow({
               onChange={(e) => onUpdate({ phone: e.target.value || null })}
               className="input"
             />
-            <input
-              type="text"
-              placeholder="RUT / Documento"
-              value={party.documentId ?? ""}
-              onChange={(e) => onUpdate({ documentId: e.target.value || null })}
-              className="input"
-            />
           </div>
+          <input
+            type="text"
+            placeholder="RUT / Documento"
+            value={party.documentId ?? ""}
+            onChange={(e) => onUpdate({ documentId: e.target.value || null })}
+            className="input"
+          />
 
           {(party.role === "broker" || party.role === "property_manager") && (
             <select
