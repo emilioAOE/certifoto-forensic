@@ -16,6 +16,7 @@ import {
   Send,
   Trash2,
   GitCompare,
+  Share2,
 } from "lucide-react";
 import { getActa, getProperty, saveActa, deleteActa } from "@/lib/storage";
 import {
@@ -39,6 +40,8 @@ import { PartiesSummary } from "./PartiesSummary";
 import { SignaturesPanel } from "./SignaturesPanel";
 import { InventorySection } from "@/components/inventory/InventorySection";
 import { generateActaPdf } from "@/lib/acta-pdf";
+import { exportActaAsShareFile } from "@/lib/share-acta";
+import { downloadBlob } from "@/lib/export-import";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 import {
@@ -193,6 +196,23 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     router.push("/actas");
   };
 
+  const handleShareForSign = async () => {
+    if (!acta) return;
+    try {
+      const result = await exportActaAsShareFile(acta.id);
+      downloadBlob(result.blob, result.fileName);
+      toast.success(
+        "Archivo descargado",
+        `Envia el archivo ${result.fileName} por WhatsApp o email a la otra parte. Esa persona lo importa en CertiFoto, firma, y te lo manda de regreso.`
+      );
+    } catch (err) {
+      toast.error(
+        "No se pudo crear el archivo",
+        err instanceof Error ? err.message : "Error desconocido"
+      );
+    }
+  };
+
   if (!mounted) return null;
 
   if (!acta) {
@@ -279,6 +299,14 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               Comparar
             </Link>
           )}
+          <button
+            onClick={handleShareForSign}
+            className="inline-flex items-center gap-1 rounded-lg bg-purple-50 border border-purple-200 px-3 py-1.5 text-xs text-purple-700 hover:bg-purple-100"
+            title="Genera un archivo .certifoto para enviar a otra persona y que firme"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+            Compartir para firma
+          </button>
           {!isReadOnly && (
             <button
               onClick={handleDelete}

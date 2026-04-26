@@ -10,6 +10,7 @@ import {
   Loader2,
   AlertTriangle,
   Shield,
+  ImagePlus,
 } from "lucide-react";
 import type {
   Acta,
@@ -73,12 +74,16 @@ export function RoomEvidenceSection({
   const { confirm } = useConfirm();
   const [expanded, setExpanded] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const photos = acta.photos.filter((p) => p.roomId === room.id);
   const isMissingRequired = room.required && photos.length === 0;
 
-  const handleFiles = async (files: FileList | null) => {
+  const handleFiles = async (
+    files: FileList | null,
+    capturedInApp: boolean = false
+  ) => {
     if (!files || files.length === 0) return;
     setUploading(true);
     const user = getCurrentUser();
@@ -153,7 +158,7 @@ export function RoomEvidenceSection({
           isFlagged: false,
           evidenceStrength: "media",
           warnings: [],
-          capturedInApp: false,
+          capturedInApp,
         };
 
         photo.warnings = calculatePhotoWarnings(photo);
@@ -176,7 +181,8 @@ export function RoomEvidenceSection({
       }
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (cameraInputRef.current) cameraInputRef.current.value = "";
+      if (galleryInputRef.current) galleryInputRef.current.value = "";
     }
   };
 
@@ -345,31 +351,50 @@ export function RoomEvidenceSection({
             ))}
 
             {!readOnly && (
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="aspect-square rounded-lg border-2 border-dashed border-gray-200 hover:border-accent/50 bg-gray-50 flex flex-col items-center justify-center gap-1 text-muted hover:text-accent transition-colors disabled:opacity-50"
-              >
-                {uploading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <>
-                    <Camera className="h-5 w-5" />
-                    <span className="text-xs">Agregar fotos</span>
-                  </>
-                )}
-              </button>
+              <>
+                <button
+                  onClick={() => cameraInputRef.current?.click()}
+                  disabled={uploading}
+                  className="aspect-square rounded-lg border-2 border-dashed border-accent/50 hover:border-accent bg-accent-softer/30 flex flex-col items-center justify-center gap-1 text-accent-dark hover:text-accent transition-colors disabled:opacity-50"
+                  title="Tomar foto con la camara (mobile) o seleccionar archivo"
+                >
+                  {uploading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <>
+                      <Camera className="h-5 w-5" />
+                      <span className="text-xs font-medium">Tomar foto</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => galleryInputRef.current?.click()}
+                  disabled={uploading}
+                  className="aspect-square rounded-lg border-2 border-dashed border-gray-200 hover:border-gray-300 bg-gray-50 flex flex-col items-center justify-center gap-1 text-muted hover:text-gray-700 transition-colors disabled:opacity-50"
+                  title="Subir foto desde la galeria"
+                >
+                  <ImagePlus className="h-5 w-5" />
+                  <span className="text-xs">Subir foto</span>
+                </button>
+              </>
             )}
           </div>
 
           <input
-            ref={fileInputRef}
+            ref={cameraInputRef}
             type="file"
             accept="image/*"
             capture="environment"
+            className="hidden"
+            onChange={(e) => handleFiles(e.target.files, true)}
+          />
+          <input
+            ref={galleryInputRef}
+            type="file"
+            accept="image/*"
             multiple
             className="hidden"
-            onChange={(e) => handleFiles(e.target.files)}
+            onChange={(e) => handleFiles(e.target.files, false)}
           />
 
           {/* AI summary */}

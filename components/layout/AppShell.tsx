@@ -14,6 +14,7 @@ import {
   Search,
   Menu,
   X,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { GlobalSearch } from "./GlobalSearch";
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { href: "/propiedades", label: "Propiedades", icon: Building2 },
   { href: "/contactos", label: "Contactos", icon: Users },
   { href: "/forensic", label: "Verificar evidencia", icon: Shield },
+  { href: "/verificar", label: "Recibir acta", icon: Share2 },
   { href: "/configuracion", label: "Configuracion", icon: Settings },
 ];
 
