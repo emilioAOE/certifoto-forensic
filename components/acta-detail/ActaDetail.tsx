@@ -15,6 +15,7 @@ import {
   FileDown,
   Send,
   Trash2,
+  GitCompare,
 } from "lucide-react";
 import { getActa, getProperty, saveActa, deleteActa } from "@/lib/storage";
 import {
@@ -267,6 +268,16 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         </div>
 
         <div className="flex flex-wrap gap-2">
+          {(acta.type === "entrega" || acta.type === "devolucion") && (
+            <Link
+              href={`/actas/${acta.id}/comparar`}
+              className="inline-flex items-center gap-1 rounded-lg bg-blue-50 border border-blue-200 px-3 py-1.5 text-xs text-blue-700 hover:bg-blue-100"
+              title="Comparar con la otra acta de esta propiedad"
+            >
+              <GitCompare className="h-3.5 w-3.5" />
+              Comparar
+            </Link>
+          )}
           {!isReadOnly && (
             <button
               onClick={handleDelete}
