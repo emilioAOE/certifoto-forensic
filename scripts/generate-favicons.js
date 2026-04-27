@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // Genera favicon.ico, icon-192.png, icon-512.png, apple-touch-icon.png
-// con el branding CertiFoto (gradiente verde + "Cf").
+// con el branding CertiFoto (gradiente verde + huella dactilar de lucide).
 // Ejecutar: node scripts/generate-favicons.js
 
 const fs = require("fs");
@@ -9,28 +9,36 @@ const sharp = require("sharp");
 
 const ROOT = path.resolve(__dirname, "..");
 
-// SVG fuente: cuadrado con esquinas redondeadas, gradiente verde, letras "Cf" blancas centradas.
-// Para que el ICO de 16/32px se vea legible, usamos una "C" grande con una "f" pequena en superindice.
-function makeSvg(size) {
-  // Para tamanos chicos (<=48), usamos solo "C" para que se lea.
-  const small = size <= 48;
-  const radius = Math.round(size * 0.19);
-  const fontSize = small ? size * 0.78 : size * 0.62;
-  const fY = small ? size * 0.72 : size * 0.66;
-  const cY = small ? size * 0.78 : size * 0.7;
+// Paths del icono Fingerprint de lucide-react v1.7.0 (viewBox 24x24, stroke = currentColor).
+const FINGERPRINT_PATHS = [
+  "M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4",
+  "M14 13.12c0 2.38 0 6.38-1 8.88",
+  "M17.29 21.02c.12-.6.43-2.3.5-3.02",
+  "M2 12a10 10 0 0 1 18-6",
+  "M2 16h.01",
+  "M21.8 16c.2-2 .131-5.354 0-6",
+  "M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2",
+  "M8.65 22c.21-.66.45-1.32.57-2",
+  "M9 6.8a6 6 0 0 1 9 5.2v2",
+];
 
-  if (small) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#16a34a"/>
-      <stop offset="100%" stop-color="#15803d"/>
-    </linearGradient>
-  </defs>
-  <rect width="${size}" height="${size}" rx="${radius}" fill="url(#bg)"/>
-  <text x="50%" y="${cY}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="900" fill="white" text-anchor="middle" letter-spacing="-${Math.round(fontSize * 0.04)}">C</text>
-</svg>`;
-  }
+// Construye el SVG: gradiente verde con esquinas redondeadas + huella centrada.
+// padding controla cuanto espacio dejar en los bordes (mas chico = icono mas grande).
+function makeSvg(size, options = {}) {
+  const { padding = 0.18, strokeWidth = 2 } = options;
+  const radius = Math.round(size * 0.19);
+
+  // Espacio interno disponible para el icono (24x24)
+  const iconArea = size * (1 - padding * 2);
+  const iconOffset = size * padding;
+  const iconScale = iconArea / 24;
+
+  // Para tamaños chicos hay que engrosar la linea para que se vea
+  const stroke = strokeWidth / iconScale;
+
+  const paths = FINGERPRINT_PATHS.map(
+    (d) => `<path d="${d}"/>`
+  ).join("");
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
   <defs>
@@ -40,13 +48,26 @@ function makeSvg(size) {
     </linearGradient>
   </defs>
   <rect width="${size}" height="${size}" rx="${radius}" fill="url(#bg)"/>
-  <text x="50%" y="${fY}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="900" fill="white" text-anchor="middle" letter-spacing="-${Math.round(fontSize * 0.06)}">Cf</text>
+  <g transform="translate(${iconOffset} ${iconOffset}) scale(${iconScale})" fill="none" stroke="white" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round">
+    ${paths}
+  </g>
 </svg>`;
 }
 
-async function svgToPngBuffer(size) {
-  const svg = makeSvg(size);
+async function svgToPngBuffer(size, options) {
+  const svg = makeSvg(size, options);
   return sharp(Buffer.from(svg)).resize(size, size).png().toBuffer();
+}
+
+// Para tamanos chicos (<=64px) renderizamos al cuadruple y downsampleamos
+// con kernel lanczos. Da bordes mas limpios que renderear directo a 16/32px.
+async function svgToPngSharp(size, options) {
+  const renderAt = size * 4;
+  const svg = makeSvg(renderAt, options);
+  return sharp(Buffer.from(svg))
+    .resize(size, size, { kernel: sharp.kernel.lanczos3 })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
 }
 
 // Construye un ICO multi-tamano embebiendo PNGs
@@ -72,16 +93,15 @@ function buildIco(images) {
     const dim = img.size === 256 ? 0 : img.size;
     ico.writeUInt8(dim, offset); offset += 1;
     ico.writeUInt8(dim, offset); offset += 1;
-    ico.writeUInt8(0, offset); offset += 1; // color palette
-    ico.writeUInt8(0, offset); offset += 1; // reserved
-    ico.writeUInt16LE(1, offset); offset += 2; // planes
-    ico.writeUInt16LE(32, offset); offset += 2; // bpp
+    ico.writeUInt8(0, offset); offset += 1;
+    ico.writeUInt8(0, offset); offset += 1;
+    ico.writeUInt16LE(1, offset); offset += 2;
+    ico.writeUInt16LE(32, offset); offset += 2;
     ico.writeUInt32LE(img.buffer.length, offset); offset += 4;
     ico.writeUInt32LE(dataOffset, offset); offset += 4;
     dataOffset += img.buffer.length;
   }
 
-  // Datos PNG
   for (const img of images) {
     img.buffer.copy(ico, offset);
     offset += img.buffer.length;
@@ -91,51 +111,57 @@ function buildIco(images) {
 }
 
 async function main() {
-  const sizes = [16, 32, 48, 64];
+  // Para tamaños chicos, padding mas chico (icono mas grande) y stroke mas gordo
+  // para que las lineas no desaparezcan al renderear. Ademas usamos rendering
+  // supersampleado para que las curvas se vean limpias.
+  const icoSizes = [
+    { size: 16, padding: 0.1, strokeWidth: 3.2 },
+    { size: 32, padding: 0.13, strokeWidth: 2.6 },
+    { size: 48, padding: 0.15, strokeWidth: 2.3 },
+    { size: 64, padding: 0.17, strokeWidth: 2.1 },
+  ];
+
   const images = [];
-  for (const size of sizes) {
-    const buffer = await svgToPngBuffer(size);
-    images.push({ size, buffer });
+  for (const cfg of icoSizes) {
+    const buffer = await svgToPngSharp(cfg.size, cfg);
+    images.push({ size: cfg.size, buffer });
   }
 
   const ico = buildIco(images);
-  const faviconPath = path.join(ROOT, "app", "favicon.ico");
-  fs.writeFileSync(faviconPath, ico);
-  console.log(`OK app/favicon.ico (${ico.length} bytes, ${sizes.length} sizes)`);
+  fs.writeFileSync(path.join(ROOT, "app", "favicon.ico"), ico);
+  console.log(`OK app/favicon.ico (${ico.length} bytes, ${icoSizes.length} sizes)`);
 
-  // PNGs publicos para el manifest
-  const png192 = await svgToPngBuffer(192);
+  // PNGs para PWA + apple
+  const png192 = await svgToPngBuffer(192, { padding: 0.18, strokeWidth: 2 });
   fs.writeFileSync(path.join(ROOT, "public", "icon-192.png"), png192);
   console.log(`OK public/icon-192.png (${png192.length} bytes)`);
 
-  const png512 = await svgToPngBuffer(512);
+  const png512 = await svgToPngBuffer(512, { padding: 0.18, strokeWidth: 2 });
   fs.writeFileSync(path.join(ROOT, "public", "icon-512.png"), png512);
   console.log(`OK public/icon-512.png (${png512.length} bytes)`);
 
-  // Apple touch icon (180x180 sin esquinas redondeadas, iOS las pone)
-  const apple = await sharp(
-    Buffer.from(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
-        <defs>
-          <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#16a34a"/>
-            <stop offset="100%" stop-color="#15803d"/>
-          </linearGradient>
-        </defs>
-        <rect width="180" height="180" fill="url(#bg)"/>
-        <text x="50%" y="119" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="900" fill="white" text-anchor="middle" letter-spacing="-7">Cf</text>
-      </svg>`
-    )
-  )
-    .resize(180, 180)
-    .png()
-    .toBuffer();
+  // Apple touch: sin esquinas redondeadas (iOS las pone)
+  const appleSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#16a34a"/>
+        <stop offset="100%" stop-color="#15803d"/>
+      </linearGradient>
+    </defs>
+    <rect width="180" height="180" fill="url(#bg)"/>
+    <g transform="translate(${180 * 0.18} ${180 * 0.18}) scale(${(180 * 0.64) / 24})" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      ${FINGERPRINT_PATHS.map((d) => `<path d="${d}"/>`).join("")}
+    </g>
+  </svg>`;
+  const apple = await sharp(Buffer.from(appleSvg)).resize(180, 180).png().toBuffer();
   fs.writeFileSync(path.join(ROOT, "public", "apple-touch-icon.png"), apple);
   console.log(`OK public/apple-touch-icon.png (${apple.length} bytes)`);
 
-  // Reescribimos el SVG estatico para que tambien sea coherente (Cf en lugar del dibujo previo)
-  const newSvg = makeSvg(512);
-  fs.writeFileSync(path.join(ROOT, "public", "icon.svg"), newSvg);
+  // SVG estatico publico (1:1 con el favicon, escalable)
+  fs.writeFileSync(
+    path.join(ROOT, "public", "icon.svg"),
+    makeSvg(512, { padding: 0.18, strokeWidth: 2 })
+  );
   console.log(`OK public/icon.svg`);
 }
 
