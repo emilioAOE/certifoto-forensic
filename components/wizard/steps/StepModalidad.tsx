@@ -3,6 +3,7 @@
 import type { ActaModality } from "@/lib/acta-types";
 import { cn } from "@/lib/cn";
 import { Users, UserCheck, Building2 } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 const OPTIONS: {
   id: ActaModality;
@@ -40,8 +41,17 @@ interface StepModalidadProps {
 export function StepModalidad({ value, onChange }: StepModalidadProps) {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
         ¿Como vas a gestionar el acta?
+        <Tooltip
+          content={
+            <>
+              La modalidad afecta los permisos por defecto de cada parte. Por
+              ejemplo, en modalidad <strong>gestionada</strong>, el corredor
+              tiene permiso de subir fotos por defecto y los demas no.
+            </>
+          }
+        />
       </h2>
       <p className="text-sm text-muted mb-5">
         La modalidad define quien gestiona el proceso y los permisos por defecto

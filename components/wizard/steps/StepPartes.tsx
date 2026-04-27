@@ -11,6 +11,7 @@ import { PARTY_ROLE_LABEL } from "@/lib/acta-constants";
 import { cn } from "@/lib/cn";
 import { Plus, Trash2, User } from "lucide-react";
 import { ContactSelector } from "@/components/contacts/ContactSelector";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 type PartyDraft = Omit<Party, "id" | "invitationToken" | "invitationStatus"> & {
   tempId: string;
@@ -239,22 +240,36 @@ function PartyRow({
             </select>
           )}
 
-          <div className="flex flex-wrap gap-3 pt-1 text-xs">
-            <Checkbox
-              label="Puede subir fotos"
-              checked={party.canUploadEvidence}
-              onChange={(v) => onUpdate({ canUploadEvidence: v })}
-            />
-            <Checkbox
-              label="Puede comentar"
-              checked={party.canComment}
-              onChange={(v) => onUpdate({ canComment: v })}
-            />
-            <Checkbox
-              label="Puede firmar"
-              checked={party.canSign}
-              onChange={(v) => onUpdate({ canSign: v })}
-            />
+          <div className="space-y-1.5 pt-1 text-xs">
+            <div className="text-[10px] uppercase tracking-wider text-gray-500 flex items-center gap-1">
+              Permisos
+              <Tooltip
+                content={
+                  <>
+                    Estos permisos definen que puede hacer esta parte sobre el
+                    acta. Si no puede firmar, no aparece en la lista de firmas
+                    requeridas.
+                  </>
+                }
+              />
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Checkbox
+                label="Puede subir fotos"
+                checked={party.canUploadEvidence}
+                onChange={(v) => onUpdate({ canUploadEvidence: v })}
+              />
+              <Checkbox
+                label="Puede comentar"
+                checked={party.canComment}
+                onChange={(v) => onUpdate({ canComment: v })}
+              />
+              <Checkbox
+                label="Puede firmar"
+                checked={party.canSign}
+                onChange={(v) => onUpdate({ canSign: v })}
+              />
+            </div>
           </div>
         </div>
       )}
