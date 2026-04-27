@@ -5,11 +5,8 @@ import {
   ChevronDown,
   ChevronUp,
   Camera,
-  Trash2,
   Sparkles,
   Loader2,
-  AlertTriangle,
-  Shield,
   ImagePlus,
 } from "lucide-react";
 import type {
@@ -18,13 +15,7 @@ import type {
   PhotoEvidence,
   ConditionLevel,
 } from "@/lib/acta-types";
-import {
-  CONDITION_LABEL,
-  CONDITION_COLOR,
-  DAMAGE_TYPE_LABEL,
-  DAMAGE_SEVERITY_LABEL,
-  DAMAGE_SEVERITY_COLOR,
-} from "@/lib/acta-constants";
+import { CONDITION_LABEL, CONDITION_COLOR } from "@/lib/acta-constants";
 import { generateId, getCurrentUser } from "@/lib/storage";
 import {
   appendAuditLog,
@@ -36,6 +27,7 @@ import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
 import { compressImage, shouldCompress } from "@/lib/image-compression";
 import { cn } from "@/lib/cn";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
+import { PhotoEvidenceCard } from "./PhotoEvidenceCard";
 
 // Helpers locales
 function fileToDataUrl(file: File | Blob): Promise<string> {
@@ -342,7 +334,7 @@ export function RoomEvidenceSection({
           {/* Photos grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {photos.map((photo) => (
-              <PhotoCard
+              <PhotoEvidenceCard
                 key={photo.id}
                 photo={photo}
                 readOnly={readOnly}
@@ -453,231 +445,3 @@ export function RoomEvidenceSection({
   );
 }
 
-function PhotoCard({
-  photo,
-  readOnly,
-  onRemove,
-}: {
-  photo: PhotoEvidence;
-  readOnly: boolean;
-  onRemove: () => void;
-}) {
-  const [showDetail, setShowDetail] = useState(false);
-
-  return (
-    <>
-      <div className="group relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={photo.dataUrl}
-          alt={photo.fileName}
-          className="w-full h-full object-cover cursor-pointer"
-          onClick={() => setShowDetail(true)}
-        />
-
-        {/* Badges */}
-        <div className="absolute top-1 left-1 flex flex-wrap gap-1">
-          {photo.aiStatus === "processing" && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-600 text-purple-700 backdrop-blur-sm flex items-center gap-1">
-              <Loader2 className="h-2 w-2 animate-spin" />
-              IA
-            </span>
-          )}
-          {photo.aiStatus === "complete" && photo.aiAnalysis && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-600 text-purple-700 backdrop-blur-sm">
-              <Sparkles className="h-2 w-2 inline" /> IA
-            </span>
-          )}
-          {photo.evidenceStrength === "fuerte" && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-600 text-emerald-700 backdrop-blur-sm">
-              <Shield className="h-2 w-2 inline" /> Fuerte
-            </span>
-          )}
-          {photo.warnings.length > 0 && (
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-600 text-amber-700 backdrop-blur-sm">
-              <AlertTriangle className="h-2 w-2 inline" />
-            </span>
-          )}
-        </div>
-
-        {/* Damage findings indicator */}
-        {photo.aiAnalysis && photo.aiAnalysis.damageFindings.length > 0 && (
-          <div className="absolute bottom-1 left-1 right-1">
-            <div className="text-[9px] bg-red-600 text-red-700 px-1.5 py-0.5 rounded backdrop-blur-sm truncate">
-              {photo.aiAnalysis.damageFindings.length} hallazgo(s)
-            </div>
-          </div>
-        )}
-
-        {/* Remove button */}
-        {!readOnly && (
-          <button
-            onClick={onRemove}
-            className="absolute top-1 right-1 p-1 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-danger"
-          >
-            <Trash2 className="h-3 w-3" />
-          </button>
-        )}
-      </div>
-
-      {/* Detail modal */}
-      {showDetail && (
-        <PhotoDetailModal photo={photo} onClose={() => setShowDetail(false)} />
-      )}
-    </>
-  );
-}
-
-function PhotoDetailModal({
-  photo,
-  onClose,
-}: {
-  photo: PhotoEvidence;
-  onClose: () => void;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div
-        className="max-w-3xl w-full bg-white border border-gray-200 rounded-lg overflow-hidden my-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-3 border-b border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-900 truncate">
-            {photo.fileName}
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-muted hover:text-gray-800 text-xl leading-none"
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 max-h-[80vh] overflow-y-auto">
-          {/* Image */}
-          <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photo.dataUrl}
-              alt={photo.fileName}
-              className="w-full rounded-lg"
-            />
-          </div>
-
-          {/* Info */}
-          <div className="space-y-3 text-sm">
-            {/* AI */}
-            {photo.aiAnalysis && (
-              <div className="rounded-md bg-purple-50 border border-purple-200 p-3">
-                <div className="flex items-center gap-1 mb-1.5 text-xs text-purple-700 uppercase tracking-wider">
-                  <Sparkles className="h-3 w-3" />
-                  Analisis IA
-                </div>
-                <p className="text-gray-700 leading-relaxed mb-2">
-                  {photo.aiAnalysis.caption}
-                </p>
-                <p className="text-xs text-muted">
-                  Estado: {photo.aiAnalysis.conditionSummary}
-                </p>
-                {photo.aiAnalysis.damageFindings.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-purple-100 space-y-1">
-                    <p className="text-xs text-purple-700 uppercase tracking-wider mb-1">
-                      Hallazgos
-                    </p>
-                    {photo.aiAnalysis.damageFindings.map((f) => (
-                      <div key={f.id} className="text-xs">
-                        <span className={cn("font-medium", DAMAGE_SEVERITY_COLOR[f.severity])}>
-                          [{DAMAGE_SEVERITY_LABEL[f.severity]}]
-                        </span>{" "}
-                        <span className="text-gray-600">
-                          {DAMAGE_TYPE_LABEL[f.type]}
-                        </span>
-                        <p className="text-muted mt-0.5">{f.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Forensic summary */}
-            {photo.forensic && (
-              <div className="rounded-md bg-gray-50 border border-gray-200 p-3">
-                <div className="flex items-center gap-1 mb-2 text-xs text-accent uppercase tracking-wider">
-                  <Shield className="h-3 w-3" />
-                  Respaldo forense
-                </div>
-                <div className="space-y-1 text-xs">
-                  <KV
-                    label="SHA-256"
-                    value={photo.forensic.file.sha256.slice(0, 16) + "..."}
-                    mono
-                  />
-                  <KV
-                    label="Fecha EXIF"
-                    value={photo.forensic.exifTemporal.dateTimeOriginal ?? "—"}
-                  />
-                  <KV
-                    label="GPS"
-                    value={
-                      photo.forensic.gps.latitude
-                        ? `${photo.forensic.gps.latitude.toFixed(4)}, ${photo.forensic.gps.longitude?.toFixed(4)}`
-                        : "—"
-                    }
-                  />
-                  <KV
-                    label="Camara"
-                    value={photo.forensic.exifDevice.model ?? "—"}
-                  />
-                  <KV label="Fuerza" value={photo.evidenceStrength} />
-                </div>
-              </div>
-            )}
-
-            {/* Warnings */}
-            {photo.warnings.length > 0 && (
-              <div className="rounded-md bg-amber-50 border border-amber-200 p-3">
-                <div className="flex items-center gap-1 mb-1 text-xs text-amber-700 uppercase tracking-wider">
-                  <AlertTriangle className="h-3 w-3" />
-                  Advertencias
-                </div>
-                <ul className="text-xs text-gray-600 space-y-0.5">
-                  {photo.warnings.map((w) => (
-                    <li key={w}>· {w.replace(/_/g, " ")}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className="text-xs text-muted">
-              Subido por {photo.uploadedByName} el{" "}
-              {new Date(photo.uploadedAt).toLocaleString("es-CL")}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function KV({
-  label,
-  value,
-  mono,
-}: {
-  label: string;
-  value: string;
-  mono?: boolean;
-}) {
-  return (
-    <div className="flex justify-between gap-2">
-      <span className="text-muted">{label}</span>
-      <span className={cn("text-gray-700 truncate", mono && "font-mono")}>
-        {value}
-      </span>
-    </div>
-  );
-}
