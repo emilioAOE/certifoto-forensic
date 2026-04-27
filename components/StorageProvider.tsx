@@ -38,9 +38,12 @@ export function StorageProvider({ children }: { children: React.ReactNode }) {
   if (!ready) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-6 w-6 text-accent animate-spin mx-auto mb-3" />
-          <p className="text-sm text-gray-500">Cargando...</p>
+        <div className="text-center" role="status" aria-live="polite">
+          <Loader2
+            className="h-6 w-6 text-accent animate-spin mx-auto mb-3"
+            aria-hidden="true"
+          />
+          <p className="text-sm text-gray-500">Cargando tu plataforma...</p>
         </div>
       </div>
     );

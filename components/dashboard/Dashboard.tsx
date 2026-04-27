@@ -37,6 +37,7 @@ import {
 import { StorageIndicator } from "./StorageIndicator";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
+import { SkeletonGrid, SkeletonLine } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cn";
 
 export function Dashboard() {
@@ -142,8 +143,13 @@ export function Dashboard() {
 
   if (!mounted) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="text-muted text-sm">Cargando...</div>
+      <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
+        <div className="space-y-2">
+          <SkeletonLine width="50%" />
+          <SkeletonLine width="80%" />
+        </div>
+        <SkeletonGrid count={4} cols={4} />
+        <SkeletonGrid count={3} cols={3} />
       </div>
     );
   }
