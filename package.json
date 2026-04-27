@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "preflight": "npm run type-check && npm run lint && npm run build"
+    "preflight": "npm run type-check && npm run lint && npm run build",
+    "favicons": "node scripts/generate-favicons.js"
   },
   "dependencies": {
     "@vercel/analytics": "~1.5.0",
