@@ -9,12 +9,14 @@ import {
   ImagePlus,
   CheckCircle2,
   Trash2,
+  Brain,
 } from "lucide-react";
 import type {
   Acta,
   Room,
   PhotoEvidence,
   RoomType,
+  ConditionLevel,
 } from "@/lib/acta-types";
 import { generateId, getCurrentUser } from "@/lib/storage";
 import {
@@ -25,6 +27,7 @@ import {
 import { parseClientSide } from "@/lib/parse-client";
 import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
 import { compressImage, shouldCompress } from "@/lib/image-compression";
+import { classifyRoomWithAI } from "@/lib/room-classifier";
 import { cn } from "@/lib/cn";
 
 interface BulkPhotoUploaderProps {
@@ -45,7 +48,11 @@ interface ProcessedPhoto {
   forensic: PhotoEvidence["forensic"];
   suggestedRoomId: string | null;
   suggestionConfidence: "alta" | "media" | "baja";
+  /** Origen de la sugerencia: heuristica de nombre o IA vision */
+  suggestionSource: "filename" | "ai" | "none";
   matchedKeyword: string | null;
+  /** Estado del job de AI: idle | running | done | failed | unavailable */
+  aiStatus: "idle" | "running" | "done" | "failed" | "unavailable";
 }
 
 /**
@@ -97,6 +104,77 @@ export function BulkPhotoUploader({
     }
     setAssignments(initialAssignments);
     setStage("review");
+
+    // Despues del procesamiento local, lanza AI vision en background para
+    // mejorar las sugerencias de fotos sin match alta de filename.
+    void runAIClassification(processed);
+  };
+
+  const runAIClassification = async (initial: ProcessedPhoto[]) => {
+    // Solo clasificamos las que NO tienen match alta del filename.
+    // Las "alta" del filename ya son confiables — no gastamos tokens ahi.
+    const targets = initial.filter(
+      (p) => p.suggestionSource !== "filename" || p.suggestionConfidence !== "alta"
+    );
+    if (targets.length === 0 || acta.rooms.length === 0) return;
+
+    const roomsForAI = acta.rooms.map((r) => ({
+      id: r.id,
+      name: r.name,
+      type: r.type,
+    }));
+
+    // Marcar todos como "running"
+    setPhotos((prev) =>
+      prev.map((p) =>
+        targets.some((t) => t.tempId === p.tempId)
+          ? { ...p, aiStatus: "running" as const }
+          : p
+      )
+    );
+
+    // Procesar en serie para que el prompt cache haga hit a partir de la 2da
+    // (Haiku tiene cache de 5min para prefijos > 4096 tokens; con muchos
+    // ambientes el system prompt entra al cache despues de la primera).
+    for (const target of targets) {
+      const result = await classifyRoomWithAI(target.dataUrl, roomsForAI);
+
+      setPhotos((prev) =>
+        prev.map((p) => {
+          if (p.tempId !== target.tempId) return p;
+          if (result.source === "unavailable") {
+            return { ...p, aiStatus: "unavailable" as const };
+          }
+          if (!result.ok || !result.roomId) {
+            // AI no pudo clasificar: dejamos el fallback de filename si lo hay
+            return {
+              ...p,
+              aiStatus: result.source === "ai" ? "done" : "failed",
+            };
+          }
+          return {
+            ...p,
+            aiStatus: "done" as const,
+            suggestedRoomId: result.roomId,
+            suggestionConfidence: result.confidence,
+            suggestionSource: "ai" as const,
+            matchedKeyword: result.reasoning,
+          };
+        })
+      );
+
+      // Si la asignacion estaba sin asignar O era de baja confianza, aplicamos
+      // la sugerencia de AI. Si el usuario ya cambio manualmente el dropdown,
+      // respetamos su eleccion (no la pisamos).
+      if (result.ok && result.roomId) {
+        setAssignments((prev) => {
+          const current = prev[target.tempId];
+          // No piso si el user ya cambio la asignacion manualmente
+          if (current && current !== target.suggestedRoomId) return prev;
+          return { ...prev, [target.tempId]: result.roomId ?? null };
+        });
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -104,13 +182,48 @@ export function BulkPhotoUploader({
     const user = getCurrentUser();
     setSaving(true);
     try {
+      // Si hay fotos sin asignar, creamos (o reutilizamos) un ambiente
+      // "Sin clasificar" automaticamente para no perderlas. El usuario
+      // puede moverlas manualmente despues.
+      const unassigned = photos.filter((p) => !assignments[p.tempId]);
+      let fallbackRoom: Room | null = null;
+      let newRoomToCreate: Room | null = null;
+      if (unassigned.length > 0) {
+        fallbackRoom =
+          acta.rooms.find(
+            (r) => r.type === "otro" && /sin clasificar/i.test(r.name)
+          ) ?? null;
+        if (!fallbackRoom) {
+          newRoomToCreate = {
+            id: generateId("room"),
+            name: "Sin clasificar",
+            type: "otro" as RoomType,
+            order: acta.rooms.length,
+            required: false,
+            minPhotos: 0,
+            generalCondition: "no_evaluado" as ConditionLevel,
+            aiSummary: null,
+            manualObservations:
+              "Ambiente creado automaticamente para fotos sin asignar. Puedes mover las fotos al ambiente correcto cuando sea claro.",
+            photoIds: [],
+          };
+          fallbackRoom = newRoomToCreate;
+        }
+      }
+
       const photosToAdd: PhotoEvidence[] = [];
       const aiJobs: { photoId: string; file: File; roomType: RoomType }[] = [];
 
       for (const p of photos) {
-        const roomId = assignments[p.tempId];
-        if (!roomId) continue; // saltar las sin asignar
-        const room = acta.rooms.find((r) => r.id === roomId);
+        let roomId = assignments[p.tempId];
+        if (!roomId && fallbackRoom) {
+          roomId = fallbackRoom.id;
+        }
+        if (!roomId) continue;
+        // Buscar el room: puede ser uno existente o el nuevo "Sin clasificar"
+        const room =
+          acta.rooms.find((r) => r.id === roomId) ??
+          (fallbackRoom?.id === roomId ? fallbackRoom : null);
         if (!room) continue;
         const photoId = generateId("photo");
         const photo: PhotoEvidence = {
@@ -149,16 +262,27 @@ export function BulkPhotoUploader({
         return;
       }
 
-      onUpdate((a) =>
-        appendAuditLog(
-          { ...a, photos: [...a.photos, ...photosToAdd] },
+      onUpdate((a) => {
+        const updatedRooms = newRoomToCreate
+          ? [...a.rooms, newRoomToCreate]
+          : a.rooms;
+        return appendAuditLog(
+          {
+            ...a,
+            rooms: updatedRooms,
+            photos: [...a.photos, ...photosToAdd],
+          },
           user.name,
           user.role,
           null,
           "photo_uploaded",
-          { count: photosToAdd.length, bulk: true }
-        )
-      );
+          {
+            count: photosToAdd.length,
+            bulk: true,
+            createdSinClasificarRoom: !!newRoomToCreate,
+          }
+        );
+      });
 
       // Lanzar analisis IA en background (no bloqueante para el usuario)
       void runBulkAI(aiJobs);
@@ -318,7 +442,7 @@ export function BulkPhotoUploader({
                   <span className="font-semibold text-amber-700">
                     {unassignedCount}
                   </span>{" "}
-                  sin asignar
+                  van a &ldquo;Sin clasificar&rdquo;
                 </>
               )}
             </div>
@@ -331,7 +455,7 @@ export function BulkPhotoUploader({
               </button>
               <button
                 onClick={handleSave}
-                disabled={saving || assignedCount === 0}
+                disabled={saving || photos.length === 0}
                 className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {saving ? (
@@ -339,7 +463,7 @@ export function BulkPhotoUploader({
                 ) : (
                   <CheckCircle2 className="h-3.5 w-3.5" />
                 )}
-                Guardar {assignedCount} foto{assignedCount === 1 ? "" : "s"}
+                Guardar {photos.length} foto{photos.length === 1 ? "" : "s"}
               </button>
             </div>
           </div>
@@ -435,12 +559,22 @@ function ReviewStage({
     );
   }
 
+  const runningCount = photos.filter((p) => p.aiStatus === "running").length;
+
   return (
     <div className="space-y-3">
-      <p className="text-xs text-gray-700 leading-relaxed">
-        Revisa la asignacion sugerida por IA. Si alguna foto se ve mal asignada,
-        cambia el ambiente desde el menu.
-      </p>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <p className="text-xs text-gray-700 leading-relaxed flex-1 min-w-[200px]">
+          Revisa la asignacion sugerida. Las fotos sin asignar se guardaran en
+          un ambiente &ldquo;Sin clasificar&rdquo; que podras renombrar despues.
+        </p>
+        {runningCount > 0 && (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 border border-purple-200 px-2.5 py-1 text-[11px] font-medium text-purple-800">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            IA analizando {runningCount} foto{runningCount === 1 ? "" : "s"}...
+          </span>
+        )}
+      </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {photos.map((p) => {
           const assignedId = assignments[p.tempId] ?? null;
@@ -474,27 +608,18 @@ function ReviewStage({
                     : "border-amber-300 text-amber-900"
                 )}
               >
-                <option value="">— Sin asignar —</option>
+                <option value="">— Sin clasificar —</option>
                 {rooms.map((r) => (
                   <option key={r.id} value={r.id}>
                     {r.name}
                   </option>
                 ))}
               </select>
-              <div className="flex items-center justify-between text-[10px]">
-                {p.matchedKeyword ? (
-                  <span className="inline-flex items-center gap-1 text-accent-dark">
-                    <Sparkles className="h-2.5 w-2.5" />
-                    IA: &ldquo;{p.matchedKeyword}&rdquo; ({p.suggestionConfidence})
-                  </span>
-                ) : (
-                  <span className="text-amber-700">
-                    Sin match — asigna manualmente
-                  </span>
-                )}
+              <div className="flex items-center justify-between gap-1 text-[10px]">
+                <SuggestionBadge photo={p} />
                 <button
                   onClick={() => onRemovePhoto(p.tempId)}
-                  className="text-muted hover:text-danger"
+                  className="text-muted hover:text-danger shrink-0"
                   aria-label="Quitar"
                 >
                   <Trash2 className="h-3 w-3" />
@@ -505,6 +630,51 @@ function ReviewStage({
         })}
       </div>
     </div>
+  );
+}
+
+function SuggestionBadge({ photo: p }: { photo: ProcessedPhoto }) {
+  if (p.aiStatus === "running") {
+    return (
+      <span className="inline-flex items-center gap-1 text-purple-700">
+        <Loader2 className="h-2.5 w-2.5 animate-spin" />
+        IA analizando...
+      </span>
+    );
+  }
+  if (p.suggestionSource === "ai") {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-purple-800 truncate"
+        title={p.matchedKeyword ?? ""}
+      >
+        <Brain className="h-2.5 w-2.5" />
+        IA ({p.suggestionConfidence}): {p.matchedKeyword?.slice(0, 40)}
+      </span>
+    );
+  }
+  if (p.suggestionSource === "filename") {
+    return (
+      <span className="inline-flex items-center gap-1 text-accent-dark">
+        <Sparkles className="h-2.5 w-2.5" />
+        Nombre: &ldquo;{p.matchedKeyword}&rdquo; ({p.suggestionConfidence})
+      </span>
+    );
+  }
+  if (p.aiStatus === "unavailable") {
+    return (
+      <span className="text-amber-700">
+        IA no configurada — asigna manualmente
+      </span>
+    );
+  }
+  if (p.aiStatus === "failed") {
+    return (
+      <span className="text-amber-700">IA fallo — asigna manualmente</span>
+    );
+  }
+  return (
+    <span className="text-amber-700">Sin match — asigna manualmente</span>
   );
 }
 
@@ -555,7 +725,7 @@ async function processOne(file: File, rooms: Room[]): Promise<ProcessedPhoto> {
     height = dims.h || null;
   }
 
-  // 3. Suggest room (heuristic)
+  // 3. Suggest room (heuristic). La AI corre despues en background.
   const { roomId, confidence, keyword } = suggestRoom(file.name, rooms);
 
   return {
@@ -570,7 +740,9 @@ async function processOne(file: File, rooms: Room[]): Promise<ProcessedPhoto> {
     forensic,
     suggestedRoomId: roomId,
     suggestionConfidence: confidence,
+    suggestionSource: roomId ? "filename" : "none",
     matchedKeyword: keyword,
+    aiStatus: "idle",
   };
 }
 
