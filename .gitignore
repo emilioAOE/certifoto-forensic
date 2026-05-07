@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# pdfjs-dist assets copiados por scripts/copy-pdf-worker.js (postinstall)
+/public/pdf.min.mjs
+/public/pdf.worker.min.mjs

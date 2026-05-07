@@ -336,15 +336,26 @@ let pdfJsCache: PdfJsLib | null = null;
 
 async function loadPdfJs(): Promise<PdfJsLib> {
   if (pdfJsCache) return pdfJsCache;
-  // Importacion dinamica para no incluir PDF.js en el bundle inicial
-  const mod = (await import("pdfjs-dist")) as unknown as PdfJsLib & {
-    default?: PdfJsLib;
-  };
+
+  // PDF.js v5 es ESM puro y rompe la interop de webpack/Next.js
+  // (TypeError: "Object.defineProperty called on non-object" en
+  // __webpack_require__.r). La solucion es cargarlo como ESM nativo del
+  // browser desde /public, bypaseando webpack con el comentario
+  // /* webpackIgnore: true */.
+  // Tanto pdf.min.mjs como pdf.worker.min.mjs los copia el script
+  // scripts/copy-pdf-worker.js durante postinstall.
+  // "/pdf.min.mjs" es un asset de /public, no un modulo resoluble en
+  // compile-time. Webpack lo deja pasar por el comentario webpackIgnore y
+  // el browser lo carga directamente como ESM nativo.
+  const mod = (await import(
+    /* webpackIgnore: true */
+    // @ts-expect-error: ruta de runtime, no de compile-time
+    "/pdf.min.mjs"
+  )) as unknown as PdfJsLib & { default?: PdfJsLib };
   const lib = (mod.default ?? mod) as PdfJsLib;
 
-  // Worker via CDN (PDF.js requiere worker para funcionar bien)
-  if (lib.GlobalWorkerOptions && lib.version) {
-    lib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${lib.version}/pdf.worker.min.mjs`;
+  if (lib.GlobalWorkerOptions) {
+    lib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
   }
 
   pdfJsCache = lib;
