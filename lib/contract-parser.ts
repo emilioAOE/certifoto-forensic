@@ -1,23 +1,21 @@
 /**
- * Extractor de datos de contratos de arriendo en PDF.
+ * Extractor de datos de contratos de arriendo.
  *
- * Usa PDF.js para extraer el texto del PDF (client-side) y luego aplica
- * heuristicas (regex + busqueda contextual) para identificar:
+ * Acepta:
+ * - PDF nativo (texto seleccionable) — extrae texto con PDF.js
+ * - PDF escaneado (imagen) — render por pagina + OCR con Tesseract.js (es-ES)
+ * - Imagenes (jpg/png/etc) — OCR directo
  *
- * - Direccion del inmueble
- * - Comuna y region
- * - RUT y nombre del arrendador
- * - RUT y nombre del arrendatario
- * - Monto del arriendo
- * - Fecha de inicio del contrato
- * - Plazo
- * - Garantia
+ * Despues aplica heuristicas (regex + busqueda contextual) para identificar:
+ *  - Direccion del inmueble + comuna + region
+ *  - RUT y nombre del arrendador y arrendatario
+ *  - Monto del arriendo, fechas de inicio/termino, garantia
  *
- * Limitaciones:
- * - Solo funciona con PDFs nativos (texto seleccionable). PDFs escaneados
- *   requeririan OCR (Tesseract.js, no implementado).
- * - Heuristicas calibradas para contratos chilenos comunes. No es perfecto.
- * - El usuario siempre puede revisar y corregir antes de continuar.
+ * Notas:
+ * - Tesseract.js carga el modelo de espanol (~12MB) la primera vez que
+ *   se usa OCR. Se almacena en cache del navegador.
+ * - Las heuristicas estan calibradas para contratos chilenos comunes.
+ *   El usuario siempre puede revisar y corregir antes de aplicar.
  */
 
 import { findComunaByName, type Region } from "./chile-comunas";
@@ -63,19 +61,97 @@ export interface ContractExtraction {
 // Entry point
 // ============================================
 
+export type ExtractStage =
+  | "loading_pdf"
+  | "reading_native_text"
+  | "ocr_loading_model"
+  | "ocr_rendering_page"
+  | "ocr_recognizing"
+  | "parsing"
+  | "done";
+
+export interface ExtractProgress {
+  stage: ExtractStage;
+  /** 0..1 del paso actual */
+  pct: number;
+  /** Pagina actual (1-indexed) si aplica */
+  page?: number;
+  /** Total de paginas, si aplica */
+  totalPages?: number;
+  /** Texto descriptivo para mostrar al usuario */
+  message: string;
+}
+
+export interface ExtractOptions {
+  onProgress?: (progress: ExtractProgress) => void;
+  /**
+   * Caracteres minimos en el texto nativo para considerarlo valido (no
+   * escaneado). Por debajo de este umbral cae al fallback OCR.
+   */
+  scannedThresholdChars?: number;
+}
+
+const DEFAULT_SCANNED_THRESHOLD = 200;
+
 /**
- * Carga PDF.js (lazy), extrae el texto del PDF y aplica heuristicas.
+ * Lee un contrato (PDF o imagen) y extrae los datos. Decide automaticamente
+ * si usar texto nativo del PDF o caer a OCR (escaneo o imagen).
  */
 export async function extractContractData(
-  file: File | Blob
+  file: File | Blob,
+  options: ExtractOptions = {}
 ): Promise<ContractExtraction> {
+  const { onProgress, scannedThresholdChars = DEFAULT_SCANNED_THRESHOLD } =
+    options;
+  const fileType =
+    "type" in file && typeof file.type === "string" ? file.type : "";
+  const isImage = fileType.startsWith("image/");
+
+  // Caso 1: imagen → OCR directo
+  if (isImage) {
+    onProgress?.({
+      stage: "ocr_loading_model",
+      pct: 0,
+      message: "Cargando modelo OCR (espanol). Primera vez ~12MB.",
+    });
+    const text = await ocrImage(file, (pct) =>
+      onProgress?.({
+        stage: "ocr_recognizing",
+        pct,
+        message: `Leyendo imagen con OCR... ${Math.round(pct * 100)}%`,
+      })
+    );
+    onProgress?.({
+      stage: "parsing",
+      pct: 1,
+      message: "Procesando datos extraidos...",
+    });
+    const result = parseContractText(text, 1);
+    onProgress?.({ stage: "done", pct: 1, message: "Listo" });
+    return result;
+  }
+
+  // Caso 2: PDF — intentamos texto nativo primero
+  onProgress?.({
+    stage: "loading_pdf",
+    pct: 0,
+    message: "Abriendo PDF...",
+  });
   const pdfjs = await loadPdfJs();
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
   const pdfDoc = await loadingTask.promise;
+  const totalPages = pdfDoc.numPages;
 
-  let rawText = "";
-  for (let i = 1; i <= pdfDoc.numPages; i++) {
+  onProgress?.({
+    stage: "reading_native_text",
+    pct: 0,
+    totalPages,
+    message: "Leyendo texto del PDF...",
+  });
+
+  let nativeText = "";
+  for (let i = 1; i <= totalPages; i++) {
     const page = await pdfDoc.getPage(i);
     const content = await page.getTextContent();
     const pageText = content.items
@@ -84,10 +160,149 @@ export async function extractContractData(
         return item.str ?? "";
       })
       .join(" ");
-    rawText += pageText + "\n";
+    nativeText += pageText + "\n";
+    onProgress?.({
+      stage: "reading_native_text",
+      pct: i / totalPages,
+      page: i,
+      totalPages,
+      message: `Leyendo pagina ${i}/${totalPages}...`,
+    });
   }
 
-  return parseContractText(rawText, pdfDoc.numPages);
+  const meaningfulChars = nativeText.replace(/\s/g, "").length;
+  const isLikelyScanned = meaningfulChars < scannedThresholdChars;
+
+  if (!isLikelyScanned) {
+    // PDF nativo con texto suficiente
+    onProgress?.({
+      stage: "parsing",
+      pct: 1,
+      message: "Procesando datos extraidos...",
+    });
+    const result = parseContractText(nativeText, totalPages);
+    onProgress?.({ stage: "done", pct: 1, message: "Listo" });
+    return result;
+  }
+
+  // PDF escaneado: render cada pagina a canvas y OCR
+  onProgress?.({
+    stage: "ocr_loading_model",
+    pct: 0,
+    totalPages,
+    message:
+      "El PDF parece escaneado. Cargando modelo OCR (primera vez ~12MB)...",
+  });
+
+  let ocrText = "";
+  for (let i = 1; i <= totalPages; i++) {
+    onProgress?.({
+      stage: "ocr_rendering_page",
+      pct: (i - 1) / totalPages,
+      page: i,
+      totalPages,
+      message: `Preparando pagina ${i}/${totalPages} para OCR...`,
+    });
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: 2 });
+    const canvas = document.createElement("canvas");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("No se pudo crear contexto canvas");
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const pageText = await ocrCanvas(canvas, (pct) =>
+      onProgress?.({
+        stage: "ocr_recognizing",
+        pct: ((i - 1) + pct) / totalPages,
+        page: i,
+        totalPages,
+        message: `OCR pagina ${i}/${totalPages}: ${Math.round(pct * 100)}%`,
+      })
+    );
+    ocrText += pageText + "\n";
+  }
+
+  onProgress?.({
+    stage: "parsing",
+    pct: 1,
+    totalPages,
+    message: "Procesando datos extraidos del OCR...",
+  });
+  const result = parseContractText(ocrText, totalPages);
+  onProgress?.({ stage: "done", pct: 1, totalPages, message: "Listo" });
+  return result;
+}
+
+// ============================================
+// OCR loader (Tesseract.js)
+// ============================================
+
+type TesseractLogger = (m: { status: string; progress: number }) => void;
+
+interface TesseractWorker {
+  recognize: (
+    image: File | Blob | HTMLCanvasElement | string
+  ) => Promise<{ data: { text: string } }>;
+  terminate: () => Promise<void>;
+}
+
+interface TesseractModule {
+  createWorker: (
+    lang: string,
+    oem?: number,
+    options?: { logger?: TesseractLogger }
+  ) => Promise<TesseractWorker>;
+}
+
+let tesseractWorkerPromise: Promise<TesseractWorker> | null = null;
+let activeOcrLogger: TesseractLogger | null = null;
+
+async function getTesseractWorker(): Promise<TesseractWorker> {
+  if (tesseractWorkerPromise) return tesseractWorkerPromise;
+  tesseractWorkerPromise = (async () => {
+    const mod = (await import("tesseract.js")) as unknown as TesseractModule;
+    const worker = await mod.createWorker("spa", undefined, {
+      logger: (m) => {
+        if (activeOcrLogger) activeOcrLogger(m);
+      },
+    });
+    return worker;
+  })();
+  return tesseractWorkerPromise;
+}
+
+async function ocrImage(
+  file: File | Blob,
+  onProgress: (pct: number) => void
+): Promise<string> {
+  const worker = await getTesseractWorker();
+  activeOcrLogger = (m) => {
+    if (m.status === "recognizing text") onProgress(m.progress);
+  };
+  try {
+    const result = await worker.recognize(file);
+    return result.data.text;
+  } finally {
+    activeOcrLogger = null;
+  }
+}
+
+async function ocrCanvas(
+  canvas: HTMLCanvasElement,
+  onProgress: (pct: number) => void
+): Promise<string> {
+  const worker = await getTesseractWorker();
+  activeOcrLogger = (m) => {
+    if (m.status === "recognizing text") onProgress(m.progress);
+  };
+  try {
+    const result = await worker.recognize(canvas);
+    return result.data.text;
+  } finally {
+    activeOcrLogger = null;
+  }
 }
 
 // ============================================
@@ -102,6 +317,14 @@ interface PdfJsLib {
         getTextContent: () => Promise<{
           items: unknown[];
         }>;
+        getViewport: (params: { scale: number }) => {
+          width: number;
+          height: number;
+        };
+        render: (params: {
+          canvasContext: CanvasRenderingContext2D;
+          viewport: { width: number; height: number };
+        }) => { promise: Promise<void> };
       }>;
     }>;
   };

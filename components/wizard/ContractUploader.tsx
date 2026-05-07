@@ -10,16 +10,24 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { extractContractData, type ContractExtraction } from "@/lib/contract-parser";
+import {
+  extractContractData,
+  type ContractExtraction,
+  type ExtractProgress,
+} from "@/lib/contract-parser";
 
 interface ContractUploaderProps {
   onExtracted: (data: ContractExtraction) => void;
   onClose?: () => void;
 }
 
+const ACCEPTED_TYPES =
+  "application/pdf,.pdf,image/jpeg,image/png,image/webp,image/heic,image/heif,image/tiff";
+
 /**
- * Componente para subir un PDF de contrato y extraer datos automaticamente.
- * Muestra preview de lo extraido para que el usuario revise antes de aplicar.
+ * Componente para subir un contrato (PDF o imagen) y extraer datos
+ * automaticamente. Si el PDF es escaneado o el archivo es una imagen, cae a
+ * OCR (Tesseract.js, espanol). Muestra preview de lo extraido para revision.
  */
 export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,33 +35,47 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
   const [extraction, setExtraction] = useState<ContractExtraction | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [progress, setProgress] = useState<ExtractProgress | null>(null);
 
   const handleFile = async (file: File) => {
     setError(null);
     setExtraction(null);
+    setProgress(null);
     setFileName(file.name);
 
-    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-      setError("Solo archivos PDF. Si tu contrato esta escaneado como imagen, ingresa los datos a mano.");
+    const isPdf =
+      file.type === "application/pdf" ||
+      file.name.toLowerCase().endsWith(".pdf");
+    const isImage = file.type.startsWith("image/");
+
+    if (!isPdf && !isImage) {
+      setError(
+        "Formato no soportado. Sube un PDF o una imagen (JPG, PNG, WebP, HEIC, TIFF)."
+      );
       return;
     }
 
-    if (file.size > 20 * 1024 * 1024) {
-      setError("El PDF es muy grande (max 20 MB)");
+    if (file.size > 30 * 1024 * 1024) {
+      setError("El archivo es muy grande (max 30 MB)");
       return;
     }
 
     setExtracting(true);
     try {
-      const data = await extractContractData(file);
+      const data = await extractContractData(file, {
+        onProgress: (p) => setProgress(p),
+      });
       setExtraction(data);
     } catch (err) {
       console.error("Contract extraction failed:", err);
       setError(
-        "No se pudo leer el PDF. Puede ser un escaneo (imagen) en lugar de texto. Ingresa los datos manualmente."
+        err instanceof Error
+          ? `No se pudo leer el archivo: ${err.message}. Ingresa los datos manualmente.`
+          : "No se pudo leer el archivo. Ingresa los datos manualmente."
       );
     } finally {
       setExtracting(false);
+      setProgress(null);
     }
   };
 
@@ -76,7 +98,8 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
               Acelerar con tu contrato
             </h3>
             <p className="text-xs text-gray-500">
-              Sube el PDF del contrato y extraemos los datos automaticamente.
+              Sube el PDF o foto del contrato y extraemos los datos
+              automaticamente. Si esta escaneado, hacemos OCR.
             </p>
           </div>
         </div>
@@ -99,16 +122,17 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
           >
             <Upload className="h-5 w-5 text-gray-400 mx-auto mb-2" />
             <div className="text-sm font-medium text-gray-800">
-              Subir contrato (PDF)
+              Subir contrato (PDF o imagen)
             </div>
-            <div className="text-xs text-gray-500 mt-1">
-              Solo PDFs con texto seleccionable. Procesado local en tu navegador.
+            <div className="text-xs text-gray-500 mt-1 leading-relaxed">
+              PDF nativo, PDF escaneado o foto del contrato (JPG, PNG, WebP,
+              HEIC). Si es escaneo o imagen, hacemos OCR en espanol localmente.
             </div>
           </button>
           <input
             ref={inputRef}
             type="file"
-            accept="application/pdf,.pdf"
+            accept={ACCEPTED_TYPES}
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];
@@ -125,9 +149,33 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
           <div className="text-sm font-medium text-gray-800">
             Leyendo {fileName}...
           </div>
-          <div className="text-xs text-gray-500 mt-1">
-            Extrayendo direccion, partes, monto y fechas.
+          <div className="text-xs text-gray-500 mt-1.5 leading-relaxed">
+            {progress?.message ?? "Procesando..."}
           </div>
+          {progress && (
+            <div className="max-w-xs mx-auto mt-3">
+              <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                <div
+                  className="h-full bg-accent transition-all"
+                  style={{
+                    width: `${Math.round((progress.pct ?? 0) * 100)}%`,
+                  }}
+                />
+              </div>
+              {progress.totalPages && progress.page && (
+                <p className="text-[10px] text-muted mt-1.5 font-mono">
+                  pagina {progress.page} de {progress.totalPages}
+                </p>
+              )}
+              {(progress.stage === "ocr_loading_model" ||
+                progress.stage === "ocr_recognizing" ||
+                progress.stage === "ocr_rendering_page") && (
+                <p className="text-[10px] text-muted mt-1 italic">
+                  El OCR puede tardar 10-30s por pagina la primera vez.
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -195,8 +243,9 @@ function ExtractionPreview({
       <div className="flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
         <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
         <div className="text-xs text-emerald-800 flex-1">
-          PDF procesado: {extraction.extractedFrom.pages} pagina(s),{" "}
+          Archivo procesado: {extraction.extractedFrom.pages} pagina(s),{" "}
           {extraction.extractedFrom.chars.toLocaleString()} caracteres
+          extraidos
         </div>
         <span className={`text-xs font-semibold ${confidenceColor}`}>
           Confianza {confidenceLabel}
