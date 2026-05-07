@@ -1,15 +1,22 @@
 "use client";
 
+import { useState } from "react";
+import { FileText, PencilLine, ArrowRight, Sparkles } from "lucide-react";
 import type { Property, PropertyType, FurnishedStatus } from "@/lib/acta-types";
 import { PROPERTY_TYPE_LABEL } from "@/lib/acta-constants";
 import { formatCLP, parseCLP } from "@/lib/validators";
 import { AddressAutocomplete } from "../AddressAutocomplete";
 import { ComunaCombobox } from "../ComunaCombobox";
+import { ContractUploader } from "../ContractUploader";
 import { PropertySelector } from "@/components/properties/PropertySelector";
+import type { ContractExtraction } from "@/lib/contract-parser";
+import { cn } from "@/lib/cn";
 
 type PropertyDraft = Omit<Property, "id" | "createdAt" | "updatedAt"> & {
   id?: string;
 };
+
+type FillMode = "ask" | "contract" | "manual";
 
 interface StepPropiedadProps {
   value: PropertyDraft;
@@ -18,6 +25,10 @@ interface StepPropiedadProps {
   onChangeProperty: (value: PropertyDraft) => void;
   onChangeInspectionDate: (value: string) => void;
   onSelectExistingProperty: (property: Property | null) => void;
+  onContractExtracted: (extraction: ContractExtraction) => void;
+  /** Si la propiedad ya tiene direccion, asumimos que el usuario ya escogio
+   * un modo (importacion previa, autoFill, etc.) y saltamos directo al form. */
+  initialMode?: FillMode;
 }
 
 export function StepPropiedad({
@@ -27,9 +38,24 @@ export function StepPropiedad({
   onChangeProperty,
   onChangeInspectionDate,
   onSelectExistingProperty,
+  onContractExtracted,
+  initialMode,
 }: StepPropiedadProps) {
+  const [mode, setMode] = useState<FillMode>(
+    initialMode ??
+      (value.address.trim().length > 0 || linkedPropertyId
+        ? "manual"
+        : "ask")
+  );
+
   const update = <K extends keyof PropertyDraft>(key: K, val: PropertyDraft[K]) =>
     onChangeProperty({ ...value, [key]: val });
+
+  const handleContractExtractedLocal = (extraction: ContractExtraction) => {
+    onContractExtracted(extraction);
+    // Tras aplicar, mostramos el formulario con los datos cargados para revisar
+    setMode("manual");
+  };
 
   return (
     <div>
@@ -37,21 +63,79 @@ export function StepPropiedad({
         Datos de la propiedad
       </h2>
       <p className="text-sm text-muted mb-5">
-        Direccion y datos basicos del inmueble que estas documentando.
-        Si tienes el contrato en PDF, usa el boton &ldquo;Subir contrato&rdquo;
-        arriba para autollenar.
+        Direccion, datos del inmueble y del contrato. Tienes dos formas de
+        completar este paso:
       </p>
 
-      {/* Selector de propiedad existente */}
-      <div className="mb-5">
-        <PropertySelector
-          selectedId={linkedPropertyId}
-          onSelect={onSelectExistingProperty}
-        />
-      </div>
+      {/* Two-path choice */}
+      {mode === "ask" && (
+        <div className="grid sm:grid-cols-2 gap-3 mb-6">
+          <PathCard
+            icon={<FileText className="h-5 w-5" />}
+            badge="Recomendado"
+            title="Subir contrato (PDF)"
+            description="Sube el PDF de tu contrato y autocompletamos direccion, partes, monto y fechas. Solo revisas y editas lo necesario."
+            cta="Subir contrato"
+            onClick={() => setMode("contract")}
+            highlighted
+          />
+          <PathCard
+            icon={<PencilLine className="h-5 w-5" />}
+            title="Llenar manualmente"
+            description="Si no tienes el PDF a mano o el contrato es escaneado, ingresa los datos a mano. Puedes saltar campos opcionales."
+            cta="Llenar manual"
+            onClick={() => setMode("manual")}
+          />
+        </div>
+      )}
 
-      <div className="space-y-4">
-        <Field label="Direccion" required>
+      {mode === "contract" && (
+        <div className="mb-6">
+          <ContractUploader
+            onExtracted={handleContractExtractedLocal}
+            onClose={() => setMode("ask")}
+          />
+          <button
+            type="button"
+            onClick={() => setMode("manual")}
+            className="mt-3 inline-flex items-center gap-1 text-xs text-muted hover:text-gray-800"
+          >
+            <ArrowRight className="h-3 w-3" />
+            Prefiero llenar manualmente
+          </button>
+        </div>
+      )}
+
+      {/* Banner sutil cuando ya esta en modo manual avisando del PDF */}
+      {mode === "manual" && (
+        <div className="mb-5 rounded-md border border-accent-light bg-accent-softer/40 px-3 py-2 flex items-center gap-2 text-xs text-accent-dark">
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span className="flex-1">
+            ¿Tienes el contrato en PDF? Puedes acelerar todo subiendolo y
+            autocompletamos los datos.
+          </span>
+          <button
+            type="button"
+            onClick={() => setMode("contract")}
+            className="rounded-md bg-white border border-accent-light px-2 py-0.5 text-[11px] font-medium hover:border-accent"
+          >
+            Subir contrato
+          </button>
+        </div>
+      )}
+
+      {/* Selector de propiedad existente + formulario manual */}
+      {mode === "manual" && (
+        <>
+          <div className="mb-5">
+            <PropertySelector
+              selectedId={linkedPropertyId}
+              onSelect={onSelectExistingProperty}
+            />
+          </div>
+
+          <div className="space-y-4">
+            <Field label="Direccion" required>
           <AddressAutocomplete
             value={value.address}
             onChange={(v) => update("address", v)}
@@ -272,7 +356,9 @@ export function StepPropiedad({
             placeholder="Cualquier observacion adicional sobre la propiedad..."
           />
         </Field>
-      </div>
+          </div>
+        </>
+      )}
 
       <style jsx>{`
         .input {
@@ -335,5 +421,63 @@ function Checkbox({
       />
       <span className="text-sm text-gray-700">{label}</span>
     </label>
+  );
+}
+
+function PathCard({
+  icon,
+  badge,
+  title,
+  description,
+  cta,
+  onClick,
+  highlighted,
+}: {
+  icon: React.ReactNode;
+  badge?: string;
+  title: string;
+  description: string;
+  cta: string;
+  onClick: () => void;
+  highlighted?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "group relative text-left rounded-xl border p-5 transition-colors flex flex-col h-full",
+        highlighted
+          ? "border-accent shadow-sm hover:bg-accent-softer/40"
+          : "border-gray-200 bg-white hover:border-accent/50"
+      )}
+    >
+      {badge && (
+        <span className="absolute -top-2 left-4 inline-flex items-center rounded-full bg-accent text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+          {badge}
+        </span>
+      )}
+      <div
+        className={cn(
+          "rounded-lg w-10 h-10 inline-flex items-center justify-center mb-3",
+          highlighted ? "bg-accent text-white" : "bg-accent-softer text-accent-dark"
+        )}
+      >
+        {icon}
+      </div>
+      <h3 className="text-sm font-semibold text-gray-900 mb-1">{title}</h3>
+      <p className="text-xs text-gray-600 leading-relaxed flex-1">
+        {description}
+      </p>
+      <span
+        className={cn(
+          "mt-3 inline-flex items-center gap-1 text-xs font-semibold",
+          highlighted ? "text-accent-dark" : "text-gray-700"
+        )}
+      >
+        {cta}
+        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+      </span>
+    </button>
   );
 }

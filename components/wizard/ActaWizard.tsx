@@ -7,12 +7,10 @@ import {
   ChevronRight,
   Check,
   Sparkles,
-  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type {
   ActaType,
-  ActaModality,
   Property,
   Party,
   Room,
@@ -35,17 +33,14 @@ import { appendAuditLog } from "@/lib/acta-helpers";
 import { syncContactsFromActa } from "@/lib/contacts";
 import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
-import { StepModalidad } from "./steps/StepModalidad";
 import { StepPropiedad } from "./steps/StepPropiedad";
 import { StepPartes } from "./steps/StepPartes";
 import { StepAmbientes } from "./steps/StepAmbientes";
 import { StepConfirmacion } from "./steps/StepConfirmacion";
-import { ContractUploader } from "./ContractUploader";
 import type { ContractExtraction } from "@/lib/contract-parser";
 
 interface WizardData {
   type: ActaType | null;
-  modality: ActaModality | null;
   property: Omit<Property, "id" | "createdAt" | "updatedAt"> & { id?: string };
   parties: (Omit<Party, "id" | "invitationToken" | "invitationStatus"> & {
     tempId: string;
@@ -56,16 +51,14 @@ interface WizardData {
 
 const STEPS = [
   { id: 1, label: "Tipo" },
-  { id: 2, label: "Modalidad" },
-  { id: 3, label: "Propiedad" },
-  { id: 4, label: "Partes" },
-  { id: 5, label: "Ambientes" },
-  { id: 6, label: "Revisar" },
+  { id: 2, label: "Propiedad" },
+  { id: 3, label: "Partes" },
+  { id: 4, label: "Ambientes" },
+  { id: 5, label: "Revisar" },
 ];
 
 const initialData: WizardData = {
   type: null,
-  modality: null,
   property: {
     address: "",
     unit: null,
@@ -104,7 +97,6 @@ export function ActaWizard() {
   const [data, setData] = useState<WizardData>(initialData);
   const [creatorName, setCreatorName] = useState("Usuario");
   const [creatorRole, setCreatorRole] = useState<PartyRole>("broker");
-  const [showContractUploader, setShowContractUploader] = useState(false);
   const [linkedPropertyId, setLinkedPropertyId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -159,13 +151,12 @@ export function ActaWizard() {
     const mock = getWizardMockData();
     setData({
       type: mock.type,
-      modality: mock.modality,
       property: mock.property,
       parties: mock.parties,
       rooms: mock.rooms,
       inspectionDate: mock.inspectionDate,
     });
-    setStep(6); // jump to confirmation
+    setStep(STEPS.length); // jump to confirmation
   };
 
   const handleContractExtracted = (extraction: ContractExtraction) => {
@@ -191,9 +182,8 @@ export function ActaWizard() {
       // Crear/actualizar partes con lo que extrajimos
       parties: mergePartiesFromExtraction(prev.parties, extraction),
     }));
-    setShowContractUploader(false);
-    // Si estabamos en el paso 1 o 2, saltar al 3 para mostrar lo extraido
-    if (step <= 2) setStep(3);
+    // Si estabamos en el paso 1 (Tipo), saltar al 2 (Propiedad) para mostrar lo extraido
+    if (step <= 1) setStep(2);
   };
 
   const canGoNext = (): boolean => {
@@ -201,15 +191,13 @@ export function ActaWizard() {
       case 1:
         return data.type !== null;
       case 2:
-        return data.modality !== null;
-      case 3:
         return (
           data.property.address.trim().length > 0 &&
           data.property.commune.trim().length > 0
         );
-      case 4:
+      case 3:
         return data.parties.length >= 1;
-      case 5:
+      case 4:
         return data.rooms.length >= 1;
       default:
         return true;
@@ -224,7 +212,7 @@ export function ActaWizard() {
   };
 
   const handleCreate = () => {
-    if (!data.type || !data.modality) return;
+    if (!data.type) return;
 
     // 1. Save property — reusar si viene de ?property=id
     const now = new Date().toISOString();
@@ -307,7 +295,9 @@ export function ActaWizard() {
     const acta: Acta = {
       id: actaId,
       type: data.type,
-      modality: data.modality,
+      // Modalidad fija — el campo se mantiene en el tipo por compatibilidad,
+      // pero ya no es una decision del usuario en el wizard.
+      modality: "gestionada",
       status: "evidence_collection",
       propertyId,
       parties: partiesWithIds,
@@ -328,6 +318,8 @@ export function ActaWizard() {
       aiSummary: null,
       manualSummary: null,
       disclaimerAccepted: false,
+      certifiedAt: null,
+      legacyCertified: false,
       inspectionDate: data.inspectionDate,
       createdAt: now,
       updatedAt: now,
@@ -342,7 +334,7 @@ export function ActaWizard() {
       creatorRole,
       null,
       "acta_created",
-      { type: data.type, modality: data.modality }
+      { type: data.type }
     );
 
     saveActa(withAudit);
@@ -353,29 +345,11 @@ export function ActaWizard() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      {/* Contract uploader (banner arriba) */}
-      {showContractUploader && (
-        <div className="mb-5">
-          <ContractUploader
-            onExtracted={handleContractExtracted}
-            onClose={() => setShowContractUploader(false)}
-          />
-        </div>
-      )}
-
       {/* Stepper */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold text-gray-900">Nueva Acta</h1>
-            <button
-              onClick={() => setShowContractUploader((s) => !s)}
-              className="inline-flex items-center gap-1 rounded-md bg-accent-softer border border-accent-light text-accent-dark px-2 py-1 text-[11px] font-medium hover:bg-accent-light/40 transition-colors"
-              title="Sube un PDF del contrato para autollenar los datos"
-            >
-              <FileText className="h-3 w-3" />
-              {showContractUploader ? "Ocultar" : "Subir contrato"}
-            </button>
             <button
               onClick={handleAutoFill}
               className="inline-flex items-center gap-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 px-2 py-1 text-[11px] hover:bg-purple-100 transition-colors"
@@ -432,16 +406,11 @@ export function ActaWizard() {
           />
         )}
         {step === 2 && (
-          <StepModalidad
-            value={data.modality}
-            onChange={(modality) => updateData({ modality })}
-          />
-        )}
-        {step === 3 && (
           <StepPropiedad
             value={data.property}
             inspectionDate={data.inspectionDate}
             linkedPropertyId={linkedPropertyId}
+            onContractExtracted={handleContractExtracted}
             onChangeProperty={(property) => updateData({ property })}
             onChangeInspectionDate={(inspectionDate) =>
               updateData({ inspectionDate })
@@ -483,20 +452,19 @@ export function ActaWizard() {
             }}
           />
         )}
-        {step === 4 && (
+        {step === 3 && (
           <StepPartes
             parties={data.parties}
-            modality={data.modality}
             onChange={(parties) => updateData({ parties })}
           />
         )}
-        {step === 5 && (
+        {step === 4 && (
           <StepAmbientes
             rooms={data.rooms}
             onChange={(rooms) => updateData({ rooms })}
           />
         )}
-        {step === 6 && <StepConfirmacion data={data} />}
+        {step === 5 && <StepConfirmacion data={data} />}
       </div>
 
       {/* Navigation */}

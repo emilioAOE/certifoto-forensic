@@ -4,7 +4,6 @@ import { useState } from "react";
 import type {
   Party,
   PartyRole,
-  ActaModality,
   RepresentsTarget,
 } from "@/lib/acta-types";
 import { PARTY_ROLE_LABEL } from "@/lib/acta-constants";
@@ -19,11 +18,10 @@ type PartyDraft = Omit<Party, "id" | "invitationToken" | "invitationStatus"> & {
 
 interface StepPartesProps {
   parties: PartyDraft[];
-  modality: ActaModality | null;
   onChange: (parties: PartyDraft[]) => void;
 }
 
-export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
+export function StepPartes({ parties, onChange }: StepPartesProps) {
   const [editing, setEditing] = useState<string | null>(null);
 
   const addParty = (role: PartyRole) => {
@@ -52,16 +50,13 @@ export function StepPartes({ parties, modality, onChange }: StepPartesProps) {
     onChange(parties.filter((p) => p.tempId !== tempId));
   };
 
-  const suggestedRoles: PartyRole[] = [];
-  if (modality === "directa") {
-    suggestedRoles.push("landlord", "tenant");
-  } else if (modality === "gestionada") {
-    suggestedRoles.push("broker", "landlord", "tenant");
-  } else if (modality === "organizacion") {
-    suggestedRoles.push("broker", "landlord", "tenant", "witness");
-  } else {
-    suggestedRoles.push("landlord", "tenant", "broker", "witness");
-  }
+  // Sugerencias por defecto: corredor + arrendador + arrendatario, mas testigo opcional.
+  const suggestedRoles: PartyRole[] = [
+    "broker",
+    "landlord",
+    "tenant",
+    "witness",
+  ];
 
   const missingSuggested = suggestedRoles.filter(
     (r) => !parties.some((p) => p.role === r)

@@ -4,7 +4,14 @@ import { useState } from "react";
 import type { Room, ConditionLevel } from "@/lib/acta-types";
 import { ROOM_TEMPLATES } from "@/lib/acta-constants";
 import { cn } from "@/lib/cn";
-import { Plus, Trash2, GripVertical, Camera } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  GripVertical,
+  Camera,
+  Sparkles,
+  ImagePlus,
+} from "lucide-react";
 
 type RoomDraft = Omit<Room, "id" | "photoIds" | "aiSummary"> & { tempId: string };
 
@@ -89,6 +96,46 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
         Agrega los espacios de la propiedad. Los marcados como obligatorios
         deben tener al menos 1 foto.
       </p>
+
+      {/* Two ways to add photos — info card */}
+      <div className="mb-6 rounded-xl border border-accent-light bg-accent-softer/40 p-4">
+        <div className="flex items-start gap-2 mb-3">
+          <div className="rounded-md bg-white border border-accent-light p-1.5 text-accent-dark shrink-0">
+            <Sparkles className="h-3.5 w-3.5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">
+              Despues podras subir fotos de dos formas
+            </h3>
+            <p className="text-xs text-gray-700 mt-0.5 leading-relaxed">
+              Aqui solo eliges los ambientes. La carga de fotos se hace en el
+              siguiente paso, dentro del acta.
+            </p>
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-2 text-xs">
+          <div className="rounded-lg bg-white border border-gray-200 p-3">
+            <div className="flex items-center gap-1.5 font-semibold text-gray-900 mb-1">
+              <ImagePlus className="h-3.5 w-3.5 text-accent-dark" />
+              Subir todas juntas + IA
+            </div>
+            <p className="text-gray-600 leading-relaxed">
+              Suelta todas las fotos en un dropzone y la IA las asigna a cada
+              ambiente. Tu solo revisas y ajustas.
+            </p>
+          </div>
+          <div className="rounded-lg bg-white border border-gray-200 p-3">
+            <div className="flex items-center gap-1.5 font-semibold text-gray-900 mb-1">
+              <Camera className="h-3.5 w-3.5 text-gray-600" />
+              Foto por ambiente (manual)
+            </div>
+            <p className="text-gray-600 leading-relaxed">
+              Toma o sube fotos directamente al ambiente correspondiente, una
+              por una.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Selected rooms */}
       {rooms.length > 0 && (
