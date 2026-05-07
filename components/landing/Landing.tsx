@@ -36,14 +36,15 @@ export function Landing() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1]">
-              Documenta el estado de tu propiedad,{" "}
-              <span className="text-accent">sin discusiones</span>.
+              Crea actas <span className="text-accent">gratis</span>.<br />
+              Paga solo cuando certificas.
             </h1>
 
             <p className="text-lg text-gray-600 mt-5 leading-relaxed max-w-xl">
-              CertiFoto te permite crear actas digitales del estado de un
-              inmueble arrendado, con fotos respaldadas, descripciones asistidas
-              con inteligencia artificial y firma de las partes.
+              CertiFoto te permite documentar el estado de un inmueble con
+              fotos respaldadas, descripciones asistidas con IA y firma de las
+              partes. La app es ilimitada — el cobro llega solo cuando sellas
+              el documento final.
             </p>
 
             <div className="flex flex-wrap gap-3 mt-8">
@@ -55,10 +56,10 @@ export function Landing() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="#como-funciona"
+                href="/precios"
                 className="inline-flex items-center gap-2 rounded-md bg-white border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 hover:border-accent hover:text-accent transition-colors"
               >
-                Ver como funciona
+                Ver packs
               </Link>
             </div>
 
@@ -69,11 +70,11 @@ export function Landing() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Comienza al instante
+                Pago unico, sin suscripcion
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Procesamiento privado
+                Borradores ilimitados
               </span>
             </div>
           </div>
@@ -302,11 +303,11 @@ export function Landing() {
       <section className="bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Empieza a documentar mejor tus arriendos
+            Empieza gratis. Certifica cuando estes listo.
           </h2>
           <p className="text-gray-300 mt-4 max-w-xl mx-auto">
-            Crea tu primera acta digital en minutos. Sin registro previo, sin
-            compromiso. Si te sirve, segui usando CertiFoto.
+            Crea tus actas en minutos. Solo pagas un pack cuando un acta esta
+            lista para entregarse formalmente al cliente.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
             <Link
@@ -317,10 +318,10 @@ export function Landing() {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/faq"
+              href="/precios"
               className="inline-flex items-center gap-2 rounded-md bg-white/10 border border-white/20 text-white px-6 py-3 text-sm font-semibold hover:bg-white/20 transition-colors"
             >
-              Ver preguntas frecuentes
+              Ver packs
             </Link>
           </div>
         </div>

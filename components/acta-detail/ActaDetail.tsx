@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -18,7 +18,7 @@ import {
   GitCompare,
   Share2,
 } from "lucide-react";
-import { getActa, getProperty, saveActa, deleteActa } from "@/lib/storage";
+import { getActa, getProperty, saveActa, deleteActa, isActaCertified } from "@/lib/storage";
 import {
   ACTA_TYPE_LABEL,
   ACTA_STATUS_LABEL,
@@ -28,16 +28,20 @@ import {
 } from "@/lib/acta-constants";
 import {
   validateActaForReview,
-  validateActaForClosing,
   calculateActaProgress,
   appendAuditLog,
-  computeDocumentHash,
 } from "@/lib/acta-helpers";
+import { certifyActa } from "@/lib/acta-certify";
+import {
+  getCreditsBalance,
+  subscribeToCreditsChanges,
+} from "@/lib/credits";
 import type { Acta, Property } from "@/lib/acta-types";
 import { cn } from "@/lib/cn";
 import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
 import { SignaturesPanel } from "./SignaturesPanel";
+import { BulkPhotoUploader } from "./BulkPhotoUploader";
 import { InventorySection } from "@/components/inventory/InventorySection";
 import { generateActaPdf } from "@/lib/acta-pdf";
 import { exportActaAsShareFile } from "@/lib/share-acta";
@@ -48,6 +52,7 @@ import {
   ValidationModal,
   type ValidationItem,
 } from "@/components/ui/ValidationModal";
+import { Award, Lock, ImagePlus, Sparkles } from "lucide-react";
 
 interface ValidationModalState {
   title: string;
@@ -63,31 +68,53 @@ export function ActaDetail({ actaId }: { actaId: string }) {
   const [property, setProperty] = useState<Property | null>(null);
   const [mounted, setMounted] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [certifying, setCertifying] = useState(false);
+  const [credits, setCredits] = useState(0);
+  const [showBulkUploader, setShowBulkUploader] = useState(false);
   const [validationModal, setValidationModal] =
     useState<ValidationModalState | null>(null);
 
   useEffect(() => {
     setMounted(true);
     refresh();
+    setCredits(getCreditsBalance());
+    const unsub = subscribeToCreditsChanges(() =>
+      setCredits(getCreditsBalance())
+    );
+    return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actaId]);
+
+  // Ref para mantener la version mas reciente del acta — necesaria para evitar
+  // stale closures cuando updates llegan despues de un unmount (p.ej. el AI
+  // background del BulkPhotoUploader sigue actualizando despues que el modal
+  // se cierra).
+  const actaRef = useRef<Acta | null>(null);
+  useEffect(() => {
+    actaRef.current = acta;
+  }, [acta]);
 
   const refresh = () => {
     const a = getActa(actaId);
     if (!a) {
       setActa(null);
+      actaRef.current = null;
       return;
     }
     setActa(a);
+    actaRef.current = a;
     setProperty(getProperty(a.propertyId));
   };
 
-  const updateActa = (updater: (a: Acta) => Acta) => {
-    if (!acta) return;
-    const updated = updater(acta);
+  const updateActa = useCallback((updater: (a: Acta) => Acta) => {
+    const current = actaRef.current;
+    if (!current) return;
+    const updated = updater(current);
+    actaRef.current = updated;
     saveActa(updated);
     setActa(updated);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const proceedRequestSignatures = () => {
     if (!acta) return;
@@ -125,40 +152,75 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     proceedRequestSignatures();
   };
 
-  const handleCloseActa = async () => {
+  const handleCertify = async () => {
     if (!acta) return;
-    const validation = validateActaForClosing(acta);
-    if (!validation.valid) {
-      const items: ValidationItem[] = validation.errors.map((m) => ({
+    // Para certificar requerimos contenido basico (rooms + fotos minimas).
+    // Las firmas faltantes solo bloquean si el usuario abandono el flujo —
+    // muchos firman por canal externo y solo certifican el respaldo.
+    const reviewValidation = validateActaForReview(acta);
+    if (!reviewValidation.valid) {
+      const items: ValidationItem[] = reviewValidation.errors.map((m) => ({
         level: "error",
         message: m,
       }));
       setValidationModal({
-        title: "No se puede cerrar el acta",
+        title: "No se puede certificar el acta todavia",
         items,
       });
       return;
     }
-    const hash = await computeDocumentHash(acta);
-    const allConformity = acta.signatures.every(
-      (s) => s.status === "signed_conformity"
-    );
-    updateActa((a) =>
-      appendAuditLog(
-        {
-          ...a,
-          status: "closed",
-          documentHash: hash,
-          closedAt: new Date().toISOString(),
-        },
-        a.createdByName,
-        a.createdByRole,
-        null,
-        "acta_closed",
-        { documentHash: hash, conformity: allConformity }
-      )
-    );
-    toast.success("Acta cerrada", "El documento quedo congelado y firmado.");
+    if (getCreditsBalance() < 1) {
+      const ok = await confirm({
+        title: "Sin creditos disponibles",
+        message:
+          "Para certificar un acta necesitas al menos 1 credito. ¿Quieres ir a comprar un pack?",
+        variant: "default",
+        confirmLabel: "Ver packs",
+      });
+      if (ok) router.push("/precios");
+      return;
+    }
+    const missingSignatures =
+      progress.signaturesObtained < progress.signaturesRequired;
+    const sigWarning = missingSignatures
+      ? ` Aviso: faltan ${progress.signaturesRequired - progress.signaturesObtained} firma(s). Si las firmas se gestionan por otro canal, puedes certificar igual.`
+      : "";
+    const ok = await confirm({
+      title: "Certificar este acta",
+      message: `Al certificar consumes 1 credito y el acta queda inmutable. Se sella el hash del documento, se quita la marca de agua del PDF y queda lista para compartir como .certifoto. Esta accion no se puede deshacer.${sigWarning}`,
+      variant: missingSignatures ? "warn" : "default",
+      confirmLabel: "Si, certificar (1 credito)",
+    });
+    if (!ok) return;
+
+    setCertifying(true);
+    try {
+      const result = await certifyActa(acta.id);
+      if (!result.ok) {
+        if (result.error === "no_credits") {
+          toast.error(
+            "Sin creditos",
+            result.errorMessage ?? "No tienes creditos disponibles."
+          );
+          router.push("/precios");
+          return;
+        }
+        toast.error(
+          "No se pudo certificar",
+          result.errorMessage ?? "Error desconocido"
+        );
+        return;
+      }
+      if (result.acta) {
+        setActa(result.acta);
+      }
+      toast.success(
+        "Acta certificada",
+        "El documento quedo sellado e inmutable. Ya puedes compartirlo como .certifoto."
+      );
+    } finally {
+      setCertifying(false);
+    }
   };
 
   const handleGeneratePdf = async () => {
@@ -198,6 +260,13 @@ export function ActaDetail({ actaId }: { actaId: string }) {
 
   const handleShareForSign = async () => {
     if (!acta) return;
+    if (!isActaCertified(acta)) {
+      toast.info(
+        "Certifica el acta primero",
+        "Solo los actas certificadas se pueden compartir como .certifoto. Asi te aseguras de que la otra parte recibe un documento sellado."
+      );
+      return;
+    }
     try {
       const result = await exportActaAsShareFile(acta.id);
       downloadBlob(result.blob, result.fileName);
@@ -235,9 +304,11 @@ export function ActaDetail({ actaId }: { actaId: string }) {
   }
 
   const progress = calculateActaProgress(acta);
-  const isReadOnly = acta.status === "closed" || acta.status === "archived";
+  const certified = isActaCertified(acta);
+  const isReadOnly =
+    certified || acta.status === "closed" || acta.status === "archived";
   const validation = validateActaForReview(acta);
-  const closeValidation = validateActaForClosing(acta);
+  const canCertify = !certified && validation.valid;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
@@ -327,6 +398,44 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         </div>
       </header>
 
+      {/* Banner de certificacion */}
+      {certified ? (
+        <section className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 flex items-start gap-2">
+          <Award className="h-4 w-4 text-emerald-700 mt-0.5 shrink-0" />
+          <div className="flex-1 text-xs text-emerald-900 leading-relaxed">
+            <strong className="font-semibold">Acta certificada.</strong>{" "}
+            {acta.certifiedAt
+              ? `Sellada el ${new Date(acta.certifiedAt).toLocaleString("es-CL")}.`
+              : "Acta importada con sello previo."}{" "}
+            El documento es inmutable y se puede compartir como{" "}
+            <span className="font-mono">.certifoto</span>.
+          </div>
+        </section>
+      ) : (
+        <section className="rounded-lg border border-amber-200 bg-amber-50 p-3 flex items-start gap-2">
+          <Lock className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
+          <div className="flex-1 text-xs text-amber-900 leading-relaxed">
+            <strong className="font-semibold">Acta en borrador.</strong> El PDF
+            lleva marca de agua y no se puede compartir como{" "}
+            <span className="font-mono">.certifoto</span> hasta que la
+            certifiques. Cuando este lista, certifica el acta para sellarla.{" "}
+            <Link
+              href="/precios"
+              className="underline font-semibold hover:text-amber-700"
+            >
+              Ver packs de creditos
+            </Link>
+            {credits > 0 && (
+              <span className="text-amber-700">
+                {" "}
+                · Tienes {credits} credito{credits === 1 ? "" : "s"} disponible
+                {credits === 1 ? "" : "s"}
+              </span>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Progress + actions */}
       <section className="rounded-lg border border-gray-200 bg-white p-4">
         <div className="flex items-center justify-between mb-2">
@@ -385,17 +494,25 @@ export function ActaDetail({ actaId }: { actaId: string }) {
                 Solicitar firmas
               </button>
             )}
-          {acta.status === "pending_signatures" &&
-            progress.signaturesObtained === progress.signaturesRequired && (
-              <button
-                onClick={handleCloseActa}
-                disabled={!closeValidation.valid}
-                className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-medium hover:bg-emerald-700 disabled:opacity-30"
-              >
-                <CheckCircle className="h-3.5 w-3.5" />
-                Cerrar acta
-              </button>
-            )}
+          {canCertify && (
+            <button
+              onClick={handleCertify}
+              disabled={certifying}
+              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-medium hover:bg-emerald-700 disabled:opacity-30"
+              title={
+                credits >= 1
+                  ? "Sella el acta y la deja inmutable. Consume 1 credito."
+                  : "Necesitas comprar un pack de creditos para certificar"
+              }
+            >
+              <Award className="h-3.5 w-3.5" />
+              {certifying
+                ? "Certificando..."
+                : credits >= 1
+                ? "Certificar acta (1 credito)"
+                : "Certificar (sin creditos)"}
+            </button>
+          )}
 
           {!validation.valid && acta.status !== "closed" && (
             <div className="text-xs text-amber-600 flex items-start gap-1">
@@ -465,6 +582,78 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           <Camera className="h-3.5 w-3.5" />
           Ambientes y evidencia
         </h3>
+
+        {/* Selector visual de modo de carga: grande cuando no hay fotos,
+            compacto cuando ya empezo a cargar. */}
+        {!isReadOnly && acta.rooms.length > 0 && acta.photos.length === 0 && (
+          <div className="mb-4">
+            <p className="text-xs font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
+              <Sparkles className="h-3 w-3 text-accent-dark" />
+              ¿Como quieres cargar las fotos?
+            </p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <button
+                onClick={() => setShowBulkUploader(true)}
+                className="group relative text-left rounded-xl border-2 border-accent shadow-md hover:shadow-lg hover:bg-accent-softer/50 transition-all p-4 flex flex-col"
+              >
+                <span className="absolute -top-2 left-4 inline-flex items-center rounded-full bg-accent text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                  Recomendado
+                </span>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="rounded-lg bg-accent text-white p-2">
+                    <ImagePlus className="h-5 w-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-gray-900">
+                    Subir todas las fotos juntas
+                  </h4>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed flex-1">
+                  Selecciona o arrastra todas las fotos del inmueble. La IA las
+                  asigna a cada ambiente segun el contenido y el nombre del
+                  archivo. Tu solo revisas.
+                </p>
+                <span className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-bold">
+                  <ImagePlus className="h-3.5 w-3.5" />
+                  Subir en lote
+                </span>
+              </button>
+
+              <div className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="rounded-lg bg-gray-100 text-gray-600 p-2">
+                    <Camera className="h-5 w-5" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-gray-900">
+                    Foto por ambiente (manual)
+                  </h4>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed flex-1">
+                  Toma o sube fotos directamente al ambiente correspondiente,
+                  una por una, usando los botones de cada tarjeta abajo.
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs text-gray-500 italic">
+                  ↓ Usa los botones de cada ambiente
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Boton compacto para cuando ya empezo a cargar fotos */}
+        {!isReadOnly && acta.rooms.length > 0 && acta.photos.length > 0 && (
+          <div className="mb-3">
+            <button
+              onClick={() => setShowBulkUploader(true)}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"
+              title="Sube mas fotos juntas y la IA las asigna"
+            >
+              <ImagePlus className="h-4 w-4" />
+              Subir mas fotos en lote
+              <Sparkles className="h-3 w-3" />
+            </button>
+          </div>
+        )}
+
         <div className="space-y-3">
           {acta.rooms.map((room) => (
             <RoomEvidenceSection
@@ -477,6 +666,14 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           ))}
         </div>
       </section>
+
+      {showBulkUploader && acta && (
+        <BulkPhotoUploader
+          acta={acta}
+          onUpdate={updateActa}
+          onClose={() => setShowBulkUploader(false)}
+        />
+      )}
 
       {/* Inventario (si la propiedad es amoblada o el acta es de tipo inventario) */}
       {(acta.type === "inventario" ||

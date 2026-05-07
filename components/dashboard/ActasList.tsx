@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Search, FileSignature } from "lucide-react";
+import { Plus, Search, FileSignature, Award, Lock } from "lucide-react";
 import { listActaSummaries } from "@/lib/storage";
 import type { ActaSummary, ActaStatus, ActaType } from "@/lib/acta-types";
 import {
@@ -133,6 +133,21 @@ export function ActasList() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-medium text-gray-900">
                       {ACTA_TYPE_LABEL[acta.type]}
+                    </span>
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-0.5 text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border",
+                        acta.certified
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-amber-50 text-amber-700 border-amber-200"
+                      )}
+                    >
+                      {acta.certified ? (
+                        <Award className="h-2.5 w-2.5" />
+                      ) : (
+                        <Lock className="h-2.5 w-2.5" />
+                      )}
+                      {acta.certified ? "Certificada" : "Borrador"}
                     </span>
                     <span
                       className={cn(

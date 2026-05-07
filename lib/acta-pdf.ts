@@ -23,6 +23,7 @@ import {
   DAMAGE_SEVERITY_LABEL,
   PDF_DISCLAIMER,
 } from "./acta-constants";
+import { isActaCertified } from "./storage";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
@@ -689,11 +690,17 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   }
 
   // ============================================
-  // FOOTERS + HEADERS
+  // FOOTERS + HEADERS + WATERMARK (si es borrador)
   // ============================================
+  const certified = isActaCertified(acta);
   const totalPages = doc.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
+
+    // Watermark: solo si NO esta certificada (acta en borrador)
+    if (!certified) {
+      drawDraftWatermark(doc, pageW, pageH);
+    }
 
     // Top accent stripe (skip cover, ya tiene una)
     if (p > 1) {
@@ -708,11 +715,10 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6.5);
     doc.setTextColor(150, 150, 150);
-    doc.text(
-      `CertiFoto · ${ACTA_TYPE_LABEL[acta.type]} · ID ${acta.id.slice(0, 16)}`,
-      margin,
-      pageH - 8
-    );
+    const footerLabel = certified
+      ? `CertiFoto · ${ACTA_TYPE_LABEL[acta.type]} · ID ${acta.id.slice(0, 16)}`
+      : `CertiFoto · ${ACTA_TYPE_LABEL[acta.type]} · BORRADOR · ID ${acta.id.slice(0, 16)}`;
+    doc.text(footerLabel, margin, pageH - 8);
 
     // Hash de documento si esta cerrado
     if (acta.documentHash) {
@@ -729,5 +735,29 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   }
 
   // Save
-  doc.save(`acta-${acta.type}-${acta.id.slice(0, 12)}.pdf`);
+  const suffix = certified ? "" : "-borrador";
+  doc.save(`acta-${acta.type}-${acta.id.slice(0, 12)}${suffix}.pdf`);
+}
+
+/**
+ * Dibuja una marca de agua diagonal "BORRADOR — NO CERTIFICADO" en gris claro
+ * detras del contenido de la pagina actual. Llamar antes de pintar el footer.
+ */
+function drawDraftWatermark(
+  doc: InstanceType<typeof import("jspdf").default>,
+  pageW: number,
+  pageH: number
+): void {
+  const text = "BORRADOR  ·  NO CERTIFICADO";
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(60);
+  doc.setTextColor(230, 230, 230);
+  // Centrar y rotar 30 grados — la diagonal cubre la pagina sin desbordar
+  const cx = pageW / 2;
+  const cy = pageH / 2;
+  doc.text(text, cx, cy, {
+    align: "center",
+    baseline: "middle",
+    angle: 30,
+  });
 }

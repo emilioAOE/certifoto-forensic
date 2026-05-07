@@ -24,6 +24,7 @@ import {
   saveProperty,
   listContacts,
   saveContact,
+  isActaCertified,
 } from "./storage";
 import { syncContactsFromActa } from "./contacts";
 
@@ -49,6 +50,11 @@ export async function exportActaAsShareFile(
 ): Promise<ShareExportResult> {
   const acta = getActa(actaId);
   if (!acta) throw new Error("Acta no encontrada");
+  if (!isActaCertified(acta)) {
+    throw new Error(
+      "Solo puedes compartir un .certifoto de un acta certificada. Certifica el acta primero."
+    );
+  }
   const property = getProperty(acta.propertyId);
 
   // Filtrar contactos relacionados al acta para incluir contexto
@@ -128,7 +134,18 @@ export async function importActaFromShareFile(
 
   const actaFile = zip.file("acta.json");
   if (!actaFile) throw new Error("Archivo invalido: falta acta.json");
-  const acta = JSON.parse(await actaFile.async("string")) as Acta;
+  const rawActa = JSON.parse(await actaFile.async("string")) as Acta &
+    Partial<Pick<Acta, "certifiedAt" | "legacyCertified">>;
+
+  // Backwards compat: actas exportadas antes del modelo de creditos no traen
+  // los campos de certificacion. Las marcamos como legacy_certified — vienen
+  // de un export valido (con firmas/hash) y no deben costar credito.
+  const acta: Acta = {
+    ...rawActa,
+    certifiedAt: rawActa.certifiedAt ?? null,
+    legacyCertified:
+      rawActa.legacyCertified === undefined ? true : rawActa.legacyCertified,
+  };
 
   const propertyFile = zip.file("property.json");
   let property: Property | null = null;

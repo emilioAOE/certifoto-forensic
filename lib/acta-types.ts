@@ -388,6 +388,7 @@ export type AuditAction =
   | "signature_completed"
   | "signature_invalidated"
   | "acta_closed"
+  | "acta_certified"
   | "pdf_generated";
 
 export interface AuditLogEntry {
@@ -440,6 +441,12 @@ export interface Acta {
   manualSummary: string | null;
   disclaimerAccepted: boolean;
 
+  // Certificacion (sello que consume 1 credito y hace el documento inmutable)
+  certifiedAt: string | null;
+  // Actas creadas antes del modelo de creditos: se consideran "ya certificadas"
+  // sin consumir creditos (grandfather clause).
+  legacyCertified: boolean;
+
   // Timestamps
   inspectionDate: string | null;
   createdAt: string;
@@ -473,6 +480,7 @@ export interface ActaSummary {
   id: string;
   type: ActaType;
   status: ActaStatus;
+  certified: boolean;
   propertyAddress: string;
   partiesCount: number;
   photosCount: number;

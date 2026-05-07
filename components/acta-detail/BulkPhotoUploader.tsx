@@ -1,0 +1,682 @@
+"use client";
+
+import { useRef, useState } from "react";
+import {
+  Upload,
+  Loader2,
+  Sparkles,
+  X,
+  ImagePlus,
+  CheckCircle2,
+  Trash2,
+} from "lucide-react";
+import type {
+  Acta,
+  Room,
+  PhotoEvidence,
+  RoomType,
+} from "@/lib/acta-types";
+import { generateId, getCurrentUser } from "@/lib/storage";
+import {
+  appendAuditLog,
+  calculateEvidenceStrength,
+  calculatePhotoWarnings,
+} from "@/lib/acta-helpers";
+import { parseClientSide } from "@/lib/parse-client";
+import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
+import { compressImage, shouldCompress } from "@/lib/image-compression";
+import { cn } from "@/lib/cn";
+
+interface BulkPhotoUploaderProps {
+  acta: Acta;
+  onUpdate: (updater: (a: Acta) => Acta) => void;
+  onClose: () => void;
+}
+
+interface ProcessedPhoto {
+  tempId: string;
+  file: File;
+  dataUrl: string;
+  thumbnailDataUrl: string | null;
+  width: number | null;
+  height: number | null;
+  bytes: number;
+  mime: string;
+  forensic: PhotoEvidence["forensic"];
+  suggestedRoomId: string | null;
+  suggestionConfidence: "alta" | "media" | "baja";
+  matchedKeyword: string | null;
+}
+
+/**
+ * Modal/panel para subir muchas fotos a la vez y dejar que la IA + heuristica
+ * de nombre de archivo las asigne a los ambientes correspondientes.
+ *
+ * Algoritmo de asignacion (mientras el AI stub solo echo del input):
+ *  - Normaliza el nombre del archivo (minusculas, sin diacriticos)
+ *  - Para cada Room, construye una lista de keywords (tipo + nombre + sinonimos)
+ *  - El que mas keywords matchea gana. Empate => primer Room.
+ *  - Sin match => sin asignar (el usuario debe escoger antes de confirmar).
+ */
+export function BulkPhotoUploader({
+  acta,
+  onUpdate,
+  onClose,
+}: BulkPhotoUploaderProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [stage, setStage] = useState<"select" | "processing" | "review">(
+    "select"
+  );
+  const [progress, setProgress] = useState({ done: 0, total: 0 });
+  const [photos, setPhotos] = useState<ProcessedPhoto[]>([]);
+  const [assignments, setAssignments] = useState<Record<string, string | null>>(
+    {}
+  );
+  const [saving, setSaving] = useState(false);
+
+  const handleFilesSelected = async (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList).filter((f) =>
+      f.type.startsWith("image/")
+    );
+    if (files.length === 0) return;
+    setStage("processing");
+    setProgress({ done: 0, total: files.length });
+
+    const processed: ProcessedPhoto[] = [];
+    for (const file of files) {
+      const result = await processOne(file, acta.rooms);
+      processed.push(result);
+      setProgress((p) => ({ ...p, done: p.done + 1 }));
+    }
+
+    setPhotos(processed);
+    const initialAssignments: Record<string, string | null> = {};
+    for (const p of processed) {
+      initialAssignments[p.tempId] = p.suggestedRoomId;
+    }
+    setAssignments(initialAssignments);
+    setStage("review");
+  };
+
+  const handleSave = async () => {
+    if (saving) return;
+    const user = getCurrentUser();
+    setSaving(true);
+    try {
+      const photosToAdd: PhotoEvidence[] = [];
+      const aiJobs: { photoId: string; file: File; roomType: RoomType }[] = [];
+
+      for (const p of photos) {
+        const roomId = assignments[p.tempId];
+        if (!roomId) continue; // saltar las sin asignar
+        const room = acta.rooms.find((r) => r.id === roomId);
+        if (!room) continue;
+        const photoId = generateId("photo");
+        const photo: PhotoEvidence = {
+          id: photoId,
+          actaId: acta.id,
+          roomId,
+          uploadedByPartyId: null,
+          uploadedByName: user.name,
+          uploadedByRole: user.role,
+          uploadedAt: new Date().toISOString(),
+          fileName: p.file.name,
+          fileSize: p.bytes,
+          mimeType: p.mime,
+          width: p.width,
+          height: p.height,
+          dataUrl: p.dataUrl,
+          thumbnailDataUrl: p.thumbnailDataUrl,
+          forensic: p.forensic,
+          aiAnalysis: null,
+          aiStatus: "pending",
+          userCaption: null,
+          isRelevant: false,
+          isFlagged: false,
+          evidenceStrength: "media",
+          warnings: [],
+          capturedInApp: false,
+        };
+        photo.warnings = calculatePhotoWarnings(photo);
+        photo.evidenceStrength = calculateEvidenceStrength(photo);
+        photosToAdd.push(photo);
+        aiJobs.push({ photoId, file: p.file, roomType: room.type });
+      }
+
+      if (photosToAdd.length === 0) {
+        onClose();
+        return;
+      }
+
+      onUpdate((a) =>
+        appendAuditLog(
+          { ...a, photos: [...a.photos, ...photosToAdd] },
+          user.name,
+          user.role,
+          null,
+          "photo_uploaded",
+          { count: photosToAdd.length, bulk: true }
+        )
+      );
+
+      // Lanzar analisis IA en background (no bloqueante para el usuario)
+      void runBulkAI(aiJobs);
+      onClose();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const runBulkAI = async (
+    jobs: { photoId: string; file: File; roomType: RoomType }[]
+  ) => {
+    for (const job of jobs) {
+      try {
+        onUpdate((a) => ({
+          ...a,
+          photos: a.photos.map((p) =>
+            p.id === job.photoId ? { ...p, aiStatus: "processing" } : p
+          ),
+        }));
+        const dims = await imageDims(job.file);
+        const analysis = await analyzePhotoWithAI(
+          job.file.name,
+          job.file.size,
+          dims.w,
+          dims.h,
+          job.roomType
+        );
+        onUpdate((a) => {
+          const updatedPhotos = a.photos.map((p) => {
+            if (p.id !== job.photoId) return p;
+            const updated: PhotoEvidence = {
+              ...p,
+              aiAnalysis: analysis,
+              aiStatus: "complete",
+            };
+            updated.warnings = calculatePhotoWarnings(updated);
+            updated.evidenceStrength = calculateEvidenceStrength(updated);
+            return updated;
+          });
+          // Actualizar resumen del room afectado
+          const photo = updatedPhotos.find((p) => p.id === job.photoId);
+          if (photo) {
+            const room = a.rooms.find((r) => r.id === photo.roomId);
+            if (room) {
+              const roomPhotos = updatedPhotos.filter(
+                (p) => p.roomId === photo.roomId
+              );
+              const analyses = roomPhotos
+                .map((p) => p.aiAnalysis)
+                .filter((x): x is NonNullable<typeof x> => x !== null);
+              const summary = summarizeRoom(room.name, analyses);
+              return {
+                ...a,
+                photos: updatedPhotos,
+                rooms: a.rooms.map((r) =>
+                  r.id === room.id ? { ...r, aiSummary: summary } : r
+                ),
+              };
+            }
+          }
+          return { ...a, photos: updatedPhotos };
+        });
+      } catch (err) {
+        console.warn("Bulk AI analysis failed for photo:", err);
+        onUpdate((a) => ({
+          ...a,
+          photos: a.photos.map((p) =>
+            p.id === job.photoId ? { ...p, aiStatus: "error" } : p
+          ),
+        }));
+      }
+    }
+  };
+
+  const updateAssignment = (tempId: string, roomId: string | null) => {
+    setAssignments((prev) => ({ ...prev, [tempId]: roomId }));
+  };
+
+  const removePhoto = (tempId: string) => {
+    setPhotos((prev) => prev.filter((p) => p.tempId !== tempId));
+    setAssignments((prev) => {
+      const next = { ...prev };
+      delete next[tempId];
+      return next;
+    });
+  };
+
+  const assignedCount = Object.values(assignments).filter(
+    (v): v is string => v !== null
+  ).length;
+  const unassignedCount = photos.length - assignedCount;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-3 p-4 border-b border-gray-200">
+          <div className="flex items-center gap-2">
+            <div className="rounded-md bg-accent-softer p-1.5 text-accent-dark">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-gray-900">
+                Subir todas las fotos juntas
+              </h2>
+              <p className="text-xs text-muted">
+                La IA propone a que ambiente pertenece cada una. Puedes
+                ajustarlas antes de guardar.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-muted hover:text-gray-800"
+            aria-label="Cerrar"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {stage === "select" && (
+            <SelectStage onSelect={handleFilesSelected} inputRef={inputRef} />
+          )}
+
+          {stage === "processing" && (
+            <ProcessingStage
+              done={progress.done}
+              total={progress.total}
+            />
+          )}
+
+          {stage === "review" && (
+            <ReviewStage
+              photos={photos}
+              rooms={acta.rooms}
+              assignments={assignments}
+              onChangeAssignment={updateAssignment}
+              onRemovePhoto={removePhoto}
+            />
+          )}
+        </div>
+
+        {/* Footer */}
+        {stage === "review" && (
+          <div className="border-t border-gray-200 p-4 flex items-center justify-between gap-3 flex-wrap">
+            <div className="text-xs text-gray-700">
+              <span className="font-semibold text-emerald-700">
+                {assignedCount}
+              </span>{" "}
+              asignadas
+              {unassignedCount > 0 && (
+                <>
+                  {" · "}
+                  <span className="font-semibold text-amber-700">
+                    {unassignedCount}
+                  </span>{" "}
+                  sin asignar
+                </>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={onClose}
+                className="rounded-md bg-gray-100 border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving || assignedCount === 0}
+                className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                {saving ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                )}
+                Guardar {assignedCount} foto{assignedCount === 1 ? "" : "s"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SelectStage({
+  onSelect,
+  inputRef,
+}: {
+  onSelect: (files: FileList | null) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+}) {
+  return (
+    <div className="rounded-lg border-2 border-dashed border-gray-200 hover:border-accent transition-colors py-12 px-4 text-center">
+      <ImagePlus className="h-8 w-8 text-gray-400 mx-auto mb-3" />
+      <p className="text-sm font-medium text-gray-800 mb-1">
+        Selecciona o arrastra todas las fotos del inmueble
+      </p>
+      <p className="text-xs text-gray-500 mb-4 max-w-md mx-auto leading-relaxed">
+        Carga juntas las fotos de todos los ambientes. Procesamos cada foto y
+        la IA propone a que ambiente pertenece. Despues revisas y ajustas.
+      </p>
+      <button
+        onClick={() => inputRef.current?.click()}
+        className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim"
+      >
+        <Upload className="h-3.5 w-3.5" />
+        Elegir fotos
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          onSelect(e.target.files);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
+function ProcessingStage({ done, total }: { done: number; total: number }) {
+  const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+  return (
+    <div className="py-8 px-4 text-center">
+      <Loader2 className="h-6 w-6 text-accent animate-spin mx-auto mb-3" />
+      <p className="text-sm font-medium text-gray-800 mb-1">
+        Procesando fotos...
+      </p>
+      <p className="text-xs text-gray-500 mb-4">
+        Calculando hash forense, comprimiendo y proponiendo asignaciones.
+      </p>
+      <div className="max-w-xs mx-auto">
+        <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden">
+          <div
+            className="h-full bg-accent transition-all"
+            style={{ width: `${percent}%` }}
+          />
+        </div>
+        <p className="text-[11px] text-muted mt-2 font-mono">
+          {done} / {total}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ReviewStage({
+  photos,
+  rooms,
+  assignments,
+  onChangeAssignment,
+  onRemovePhoto,
+}: {
+  photos: ProcessedPhoto[];
+  rooms: Room[];
+  assignments: Record<string, string | null>;
+  onChangeAssignment: (tempId: string, roomId: string | null) => void;
+  onRemovePhoto: (tempId: string) => void;
+}) {
+  if (photos.length === 0) {
+    return (
+      <p className="text-sm text-muted text-center py-8">
+        No hay fotos para revisar.
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-gray-700 leading-relaxed">
+        Revisa la asignacion sugerida por IA. Si alguna foto se ve mal asignada,
+        cambia el ambiente desde el menu.
+      </p>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {photos.map((p) => {
+          const assignedId = assignments[p.tempId] ?? null;
+          const isAssigned = assignedId !== null;
+          return (
+            <div
+              key={p.tempId}
+              className={cn(
+                "rounded-lg border bg-white p-2 flex flex-col gap-2",
+                isAssigned ? "border-gray-200" : "border-amber-300 bg-amber-50/40"
+              )}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.thumbnailDataUrl ?? p.dataUrl}
+                alt={p.file.name}
+                className="aspect-video w-full object-cover rounded-md bg-gray-100"
+              />
+              <div className="text-[10px] text-muted truncate font-mono">
+                {p.file.name}
+              </div>
+              <select
+                value={assignedId ?? ""}
+                onChange={(e) =>
+                  onChangeAssignment(p.tempId, e.target.value || null)
+                }
+                className={cn(
+                  "w-full text-xs rounded-md border px-2 py-1.5 bg-white",
+                  isAssigned
+                    ? "border-gray-200"
+                    : "border-amber-300 text-amber-900"
+                )}
+              >
+                <option value="">— Sin asignar —</option>
+                {rooms.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
+                  </option>
+                ))}
+              </select>
+              <div className="flex items-center justify-between text-[10px]">
+                {p.matchedKeyword ? (
+                  <span className="inline-flex items-center gap-1 text-accent-dark">
+                    <Sparkles className="h-2.5 w-2.5" />
+                    IA: &ldquo;{p.matchedKeyword}&rdquo; ({p.suggestionConfidence})
+                  </span>
+                ) : (
+                  <span className="text-amber-700">
+                    Sin match — asigna manualmente
+                  </span>
+                )}
+                <button
+                  onClick={() => onRemovePhoto(p.tempId)}
+                  className="text-muted hover:text-danger"
+                  aria-label="Quitar"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// Helpers
+// ============================================
+
+async function processOne(file: File, rooms: Room[]): Promise<ProcessedPhoto> {
+  const tempId = `bulk_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+  // 1. Forensic
+  let forensic: PhotoEvidence["forensic"] = null;
+  try {
+    forensic = await parseClientSide(file, tempId);
+  } catch (err) {
+    console.warn("Forensic parse failed:", err);
+  }
+
+  // 2. Compress
+  let dataUrl: string;
+  let bytes = file.size;
+  let width: number | null = null;
+  let height: number | null = null;
+  let mime = file.type;
+
+  if (shouldCompress(file)) {
+    try {
+      const c = await compressImage(file, {
+        maxWidth: 2000,
+        maxHeight: 2000,
+        quality: 0.85,
+      });
+      dataUrl = c.dataUrl;
+      bytes = c.bytes;
+      width = c.width;
+      height = c.height;
+      mime = c.format;
+    } catch {
+      dataUrl = await fileToDataUrl(file);
+    }
+  } else {
+    dataUrl = await fileToDataUrl(file);
+  }
+
+  if (width === null || height === null) {
+    const dims = await imageDimsFromUrl(dataUrl);
+    width = dims.w || null;
+    height = dims.h || null;
+  }
+
+  // 3. Suggest room (heuristic)
+  const { roomId, confidence, keyword } = suggestRoom(file.name, rooms);
+
+  return {
+    tempId,
+    file,
+    dataUrl,
+    thumbnailDataUrl: forensic?.thumbnail.dataUrl ?? null,
+    width,
+    height,
+    bytes,
+    mime,
+    forensic,
+    suggestedRoomId: roomId,
+    suggestionConfidence: confidence,
+    matchedKeyword: keyword,
+  };
+}
+
+function fileToDataUrl(file: File | Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error ?? new Error("FileReader failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function imageDims(file: File): Promise<{ w: number; h: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = () => resolve({ w: 0, h: 0 });
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function imageDimsFromUrl(dataUrl: string): Promise<{ w: number; h: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = () => resolve({ w: 0, h: 0 });
+    img.src = dataUrl;
+  });
+}
+
+function normalize(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[_-]/g, " ");
+}
+
+const ROOM_KEYWORDS: Record<string, string[]> = {
+  living: ["living", "sala", "estar", "salon"],
+  comedor: ["comedor", "dining"],
+  cocina: ["cocina", "kitchen"],
+  dormitorio_principal: ["dormitorio principal", "matrimonial", "master", "principal"],
+  dormitorio_secundario: ["dormitorio", "pieza", "habitacion", "bedroom", "secundario"],
+  bano_principal: ["bano principal", "baño principal", "bano master", "master bath"],
+  bano_secundario: ["bano", "baño", "bath", "wc", "toilet"],
+  terraza: ["terraza", "balcon", "terrace"],
+  logia: ["logia", "lavanderia", "laundry"],
+  pasillo: ["pasillo", "hall", "corridor"],
+  estacionamiento: ["estacionamiento", "parking", "garage", "cochera"],
+  bodega: ["bodega", "storage"],
+  medidores: ["medidor", "meter", "tablero"],
+  accesos: ["acceso", "entrada", "puerta", "lobby"],
+  llaves_controles: ["llaves", "controles", "keys"],
+  muebles: ["muebles", "mueble", "furniture"],
+  electrodomesticos: ["electrodomestico", "appliance"],
+};
+
+function suggestRoom(
+  fileName: string,
+  rooms: Room[]
+): {
+  roomId: string | null;
+  confidence: "alta" | "media" | "baja";
+  keyword: string | null;
+} {
+  if (rooms.length === 0) {
+    return { roomId: null, confidence: "baja", keyword: null };
+  }
+  const name = normalize(fileName);
+
+  let bestRoom: Room | null = null;
+  let bestKeyword: string | null = null;
+  let bestScore = 0;
+
+  for (const room of rooms) {
+    // 1. Try matching against this room's name directly
+    const roomNameNorm = normalize(room.name);
+    if (roomNameNorm.length >= 3 && name.includes(roomNameNorm)) {
+      const score = roomNameNorm.length + 5; // bonus for direct name match
+      if (score > bestScore) {
+        bestScore = score;
+        bestRoom = room;
+        bestKeyword = room.name;
+      }
+    }
+
+    // 2. Try matching against canonical keywords for this room type
+    const keywords = ROOM_KEYWORDS[room.type] ?? [];
+    for (const kw of keywords) {
+      if (name.includes(normalize(kw))) {
+        const score = kw.length;
+        if (score > bestScore) {
+          bestScore = score;
+          bestRoom = room;
+          bestKeyword = kw;
+        }
+      }
+    }
+  }
+
+  if (bestRoom) {
+    const confidence: "alta" | "media" | "baja" =
+      bestScore >= 8 ? "alta" : bestScore >= 5 ? "media" : "baja";
+    return { roomId: bestRoom.id, confidence, keyword: bestKeyword };
+  }
+
+  return { roomId: null, confidence: "baja", keyword: null };
+}

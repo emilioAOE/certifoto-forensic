@@ -34,6 +34,7 @@ import {
   idbSetMeta,
   migrateFromLocalStorageIfNeeded,
 } from "./storage-idb";
+import { hydrateCredits } from "./credits";
 
 // ============================================
 // Cache en memoria
@@ -159,14 +160,20 @@ export function hydrateStorage(): Promise<void> {
         idbGetMeta<CurrentUser>("currentUser"),
       ]);
 
-      cache.actas = actas;
+      // Migracion: actas pre-modelo-de-creditos se marcan como legacy_certified
+      // (grandfather clause) para no romper la experiencia de usuarios existentes.
+      cache.actas = actas.map(migrateActaIfNeeded);
+
       cache.properties = properties;
       cache.organizations = organizations;
       cache.contacts = contacts;
       cache.currentUser = currentUser;
       cache.hydrated = true;
 
-      // 3. Activar canal de sync
+      // 3. Hidratar capa de creditos (independiente, en paralelo conceptualmente)
+      await hydrateCredits();
+
+      // 4. Activar canal de sync
       getChannel();
     } catch (err) {
       cache.hydrationError = err instanceof Error ? err.message : String(err);
@@ -193,6 +200,38 @@ export function getHydrationError(): string | null {
 
 export function generateId(prefix = "id"): string {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+// ============================================
+// Migraciones
+// ============================================
+
+/**
+ * Para actas guardadas antes del modelo de creditos: si no traen los campos
+ * `certifiedAt`/`legacyCertified`, las marcamos como legacy (ya certificadas
+ * gratis). Asi un usuario con datos previos no pierde ni paga retroactivamente.
+ *
+ * El parametro va tipado como `unknown` porque los datos vienen de IndexedDB
+ * y pueden ser de un schema anterior — TypeScript no puede saberlo.
+ */
+function migrateActaIfNeeded(rawActa: Acta): Acta {
+  const acta = rawActa as Acta & Partial<Pick<Acta, "certifiedAt" | "legacyCertified">>;
+  const hasCertFields =
+    acta.certifiedAt !== undefined && acta.legacyCertified !== undefined;
+  if (hasCertFields) return rawActa;
+  return {
+    ...rawActa,
+    certifiedAt: acta.certifiedAt ?? null,
+    legacyCertified: true,
+  };
+}
+
+/**
+ * Helper publico: dado un acta, ¿esta certificada? (ya sea por compra de
+ * credito o por grandfather clause).
+ */
+export function isActaCertified(acta: Acta): boolean {
+  return acta.certifiedAt != null || acta.legacyCertified === true;
 }
 
 // ============================================
@@ -278,6 +317,7 @@ export function listActaSummaries(): ActaSummary[] {
       id: a.id,
       type: a.type,
       status: a.status,
+      certified: isActaCertified(a),
       propertyAddress: property
         ? `${property.address}${property.unit ? ` ${property.unit}` : ""}, ${property.commune}`
         : "(sin propiedad)",
@@ -449,7 +489,7 @@ export async function bulkReplace(data: {
 }): Promise<void> {
   await idbBulkImport(data);
   // Recargar cache
-  cache.actas = await idbLoadAllActas();
+  cache.actas = (await idbLoadAllActas()).map(migrateActaIfNeeded);
   cache.properties = await idbLoadAllProperties();
   cache.organizations = await idbLoadAllOrganizations();
   cache.contacts = await idbLoadAllContacts();
@@ -463,7 +503,7 @@ export async function bulkReplace(data: {
 
 // Export para que el provider pueda forzar refresh tras un import
 export async function reloadCache(): Promise<void> {
-  cache.actas = await idbLoadAllActas();
+  cache.actas = (await idbLoadAllActas()).map(migrateActaIfNeeded);
   cache.properties = await idbLoadAllProperties();
   cache.organizations = await idbLoadAllOrganizations();
   cache.contacts = await idbLoadAllContacts();

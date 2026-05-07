@@ -15,6 +15,9 @@ import {
   Loader2,
   Download,
   Upload,
+  Coins,
+  Award,
+  Lock,
 } from "lucide-react";
 import {
   listActaSummaries,
@@ -22,6 +25,10 @@ import {
   subscribeToStorageChanges,
   type DashboardStats,
 } from "@/lib/storage";
+import {
+  getCreditsBalance,
+  subscribeToCreditsChanges,
+} from "@/lib/credits";
 import type { ActaSummary } from "@/lib/acta-types";
 import {
   ACTA_TYPE_LABEL,
@@ -45,6 +52,7 @@ export function Dashboard() {
   const { confirm } = useConfirm();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [actas, setActas] = useState<ActaSummary[]>([]);
+  const [credits, setCredits] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [seeding, setSeeding] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -59,13 +67,20 @@ export function Dashboard() {
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )
     );
+    setCredits(getCreditsBalance());
   };
 
   useEffect(() => {
     setMounted(true);
     refresh();
-    const unsub = subscribeToStorageChanges(refresh);
-    return unsub;
+    const unsubStorage = subscribeToStorageChanges(refresh);
+    const unsubCredits = subscribeToCreditsChanges(() =>
+      setCredits(getCreditsBalance())
+    );
+    return () => {
+      unsubStorage();
+      unsubCredits();
+    };
   }, []);
 
   const handleSeedMockData = async () => {
@@ -227,6 +242,39 @@ export function Dashboard() {
         </div>
       </section>
 
+      {/* Credits */}
+      <section className="rounded-xl border border-accent-light bg-accent-softer p-4 flex items-center justify-between gap-3 flex-wrap">
+        <Link
+          href="/mis-creditos"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
+          <div className="rounded-lg bg-white border border-accent-light p-2 text-accent-dark">
+            <Coins className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold text-accent-dark uppercase tracking-wider">
+              Creditos disponibles
+            </p>
+            <p className="text-2xl font-bold text-gray-900 leading-tight">
+              {credits}
+              <span className="text-xs font-normal text-gray-600 ml-1.5">
+                credito{credits === 1 ? "" : "s"}
+              </span>
+            </p>
+          </div>
+        </Link>
+        <div className="text-xs text-gray-700 hidden sm:block max-w-md">
+          Cada acta certificada consume 1 credito. Crear y editar actas es{" "}
+          <span className="font-semibold">gratis</span>.{" "}
+          <Link
+            href="/precios"
+            className="text-accent-dark font-semibold hover:underline"
+          >
+            Ver packs
+          </Link>
+        </div>
+      </section>
+
       {/* Stats */}
       {stats && stats.totalActas > 0 && (
         <section>
@@ -379,6 +427,26 @@ function ActaListItem({ acta }: { acta: ActaSummary }) {
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-medium text-gray-900">
               {ACTA_TYPE_LABEL[acta.type]}
+            </span>
+            <span
+              className={cn(
+                "inline-flex items-center gap-0.5 text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border",
+                acta.certified
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                  : "bg-amber-50 text-amber-700 border-amber-200"
+              )}
+              title={
+                acta.certified
+                  ? "Acta certificada e inmutable"
+                  : "Borrador editable, no se puede compartir como .certifoto"
+              }
+            >
+              {acta.certified ? (
+                <Award className="h-2.5 w-2.5" />
+              ) : (
+                <Lock className="h-2.5 w-2.5" />
+              )}
+              {acta.certified ? "Certificada" : "Borrador"}
             </span>
             <span
               className={cn(

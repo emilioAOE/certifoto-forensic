@@ -37,7 +37,7 @@ const SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cuanto cuesta?",
-        a: "El uso individual es gratis mientras estamos en periodo de pruebas. Tendremos planes pagados para corredores y administradoras con funciones avanzadas (multiples propiedades, marca propia, dashboard gerencial, integraciones). Puedes ver mas en nuestra pagina de precios.",
+        a: "Crear y editar actas es gratis e ilimitado. Solo pagas cuando certificas — es decir, cuando el acta queda lista para entregarse formalmente. Las certificaciones se compran en packs one-time desde $2.990 CLP (1 cert) hasta $99.900 CLP (50 certs). Ver detalle en /precios.",
       },
       {
         q: "¿Funciona en celular?",
@@ -67,8 +67,8 @@ const SECTIONS: FaqSection[] = [
         a: "Estamos terminando esa funcionalidad. Hoy puedes generar el PDF firmado por una parte y compartirlo, o que ambas partes firmen desde el mismo dispositivo durante la inspeccion. Pronto podras enviar links unicos de firma a cada parte por email o WhatsApp.",
       },
       {
-        q: "¿Se puede modificar un acta despues de firmada?",
-        a: "Una vez que un acta esta firmada y cerrada, queda congelada. Si necesitas hacer cambios, debes crear una nueva acta complementaria o iniciar un proceso de revision que invalida las firmas previas.",
+        q: "¿Se puede modificar un acta despues de certificada?",
+        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua del PDF y queda lista para compartirse como .certifoto. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento este verdaderamente listo (firmas obtenidas, fotos completas).",
       },
       {
         q: "¿Que pasa si una parte no quiere firmar?",

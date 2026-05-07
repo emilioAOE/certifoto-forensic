@@ -603,6 +603,8 @@ export async function seedSampleActa(
     manualSummary:
       "Acta de ejemplo generada automaticamente para probar el flujo. Las fotos son placeholders.",
     disclaimerAccepted: false,
+    certifiedAt: null,
+    legacyCertified: false,
     inspectionDate: data.inspectionDate,
     createdAt: now,
     updatedAt: now,
