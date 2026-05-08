@@ -178,9 +178,9 @@ export async function extractContractData(
     onProgress?.({
       stage: "parsing",
       pct: 1,
-      message: "Procesando datos extraidos...",
+      message: "Analizando contrato con IA...",
     });
-    const result = parseContractText(nativeText, totalPages);
+    const result = await parseContractTextSmart(nativeText, totalPages);
     onProgress?.({ stage: "done", pct: 1, message: "Listo" });
     return result;
   }
@@ -228,11 +228,178 @@ export async function extractContractData(
     stage: "parsing",
     pct: 1,
     totalPages,
-    message: "Procesando datos extraidos del OCR...",
+    message: "Analizando contrato con IA...",
   });
-  const result = parseContractText(ocrText, totalPages);
+  const result = await parseContractTextSmart(ocrText, totalPages);
   onProgress?.({ stage: "done", pct: 1, totalPages, message: "Listo" });
   return result;
+}
+
+/**
+ * Parsea el texto extraido usando AI (Claude Haiku) primero. Si AI falla
+ * o no esta disponible, cae a la heuristica regex local.
+ */
+async function parseContractTextSmart(
+  text: string,
+  pages: number
+): Promise<ContractExtraction> {
+  // 1. Heuristica local — siempre la corremos para tener fallback / merge
+  const local = parseContractText(text, pages);
+
+  // 2. AI si esta disponible
+  try {
+    const res = await fetch("/api/parse-contract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rawText: text }),
+    });
+    if (!res.ok) {
+      // 503 (sin API key) o cualquier otro error → usar local
+      return local;
+    }
+    const data = (await res.json()) as {
+      ok?: boolean;
+      data?: {
+        property: {
+          address: string | null;
+          unit: string | null;
+          commune: string | null;
+          city: string | null;
+        };
+        landlord: { name: string | null; rut: string | null };
+        tenant: { name: string | null; rut: string | null };
+        contract: {
+          monthlyAmount: number | null;
+          startDate: string | null;
+          endDate: string | null;
+          deposit: number | null;
+          depositKind: "months" | "amount" | null;
+        };
+        notes: string | null;
+      };
+    };
+    if (!data.ok || !data.data) return local;
+
+    return mergeAIWithLocal(data.data, local, text, pages);
+  } catch {
+    // Network error u otro — fallback al heuristico
+    return local;
+  }
+}
+
+/**
+ * Construye la ContractExtraction priorizando datos de AI sobre heuristica.
+ * Para campos donde AI devolvio null, usa lo que encontro la heuristica.
+ * Resuelve la region a partir del nombre de comuna y normaliza/valida RUTs.
+ */
+function mergeAIWithLocal(
+  ai: {
+    property: {
+      address: string | null;
+      unit: string | null;
+      commune: string | null;
+      city: string | null;
+    };
+    landlord: { name: string | null; rut: string | null };
+    tenant: { name: string | null; rut: string | null };
+    contract: {
+      monthlyAmount: number | null;
+      startDate: string | null;
+      endDate: string | null;
+      deposit: number | null;
+      depositKind: "months" | "amount" | null;
+    };
+    notes: string | null;
+  },
+  local: ContractExtraction,
+  rawText: string,
+  pages: number
+): ContractExtraction {
+  // Normalizar y validar RUTs de AI. Si AI devolvio basura, caer a local.
+  const aiLandlordRut = normalizeRut(ai.landlord.rut);
+  const aiTenantRut = normalizeRut(ai.tenant.rut);
+
+  // Resolver comuna → region usando nuestro catalogo. Si AI dio una comuna
+  // valida la priorizamos sobre la del heuristico.
+  const aiCommune = ai.property.commune?.trim() || null;
+  const aiCommuneMatch = aiCommune ? findComunaByName(aiCommune) : null;
+
+  const finalCommune = aiCommuneMatch?.name ?? aiCommune ?? local.property.commune;
+  const finalRegion = aiCommuneMatch?.region ?? local.property.region;
+
+  // Si AI dio depositKind === "amount", el numero es CLP — usar como deposit.
+  // Si dio "months", usar el numero pequeno tal cual (compatibilidad con el
+  // schema heuristico que guarda meses como numero pequeno y CLP como grande).
+  const finalDeposit = ai.contract.deposit ?? local.contract.deposit;
+
+  // Confidence: si AI llenó el campo, alta. Si no llenó pero local sí, media.
+  // Si ninguno, 0.
+  const conf = (aiVal: unknown, localVal: unknown): number =>
+    aiVal != null ? 0.9 : localVal != null ? 0.5 : 0;
+
+  const addressConf = conf(ai.property.address, local.property.address);
+  const landlordConf =
+    (ai.landlord.name ? 0.5 : local.landlord.name ? 0.25 : 0) +
+    (aiLandlordRut ? 0.4 : local.landlord.rut ? 0.2 : 0);
+  const tenantConf =
+    (ai.tenant.name ? 0.5 : local.tenant.name ? 0.25 : 0) +
+    (aiTenantRut ? 0.4 : local.tenant.rut ? 0.2 : 0);
+  const contractConf =
+    conf(ai.contract.monthlyAmount, local.contract.monthlyAmount) * 0.4 +
+    conf(ai.contract.startDate, local.contract.startDate) * 0.3 +
+    conf(ai.contract.deposit, local.contract.deposit) * 0.2 +
+    conf(ai.contract.endDate, local.contract.endDate) * 0.1;
+
+  const overall =
+    (addressConf + landlordConf + tenantConf + contractConf) / 4;
+
+  return {
+    rawText: rawText.slice(0, 5000),
+    property: {
+      address: ai.property.address ?? local.property.address,
+      unit: ai.property.unit ?? local.property.unit,
+      commune: finalCommune,
+      region: finalRegion,
+      city: ai.property.city ?? local.property.city,
+    },
+    landlord: {
+      name: ai.landlord.name ?? local.landlord.name,
+      rut: aiLandlordRut ?? local.landlord.rut,
+    },
+    tenant: {
+      name: ai.tenant.name ?? local.tenant.name,
+      rut: aiTenantRut ?? local.tenant.rut,
+    },
+    contract: {
+      monthlyAmount: ai.contract.monthlyAmount ?? local.contract.monthlyAmount,
+      startDate: ai.contract.startDate ?? local.contract.startDate,
+      endDate: ai.contract.endDate ?? local.contract.endDate,
+      deposit: finalDeposit,
+    },
+    confidence: {
+      address: addressConf,
+      landlord: landlordConf,
+      tenant: tenantConf,
+      contract: contractConf,
+      overall,
+    },
+    extractedFrom: {
+      pages,
+      chars: rawText.length,
+    },
+  };
+}
+
+/**
+ * Normaliza un RUT a formato canonico ("12.345.678-9") y valida con DV.
+ * Retorna null si no es un RUT valido.
+ */
+function normalizeRut(raw: string | null): string | null {
+  if (!raw) return null;
+  const cleaned = cleanRut(raw);
+  if (!cleaned) return null;
+  if (!isValidRut(cleaned)) return null;
+  return formatRut(cleaned);
 }
 
 // ============================================
