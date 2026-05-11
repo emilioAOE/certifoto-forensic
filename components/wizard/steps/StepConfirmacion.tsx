@@ -76,31 +76,48 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
 
         <Section
           icon={<Home className="h-4 w-4" />}
-          title={`Ambientes (${data.rooms.length})`}
+          title={
+            data.rooms.length === 0
+              ? "Ambientes (la IA los va a detectar)"
+              : `Ambientes (${data.rooms.length})`
+          }
         >
-          <div className="flex flex-wrap gap-1.5">
-            {data.rooms.map((r) => (
-              <span
-                key={r.tempId}
-                className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded"
-              >
-                {r.name}
-                {r.required && (
-                  <span className="text-accent ml-1">*</span>
-                )}
-              </span>
-            ))}
-          </div>
-          {data.rooms.some((r) => r.required) && (
-            <p className="text-[10px] text-muted mt-1.5">* Obligatorio</p>
+          {data.rooms.length === 0 ? (
+            <p className="text-xs text-muted leading-relaxed">
+              No pre-seleccionaste ambientes. La IA va a leer las fotos que
+              subas y crear los ambientes automaticamente (cocina, baño,
+              dormitorios, terraza, etc.).
+            </p>
+          ) : (
+            <>
+              <div className="flex flex-wrap gap-1.5">
+                {data.rooms.map((r) => (
+                  <span
+                    key={r.tempId}
+                    className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded"
+                  >
+                    {r.name}
+                    {r.required && (
+                      <span className="text-accent ml-1">*</span>
+                    )}
+                  </span>
+                ))}
+              </div>
+              {data.rooms.some((r) => r.required) && (
+                <p className="text-[10px] text-muted mt-1.5">* Obligatorio</p>
+              )}
+            </>
           )}
         </Section>
       </div>
 
       <div className="mt-5 rounded-lg border border-info/30 bg-info/5 p-3">
         <p className="text-xs text-gray-700 leading-relaxed">
-          Despues de crear el acta podras subir fotos por ambiente, agregar
-          observaciones y solicitar firmas. El acta se guardara en estado{" "}
+          Despues de crear el acta podras subir fotos
+          {data.rooms.length === 0
+            ? " (la IA va a detectar y crear los ambientes), "
+            : " por ambiente, "}
+          agregar observaciones y solicitar firmas. El acta se guardara en estado{" "}
           <span className="text-accent font-medium">recopilando evidencia</span>.
         </p>
       </div>
