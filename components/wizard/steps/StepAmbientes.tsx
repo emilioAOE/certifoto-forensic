@@ -266,9 +266,10 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
         <p className="text-xs text-gray-700 leading-relaxed flex items-start gap-2">
           <Sparkles className="h-3.5 w-3.5 text-accent-dark shrink-0 mt-0.5" />
           <span>
-            <strong>Dos formas de subir fotos despues:</strong> "Subir todas
-            juntas + IA" (la IA reconoce el ambiente de cada foto) o "Foto
-            por ambiente" (tu las asignas manualmente).
+            <strong>Dos formas de subir fotos despues:</strong>{" "}
+            &ldquo;Subir todas juntas + IA&rdquo; (la IA reconoce el ambiente
+            de cada foto) o &ldquo;Foto por ambiente&rdquo; (tu las asignas
+            manualmente).
           </span>
         </p>
       </div>
