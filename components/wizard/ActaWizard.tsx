@@ -52,8 +52,8 @@ interface WizardData {
 const STEPS = [
   { id: 1, label: "Tipo" },
   { id: 2, label: "Propiedad" },
-  { id: 3, label: "Partes" },
-  { id: 4, label: "Ambientes" },
+  { id: 3, label: "Fotos" },
+  { id: 4, label: "Partes" },
   { id: 5, label: "Revisar" },
 ];
 
@@ -196,12 +196,12 @@ export function ActaWizard() {
           data.property.commune.trim().length > 0
         );
       case 3:
-        return data.parties.length >= 1;
-      case 4:
-        // Step 4 (Ambientes) ahora es opcional — la IA crea los ambientes
-        // dinamicamente cuando se suben fotos. El usuario puede pre-seleccionar
-        // si quiere, pero no es requerido.
+        // Step 3 (Fotos) ahora es opcional — la IA crea los ambientes
+        // dinamicamente cuando se suben fotos despues. El usuario puede
+        // pre-seleccionar ambientes manualmente, pero no es requerido.
         return true;
+      case 4:
+        return data.parties.length >= 1;
       default:
         return true;
     }
@@ -456,15 +456,15 @@ export function ActaWizard() {
           />
         )}
         {step === 3 && (
-          <StepPartes
-            parties={data.parties}
-            onChange={(parties) => updateData({ parties })}
-          />
-        )}
-        {step === 4 && (
           <StepAmbientes
             rooms={data.rooms}
             onChange={(rooms) => updateData({ rooms })}
+          />
+        )}
+        {step === 4 && (
+          <StepPartes
+            parties={data.parties}
+            onChange={(parties) => updateData({ parties })}
           />
         )}
         {step === 5 && <StepConfirmacion data={data} />}

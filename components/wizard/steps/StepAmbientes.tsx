@@ -9,10 +9,10 @@ import {
   Trash2,
   GripVertical,
   Camera,
-  Sparkles,
   ChevronDown,
   ChevronUp,
   Brain,
+  ImagePlus,
 } from "lucide-react";
 
 type RoomDraft = Omit<Room, "id" | "photoIds" | "aiSummary"> & { tempId: string };
@@ -93,37 +93,61 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
   return (
     <div>
       <h2 className="text-lg font-semibold text-gray-900 mb-1">
-        Ambientes
+        Fotos del inmueble
       </h2>
       <p className="text-sm text-muted mb-5">
-        No necesitas marcar nada aqui — la IA va a detectar y crear los
-        ambientes automaticamente cuando subas las fotos.
+        Cuando termines el acta vas a poder subir las fotos. Tienes dos
+        formas — la mas rapida es dejar que la IA las clasifique sola.
       </p>
 
-      {/* Hero: la opcion recomendada es saltar */}
-      <div className="mb-5 rounded-xl border-2 border-accent bg-accent-softer/40 p-5 shadow-sm">
-        <div className="flex items-start gap-3 mb-3">
-          <div className="rounded-lg bg-accent text-white p-2.5 shrink-0">
-            <Brain className="h-5 w-5" />
+      {/* Two-card preview: same UX as detail page */}
+      <div className="mb-5 grid sm:grid-cols-2 gap-3">
+        {/* Recomendado: AI bulk */}
+        <div className="group relative text-left rounded-xl border-2 border-accent shadow-md bg-white p-4 flex flex-col">
+          <span className="absolute -top-2 left-4 inline-flex items-center rounded-full bg-accent text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm">
+            Recomendado
+          </span>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="rounded-lg bg-accent text-white p-2">
+              <ImagePlus className="h-5 w-5" />
+            </div>
+            <h4 className="text-sm font-bold text-gray-900">
+              Subir todas las fotos juntas
+            </h4>
           </div>
-          <div className="flex-1">
-            <h3 className="text-base font-bold text-gray-900 mb-1">
-              Dejar que la IA detecte los ambientes
-            </h3>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              Cuando subas las fotos en el siguiente paso, la IA va a leer
-              cada una y crear los ambientes que detecte (cocina, baño,
-              dormitorios, terraza, etc). Puedes corregir o renombrar
-              despues.
-            </p>
+          <p className="text-xs text-gray-700 leading-relaxed flex-1">
+            Selecciona o arrastra todas las fotos del inmueble. La IA mira
+            cada una y crea automaticamente los ambientes (cocina, baño,
+            dormitorios, terraza, etc.). Tu solo revisas.
+          </p>
+        </div>
+
+        {/* Manual */}
+        <div className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="rounded-lg bg-gray-100 text-gray-600 p-2">
+              <Camera className="h-5 w-5" />
+            </div>
+            <h4 className="text-sm font-semibold text-gray-900">
+              Foto por ambiente (manual)
+            </h4>
           </div>
+          <p className="text-xs text-gray-700 leading-relaxed flex-1">
+            Toma o sube fotos directamente al ambiente correspondiente, una
+            por una. Si prefieres pre-armar la lista de ambientes, expande
+            la seccion de abajo.
+          </p>
         </div>
-        <div className="rounded-md bg-white border border-accent-light px-3 py-2 text-xs text-gray-700">
-          <strong className="text-accent-dark">Tip:</strong> simplemente
-          haz click en{" "}
-          <span className="font-semibold">Siguiente</span> y avanza al paso
-          de revisar. Vas a poder cargar fotos despues de crear el acta.
-        </div>
+      </div>
+
+      <div className="mb-4 rounded-md border border-accent-light bg-accent-softer/40 px-3 py-2.5 flex items-start gap-2 text-xs text-gray-700">
+        <Brain className="h-3.5 w-3.5 text-accent-dark shrink-0 mt-0.5" />
+        <span>
+          <strong className="text-accent-dark">No necesitas marcar nada aqui.</strong>{" "}
+          Despues de crear el acta vas a llegar a la pantalla donde subes las
+          fotos. La IA va a detectar todos los ambientes
+          automaticamente.
+        </span>
       </div>
 
       {/* Selected rooms (only shown if user manually added some) */}
@@ -260,19 +284,6 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
           </div>
         </div>
       )}
-
-      {/* Hints for bulk vs manual photo flow — moved to bottom, simpler */}
-      <div className="mt-6 rounded-lg border border-gray-200 bg-white p-3">
-        <p className="text-xs text-gray-700 leading-relaxed flex items-start gap-2">
-          <Sparkles className="h-3.5 w-3.5 text-accent-dark shrink-0 mt-0.5" />
-          <span>
-            <strong>Dos formas de subir fotos despues:</strong>{" "}
-            &ldquo;Subir todas juntas + IA&rdquo; (la IA reconoce el ambiente
-            de cada foto) o &ldquo;Foto por ambiente&rdquo; (tu las asignas
-            manualmente).
-          </span>
-        </p>
-      </div>
 
     </div>
   );
