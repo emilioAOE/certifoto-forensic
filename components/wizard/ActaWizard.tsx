@@ -15,6 +15,7 @@ import type {
   Party,
   Room,
   PartyRole,
+  PhotoEvidence,
   PropertyType,
   FurnishedStatus,
   RepresentsTarget,
@@ -35,7 +36,7 @@ import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
 import { StepPropiedad } from "./steps/StepPropiedad";
 import { StepPartes } from "./steps/StepPartes";
-import { StepAmbientes } from "./steps/StepAmbientes";
+import { StepFotos } from "./steps/StepFotos";
 import { StepConfirmacion } from "./steps/StepConfirmacion";
 import type { ContractExtraction } from "@/lib/contract-parser";
 
@@ -46,6 +47,10 @@ interface WizardData {
     tempId: string;
   })[];
   rooms: (Omit<Room, "id" | "photoIds" | "aiSummary"> & { tempId: string })[];
+  /** Fotos cargadas en el paso "Fotos" via IA. Listas para adjuntar al acta. */
+  pendingPhotos: PhotoEvidence[];
+  /** Rooms creados por la IA durante el paso "Fotos" (ademas de los manuales). */
+  detectedRooms: Room[];
   inspectionDate: string;
 }
 
@@ -87,6 +92,8 @@ const initialData: WizardData = {
   },
   parties: [],
   rooms: [],
+  pendingPhotos: [],
+  detectedRooms: [],
   inspectionDate: new Date().toISOString().slice(0, 10),
 };
 
@@ -154,6 +161,8 @@ export function ActaWizard() {
       property: mock.property,
       parties: mock.parties,
       rooms: mock.rooms,
+      pendingPhotos: [],
+      detectedRooms: [],
       inspectionDate: mock.inspectionDate,
     });
     setStep(STEPS.length); // jump to confirmation
@@ -265,15 +274,43 @@ export function ActaWizard() {
       invitationStatus: "pending",
     }));
 
-    const roomsWithIds: Room[] = data.rooms.map((r, i) => ({
-      ...r,
-      id: generateId("room"),
-      order: i,
-      photoIds: [],
-      aiSummary: null,
-    }));
+    // Rooms manuales (RoomDraft con tempId) → Room con id real
+    const manualRoomIdMap = new Map<string, string>();
+    const manualRoomsWithIds: Room[] = data.rooms.map((r, i) => {
+      const realId = generateId("room");
+      manualRoomIdMap.set(`manual:${r.tempId}`, realId);
+      return {
+        ...r,
+        id: realId,
+        order: i,
+        photoIds: [],
+        aiSummary: null,
+      };
+    });
+
+    // Rooms detectados por IA en el step Fotos: ya tienen id real, los
+    // appendamos despues de los manuales evitando duplicados por type.
+    const manualTypes = new Set(manualRoomsWithIds.map((r) => r.type));
+    const aiRooms: Room[] = data.detectedRooms
+      .filter((r) => !manualTypes.has(r.type))
+      .map((r, i) => ({
+        ...r,
+        order: manualRoomsWithIds.length + i,
+      }));
+
+    const roomsWithIds: Room[] = [...manualRoomsWithIds, ...aiRooms];
 
     const actaId = generateId("acta");
+
+    // Fotos pendientes: reescribir actaId y mappear roomId si apunta a un
+    // room manual (id "manual:..." → id real).
+    const finalPendingPhotos: PhotoEvidence[] = data.pendingPhotos.map(
+      (p) => ({
+        ...p,
+        actaId,
+        roomId: manualRoomIdMap.get(p.roomId) ?? p.roomId,
+      })
+    );
 
     // Si es acta de devolucion, buscar la entrega mas reciente de la misma propiedad
     let relatedEntregaActaId: string | null = null;
@@ -307,7 +344,7 @@ export function ActaWizard() {
       brokerRole: null,
       organizationId: null,
       rooms: roomsWithIds,
-      photos: [],
+      photos: finalPendingPhotos,
       inventoryItems: [],
       comments: [],
       signatures: [],
@@ -456,9 +493,15 @@ export function ActaWizard() {
           />
         )}
         {step === 3 && (
-          <StepAmbientes
+          <StepFotos
             rooms={data.rooms}
-            onChange={(rooms) => updateData({ rooms })}
+            onChangeRooms={(rooms) => updateData({ rooms })}
+            pendingPhotos={data.pendingPhotos}
+            onChangePhotos={(pendingPhotos) => updateData({ pendingPhotos })}
+            detectedRooms={data.detectedRooms}
+            onChangeDetectedRooms={(detectedRooms) =>
+              updateData({ detectedRooms })
+            }
           />
         )}
         {step === 4 && (

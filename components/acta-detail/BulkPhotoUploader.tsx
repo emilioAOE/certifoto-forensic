@@ -38,6 +38,13 @@ interface BulkPhotoUploaderProps {
   acta: Acta;
   onUpdate: (updater: (a: Acta) => Acta) => void;
   onClose: () => void;
+  /**
+   * "modal" (default): modal con overlay fijo + boton X. Usado en la
+   *   pagina de detalle del acta.
+   * "inline": sin overlay, embebido inline. Usado en el paso "Fotos" del
+   *   wizard sobre un acta-borrador.
+   */
+  variant?: "modal" | "inline";
 }
 
 interface ProcessedPhoto {
@@ -73,7 +80,9 @@ export function BulkPhotoUploader({
   acta,
   onUpdate,
   onClose,
+  variant = "modal",
 }: BulkPhotoUploaderProps) {
+  const inline = variant === "inline";
   const inputRef = useRef<HTMLInputElement>(null);
   const [stage, setStage] = useState<"select" | "processing" | "review">(
     "select"
@@ -459,9 +468,16 @@ export function BulkPhotoUploader({
   ).length;
   const unassignedCount = photos.length - assignedCount;
 
+  const containerOuterClass = inline
+    ? ""
+    : "fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4";
+  const containerInnerClass = inline
+    ? "bg-white rounded-xl border border-gray-200 flex flex-col"
+    : "bg-white rounded-xl border border-gray-200 shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col";
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl border border-gray-200 shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+    <div className={containerOuterClass}>
+      <div className={containerInnerClass}>
         {/* Header */}
         <div className="flex items-center justify-between gap-3 p-4 border-b border-gray-200">
           <div className="flex items-center gap-2">
@@ -478,13 +494,15 @@ export function BulkPhotoUploader({
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-muted hover:text-gray-800"
-            aria-label="Cerrar"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          {!inline && (
+            <button
+              onClick={onClose}
+              className="text-muted hover:text-gray-800"
+              aria-label="Cerrar"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         {/* Body */}
