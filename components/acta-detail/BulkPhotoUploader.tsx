@@ -376,8 +376,16 @@ export function BulkPhotoUploader({
         );
       });
 
-      // Lanzar analisis IA en background (no bloqueante para el usuario)
-      void runBulkAI(aiJobs);
+      // Lanzar analisis IA en background (no bloqueante para el usuario).
+      // En modo "inline" (wizard) este componente se desmonta apenas el
+      // usuario hace Save, y los closures stale de runBulkAI terminarian
+      // sobreescribiendo wizard state con arrays vacios (a.photos en el
+      // closure es la version vieja, con photos=[] antes del save). En la
+      // detail page no aplica porque la acta real es la fuente de verdad
+      // y onUpdate usa useRef.
+      if (!inline) {
+        void runBulkAI(aiJobs);
+      }
       onClose();
     } finally {
       setSaving(false);
