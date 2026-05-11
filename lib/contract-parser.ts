@@ -96,14 +96,16 @@ const DEFAULT_SCANNED_THRESHOLD = 200;
 /**
  * Lee un contrato (PDF o imagen) y extrae los datos.
  *
- * Estrategia:
- *  1. Si el archivo es chico (< 3MB) y AI esta disponible: mandar el
- *     archivo entero al endpoint /api/parse-contract para que Claude lo
- *     lea con visiónvalu+texto en un solo paso. Mejor que extraer texto
- *     y mandarlo, porque PDF.js suele desordenar layouts complejos.
- *  2. Si el archivo es grande o AI falla: extraer texto localmente
- *     (PDF.js para PDFs, Tesseract para imagenes) y caer al parser
- *     heuristico regex.
+ * Estrategia (en orden de preferencia):
+ *  1. PDF nativo: renderizamos las primeras N paginas como JPEG con
+ *     PDF.js + canvas y mandamos las imagenes a Claude vision. Bypasea
+ *     completamente la extraccion de texto (que falla en layouts
+ *     complejos) y funciona con PDFs de cualquier tamano (renderizamos
+ *     local, mandamos solo lo que cabe en el body cap de Vercel).
+ *  2. Imagen: la mandamos directo a Claude vision.
+ *  3. Si AI falla o no esta disponible: extraemos texto localmente
+ *     (PDF.js getTextContent o Tesseract OCR) y caemos al parser
+ *     heuristico regex como ultimo recurso.
  */
 export async function extractContractData(
   file: File | Blob,
@@ -120,30 +122,56 @@ export async function extractContractData(
       typeof file.name === "string" &&
       file.name.toLowerCase().endsWith(".pdf"));
 
-  const fileSize = "size" in file && typeof file.size === "number" ? file.size : 0;
-  // Limite seguro para subir el archivo entero a la AI. Vercel acepta ~4.5MB
-  // de body; le dejamos margen al base64 (que infla ~33%) y resto del payload.
-  const MAX_FILE_BYTES = 2.8 * 1024 * 1024;
-  const canUseAIDirect = fileSize > 0 && fileSize <= MAX_FILE_BYTES;
-
-  // Caso 1: archivo chico + AI disponible -> mandar directo
-  if (canUseAIDirect && (isPdf || isImage)) {
+  // Caso 1A: PDF -> renderizar primeras paginas como JPEG y mandar a AI
+  if (isPdf) {
     onProgress?.({
       stage: "parsing",
       pct: 0.1,
-      message: "Enviando contrato a la IA para analisis...",
+      message: "Renderizando primeras paginas del PDF...",
     });
-    const aiResult = await tryParseFileWithAI(file, isPdf, fileType, onProgress);
-    if (aiResult) {
-      onProgress?.({ stage: "done", pct: 1, message: "Listo" });
-      return aiResult;
+    try {
+      const images = await renderPdfPagesToJpegs(file, onProgress);
+      onProgress?.({
+        stage: "parsing",
+        pct: 0.6,
+        message: "La IA esta analizando el contrato...",
+      });
+      const aiResult = await tryParseImagesWithAI(images);
+      if (aiResult) {
+        onProgress?.({ stage: "done", pct: 1, message: "Listo" });
+        return aiResult;
+      }
+      // AI fallo (sin API key u otro error) — continuamos al fallback
+      onProgress?.({
+        stage: "parsing",
+        pct: 0.2,
+        message: "IA no disponible. Extrayendo texto localmente...",
+      });
+    } catch (err) {
+      console.warn("Render PDF to JPEG failed:", err);
+      // Continuamos al fallback
     }
-    // AI fallo o no disponible — continuamos con extraccion local
+  }
+
+  // Caso 1B: imagen -> mandar directo a AI vision
+  if (isImage) {
     onProgress?.({
       stage: "parsing",
-      pct: 0.2,
-      message: "IA no disponible. Extrayendo texto localmente...",
+      pct: 0.3,
+      message: "Enviando imagen a la IA...",
     });
+    try {
+      const imgBase64 = await fileToBase64(file);
+      const aiResult = await tryParseImagesWithAI([
+        { base64: imgBase64, mime: fileType },
+      ]);
+      if (aiResult) {
+        onProgress?.({ stage: "done", pct: 1, message: "Listo" });
+        return aiResult;
+      }
+    } catch (err) {
+      console.warn("Send image to AI failed:", err);
+    }
   }
 
   // Caso 2: imagen → OCR directo + heuristica
@@ -290,31 +318,75 @@ async function fileToBase64(file: File | Blob): Promise<string> {
 }
 
 /**
- * Manda el archivo (PDF o imagen) directamente al endpoint AI. Claude lee
- * el contrato con vision + texto natively. Retorna null si AI no esta
- * disponible o falla — el caller debe caer al flujo local.
+ * Renderiza las primeras N paginas de un PDF como JPEG comprimidos para
+ * mandar a la AI vision. Bypasea PDF.js getTextContent (que falla en
+ * layouts complejos) y funciona con PDFs de cualquier tamano — solo
+ * mandamos las imagenes, no el PDF binario.
+ *
+ * Por defecto: 5 paginas, scale 1.5, JPEG quality 0.8. Tipicamente
+ * ~150-300 KB por pagina, total ~1 MB — bien dentro del body cap.
  */
-async function tryParseFileWithAI(
+async function renderPdfPagesToJpegs(
   file: File | Blob,
-  isPdf: boolean,
-  fileType: string,
-  onProgress?: (p: ExtractProgress) => void
-): Promise<ContractExtraction | null> {
-  try {
-    const base64 = await fileToBase64(file);
-    onProgress?.({
-      stage: "parsing",
-      pct: 0.5,
-      message: "La IA esta analizando el contrato...",
-    });
-    const body = isPdf
-      ? { pdfBase64: base64 }
-      : { imageBase64: base64, imageMime: fileType };
+  onProgress?: (p: ExtractProgress) => void,
+  maxPages = 5
+): Promise<ImagePayload[]> {
+  const pdfjs = await loadPdfJs();
+  const arrayBuffer = await file.arrayBuffer();
+  const pdfDoc = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+  const pagesToRender = Math.min(pdfDoc.numPages, maxPages);
+  const images: ImagePayload[] = [];
 
+  // Budget total para no pasarnos del body cap (Vercel ~4.5 MB con margen).
+  const MAX_TOTAL_BASE64 = 3 * 1024 * 1024;
+  let totalBase64Bytes = 0;
+
+  for (let i = 1; i <= pagesToRender; i++) {
+    onProgress?.({
+      stage: "ocr_rendering_page",
+      pct: (i - 1) / pagesToRender,
+      page: i,
+      totalPages: pagesToRender,
+      message: `Renderizando pagina ${i}/${pagesToRender}...`,
+    });
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: 1.5 });
+    const canvas = document.createElement("canvas");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("No se pudo crear contexto canvas");
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+    const base64 = dataUrl.split(",")[1] ?? "";
+    if (totalBase64Bytes + base64.length > MAX_TOTAL_BASE64) {
+      // Llegamos al limite — cortamos aqui
+      break;
+    }
+    totalBase64Bytes += base64.length;
+    images.push({ base64, mime: "image/jpeg" });
+  }
+  return images;
+}
+
+interface ImagePayload {
+  base64: string;
+  mime: string;
+}
+
+/**
+ * Manda un array de imagenes al endpoint AI. Retorna null si AI no esta
+ * disponible o falla.
+ */
+async function tryParseImagesWithAI(
+  images: ImagePayload[]
+): Promise<ContractExtraction | null> {
+  if (images.length === 0) return null;
+  try {
     const res = await fetch("/api/parse-contract", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ imageBase64s: images }),
     });
     if (!res.ok) return null;
     const data = (await res.json()) as {
@@ -339,15 +411,14 @@ async function tryParseFileWithAI(
       };
     };
     if (!data.ok || !data.data) return null;
-    // Construir el resultado completo. No tenemos rawText desde el endpoint
-    // porque mandamos el archivo crudo, asi que pasamos "" como rawText.
     return mergeAIWithLocal(
       data.data,
       buildEmptyLocal(),
       "",
-      // Si es PDF no sabemos cuantas paginas — el endpoint no nos lo dice;
-      // dejamos 1 como placeholder honesto. La UI no depende de esto.
-      1
+      // Como no sabemos cuantas paginas tenia el archivo original (mandamos
+      // solo las primeras N), dejamos el pageCount como el numero de
+      // imagenes que mandamos.
+      images.length
     );
   } catch {
     return null;

@@ -21,16 +21,25 @@ import Anthropic from "@anthropic-ai/sdk";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
+interface ImagePayload {
+  base64: string;
+  mime: string;
+}
+
 interface RequestBody {
-  /** PDF en base64 — preferido para contratos nativos. Claude lee la
-   * estructura visual + texto correctamente (mejor que extraer texto y
-   * mandarlo, porque PDF.js suele desordenar columnas/tablas). */
+  /** PDF en base64 — preferido cuando cabe en el body cap (< 3MB).
+   * Claude lee texto + estructura visual nativamente. */
   pdfBase64?: string;
-  /** Imagen en base64 — para contratos escaneados o fotografiados. */
+  /** Array de imagenes (primeras N paginas renderizadas como JPEG).
+   * Mejor para PDFs grandes — el cliente renderiza con PDF.js a JPEG
+   * comprimido y manda solo lo que cabe. */
+  imageBase64s?: ImagePayload[];
+  /** Imagen unica (contrato fotografiado o single-page). Compat con
+   * el formato anterior. */
   imageBase64?: string;
   /** MIME de la imagen (jpeg/png/webp/etc.) */
   imageMime?: string;
-  /** Texto crudo — fallback cuando no se puede mandar el archivo. */
+  /** Texto crudo — fallback de ultimo recurso. */
   rawText?: string;
 }
 
@@ -164,7 +173,45 @@ export async function POST(
   const promptInstruction =
     "Lee este contrato de arrendamiento chileno y extrae los datos estructurados segun el schema definido. Si algun dato no aparece o no estas seguro, devuelve null para ese campo.";
 
-  if (body.pdfBase64) {
+  if (body.imageBase64s && Array.isArray(body.imageBase64s) && body.imageBase64s.length > 0) {
+    // Validar tamano total y MIMEs
+    const totalBytes = body.imageBase64s.reduce(
+      (acc, img) => acc + (img.base64?.length ?? 0),
+      0
+    );
+    if (totalBytes > MAX_BASE64_BYTES) {
+      return NextResponse.json(
+        { ok: false, error: "Imagenes muy grandes (max ~3 MB total)" },
+        { status: 413 }
+      );
+    }
+    for (const img of body.imageBase64s) {
+      if (!SUPPORTED_IMAGE_MIMES.has(img.mime)) {
+        return NextResponse.json(
+          { ok: false, error: `MIME no soportado: ${img.mime}` },
+          { status: 400 }
+        );
+      }
+    }
+    userContent = [
+      ...body.imageBase64s.map((img) => ({
+        type: "image" as const,
+        source: {
+          type: "base64" as const,
+          media_type: img.mime as
+            | "image/jpeg"
+            | "image/png"
+            | "image/webp"
+            | "image/gif",
+          data: img.base64,
+        },
+      })),
+      {
+        type: "text",
+        text: `${promptInstruction}\n\nNota: las imagenes son las primeras ${body.imageBase64s.length} paginas del contrato, donde suelen estar los datos clave (partes, propiedad, monto, fechas, garantia).`,
+      },
+    ];
+  } else if (body.pdfBase64) {
     if (body.pdfBase64.length > MAX_BASE64_BYTES) {
       return NextResponse.json(
         { ok: false, error: "PDF muy grande (max ~3 MB)" },
