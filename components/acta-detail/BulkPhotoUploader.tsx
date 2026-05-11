@@ -28,7 +28,11 @@ import { parseClientSide } from "@/lib/parse-client";
 import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
 import { compressImage, shouldCompress } from "@/lib/image-compression";
 import { classifyRoomWithAI } from "@/lib/room-classifier";
+import { ROOM_TEMPLATES } from "@/lib/acta-constants";
 import { cn } from "@/lib/cn";
+
+/** Prefijo de ids sinteticos para templates que la AI puede sugerir crear. */
+const TEMPLATE_PREFIX = "__tpl__";
 
 interface BulkPhotoUploaderProps {
   acta: Acta;
@@ -79,7 +83,16 @@ export function BulkPhotoUploader({
   const [assignments, setAssignments] = useState<Record<string, string | null>>(
     {}
   );
+  /**
+   * Rooms materializados localmente por la IA — ambientes que la IA detecto
+   * en las fotos y que no existian en el acta. Se persisten al hacer Save.
+   * Tienen id real (no de template) para que el dropdown pueda mostrarlos.
+   */
+  const [extraRooms, setExtraRooms] = useState<Room[]>([]);
   const [saving, setSaving] = useState(false);
+
+  /** Combinacion de rooms del acta + los materializados durante esta sesion. */
+  const allAvailableRooms: Room[] = [...acta.rooms, ...extraRooms];
 
   const handleFilesSelected = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
@@ -116,13 +129,24 @@ export function BulkPhotoUploader({
     const targets = initial.filter(
       (p) => p.suggestionSource !== "filename" || p.suggestionConfidence !== "alta"
     );
-    if (targets.length === 0 || acta.rooms.length === 0) return;
+    if (targets.length === 0) return;
 
-    const roomsForAI = acta.rooms.map((r) => ({
-      id: r.id,
-      name: r.name,
-      type: r.type,
-    }));
+    // Le mandamos a la AI todos los rooms existentes del acta MAS los templates
+    // canonicos para los tipos que aun no estan en el acta. Si la AI elige
+    // un template, lo materializamos como Room real al recibir la respuesta.
+    const existingTypes = new Set(acta.rooms.map((r) => r.type));
+    const roomsForAI = [
+      ...acta.rooms.map((r) => ({
+        id: r.id,
+        name: r.name,
+        type: r.type,
+      })),
+      ...ROOM_TEMPLATES.filter((t) => !existingTypes.has(t.type)).map((t) => ({
+        id: `${TEMPLATE_PREFIX}${t.type}`,
+        name: t.name,
+        type: t.type,
+      })),
+    ];
 
     // Marcar todos como "running"
     setPhotos((prev) =>
@@ -139,13 +163,25 @@ export function BulkPhotoUploader({
     for (const target of targets) {
       const result = await classifyRoomWithAI(target.dataUrl, roomsForAI);
 
+      // Si la IA respondio con un id de template (ambiente que no existia
+      // en el acta), lo materializamos como Room real ahora.
+      let finalRoomId = result.roomId;
+      if (
+        result.ok &&
+        result.roomId &&
+        result.roomId.startsWith(TEMPLATE_PREFIX)
+      ) {
+        const templateType = result.roomId.slice(TEMPLATE_PREFIX.length);
+        finalRoomId = ensureRoomFromTemplate(templateType);
+      }
+
       setPhotos((prev) =>
         prev.map((p) => {
           if (p.tempId !== target.tempId) return p;
           if (result.source === "unavailable") {
             return { ...p, aiStatus: "unavailable" as const };
           }
-          if (!result.ok || !result.roomId) {
+          if (!result.ok || !finalRoomId) {
             // AI no pudo clasificar: dejamos el fallback de filename si lo hay
             return {
               ...p,
@@ -155,7 +191,7 @@ export function BulkPhotoUploader({
           return {
             ...p,
             aiStatus: "done" as const,
-            suggestedRoomId: result.roomId,
+            suggestedRoomId: finalRoomId,
             suggestionConfidence: result.confidence,
             suggestionSource: "ai" as const,
             matchedKeyword: result.reasoning,
@@ -166,15 +202,46 @@ export function BulkPhotoUploader({
       // Si la asignacion estaba sin asignar O era de baja confianza, aplicamos
       // la sugerencia de AI. Si el usuario ya cambio manualmente el dropdown,
       // respetamos su eleccion (no la pisamos).
-      if (result.ok && result.roomId) {
+      if (result.ok && finalRoomId) {
         setAssignments((prev) => {
           const current = prev[target.tempId];
           // No piso si el user ya cambio la asignacion manualmente
           if (current && current !== target.suggestedRoomId) return prev;
-          return { ...prev, [target.tempId]: result.roomId ?? null };
+          return { ...prev, [target.tempId]: finalRoomId };
         });
       }
     }
+  };
+
+  /**
+   * Garantiza que existe un Room con el tipo dado (en acta.rooms o en
+   * extraRooms). Si no existe, lo crea en extraRooms con el nombre del
+   * template canonico. Retorna el id del Room.
+   */
+  const ensureRoomFromTemplate = (templateType: string): string | null => {
+    // 1. Si ya existe en el acta, usarlo
+    const existing = acta.rooms.find((r) => r.type === templateType);
+    if (existing) return existing.id;
+    // 2. Si ya lo materializamos en esta sesion, reutilizar
+    const materialized = extraRooms.find((r) => r.type === templateType);
+    if (materialized) return materialized.id;
+    // 3. Crear desde template
+    const template = ROOM_TEMPLATES.find((t) => t.type === templateType);
+    if (!template) return null;
+    const newRoom: Room = {
+      id: generateId("room"),
+      type: template.type,
+      name: template.name,
+      order: acta.rooms.length + extraRooms.length,
+      required: false,
+      minPhotos: template.minPhotos,
+      generalCondition: "no_evaluado" as ConditionLevel,
+      aiSummary: null,
+      manualObservations: null,
+      photoIds: [],
+    };
+    setExtraRooms((prev) => [...prev, newRoom]);
+    return newRoom.id;
   };
 
   const handleSave = async () => {
@@ -187,18 +254,22 @@ export function BulkPhotoUploader({
       // puede moverlas manualmente despues.
       const unassigned = photos.filter((p) => !assignments[p.tempId]);
       let fallbackRoom: Room | null = null;
-      let newRoomToCreate: Room | null = null;
+      let newSinClasificar: Room | null = null;
       if (unassigned.length > 0) {
         fallbackRoom =
           acta.rooms.find(
             (r) => r.type === "otro" && /sin clasificar/i.test(r.name)
-          ) ?? null;
+          ) ??
+          extraRooms.find(
+            (r) => r.type === "otro" && /sin clasificar/i.test(r.name)
+          ) ??
+          null;
         if (!fallbackRoom) {
-          newRoomToCreate = {
+          newSinClasificar = {
             id: generateId("room"),
             name: "Sin clasificar",
             type: "otro" as RoomType,
-            order: acta.rooms.length,
+            order: acta.rooms.length + extraRooms.length,
             required: false,
             minPhotos: 0,
             generalCondition: "no_evaluado" as ConditionLevel,
@@ -207,12 +278,20 @@ export function BulkPhotoUploader({
               "Ambiente creado automaticamente para fotos sin asignar. Puedes mover las fotos al ambiente correcto cuando sea claro.",
             photoIds: [],
           };
-          fallbackRoom = newRoomToCreate;
+          fallbackRoom = newSinClasificar;
         }
       }
 
       const photosToAdd: PhotoEvidence[] = [];
       const aiJobs: { photoId: string; file: File; roomType: RoomType }[] = [];
+
+      // Universo completo de rooms para esta operacion: acta.rooms + extra
+      // (detectados por AI) + sinClasificar (si fue necesario crearlo).
+      const allRoomsThisSave = [
+        ...acta.rooms,
+        ...extraRooms,
+        ...(newSinClasificar ? [newSinClasificar] : []),
+      ];
 
       for (const p of photos) {
         let roomId = assignments[p.tempId];
@@ -220,10 +299,7 @@ export function BulkPhotoUploader({
           roomId = fallbackRoom.id;
         }
         if (!roomId) continue;
-        // Buscar el room: puede ser uno existente o el nuevo "Sin clasificar"
-        const room =
-          acta.rooms.find((r) => r.id === roomId) ??
-          (fallbackRoom?.id === roomId ? fallbackRoom : null);
+        const room = allRoomsThisSave.find((r) => r.id === roomId);
         if (!room) continue;
         const photoId = generateId("photo");
         const photo: PhotoEvidence = {
@@ -263,13 +339,19 @@ export function BulkPhotoUploader({
       }
 
       onUpdate((a) => {
-        const updatedRooms = newRoomToCreate
-          ? [...a.rooms, newRoomToCreate]
-          : a.rooms;
+        // Para no duplicar: solo agregamos extraRooms / newSinClasificar
+        // si NO existen ya en a.rooms (por tipo y nombre).
+        const existingIds = new Set(a.rooms.map((r) => r.id));
+        const roomsToAdd = [
+          ...extraRooms.filter((r) => !existingIds.has(r.id)),
+          ...(newSinClasificar && !existingIds.has(newSinClasificar.id)
+            ? [newSinClasificar]
+            : []),
+        ];
         return appendAuditLog(
           {
             ...a,
-            rooms: updatedRooms,
+            rooms: [...a.rooms, ...roomsToAdd],
             photos: [...a.photos, ...photosToAdd],
           },
           user.name,
@@ -279,7 +361,8 @@ export function BulkPhotoUploader({
           {
             count: photosToAdd.length,
             bulk: true,
-            createdSinClasificarRoom: !!newRoomToCreate,
+            createdAIRooms: extraRooms.length,
+            createdSinClasificarRoom: !!newSinClasificar,
           }
         );
       });
@@ -420,7 +503,8 @@ export function BulkPhotoUploader({
           {stage === "review" && (
             <ReviewStage
               photos={photos}
-              rooms={acta.rooms}
+              rooms={allAvailableRooms}
+              extraRoomsCount={extraRooms.length}
               assignments={assignments}
               onChangeAssignment={updateAssignment}
               onRemovePhoto={removePhoto}
@@ -541,12 +625,14 @@ function ProcessingStage({ done, total }: { done: number; total: number }) {
 function ReviewStage({
   photos,
   rooms,
+  extraRoomsCount,
   assignments,
   onChangeAssignment,
   onRemovePhoto,
 }: {
   photos: ProcessedPhoto[];
   rooms: Room[];
+  extraRoomsCount: number;
   assignments: Record<string, string | null>;
   onChangeAssignment: (tempId: string, roomId: string | null) => void;
   onRemovePhoto: (tempId: string) => void;
@@ -568,12 +654,25 @@ function ReviewStage({
           Revisa la asignacion sugerida. Las fotos sin asignar se guardaran en
           un ambiente &ldquo;Sin clasificar&rdquo; que podras renombrar despues.
         </p>
-        {runningCount > 0 && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 border border-purple-200 px-2.5 py-1 text-[11px] font-medium text-purple-800">
-            <Loader2 className="h-3 w-3 animate-spin" />
-            IA analizando {runningCount} foto{runningCount === 1 ? "" : "s"}...
-          </span>
-        )}
+        <div className="flex items-center gap-2 flex-wrap">
+          {extraRoomsCount > 0 && (
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-medium text-emerald-800"
+              title="Ambientes creados automaticamente por IA segun el contenido de las fotos"
+            >
+              <Brain className="h-3 w-3" />
+              IA creo {extraRoomsCount} ambiente
+              {extraRoomsCount === 1 ? "" : "s"} nuevo
+              {extraRoomsCount === 1 ? "" : "s"}
+            </span>
+          )}
+          {runningCount > 0 && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 border border-purple-200 px-2.5 py-1 text-[11px] font-medium text-purple-800">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              IA analizando {runningCount} foto{runningCount === 1 ? "" : "s"}...
+            </span>
+          )}
+        </div>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {photos.map((p) => {

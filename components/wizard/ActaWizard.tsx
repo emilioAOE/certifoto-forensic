@@ -198,7 +198,10 @@ export function ActaWizard() {
       case 3:
         return data.parties.length >= 1;
       case 4:
-        return data.rooms.length >= 1;
+        // Step 4 (Ambientes) ahora es opcional — la IA crea los ambientes
+        // dinamicamente cuando se suben fotos. El usuario puede pre-seleccionar
+        // si quiere, pero no es requerido.
+        return true;
       default:
         return true;
     }

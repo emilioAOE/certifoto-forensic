@@ -585,13 +585,20 @@ export function ActaDetail({ actaId }: { actaId: string }) {
 
         {/* Selector visual de modo de carga: grande cuando no hay fotos,
             compacto cuando ya empezo a cargar. */}
-        {!isReadOnly && acta.rooms.length > 0 && acta.photos.length === 0 && (
+        {!isReadOnly && acta.photos.length === 0 && (
           <div className="mb-4">
             <p className="text-xs font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
               <Sparkles className="h-3 w-3 text-accent-dark" />
-              ¿Como quieres cargar las fotos?
+              {acta.rooms.length === 0
+                ? "Sube las fotos y la IA detecta los ambientes"
+                : "¿Como quieres cargar las fotos?"}
             </p>
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div
+              className={cn(
+                "grid gap-3",
+                acta.rooms.length === 0 ? "" : "sm:grid-cols-2"
+              )}
+            >
               <button
                 onClick={() => setShowBulkUploader(true)}
                 className="group relative text-left rounded-xl border-2 border-accent shadow-md hover:shadow-lg hover:bg-accent-softer/50 transition-all p-4 flex flex-col"
@@ -604,38 +611,51 @@ export function ActaDetail({ actaId }: { actaId: string }) {
                     <ImagePlus className="h-5 w-5" />
                   </div>
                   <h4 className="text-sm font-bold text-gray-900">
-                    Subir todas las fotos juntas
+                    {acta.rooms.length === 0
+                      ? "Subir fotos — la IA detecta los ambientes"
+                      : "Subir todas las fotos juntas"}
                   </h4>
                 </div>
                 <p className="text-xs text-gray-700 leading-relaxed flex-1">
-                  Selecciona o arrastra todas las fotos del inmueble. La IA las
-                  asigna a cada ambiente segun el contenido y el nombre del
-                  archivo. Tu solo revisas.
+                  {acta.rooms.length === 0
+                    ? "Selecciona o arrastra todas las fotos del inmueble. La IA mira cada una y crea automaticamente los ambientes (cocina, baño, dormitorios, terraza, etc). Tu solo revisas."
+                    : "Selecciona o arrastra todas las fotos del inmueble. La IA las asigna a cada ambiente segun el contenido y el nombre del archivo. Tu solo revisas."}
                 </p>
                 <span className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-bold">
                   <ImagePlus className="h-3.5 w-3.5" />
-                  Subir en lote
+                  {acta.rooms.length === 0
+                    ? "Subir fotos"
+                    : "Subir en lote"}
                 </span>
               </button>
 
-              <div className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="rounded-lg bg-gray-100 text-gray-600 p-2">
-                    <Camera className="h-5 w-5" />
+              {acta.rooms.length > 0 && (
+                <div className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="rounded-lg bg-gray-100 text-gray-600 p-2">
+                      <Camera className="h-5 w-5" />
+                    </div>
+                    <h4 className="text-sm font-semibold text-gray-900">
+                      Foto por ambiente (manual)
+                    </h4>
                   </div>
-                  <h4 className="text-sm font-semibold text-gray-900">
-                    Foto por ambiente (manual)
-                  </h4>
+                  <p className="text-xs text-gray-700 leading-relaxed flex-1">
+                    Toma o sube fotos directamente al ambiente correspondiente,
+                    una por una, usando los botones de cada tarjeta abajo.
+                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs text-gray-500 italic">
+                    ↓ Usa los botones de cada ambiente
+                  </span>
                 </div>
-                <p className="text-xs text-gray-700 leading-relaxed flex-1">
-                  Toma o sube fotos directamente al ambiente correspondiente,
-                  una por una, usando los botones de cada tarjeta abajo.
-                </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-xs text-gray-500 italic">
-                  ↓ Usa los botones de cada ambiente
-                </span>
-              </div>
+              )}
             </div>
+            {acta.rooms.length === 0 && (
+              <p className="mt-3 text-xs text-muted leading-relaxed">
+                Aun no agregaste ambientes manualmente. La IA los va a crear
+                cuando subas las fotos. Tambien puedes agregar ambientes a mano
+                desde el wizard si vuelves al paso de Ambientes.
+              </p>
+            )}
           </div>
         )}
 

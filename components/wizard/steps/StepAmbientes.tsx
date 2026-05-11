@@ -10,7 +10,9 @@ import {
   GripVertical,
   Camera,
   Sparkles,
-  ImagePlus,
+  ChevronDown,
+  ChevronUp,
+  Brain,
 } from "lucide-react";
 
 type RoomDraft = Omit<Room, "id" | "photoIds" | "aiSummary"> & { tempId: string };
@@ -29,6 +31,7 @@ const CATEGORIES = [
 
 export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
   const [customName, setCustomName] = useState("");
+  const [showManual, setShowManual] = useState(rooms.length > 0);
 
   const isAdded = (templateType: string) =>
     rooms.some((r) => r.type === templateType);
@@ -90,58 +93,44 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
   return (
     <div>
       <h2 className="text-lg font-semibold text-gray-900 mb-1">
-        Selecciona los ambientes a documentar
+        Ambientes
       </h2>
       <p className="text-sm text-muted mb-5">
-        Agrega los espacios de la propiedad. Los marcados como obligatorios
-        deben tener al menos 1 foto.
+        No necesitas marcar nada aqui — la IA va a detectar y crear los
+        ambientes automaticamente cuando subas las fotos.
       </p>
 
-      {/* Two ways to add photos — info card */}
-      <div className="mb-6 rounded-xl border border-accent-light bg-accent-softer/40 p-4">
-        <div className="flex items-start gap-2 mb-3">
-          <div className="rounded-md bg-white border border-accent-light p-1.5 text-accent-dark shrink-0">
-            <Sparkles className="h-3.5 w-3.5" />
+      {/* Hero: la opcion recomendada es saltar */}
+      <div className="mb-5 rounded-xl border-2 border-accent bg-accent-softer/40 p-5 shadow-sm">
+        <div className="flex items-start gap-3 mb-3">
+          <div className="rounded-lg bg-accent text-white p-2.5 shrink-0">
+            <Brain className="h-5 w-5" />
           </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">
-              Despues podras subir fotos de dos formas
+          <div className="flex-1">
+            <h3 className="text-base font-bold text-gray-900 mb-1">
+              Dejar que la IA detecte los ambientes
             </h3>
-            <p className="text-xs text-gray-700 mt-0.5 leading-relaxed">
-              Aqui solo eliges los ambientes. La carga de fotos se hace en el
-              siguiente paso, dentro del acta.
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Cuando subas las fotos en el siguiente paso, la IA va a leer
+              cada una y crear los ambientes que detecte (cocina, baño,
+              dormitorios, terraza, etc). Puedes corregir o renombrar
+              despues.
             </p>
           </div>
         </div>
-        <div className="grid sm:grid-cols-2 gap-2 text-xs">
-          <div className="rounded-lg bg-white border border-gray-200 p-3">
-            <div className="flex items-center gap-1.5 font-semibold text-gray-900 mb-1">
-              <ImagePlus className="h-3.5 w-3.5 text-accent-dark" />
-              Subir todas juntas + IA
-            </div>
-            <p className="text-gray-600 leading-relaxed">
-              Suelta todas las fotos en un dropzone y la IA las asigna a cada
-              ambiente. Tu solo revisas y ajustas.
-            </p>
-          </div>
-          <div className="rounded-lg bg-white border border-gray-200 p-3">
-            <div className="flex items-center gap-1.5 font-semibold text-gray-900 mb-1">
-              <Camera className="h-3.5 w-3.5 text-gray-600" />
-              Foto por ambiente (manual)
-            </div>
-            <p className="text-gray-600 leading-relaxed">
-              Toma o sube fotos directamente al ambiente correspondiente, una
-              por una.
-            </p>
-          </div>
+        <div className="rounded-md bg-white border border-accent-light px-3 py-2 text-xs text-gray-700">
+          <strong className="text-accent-dark">Tip:</strong> simplemente
+          haz click en{" "}
+          <span className="font-semibold">Siguiente</span> y avanza al paso
+          de revisar. Vas a poder cargar fotos despues de crear el acta.
         </div>
       </div>
 
-      {/* Selected rooms */}
+      {/* Selected rooms (only shown if user manually added some) */}
       {rooms.length > 0 && (
         <div className="mb-5">
           <p className="text-xs text-muted uppercase tracking-wider mb-2">
-            Seleccionados ({rooms.length})
+            Pre-seleccionados ({rooms.length})
           </p>
           <div className="space-y-1.5">
             {rooms.map((room) => (
@@ -187,62 +176,103 @@ export function StepAmbientes({ rooms, onChange }: StepAmbientesProps) {
         </div>
       )}
 
-      {/* Available templates */}
-      <div className="space-y-4">
-        {CATEGORIES.map((cat) => {
-          const items = ROOM_TEMPLATES.filter((t) => t.category === cat.id);
-          return (
-            <div key={cat.id}>
-              <p className="text-xs text-muted uppercase tracking-wider mb-2">
-                {cat.label}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {items.map((tpl) => {
-                  const added = isAdded(tpl.type);
-                  return (
-                    <button
-                      key={tpl.type}
-                      onClick={() => !added && addFromTemplate(tpl.type)}
-                      disabled={added}
-                      className={cn(
-                        "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs transition-colors",
-                        added
-                          ? "border-accent/30 bg-accent/10 text-accent cursor-default"
-                          : "border-gray-200 bg-gray-50 text-gray-700 hover:border-accent/50"
-                      )}
-                    >
-                      {!added && <Plus className="h-3 w-3" />}
-                      {added && "✓"} {tpl.name}
-                    </button>
-                  );
-                })}
-              </div>
+      {/* Manual selection (collapsed by default) */}
+      <button
+        type="button"
+        onClick={() => setShowManual((s) => !s)}
+        className="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
+      >
+        {showManual ? (
+          <ChevronUp className="h-3.5 w-3.5" />
+        ) : (
+          <ChevronDown className="h-3.5 w-3.5" />
+        )}
+        {showManual
+          ? "Ocultar seleccion manual"
+          : "Prefiero pre-seleccionar manualmente (opcional)"}
+      </button>
+
+      {showManual && (
+        <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+          <p className="text-xs text-muted mb-3 leading-relaxed">
+            Si ya sabes que ambientes tiene la propiedad, puedes
+            pre-seleccionarlos aqui. Igual la IA va a poder crear los que
+            falten cuando subas fotos.
+          </p>
+
+          {/* Available templates */}
+          <div className="space-y-3">
+            {CATEGORIES.map((cat) => {
+              const items = ROOM_TEMPLATES.filter((t) => t.category === cat.id);
+              return (
+                <div key={cat.id}>
+                  <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5">
+                    {cat.label}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {items.map((tpl) => {
+                      const added = isAdded(tpl.type);
+                      return (
+                        <button
+                          key={tpl.type}
+                          onClick={() => !added && addFromTemplate(tpl.type)}
+                          disabled={added}
+                          className={cn(
+                            "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs transition-colors",
+                            added
+                              ? "border-accent/30 bg-accent/10 text-accent cursor-default"
+                              : "border-gray-200 bg-white text-gray-700 hover:border-accent/50"
+                          )}
+                        >
+                          {!added && <Plus className="h-3 w-3" />}
+                          {added && "✓"} {tpl.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Custom room */}
+          <div className="mt-4 pt-3 border-t border-gray-200">
+            <p className="text-[10px] text-muted mb-1.5">
+              Agregar ambiente personalizado:
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addCustom()}
+                placeholder="Ej: Sala de juegos"
+                className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-1.5 text-xs text-gray-800 focus:outline-none focus:border-accent/50"
+              />
+              <button
+                onClick={addCustom}
+                disabled={!customName.trim()}
+                className="rounded-md bg-white border border-gray-200 px-3 py-1.5 text-xs text-gray-800 hover:bg-gray-100 disabled:opacity-30"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
             </div>
-          );
-        })}
+          </div>
+        </div>
+      )}
+
+      {/* Hints for bulk vs manual photo flow — moved to bottom, simpler */}
+      <div className="mt-6 rounded-lg border border-gray-200 bg-white p-3">
+        <p className="text-xs text-gray-700 leading-relaxed flex items-start gap-2">
+          <Sparkles className="h-3.5 w-3.5 text-accent-dark shrink-0 mt-0.5" />
+          <span>
+            <strong>Dos formas de subir fotos despues:</strong> "Subir todas
+            juntas + IA" (la IA reconoce el ambiente de cada foto) o "Foto
+            por ambiente" (tu las asignas manualmente).
+          </span>
+        </p>
       </div>
 
-      {/* Custom room */}
-      <div className="mt-5 pt-4 border-t border-gray-200">
-        <p className="text-xs text-muted mb-2">Agregar ambiente personalizado:</p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={customName}
-            onChange={(e) => setCustomName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addCustom()}
-            placeholder="Ej: Sala de juegos"
-            className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-accent/50"
-          />
-          <button
-            onClick={addCustom}
-            disabled={!customName.trim()}
-            className="rounded-lg bg-gray-100 border border-gray-200 px-3 py-2 text-sm text-gray-800 hover:bg-gray-200 disabled:opacity-30"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
