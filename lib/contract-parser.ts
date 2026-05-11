@@ -94,8 +94,16 @@ export interface ExtractOptions {
 const DEFAULT_SCANNED_THRESHOLD = 200;
 
 /**
- * Lee un contrato (PDF o imagen) y extrae los datos. Decide automaticamente
- * si usar texto nativo del PDF o caer a OCR (escaneo o imagen).
+ * Lee un contrato (PDF o imagen) y extrae los datos.
+ *
+ * Estrategia:
+ *  1. Si el archivo es chico (< 3MB) y AI esta disponible: mandar el
+ *     archivo entero al endpoint /api/parse-contract para que Claude lo
+ *     lea con visiónvalu+texto en un solo paso. Mejor que extraer texto
+ *     y mandarlo, porque PDF.js suele desordenar layouts complejos.
+ *  2. Si el archivo es grande o AI falla: extraer texto localmente
+ *     (PDF.js para PDFs, Tesseract para imagenes) y caer al parser
+ *     heuristico regex.
  */
 export async function extractContractData(
   file: File | Blob,
@@ -106,8 +114,39 @@ export async function extractContractData(
   const fileType =
     "type" in file && typeof file.type === "string" ? file.type : "";
   const isImage = fileType.startsWith("image/");
+  const isPdf =
+    fileType === "application/pdf" ||
+    ("name" in file &&
+      typeof file.name === "string" &&
+      file.name.toLowerCase().endsWith(".pdf"));
 
-  // Caso 1: imagen → OCR directo
+  const fileSize = "size" in file && typeof file.size === "number" ? file.size : 0;
+  // Limite seguro para subir el archivo entero a la AI. Vercel acepta ~4.5MB
+  // de body; le dejamos margen al base64 (que infla ~33%) y resto del payload.
+  const MAX_FILE_BYTES = 2.8 * 1024 * 1024;
+  const canUseAIDirect = fileSize > 0 && fileSize <= MAX_FILE_BYTES;
+
+  // Caso 1: archivo chico + AI disponible -> mandar directo
+  if (canUseAIDirect && (isPdf || isImage)) {
+    onProgress?.({
+      stage: "parsing",
+      pct: 0.1,
+      message: "Enviando contrato a la IA para analisis...",
+    });
+    const aiResult = await tryParseFileWithAI(file, isPdf, fileType, onProgress);
+    if (aiResult) {
+      onProgress?.({ stage: "done", pct: 1, message: "Listo" });
+      return aiResult;
+    }
+    // AI fallo o no disponible — continuamos con extraccion local
+    onProgress?.({
+      stage: "parsing",
+      pct: 0.2,
+      message: "IA no disponible. Extrayendo texto localmente...",
+    });
+  }
+
+  // Caso 2: imagen → OCR directo + heuristica
   if (isImage) {
     onProgress?.({
       stage: "ocr_loading_model",
@@ -126,7 +165,7 @@ export async function extractContractData(
       pct: 1,
       message: "Procesando datos extraidos...",
     });
-    const result = parseContractText(text, 1);
+    const result = await parseContractTextSmart(text, 1);
     onProgress?.({ stage: "done", pct: 1, message: "Listo" });
     return result;
   }
@@ -233,6 +272,115 @@ export async function extractContractData(
   const result = await parseContractTextSmart(ocrText, totalPages);
   onProgress?.({ stage: "done", pct: 1, totalPages, message: "Listo" });
   return result;
+}
+
+/**
+ * Convierte un File/Blob a base64 (sin el prefijo data:).
+ */
+async function fileToBase64(file: File | Blob): Promise<string> {
+  const buf = await file.arrayBuffer();
+  // Para archivos grandes, usar chunked encoding evita "Maximum call stack size exceeded"
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  const CHUNK = 8192;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(binary);
+}
+
+/**
+ * Manda el archivo (PDF o imagen) directamente al endpoint AI. Claude lee
+ * el contrato con vision + texto natively. Retorna null si AI no esta
+ * disponible o falla — el caller debe caer al flujo local.
+ */
+async function tryParseFileWithAI(
+  file: File | Blob,
+  isPdf: boolean,
+  fileType: string,
+  onProgress?: (p: ExtractProgress) => void
+): Promise<ContractExtraction | null> {
+  try {
+    const base64 = await fileToBase64(file);
+    onProgress?.({
+      stage: "parsing",
+      pct: 0.5,
+      message: "La IA esta analizando el contrato...",
+    });
+    const body = isPdf
+      ? { pdfBase64: base64 }
+      : { imageBase64: base64, imageMime: fileType };
+
+    const res = await fetch("/api/parse-contract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      ok?: boolean;
+      data?: {
+        property: {
+          address: string | null;
+          unit: string | null;
+          commune: string | null;
+          city: string | null;
+        };
+        landlord: { name: string | null; rut: string | null };
+        tenant: { name: string | null; rut: string | null };
+        contract: {
+          monthlyAmount: number | null;
+          startDate: string | null;
+          endDate: string | null;
+          deposit: number | null;
+          depositKind: "months" | "amount" | null;
+        };
+        notes: string | null;
+      };
+    };
+    if (!data.ok || !data.data) return null;
+    // Construir el resultado completo. No tenemos rawText desde el endpoint
+    // porque mandamos el archivo crudo, asi que pasamos "" como rawText.
+    return mergeAIWithLocal(
+      data.data,
+      buildEmptyLocal(),
+      "",
+      // Si es PDF no sabemos cuantas paginas — el endpoint no nos lo dice;
+      // dejamos 1 como placeholder honesto. La UI no depende de esto.
+      1
+    );
+  } catch {
+    return null;
+  }
+}
+
+function buildEmptyLocal(): ContractExtraction {
+  return {
+    rawText: "",
+    property: {
+      address: null,
+      unit: null,
+      commune: null,
+      region: null,
+      city: null,
+    },
+    landlord: { name: null, rut: null },
+    tenant: { name: null, rut: null },
+    contract: {
+      monthlyAmount: null,
+      startDate: null,
+      endDate: null,
+      deposit: null,
+    },
+    confidence: {
+      address: 0,
+      landlord: 0,
+      tenant: 0,
+      contract: 0,
+      overall: 0,
+    },
+    extractedFrom: { pages: 0, chars: 0 },
+  };
 }
 
 /**

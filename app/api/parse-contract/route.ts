@@ -22,7 +22,16 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 interface RequestBody {
-  rawText: string;
+  /** PDF en base64 — preferido para contratos nativos. Claude lee la
+   * estructura visual + texto correctamente (mejor que extraer texto y
+   * mandarlo, porque PDF.js suele desordenar columnas/tablas). */
+  pdfBase64?: string;
+  /** Imagen en base64 — para contratos escaneados o fotografiados. */
+  imageBase64?: string;
+  /** MIME de la imagen (jpeg/png/webp/etc.) */
+  imageMime?: string;
+  /** Texto crudo — fallback cuando no se puede mandar el archivo. */
+  rawText?: string;
 }
 
 interface ParsedContract {
@@ -60,6 +69,17 @@ interface ParseResponse {
 // Limite generoso del texto enviado a Claude. Contratos > 30K chars
 // suelen incluir reglamento de copropiedad — truncamos antes de enviar.
 const MAX_TEXT_CHARS = 30_000;
+// Vercel tiene limite de ~4.5MB en body de requests. Limitamos base64 a 4MB
+// para tener margen para el resto del payload (rooms, etc.).
+const MAX_BASE64_BYTES = 4 * 1024 * 1024;
+
+const SUPPORTED_IMAGE_MIMES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
 
 const SYSTEM_PROMPT = `Eres un experto en contratos de arrendamiento chilenos. Tu tarea es extraer datos estructurados del texto de un contrato.
 
@@ -117,15 +137,94 @@ export async function POST(
     );
   }
 
-  if (!body.rawText || typeof body.rawText !== "string") {
+  // Construir el contenido del mensaje segun lo que el cliente envio.
+  // Prioridad: PDF nativo > imagen > texto crudo (fallback).
+  let userContent:
+    | string
+    | Array<
+        | { type: "text"; text: string }
+        | {
+            type: "image";
+            source: {
+              type: "base64";
+              media_type: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
+              data: string;
+            };
+          }
+        | {
+            type: "document";
+            source: {
+              type: "base64";
+              media_type: "application/pdf";
+              data: string;
+            };
+          }
+      >;
+
+  const promptInstruction =
+    "Lee este contrato de arrendamiento chileno y extrae los datos estructurados segun el schema definido. Si algun dato no aparece o no estas seguro, devuelve null para ese campo.";
+
+  if (body.pdfBase64) {
+    if (body.pdfBase64.length > MAX_BASE64_BYTES) {
+      return NextResponse.json(
+        { ok: false, error: "PDF muy grande (max ~3 MB)" },
+        { status: 413 }
+      );
+    }
+    userContent = [
+      {
+        type: "document",
+        source: {
+          type: "base64",
+          media_type: "application/pdf",
+          data: body.pdfBase64,
+        },
+      },
+      { type: "text", text: promptInstruction },
+    ];
+  } else if (body.imageBase64 && body.imageMime) {
+    if (!SUPPORTED_IMAGE_MIMES.has(body.imageMime)) {
+      return NextResponse.json(
+        { ok: false, error: `MIME no soportado: ${body.imageMime}` },
+        { status: 400 }
+      );
+    }
+    if (body.imageBase64.length > MAX_BASE64_BYTES) {
+      return NextResponse.json(
+        { ok: false, error: "Imagen muy grande (max ~3 MB)" },
+        { status: 413 }
+      );
+    }
+    userContent = [
+      {
+        type: "image",
+        source: {
+          type: "base64",
+          media_type: body.imageMime as
+            | "image/jpeg"
+            | "image/png"
+            | "image/webp"
+            | "image/gif",
+          data: body.imageBase64,
+        },
+      },
+      { type: "text", text: promptInstruction },
+    ];
+  } else if (body.rawText) {
+    const truncated = body.rawText.slice(0, MAX_TEXT_CHARS);
+    const wasTruncated = body.rawText.length > MAX_TEXT_CHARS;
+    userContent = `${promptInstruction}\n\n----- INICIO DEL CONTRATO${
+      wasTruncated ? " (truncado a 30K chars)" : ""
+    } -----\n${truncated}\n----- FIN DEL CONTRATO -----`;
+  } else {
     return NextResponse.json(
-      { ok: false, error: "Falta rawText" },
+      {
+        ok: false,
+        error: "Falta pdfBase64, imageBase64, o rawText",
+      },
       { status: 400 }
     );
   }
-
-  const truncated = body.rawText.slice(0, MAX_TEXT_CHARS);
-  const wasTruncated = body.rawText.length > MAX_TEXT_CHARS;
 
   const client = new Anthropic();
 
@@ -143,9 +242,7 @@ export async function POST(
       messages: [
         {
           role: "user",
-          content: `Extrae los datos estructurados del siguiente texto de contrato${
-            wasTruncated ? " (texto truncado a 30K caracteres)" : ""
-          }:\n\n----- INICIO DEL CONTRATO -----\n${truncated}\n----- FIN DEL CONTRATO -----`,
+          content: userContent,
         },
       ],
       output_config: {
