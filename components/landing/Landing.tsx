@@ -17,6 +17,11 @@ import {
   Quote,
   Star,
   Award,
+  Home,
+  KeyRound,
+  ShieldAlert,
+  Clock,
+  Scale,
 } from "lucide-react";
 import { LandingHeader } from "./LandingHeader";
 import { LandingFooter } from "./LandingFooter";
@@ -32,27 +37,37 @@ export function Landing() {
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent-softer border border-accent-light px-3 py-1 text-xs font-medium text-accent-dark mb-5">
               <Shield className="h-3.5 w-3.5" />
-              <span>Hecho en Chile · Pensado para arriendos</span>
+              <span>Hecho en Chile · Arriendos y compraventas</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1]">
-              Crea actas <span className="text-accent">gratis</span>.<br />
-              Paga solo cuando certificas.
+              No entregues ni recibas una propiedad{" "}
+              <span className="text-accent">a ciegas</span>.
             </h1>
 
             <p className="text-lg text-gray-600 mt-5 leading-relaxed max-w-xl">
-              CertiFoto te permite documentar el estado de un inmueble con
-              fotos respaldadas, descripciones asistidas con IA y firma de las
-              partes. La app es ilimitada — el cobro llega solo cuando sellas
-              el documento final.
+              El estado en que se entrega un inmueble —en un arriendo o en una
+              compraventa— casi siempre queda a la palabra de las partes.
+              CertiFoto lo deja documentado: fotos con respaldo forense,
+              descripciones con IA y firma de cada parte. Creala gratis; pagas
+              solo cuando la certificas.
             </p>
+
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 max-w-xl">
+              <ShieldAlert className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-900 leading-relaxed">
+                <span className="font-semibold">El dano aparece despues.</span>{" "}
+                La prueba tiene que existir antes. Sin un acta, la discusion de
+                la garantia o de los desperfectos es tu palabra contra la otra.
+              </p>
+            </div>
 
             <div className="flex flex-wrap gap-3 mt-8">
               <Link
                 href="/dashboard"
                 className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"
               >
-                Ingresar a la plataforma
+                Crear mi acta gratis
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -115,34 +130,75 @@ export function Landing() {
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
-            Para todo el ecosistema del arriendo
+            Para todo el ecosistema inmobiliario
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             Una herramienta neutral que protege a todas las partes
           </h2>
+          <p className="text-gray-600 mt-3">
+            Da lo mismo si arriendas, compras o vendes: el momento de entregar o
+            recibir las llaves es cuando conviene dejar todo documentado.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <Audience
             icon={<Users className="h-6 w-6" />}
-            title="Arrendadores"
-            description="Deja constancia ordenada del estado en que entregas la propiedad y de las condiciones acordadas con tu arrendatario."
+            title="Propietarios y arrendadores"
+            description="Deja constancia ordenada del estado en que entregas tu propiedad, sea en un arriendo o en una venta, y de las condiciones acordadas."
           />
           <Audience
             icon={<Eye className="h-6 w-6" />}
-            title="Arrendatarios"
-            description="Protege tu inversion en el arriendo con un registro fotografico fechado y firmado por ambas partes."
+            title="Arrendatarios y compradores"
+            description="Protege lo que recibes con un registro fotografico fechado y firmado por ambas partes el dia de la entrega."
           />
           <Audience
             icon={<Building2 className="h-6 w-6" />}
             title="Corredores"
-            description="Profesionaliza tu servicio con actas digitales que reducen disputas y respaldan tu trabajo ante los clientes."
+            description="Profesionaliza arriendos y compraventas con actas digitales que reducen disputas y respaldan tu trabajo ante los clientes."
           />
           <Audience
             icon={<Award className="h-6 w-6" />}
             title="Administradoras"
             description="Documenta tu cartera completa de propiedades con un mismo estandar y trazabilidad de cada inspeccion."
           />
+        </div>
+      </section>
+
+      {/* Cuando conviene */}
+      <section className="bg-white border-t border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-20">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
+              Cuando conviene usarla
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+              Cada vez que un inmueble cambia de manos
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <UseCase
+              icon={<KeyRound className="h-6 w-6" />}
+              title="Entrega de arriendo"
+              description="Documenta el estado al inicio del contrato y respalda lo que despues se devuelve."
+            />
+            <UseCase
+              icon={<Home className="h-6 w-6" />}
+              title="Recepcion de compraventa"
+              description="Deja registro del estado de entrega de un departamento o casa el dia de la escritura o la recepcion."
+            />
+            <UseCase
+              icon={<Scale className="h-6 w-6" />}
+              title="Devolucion y garantia"
+              description="Compara contra la entrega y evita que la discusion del mes de garantia quede a la palabra."
+            />
+            <UseCase
+              icon={<Clock className="h-6 w-6" />}
+              title="Inspeccion periodica"
+              description="Revisa el estado durante el contrato y mantiene trazabilidad de cada visita."
+            />
+          </div>
         </div>
       </section>
 
@@ -281,9 +337,9 @@ export function Landing() {
               role="Administradora, Las Condes"
             />
             <Testimonial
-              quote="Lo use al recibir mi departamento. Tener fotos firmadas por el corredor el primer dia me dio tranquilidad para todo el contrato."
+              quote="Lo use el dia que recibi el departamento que compre. Tener fotos firmadas del estado de entrega me dejo tranquilo frente a la inmobiliaria."
               name="Diego S."
-              role="Arrendatario, Nunoa"
+              role="Comprador, Nunoa"
             />
           </div>
         </div>
@@ -303,11 +359,12 @@ export function Landing() {
       <section className="bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Empieza gratis. Certifica cuando estes listo.
+            El mejor momento para documentar es antes de entregar las llaves.
           </h2>
           <p className="text-gray-300 mt-4 max-w-xl mx-auto">
-            Crea tus actas en minutos. Solo pagas un pack cuando un acta esta
-            lista para entregarse formalmente al cliente.
+            Crea tu acta gratis en minutos. Pagas un pack solo cuando la
+            certificas: el sello inmutable que la deja lista para entregar.
+            Desde $2.990, pago unico.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
             <Link
@@ -340,11 +397,23 @@ function HeroVisual() {
   return (
     <div className="relative">
       <div className="absolute inset-0 bg-gradient-to-br from-accent-softer to-accent-light/40 rounded-2xl" />
+
+      {/* Sello "verificable" flotante */}
+      <div className="absolute -top-3 -right-3 z-10 flex items-center gap-1.5 rounded-full bg-emerald-600 text-white px-3 py-1.5 shadow-lg shadow-emerald-600/20">
+        <Shield className="h-3.5 w-3.5" />
+        <span className="text-[11px] font-semibold">Acta certificada</span>
+      </div>
+
       <div className="relative bg-white rounded-2xl border border-gray-200 shadow-xl shadow-accent/5 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="h-2.5 w-2.5 rounded-full bg-accent" />
-          <span className="text-xs font-mono text-gray-500">
-            Acta de Entrega · Av. Providencia 1234
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="h-2.5 w-2.5 rounded-full bg-accent" />
+            <span className="text-xs font-mono text-gray-500">
+              Acta de Entrega · Av. Providencia 1234
+            </span>
+          </div>
+          <span className="text-[10px] font-medium text-accent-dark bg-accent-softer border border-accent-light px-1.5 py-0.5 rounded">
+            Arriendo
           </span>
         </div>
 
@@ -357,39 +426,87 @@ function HeroVisual() {
               </span>
             </div>
             <div className="grid grid-cols-3 gap-1.5">
-              <div className="aspect-square rounded bg-gradient-to-br from-accent/20 to-accent/40" />
-              <div className="aspect-square rounded bg-gradient-to-br from-accent/30 to-accent/50" />
-              <div className="aspect-square rounded bg-gradient-to-br from-accent/25 to-accent/45" />
+              <PhotoTile className="from-accent/20 to-accent/40" />
+              <PhotoTile className="from-accent/30 to-accent/50" />
+              <PhotoTile className="from-accent/25 to-accent/45" />
             </div>
             <p className="text-[10px] text-gray-500 mt-2 leading-relaxed">
               Se observa living con muros en buen estado general aparente. No se
               aprecian humedades visibles.
             </p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              <ForensicChip icon={<Hash className="h-2.5 w-2.5" />} label="SHA-256" />
+              <ForensicChip icon={<MapPin className="h-2.5 w-2.5" />} label="GPS" />
+              <ForensicChip icon={<Clock className="h-2.5 w-2.5" />} label="14:32" />
+            </div>
           </div>
 
           <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-gray-700">Cocina</span>
-              <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
-                Bueno
+              <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                1 hallazgo
               </span>
             </div>
             <div className="grid grid-cols-3 gap-1.5">
-              <div className="aspect-square rounded bg-gradient-to-br from-emerald-200 to-emerald-300" />
-              <div className="aspect-square rounded bg-gradient-to-br from-emerald-300 to-emerald-400" />
-              <div className="aspect-square rounded bg-gradient-to-br from-emerald-200 to-emerald-300" />
+              <PhotoTile className="from-emerald-200 to-emerald-300" />
+              <PhotoTile className="from-emerald-300 to-emerald-400" flagged />
+              <PhotoTile className="from-emerald-200 to-emerald-300" />
+            </div>
+            <div className="flex items-center gap-1.5 mt-2 text-[10px] text-amber-800">
+              <ShieldAlert className="h-3 w-3 text-amber-600 shrink-0" />
+              <span>Rayadura leve en cubierta · requiere revision humana</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 pt-1">
-            <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
-            <span className="text-[11px] text-gray-600">
-              Firmado por arrendador y arrendatario
+          <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
+              <span className="text-[11px] text-gray-600">
+                Firmado por ambas partes
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-gray-400">
+              hash 9f3a…c1
             </span>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function PhotoTile({
+  className,
+  flagged,
+}: {
+  className: string;
+  flagged?: boolean;
+}) {
+  return (
+    <div
+      className={`relative aspect-square rounded bg-gradient-to-br ${className}`}
+    >
+      <Camera className="absolute bottom-1 right-1 h-2.5 w-2.5 text-white/70" />
+      {flagged && (
+        <span className="absolute top-1 left-1 h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white" />
+      )}
+    </div>
+  );
+}
+
+function ForensicChip({
+  icon,
+  label,
+}: {
+  icon: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded bg-white border border-gray-200 px-1.5 py-0.5 text-[9px] font-medium text-gray-500">
+      {icon}
+      {label}
+    </span>
   );
 }
 
@@ -430,6 +547,26 @@ function Audience({
         {icon}
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+    </div>
+  );
+}
+
+function UseCase({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+      <div className="rounded-lg bg-white border border-gray-200 inline-flex p-2.5 text-accent-dark mb-4">
+        {icon}
+      </div>
+      <h3 className="text-base font-semibold text-gray-900 mb-1.5">{title}</h3>
       <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
     </div>
   );
