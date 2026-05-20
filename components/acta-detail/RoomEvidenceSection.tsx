@@ -23,7 +23,8 @@ import {
   calculatePhotoWarnings,
 } from "@/lib/acta-helpers";
 import { parseClientSide } from "@/lib/parse-client";
-import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
+import { summarizeRoom } from "@/lib/ai-stub";
+import { analyzePhotoVision } from "@/lib/photo-analyzer";
 import { compressImage, shouldCompress } from "@/lib/image-compression";
 import { cn } from "@/lib/cn";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
@@ -169,7 +170,7 @@ export function RoomEvidenceSection({
         );
 
         // 4. AI analysis (async, updates the photo when done)
-        runAIAnalysis(photoId, file, room);
+        runAIAnalysis(photoId, file, room, dataUrl, displayWidth, displayHeight);
       }
     } finally {
       setUploading(false);
@@ -181,7 +182,10 @@ export function RoomEvidenceSection({
   const runAIAnalysis = async (
     photoId: string,
     file: File,
-    room: Room
+    room: Room,
+    dataUrl: string,
+    width: number | null,
+    height: number | null
   ) => {
     onUpdate((a) => ({
       ...a,
@@ -191,20 +195,16 @@ export function RoomEvidenceSection({
     }));
 
     try {
-      // Get dimensions
-      const dims = await new Promise<{ w: number; h: number }>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
-        img.onerror = () => resolve({ w: 0, h: 0 });
-        img.src = URL.createObjectURL(file);
-      });
-
-      const analysis = await analyzePhotoWithAI(
-        file.name,
-        file.size,
-        dims.w || null,
-        dims.h || null,
-        room.type
+      const analysis = await analyzePhotoVision(
+        dataUrl,
+        room.name,
+        room.type,
+        {
+          fileName: file.name,
+          fileSize: file.size,
+          width,
+          height,
+        }
       );
 
       onUpdate((a) => {

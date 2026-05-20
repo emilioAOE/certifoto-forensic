@@ -25,7 +25,8 @@ import {
   calculatePhotoWarnings,
 } from "@/lib/acta-helpers";
 import { parseClientSide } from "@/lib/parse-client";
-import { analyzePhotoWithAI, summarizeRoom } from "@/lib/ai-stub";
+import { summarizeRoom } from "@/lib/ai-stub";
+import { analyzePhotoVision } from "@/lib/photo-analyzer";
 import { compressImage, shouldCompress } from "@/lib/image-compression";
 import { classifyRoomWithAI } from "@/lib/room-classifier";
 import { ROOM_TEMPLATES } from "@/lib/acta-constants";
@@ -292,7 +293,15 @@ export function BulkPhotoUploader({
       }
 
       const photosToAdd: PhotoEvidence[] = [];
-      const aiJobs: { photoId: string; file: File; roomType: RoomType }[] = [];
+      const aiJobs: {
+        photoId: string;
+        file: File;
+        roomType: RoomType;
+        roomName: string;
+        dataUrl: string;
+        width: number | null;
+        height: number | null;
+      }[] = [];
 
       // Universo completo de rooms para esta operacion: acta.rooms + extra
       // (detectados por AI) + sinClasificar (si fue necesario crearlo).
@@ -339,7 +348,15 @@ export function BulkPhotoUploader({
         photo.warnings = calculatePhotoWarnings(photo);
         photo.evidenceStrength = calculateEvidenceStrength(photo);
         photosToAdd.push(photo);
-        aiJobs.push({ photoId, file: p.file, roomType: room.type });
+        aiJobs.push({
+          photoId,
+          file: p.file,
+          roomType: room.type,
+          roomName: room.name,
+          dataUrl: p.dataUrl,
+          width: p.width,
+          height: p.height,
+        });
       }
 
       if (photosToAdd.length === 0) {
@@ -393,7 +410,15 @@ export function BulkPhotoUploader({
   };
 
   const runBulkAI = async (
-    jobs: { photoId: string; file: File; roomType: RoomType }[]
+    jobs: {
+      photoId: string;
+      file: File;
+      roomType: RoomType;
+      roomName: string;
+      dataUrl: string;
+      width: number | null;
+      height: number | null;
+    }[]
   ) => {
     for (const job of jobs) {
       try {
@@ -403,13 +428,16 @@ export function BulkPhotoUploader({
             p.id === job.photoId ? { ...p, aiStatus: "processing" } : p
           ),
         }));
-        const dims = await imageDims(job.file);
-        const analysis = await analyzePhotoWithAI(
-          job.file.name,
-          job.file.size,
-          dims.w,
-          dims.h,
-          job.roomType
+        const analysis = await analyzePhotoVision(
+          job.dataUrl,
+          job.roomName,
+          job.roomType,
+          {
+            fileName: job.file.name,
+            fileSize: job.file.size,
+            width: job.width,
+            height: job.height,
+          }
         );
         onUpdate((a) => {
           const updatedPhotos = a.photos.map((p) => {
@@ -877,15 +905,6 @@ function fileToDataUrl(file: File | Blob): Promise<string> {
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = () => reject(reader.error ?? new Error("FileReader failed"));
     reader.readAsDataURL(file);
-  });
-}
-
-function imageDims(file: File): Promise<{ w: number; h: number }> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
-    img.onerror = () => resolve({ w: 0, h: 0 });
-    img.src = URL.createObjectURL(file);
   });
 }
 
