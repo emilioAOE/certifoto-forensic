@@ -135,7 +135,7 @@ export async function importFromZip(file: File | Blob): Promise<ImportResult> {
 
   const manifestFile = zip.file("manifest.json");
   if (!manifestFile) {
-    throw new Error("ZIP invalido: falta manifest.json");
+    throw new Error("ZIP inválido: falta manifest.json");
   }
   const manifest = JSON.parse(await manifestFile.async("string")) as Manifest;
   if (manifest.app !== "CertiFoto") {
@@ -143,7 +143,7 @@ export async function importFromZip(file: File | Blob): Promise<ImportResult> {
   }
   if (manifest.version > EXPORT_VERSION) {
     throw new Error(
-      `Version del archivo (${manifest.version}) es mayor a la soportada (${EXPORT_VERSION}). Actualiza CertiFoto.`
+      `Versión del archivo (${manifest.version}) es mayor a la soportada (${EXPORT_VERSION}). Actualiza CertiFoto.`
     );
   }
 
@@ -165,7 +165,7 @@ export async function importFromZip(file: File | Blob): Promise<ImportResult> {
       currentUser = userJson as CurrentUser;
     }
   } catch {
-    warnings.push("currentUser.json ausente o invalido — se mantendra el usuario actual");
+    warnings.push("currentUser.json ausente o inválido — se mantendrá el usuario actual");
   }
 
   await bulkReplace({

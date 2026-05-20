@@ -80,7 +80,7 @@ export function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
               <div className="rounded-md bg-purple-50 border border-purple-200 p-3">
                 <div className="flex items-center gap-1 mb-1.5 text-xs text-purple-700 uppercase tracking-wider">
                   <Sparkles className="h-3 w-3" />
-                  Analisis IA
+                  Análisis IA
                 </div>
                 <p className="text-gray-700 leading-relaxed mb-2">
                   {photo.aiAnalysis.caption}
@@ -142,7 +142,7 @@ export function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
                     }
                   />
                   <KV
-                    label="Camara"
+                    label="Cámara"
                     value={photo.forensic.exifDevice.model ?? "—"}
                   />
                   <KV label="Fuerza" value={photo.evidenceStrength} />

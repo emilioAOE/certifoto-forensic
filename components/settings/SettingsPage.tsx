@@ -46,10 +46,10 @@ export function SettingsPage() {
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Configuracion
+          Configuración
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Datos de usuario, branding y gestion de tus datos guardados.
+          Datos de usuario, branding y gestión de tus datos guardados.
         </p>
       </div>
 
@@ -242,7 +242,7 @@ function BrandingTab() {
           </h3>
           <p className="text-xs text-amber-800 leading-relaxed">
             Personalizar el logo, color de marca y nombre de tu corredora en los
-            PDFs estara disponible en el plan Pro Corredores. Mientras tanto,
+            PDFs estará disponible en el plan Pro Corredores. Mientras tanto,
             todas las actas se generan con la marca CertiFoto.
           </p>
         </div>
@@ -332,9 +332,9 @@ function DataTab() {
     const ok = await confirm({
       title: "Reemplazar todos los datos",
       message:
-        "Importar reemplazara TODAS las actas, propiedades, contactos y configuracion actuales con las del archivo. Esta accion no se puede deshacer.",
+        "Importar reemplazará TODAS las actas, propiedades, contactos y configuración actuales con las del archivo. Esta acción no se puede deshacer.",
       variant: "warn",
-      confirmLabel: "Si, reemplazar",
+      confirmLabel: "Sí, reemplazar",
     });
     if (!ok) return;
 
@@ -342,7 +342,7 @@ function DataTab() {
     try {
       const result = await importFromZip(file);
       toast.success(
-        "Importacion exitosa",
+        "Importación exitosa",
         `${result.imported.actas} actas, ${result.imported.properties} propiedades, ${result.imported.organizations} organizaciones.`
       );
     } catch (err) {
@@ -361,7 +361,7 @@ function DataTab() {
     const ok = await confirm({
       title: "Eliminar todos los datos",
       message:
-        "Esto eliminara TODAS tus actas, propiedades, contactos y configuracion permanentemente. Considera exportar primero.\n\nEsta accion NO se puede deshacer.",
+        "Esto eliminará TODAS tus actas, propiedades, contactos y configuración permanentemente. Considera exportar primero.\n\nEsta acción NO se puede deshacer.",
       variant: "danger",
       confirmLabel: "Eliminar permanentemente",
       requireConfirmText: "ELIMINAR",
@@ -391,7 +391,7 @@ function DataTab() {
 
       <div className="rounded-lg border border-gray-200 bg-white p-6">
         <h3 className="text-sm font-semibold text-gray-900 mb-1">
-          Backup y restauracion
+          Backup y restauración
         </h3>
         <p className="text-xs text-gray-500 mb-4">
           Exporta todos tus datos a un archivo ZIP para guardarlos como respaldo
@@ -439,7 +439,7 @@ function DataTab() {
         </h3>
         <p className="text-xs text-red-800 mb-4 leading-relaxed">
           Eliminar todos los datos borra permanentemente todas tus actas,
-          propiedades, contactos y configuracion. Esta accion no se puede deshacer.
+          propiedades, contactos y configuración. Esta acción no se puede deshacer.
           Considera exportar primero como respaldo.
         </p>
         <button

@@ -140,7 +140,7 @@ export function PropertySelector({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar por direccion, comuna..."
+              placeholder="Buscar por dirección, comuna..."
               autoFocus
               className="w-full bg-white border border-gray-200 rounded-md pl-9 pr-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-accent"
             />

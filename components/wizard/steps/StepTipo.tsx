@@ -23,7 +23,7 @@ export function StepTipo({ value, onChange }: StepTipoProps) {
   return (
     <div>
       <h2 className="text-lg font-semibold text-gray-900 mb-1">
-        ¿Que tipo de acta vas a crear?
+        ¿Qué tipo de acta vas a crear?
       </h2>
       <p className="text-sm text-muted mb-5">
         Selecciona el momento del proceso de arriendo que quieres documentar.

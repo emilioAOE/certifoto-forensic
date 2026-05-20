@@ -71,7 +71,7 @@ export function StepPartes({ parties, onChange }: StepPartesProps) {
         Datos de las partes
       </h2>
       <p className="text-sm text-muted mb-5">
-        Agrega a las personas que participaran en el acta. Al menos una parte
+        Agrega a las personas que participarán en el acta. Al menos una parte
         debe poder firmar.
       </p>
 
@@ -209,7 +209,7 @@ function PartyRow({
             />
             <input
               type="tel"
-              placeholder="Telefono"
+              placeholder="Teléfono"
               value={party.phone ?? ""}
               onChange={(e) => onUpdate({ phone: e.target.value || null })}
               className="input"
@@ -231,10 +231,10 @@ function PartyRow({
               }
               className="input"
             >
-              <option value="self">Actua como tercero neutral</option>
+              <option value="self">Actúa como tercero neutral</option>
               <option value="landlord">Representa al arrendador</option>
               <option value="tenant">Representa al arrendatario</option>
-              <option value="organization">Representa a la organizacion</option>
+              <option value="organization">Representa a la organización</option>
             </select>
           )}
 
@@ -244,7 +244,7 @@ function PartyRow({
               <Tooltip
                 content={
                   <>
-                    Estos permisos definen que puede hacer esta parte sobre el
+                    Estos permisos definen qué puede hacer esta parte sobre el
                     acta. Si no puede firmar, no aparece en la lista de firmas
                     requeridas.
                   </>

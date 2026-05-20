@@ -22,11 +22,11 @@ const ROOM_DESCRIPTIONS: Partial<Record<RoomType, string[]>> = {
   cocina: [
     "Se observa cocina con muebles y cubierta visibles.",
     "La superficie de trabajo se aprecia limpia.",
-    "Los electrodomesticos visibles no muestran daños evidentes en la imagen.",
+    "Los electrodomésticos visibles no muestran daños evidentes en la imagen.",
   ],
   bano_principal: [
-    "Se observa baño con sanitarios y griferia visibles.",
-    "La griferia se aprecia en su lugar.",
+    "Se observa baño con sanitarios y grifería visibles.",
+    "La grifería se aprecia en su lugar.",
     "No se aprecian filtraciones evidentes en la imagen.",
   ],
   dormitorio_principal: [
@@ -58,7 +58,7 @@ const ROOM_DESCRIPTIONS: Partial<Record<RoomType, string[]>> = {
   bodega: ["Se observa bodega con espacio interior visible."],
   medidores: [
     "Se observan medidores en la imagen.",
-    "Las lecturas y numeracion son visibles parcialmente.",
+    "Las lecturas y numeración son visibles parcialmente.",
   ],
 };
 
@@ -105,7 +105,7 @@ function generateDamageFinding(): DamageFinding {
     id: generateId("damage"),
     type,
     severity,
-    description: descriptions[type] + " Requiere revision humana para confirmar relevancia.",
+    description: descriptions[type] + " Requiere revisión humana para confirmar relevancia.",
     confidence: 0.55 + Math.random() * 0.3,
     needsHumanReview: severity === "review_required" || Math.random() < 0.5,
   };
@@ -190,8 +190,8 @@ export function summarizeRoom(
   const needsReview = aiAnalyses.some((a) => a.needsHumanReview);
 
   if (damageCount === 0) {
-    return `${roomName}: ${aiAnalyses.length} foto${aiAnalyses.length > 1 ? "s" : ""} analizada${aiAnalyses.length > 1 ? "s" : ""}. No se aprecian daños evidentes en las imagenes.`;
+    return `${roomName}: ${aiAnalyses.length} foto${aiAnalyses.length > 1 ? "s" : ""} analizada${aiAnalyses.length > 1 ? "s" : ""}. No se aprecian daños evidentes en las imágenes.`;
   }
 
-  return `${roomName}: ${aiAnalyses.length} foto${aiAnalyses.length > 1 ? "s" : ""} analizada${aiAnalyses.length > 1 ? "s" : ""}. ${damageCount} hallazgo${damageCount > 1 ? "s" : ""} detectado${damageCount > 1 ? "s" : ""}. ${needsReview ? "Algunos requieren revision humana." : ""}`;
+  return `${roomName}: ${aiAnalyses.length} foto${aiAnalyses.length > 1 ? "s" : ""} analizada${aiAnalyses.length > 1 ? "s" : ""}. ${damageCount} hallazgo${damageCount > 1 ? "s" : ""} detectado${damageCount > 1 ? "s" : ""}. ${needsReview ? "Algunos requieren revisión humana." : ""}`;
 }

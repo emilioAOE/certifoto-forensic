@@ -105,7 +105,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
   const handleDelete = async () => {
     const ok = await confirm({
       title: "Eliminar propiedad",
-      message: `Se eliminara esta propiedad de tu lista. Las ${actas.length} acta(s) asociadas mantendran sus datos pero perderan el vinculo a la propiedad.`,
+      message: `Se eliminará esta propiedad de tu lista. Las ${actas.length} acta(s) asociadas mantendrán sus datos pero perderán el vínculo a la propiedad.`,
       variant: "warn",
       confirmLabel: "Eliminar",
     });
@@ -162,7 +162,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
             className="inline-flex items-center gap-2 rounded-lg bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
           >
             <Plus className="h-4 w-4" />
-            Crear nueva acta aqui
+            Crear nueva acta aquí
           </button>
         </div>
       </header>
@@ -176,7 +176,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
             Datos
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-            <Info label="Direccion" value={property.address} />
+            <Info label="Dirección" value={property.address} />
             <Info label="Unidad" value={property.unit ?? "—"} />
             <Info label="Comuna" value={property.commune} />
             <Info label="Tipo" value={PROPERTY_TYPE_LABEL[property.propertyType]} />
@@ -184,7 +184,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
               label="Amoblada"
               value={
                 property.furnished === "yes"
-                  ? "Si"
+                  ? "Sí"
                   : property.furnished === "partial"
                   ? "Parcialmente"
                   : "No"
@@ -202,7 +202,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
               }
             />
             {property.internalCode && (
-              <Info label="Codigo" value={property.internalCode} />
+              <Info label="Código" value={property.internalCode} />
             )}
             {property.rolSii && <Info label="Rol SII" value={property.rolSii} />}
           </div>
@@ -225,7 +225,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
                 )}
                 {property.contractDeposit !== null && (
                   <Info
-                    label="Garantia"
+                    label="Garantía"
                     value={
                       property.contractDeposit < 13
                         ? `${property.contractDeposit} mes(es)`
@@ -243,7 +243,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
                 )}
                 {property.contractEndDate && (
                   <Info
-                    label="Termino"
+                    label="Término"
                     value={new Date(property.contractEndDate).toLocaleDateString(
                       "es-CL"
                     )}
@@ -268,15 +268,15 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
           <div className="p-3 border-b border-gray-100">
             <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5" />
-              Ubicacion
+              Ubicación
             </h2>
           </div>
           {property.latitude && property.longitude ? (
             <LeafletMap lat={property.latitude} lng={property.longitude} />
           ) : (
             <div className="h-48 flex items-center justify-center text-xs text-gray-400 px-4 text-center">
-              Sin coordenadas guardadas. Selecciona una direccion del autocomplete
-              al crear la proxima acta para registrar la ubicacion.
+              Sin coordenadas guardadas. Selecciona una dirección del autocomplete
+              al crear la próxima acta para registrar la ubicación.
             </div>
           )}
         </section>
@@ -291,7 +291,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
 
         {sortedActas.length === 0 ? (
           <p className="text-sm text-gray-500 text-center py-6">
-            Aun no hay actas para esta propiedad
+            Aún no hay actas para esta propiedad
           </p>
         ) : (
           <div className="space-y-2">

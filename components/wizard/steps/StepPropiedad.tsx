@@ -63,7 +63,7 @@ export function StepPropiedad({
         Datos de la propiedad
       </h2>
       <p className="text-sm text-muted mb-5">
-        Direccion, datos del inmueble y del contrato. Tienes dos formas de
+        Dirección, datos del inmueble y del contrato. Tienes dos formas de
         completar este paso:
       </p>
 
@@ -74,7 +74,7 @@ export function StepPropiedad({
             icon={<FileText className="h-5 w-5" />}
             badge="Recomendado"
             title="Subir contrato (PDF)"
-            description="Sube el PDF de tu contrato y autocompletamos direccion, partes, monto y fechas. Solo revisas y editas lo necesario."
+            description="Sube el PDF de tu contrato y autocompletamos dirección, partes, monto y fechas. Solo revisas y editas lo necesario."
             cta="Subir contrato"
             onClick={() => setMode("contract")}
             highlighted
@@ -111,7 +111,7 @@ export function StepPropiedad({
         <div className="mb-5 rounded-md border border-accent-light bg-accent-softer/40 px-3 py-2 flex items-center gap-2 text-xs text-accent-dark">
           <Sparkles className="h-3.5 w-3.5 shrink-0" />
           <span className="flex-1">
-            ¿Tienes el contrato en PDF? Puedes acelerar todo subiendolo y
+            ¿Tienes el contrato en PDF? Puedes acelerar todo subiéndolo y
             autocompletamos los datos.
           </span>
           <button
@@ -135,7 +135,7 @@ export function StepPropiedad({
           </div>
 
           <div className="space-y-4">
-            <Field label="Direccion" required>
+            <Field label="Dirección" required>
           <AddressAutocomplete
             value={value.address}
             onChange={(v) => update("address", v)}
@@ -189,7 +189,7 @@ export function StepPropiedad({
               className="input"
             />
           </Field>
-          <Field label="Pais">
+          <Field label="País">
             <input
               type="text"
               value={value.country}
@@ -225,7 +225,7 @@ export function StepPropiedad({
             >
               <option value="no">No</option>
               <option value="partial">Parcialmente</option>
-              <option value="yes">Si</option>
+              <option value="yes">Sí</option>
             </select>
           </Field>
         </div>
@@ -266,7 +266,7 @@ export function StepPropiedad({
                   className="input"
                 />
               </Field>
-              <Field label="Garantia (meses o monto)">
+              <Field label="Garantía (meses o monto)">
                 <input
                   type="text"
                   inputMode="numeric"
@@ -291,7 +291,7 @@ export function StepPropiedad({
                   className="input"
                 />
               </Field>
-              <Field label="Termino del contrato">
+              <Field label="Término del contrato">
                 <input
                   type="date"
                   value={value.contractEndDate ?? ""}
@@ -318,7 +318,7 @@ export function StepPropiedad({
         </details>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Field label="Codigo interno (opcional)">
+          <Field label="Código interno (opcional)">
             <input
               type="text"
               value={value.internalCode ?? ""}
@@ -338,7 +338,7 @@ export function StepPropiedad({
           </Field>
         </div>
 
-        <Field label="Fecha de inspeccion">
+        <Field label="Fecha de inspección">
           <input
             type="date"
             value={inspectionDate}
@@ -353,7 +353,7 @@ export function StepPropiedad({
             onChange={(e) => update("observations", e.target.value || null)}
             rows={3}
             className="input resize-none"
-            placeholder="Cualquier observacion adicional sobre la propiedad..."
+            placeholder="Cualquier observación adicional sobre la propiedad..."
           />
         </Field>
           </div>

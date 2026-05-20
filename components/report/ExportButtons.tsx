@@ -112,17 +112,17 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       doc.setTextColor(100, 100, 100);
-      doc.text("Informe de Analisis de Metadata de Imagenes", margin, 33);
+      doc.text("Informe de Análisis de Metadata de Imágenes", margin, 33);
 
       y = 45;
       drawRow("Fecha del informe", new Date().toLocaleString("es-CL"));
-      drawRow("Total de imagenes", String(analyses.length));
+      drawRow("Total de imágenes", String(analyses.length));
 
       y += 10;
       doc.setFontSize(7);
       doc.setTextColor(150, 150, 150);
       const disclaimer = doc.splitTextToSize(
-        "Este informe fue generado automaticamente por CertiFoto Forensic. Contiene un analisis de la metadata disponible en cada imagen, incluyendo datos EXIF, GPS, IPTC/XMP, perfiles de color, hashes criptograficos y verificaciones de integridad. Toda la informacion fue extraida directamente de los archivos sin modificacion.",
+        "Este informe fue generado automáticamente por CertiFoto Forensic. Contiene un análisis de la metadata disponible en cada imagen, incluyendo datos EXIF, GPS, IPTC/XMP, perfiles de color, hashes criptográficos y verificaciones de integridad. Toda la información fue extraída directamente de los archivos sin modificación.",
         contentW
       );
       doc.text(disclaimer, margin, y);
@@ -153,7 +153,7 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
         // File Data
         drawSectionTitle("Datos del Archivo");
         drawRow("Nombre", f.name);
-        drawRow("Tamano", `${f.sizeHuman} (${f.size.toLocaleString()} bytes)`);
+        drawRow("Tamaño", `${f.sizeHuman} (${f.size.toLocaleString()} bytes)`);
         drawRow("Tipo MIME", f.mimeType);
         drawRow("Dimensiones", f.width && f.height ? `${f.width} x ${f.height} px` : null);
         drawRow("SHA-256", f.sha256, true);
@@ -168,9 +168,9 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
         drawRow("N/S", d.serialNumber);
 
         // Capture
-        drawSectionTitle("Parametros de Captura");
+        drawSectionTitle("Parámetros de Captura");
         drawRow("Apertura", c.fNumber !== null ? `f/${c.fNumber}` : null);
-        drawRow("Exposicion", c.exposureTimeFormatted);
+        drawRow("Exposición", c.exposureTimeFormatted);
         drawRow("ISO", c.iso !== null ? String(c.iso) : null);
         drawRow("Focal", c.focalLength !== null ? `${c.focalLength} mm` : null);
         drawRow("Flash", c.flash);
@@ -180,12 +180,12 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
         drawSectionTitle("Fechas");
         drawRow("Original", t.dateTimeOriginal);
         drawRow("Digitalizada", t.dateTimeDigitized);
-        drawRow("Modificacion", t.dateTime);
+        drawRow("Modificación", t.dateTime);
         drawRow("Offset TZ", t.offsetTimeOriginal);
 
         // GPS
         if (g.latitude !== null && g.longitude !== null) {
-          drawSectionTitle("Geolocalizacion");
+          drawSectionTitle("Geolocalización");
           drawRow("Latitud", String(g.latitude));
           drawRow("Longitud", String(g.longitude));
           drawRow("Altitud", g.altitude !== null ? `${g.altitude} m` : null);
@@ -193,7 +193,7 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
         }
 
         // Consistency
-        drawSectionTitle("Senales de Integridad");
+        drawSectionTitle("Señales de Integridad");
         for (const check of photo.consistency) {
           checkNewPage(6);
           doc.setFontSize(8);
@@ -218,7 +218,7 @@ export function ExportButtons({ analyses }: ExportButtonsProps) {
         doc.setFontSize(6);
         doc.setTextColor(150, 150, 150);
         doc.text("CertiFoto Forensic — Informe Pericial", margin, pageH - 8);
-        doc.text(`Pagina ${p} de ${totalPages}`, pageW - margin - 25, pageH - 8);
+        doc.text(`Página ${p} de ${totalPages}`, pageW - margin - 25, pageH - 8);
       }
 
       doc.save(`certifoto-informe-${new Date().toISOString().slice(0, 10)}.pdf`);

@@ -128,7 +128,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         { partiesCount: a.parties.filter((p) => p.canSign).length }
       )
     );
-    toast.success("Firmas solicitadas", "El acta esta lista para que las partes firmen.");
+    toast.success("Firmas solicitadas", "El acta está lista para que las partes firmen.");
   };
 
   const handleRequestSignatures = () => {
@@ -164,16 +164,16 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         message: m,
       }));
       setValidationModal({
-        title: "No se puede certificar el acta todavia",
+        title: "No se puede certificar el acta todavía",
         items,
       });
       return;
     }
     if (getCreditsBalance() < 1) {
       const ok = await confirm({
-        title: "Sin creditos disponibles",
+        title: "Sin créditos disponibles",
         message:
-          "Para certificar un acta necesitas al menos 1 credito. ¿Quieres ir a comprar un pack?",
+          "Para certificar un acta necesitas al menos 1 crédito. ¿Quieres ir a comprar un pack?",
         variant: "default",
         confirmLabel: "Ver packs",
       });
@@ -187,9 +187,9 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       : "";
     const ok = await confirm({
       title: "Certificar este acta",
-      message: `Al certificar consumes 1 credito y el acta queda inmutable. Se sella el hash del documento, se quita la marca de agua del PDF y queda lista para compartir como .certifoto. Esta accion no se puede deshacer.${sigWarning}`,
+      message: `Al certificar consumes 1 crédito y el acta queda inmutable. Se sella el hash del documento, se quita la marca de agua del PDF y queda lista para compartir como .certifoto. Esta acción no se puede deshacer.${sigWarning}`,
       variant: missingSignatures ? "warn" : "default",
-      confirmLabel: "Si, certificar (1 credito)",
+      confirmLabel: "Sí, certificar (1 crédito)",
     });
     if (!ok) return;
 
@@ -199,17 +199,17 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       if (!result.ok) {
         if (result.error === "no_credits") {
           toast.error(
-            "Sin creditos",
-            result.errorMessage ?? "No tienes creditos disponibles."
+            "Sin créditos",
+            result.errorMessage ?? "No tienes créditos disponibles."
           );
           router.push("/precios");
           return;
         }
         if (result.error === "not_ready") {
           setValidationModal({
-            title: "El acta no esta lista para certificar",
+            title: "El acta no está lista para certificar",
             items: (result.validationErrors ?? [
-              result.errorMessage ?? "Falta contenido minimo",
+              result.errorMessage ?? "Falta contenido mínimo",
             ]).map((m) => ({ level: "error" as const, message: m })),
           });
           return;
@@ -225,7 +225,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       }
       toast.success(
         "Acta certificada",
-        "El documento quedo sellado e inmutable. Ya puedes compartirlo como .certifoto."
+        "El documento quedó sellado e inmutable. Ya puedes compartirlo como .certifoto."
       );
     } finally {
       setCertifying(false);
@@ -240,7 +240,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       updateActa((a) =>
         appendAuditLog(a, a.createdByName, a.createdByRole, null, "pdf_generated", {})
       );
-      toast.success("PDF generado", "Se descargo el archivo a tu equipo.");
+      toast.success("PDF generado", "Se descargó el archivo a tu equipo.");
     } catch (err) {
       console.error(err);
       toast.error(
@@ -257,9 +257,9 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     const ok = await confirm({
       title: "Eliminar acta",
       message:
-        "Esta accion no se puede deshacer. Las fotos, observaciones y firmas se borraran.",
+        "Esta acción no se puede deshacer. Las fotos, observaciones y firmas se borrarán.",
       variant: "danger",
-      confirmLabel: "Si, eliminar",
+      confirmLabel: "Sí, eliminar",
     });
     if (!ok) return;
     deleteActa(actaId);
@@ -272,7 +272,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     if (!isActaCertified(acta)) {
       toast.info(
         "Certifica el acta primero",
-        "Solo los actas certificadas se pueden compartir como .certifoto. Asi te aseguras de que la otra parte recibe un documento sellado."
+        "Solo las actas certificadas se pueden compartir como .certifoto. Así te aseguras de que la otra parte recibe un documento sellado."
       );
       return;
     }
@@ -281,7 +281,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       downloadBlob(result.blob, result.fileName);
       toast.success(
         "Archivo descargado",
-        `Envia el archivo ${result.fileName} por WhatsApp o email a la otra parte. Esa persona lo importa en CertiFoto, firma, y te lo manda de regreso.`
+        `Envía el archivo ${result.fileName} por WhatsApp o email a la otra parte. Esa persona lo importa en CertiFoto, firma, y te lo manda de regreso.`
       );
     } catch (err) {
       toast.error(
@@ -427,17 +427,17 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             <strong className="font-semibold">Acta en borrador.</strong> El PDF
             lleva marca de agua y no se puede compartir como{" "}
             <span className="font-mono">.certifoto</span> hasta que la
-            certifiques. Cuando este lista, certifica el acta para sellarla.{" "}
+            certifiques. Cuando esté lista, certifica el acta para sellarla.{" "}
             <Link
               href="/precios"
               className="underline font-semibold hover:text-amber-700"
             >
-              Ver packs de creditos
+              Ver packs de créditos
             </Link>
             {credits > 0 && (
               <span className="text-amber-700">
                 {" "}
-                · Tienes {credits} credito{credits === 1 ? "" : "s"} disponible
+                · Tienes {credits} crédito{credits === 1 ? "" : "s"} disponible
                 {credits === 1 ? "" : "s"}
               </span>
             )}
@@ -510,16 +510,16 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-medium hover:bg-emerald-700 disabled:opacity-30"
               title={
                 credits >= 1
-                  ? "Sella el acta y la deja inmutable. Consume 1 credito."
-                  : "Necesitas comprar un pack de creditos para certificar"
+                  ? "Sella el acta y la deja inmutable. Consume 1 crédito."
+                  : "Necesitas comprar un pack de créditos para certificar"
               }
             >
               <Award className="h-3.5 w-3.5" />
               {certifying
                 ? "Certificando..."
                 : credits >= 1
-                ? "Certificar acta (1 credito)"
-                : "Certificar (sin creditos)"}
+                ? "Certificar acta (1 crédito)"
+                : "Certificar (sin créditos)"}
             </button>
           )}
 
@@ -543,7 +543,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             Propiedad
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-            <Info label="Direccion" value={property.address} />
+            <Info label="Dirección" value={property.address} />
             <Info label="Unidad" value={property.unit ?? "—"} />
             <Info label="Comuna" value={property.commune} />
             <Info label="Tipo" value={PROPERTY_TYPE_LABEL[property.propertyType]} />
@@ -551,7 +551,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               label="Amoblada"
               value={
                 property.furnished === "yes"
-                  ? "Si"
+                  ? "Sí"
                   : property.furnished === "partial"
                   ? "Parcialmente"
                   : "No"
@@ -600,7 +600,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               <Sparkles className="h-3 w-3 text-accent-dark" />
               {acta.rooms.length === 0
                 ? "Sube las fotos y la IA detecta los ambientes"
-                : "¿Como quieres cargar las fotos?"}
+                : "¿Cómo quieres cargar las fotos?"}
             </p>
             <div
               className={cn(
@@ -627,8 +627,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
                 </div>
                 <p className="text-xs text-gray-700 leading-relaxed flex-1">
                   {acta.rooms.length === 0
-                    ? "Selecciona o arrastra todas las fotos del inmueble. La IA mira cada una y crea automaticamente los ambientes (cocina, baño, dormitorios, terraza, etc). Tu solo revisas."
-                    : "Selecciona o arrastra todas las fotos del inmueble. La IA las asigna a cada ambiente segun el contenido y el nombre del archivo. Tu solo revisas."}
+                    ? "Selecciona o arrastra todas las fotos del inmueble. La IA mira cada una y crea automáticamente los ambientes (cocina, baño, dormitorios, terraza, etc). Tú solo revisas."
+                    : "Selecciona o arrastra todas las fotos del inmueble. La IA las asigna a cada ambiente según el contenido y el nombre del archivo. Tú solo revisas."}
                 </p>
                 <span className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-bold">
                   <ImagePlus className="h-3.5 w-3.5" />
@@ -660,8 +660,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             </div>
             {acta.rooms.length === 0 && (
               <p className="mt-3 text-xs text-muted leading-relaxed">
-                Aun no agregaste ambientes manualmente. La IA los va a crear
-                cuando subas las fotos. Tambien puedes agregar ambientes a mano
+                Aún no agregaste ambientes manualmente. La IA los va a crear
+                cuando subas las fotos. También puedes agregar ambientes a mano
                 desde el wizard si vuelves al paso de Ambientes.
               </p>
             )}
@@ -674,10 +674,10 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             <button
               onClick={() => setShowBulkUploader(true)}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"
-              title="Sube mas fotos juntas y la IA las asigna"
+              title="Sube más fotos juntas y la IA las asigna"
             >
               <ImagePlus className="h-4 w-4" />
-              Subir mas fotos en lote
+              Subir más fotos en lote
               <Sparkles className="h-3 w-3" />
             </button>
           </div>

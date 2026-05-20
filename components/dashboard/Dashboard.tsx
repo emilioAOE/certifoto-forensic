@@ -131,9 +131,9 @@ export function Dashboard() {
     const ok = await confirm({
       title: "Reemplazar todos los datos",
       message:
-        "Importar reemplazara TODAS las actas, propiedades y configuracion actuales con las del archivo. Esta accion no se puede deshacer.",
+        "Importar reemplazará TODAS las actas, propiedades y configuración actuales con las del archivo. Esta acción no se puede deshacer.",
       variant: "warn",
-      confirmLabel: "Si, reemplazar",
+      confirmLabel: "Sí, reemplazar",
     });
     if (!ok) return;
 
@@ -142,7 +142,7 @@ export function Dashboard() {
       const result = await importFromZip(file);
       refresh();
       toast.success(
-        "Importacion exitosa",
+        "Importación exitosa",
         `${result.imported.actas} actas, ${result.imported.properties} propiedades.`
       );
     } catch (err) {
@@ -201,7 +201,7 @@ export function Dashboard() {
             onClick={handleSeedMockData}
             disabled={seeding}
             className="inline-flex items-center gap-2 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 px-4 py-2 text-sm hover:bg-purple-100 transition-colors disabled:opacity-50"
-            title="Crea 3 actas de ejemplo (entrega, devolucion, inspeccion) con fotos y analisis IA"
+            title="Crea 3 actas de ejemplo (entrega, devolución, inspección) con fotos y análisis IA"
           >
             {seeding ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -216,7 +216,7 @@ export function Dashboard() {
               onClick={handleExport}
               disabled={exporting}
               className="inline-flex items-center gap-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-700 px-4 py-2 text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
-              title="Descarga un ZIP con todas tus actas, propiedades y configuracion"
+              title="Descarga un ZIP con todas tus actas, propiedades y configuración"
             >
               {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
               {exporting ? "Exportando..." : "Exportar todo"}
@@ -253,18 +253,18 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-[11px] font-semibold text-accent-dark uppercase tracking-wider">
-              Creditos disponibles
+              Créditos disponibles
             </p>
             <p className="text-2xl font-bold text-gray-900 leading-tight">
               {credits}
               <span className="text-xs font-normal text-gray-600 ml-1.5">
-                credito{credits === 1 ? "" : "s"}
+                crédito{credits === 1 ? "" : "s"}
               </span>
             </p>
           </div>
         </Link>
         <div className="text-xs text-gray-700 hidden sm:block max-w-md">
-          Cada acta certificada consume 1 credito. Crear y editar actas es{" "}
+          Cada acta certificada consume 1 crédito. Crear y editar actas es{" "}
           <span className="font-semibold">gratis</span>.{" "}
           <Link
             href="/precios"
@@ -347,23 +347,23 @@ export function Dashboard() {
       {/* Features */}
       <section>
         <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
-          Que incluye CertiFoto
+          Qué incluye CertiFoto
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <FeatureCard
             icon={<Camera className="h-5 w-5" />}
             title="Fotos por ambiente"
-            description="Captura o sube fotos organizadas por habitacion. Tomar dentro de la app guarda timestamp y GPS automaticamente."
+            description="Captura o sube fotos organizadas por habitación. Tomar dentro de la app guarda timestamp y GPS automáticamente."
           />
           <FeatureCard
             icon={<TrendingUp className="h-5 w-5" />}
             title="Descripciones con IA"
-            description="Cada foto recibe una descripcion objetiva y posibles hallazgos. Las partes pueden revisar antes de firmar."
+            description="Cada foto recibe una descripción objetiva y posibles hallazgos. Las partes pueden revisar antes de firmar."
           />
           <FeatureCard
             icon={<Shield className="h-5 w-5" />}
             title="Respaldo forense"
-            description="SHA-256, pHash, deteccion C2PA y verificaciones de consistencia. Cada foto tiene huella digital verificable."
+            description="SHA-256, pHash, detección C2PA y verificaciones de consistencia. Cada foto tiene huella digital verificable."
           />
         </div>
       </section>
@@ -486,7 +486,7 @@ function EmptyState({
   return (
     <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 py-10 px-4 text-center">
       <Building2 className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-      <p className="text-sm text-gray-700">Aun no tienes actas creadas</p>
+      <p className="text-sm text-gray-700">Aún no tienes actas creadas</p>
       <p className="text-xs text-muted mt-1 mb-5">
         Crea tu primera acta o carga datos de ejemplo para explorar el flujo
       </p>
@@ -513,7 +513,7 @@ function EmptyState({
       </div>
       <p className="text-[10px] text-muted mt-3">
         Los datos de ejemplo crean 3 actas con fotos placeholder, IA simulada y
-        analisis forense para explorar todo el flujo.
+        análisis forense para explorar todo el flujo.
       </p>
     </div>
   );

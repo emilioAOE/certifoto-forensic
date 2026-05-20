@@ -56,7 +56,7 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
     }
 
     if (file.size > 30 * 1024 * 1024) {
-      setError("El archivo es muy grande (max 30 MB)");
+      setError("El archivo es muy grande (máx 30 MB)");
       return;
     }
 
@@ -99,7 +99,7 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
             </h3>
             <p className="text-xs text-gray-500">
               Sube el PDF o foto del contrato y extraemos los datos
-              automaticamente. Si esta escaneado, hacemos OCR.
+              automáticamente. Si está escaneado, hacemos OCR.
             </p>
           </div>
         </div>
@@ -126,7 +126,7 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
             </div>
             <div className="text-xs text-gray-500 mt-1 leading-relaxed">
               PDF nativo, PDF escaneado o foto del contrato (JPG, PNG, WebP,
-              HEIC). Si es escaneo o imagen, hacemos OCR en espanol localmente.
+              HEIC). Si es escaneo o imagen, hacemos OCR en español localmente.
             </div>
           </button>
           <input
@@ -164,14 +164,14 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
               </div>
               {progress.totalPages && progress.page && (
                 <p className="text-[10px] text-muted mt-1.5 font-mono">
-                  pagina {progress.page} de {progress.totalPages}
+                  página {progress.page} de {progress.totalPages}
                 </p>
               )}
               {(progress.stage === "ocr_loading_model" ||
                 progress.stage === "ocr_recognizing" ||
                 progress.stage === "ocr_rendering_page") && (
                 <p className="text-[10px] text-muted mt-1 italic">
-                  El OCR puede tardar 10-30s por pagina la primera vez.
+                  El OCR puede tardar 10-30s por página la primera vez.
                 </p>
               )}
             </div>
@@ -212,8 +212,8 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
       )}
 
       <p className="text-[10px] text-gray-400 mt-3 leading-relaxed">
-        El PDF se procesa localmente en tu navegador. No se envia a ningun servidor.
-        Los datos extraidos son una sugerencia y debes revisarlos antes de continuar.
+        El PDF se procesa localmente en tu navegador. No se envía a ningún servidor.
+        Los datos extraídos son una sugerencia y debes revisarlos antes de continuar.
       </p>
     </div>
   );
@@ -243,9 +243,9 @@ function ExtractionPreview({
       <div className="flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
         <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
         <div className="text-xs text-emerald-800 flex-1">
-          Archivo procesado: {extraction.extractedFrom.pages} pagina(s),{" "}
+          Archivo procesado: {extraction.extractedFrom.pages} página(s),{" "}
           {extraction.extractedFrom.chars.toLocaleString()} caracteres
-          extraidos
+          extraídos
         </div>
         <span className={`text-xs font-semibold ${confidenceColor}`}>
           Confianza {confidenceLabel}
@@ -254,10 +254,10 @@ function ExtractionPreview({
 
       <div className="space-y-3 max-h-80 overflow-y-auto">
         <PreviewSection title="Propiedad">
-          <PreviewField label="Direccion" value={extraction.property.address} />
+          <PreviewField label="Dirección" value={extraction.property.address} />
           <PreviewField label="Unidad" value={extraction.property.unit} />
           <PreviewField label="Comuna" value={extraction.property.commune} />
-          <PreviewField label="Region" value={extraction.property.region?.name ?? null} />
+          <PreviewField label="Región" value={extraction.property.region?.name ?? null} />
         </PreviewSection>
 
         <PreviewSection title="Arrendador">
@@ -280,9 +280,9 @@ function ExtractionPreview({
             }
           />
           <PreviewField label="Inicio" value={extraction.contract.startDate} />
-          <PreviewField label="Termino" value={extraction.contract.endDate} />
+          <PreviewField label="Término" value={extraction.contract.endDate} />
           <PreviewField
-            label="Garantia"
+            label="Garantía"
             value={
               extraction.contract.deposit
                 ? extraction.contract.deposit < 13
@@ -295,8 +295,8 @@ function ExtractionPreview({
       </div>
 
       <p className="text-xs text-gray-600 leading-relaxed">
-        Revisa los datos antes de aplicarlos. Podras editar todo despues. Si la
-        confianza es baja o algun campo se ve mal, lo mejor es ingresarlo a mano.
+        Revisa los datos antes de aplicarlos. Podrás editar todo después. Si la
+        confianza es baja o algún campo se ve mal, lo mejor es ingresarlo a mano.
       </p>
 
       <div className="flex flex-wrap gap-2">

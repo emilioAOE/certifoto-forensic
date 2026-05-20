@@ -17,11 +17,11 @@ export function SobrePage() {
             Sobre nosotros
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
-            Documentar arriendos no deberia ser tan dificil
+            Documentar arriendos no debería ser tan difícil
           </h1>
           <p className="text-lg text-gray-600 mt-4">
-            CertiFoto nacio para resolver un problema concreto: la falta de
-            registros ordenados y verificables al inicio y termino de un
+            CertiFoto nació para resolver un problema concreto: la falta de
+            registros ordenados y verificables al inicio y término de un
             arriendo.
           </p>
         </div>
@@ -30,29 +30,29 @@ export function SobrePage() {
       {/* Por que existimos */}
       <section className="max-w-3xl mx-auto px-4 py-16">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-6">
-          Por que existimos
+          Por qué existimos
         </h2>
         <div className="space-y-5 text-base text-gray-700 leading-relaxed">
           <p>
             Cualquiera que haya arrendado o entregado una propiedad sabe que el
-            momento de devolver la garantia suele ser dificil. Discusiones
+            momento de devolver la garantía suele ser difícil. Discusiones
             sobre si una mancha estaba antes, si una rayadura es desgaste
             normal o daño imputable, o si se entregaron todas las llaves. Casi
-            siempre, el problema no es de mala fe sino de mala documentacion.
+            siempre, el problema no es de mala fe sino de mala documentación.
           </p>
           <p>
-            Nos sorprendio que un proceso tan recurrente y con tanto dinero en
+            Nos sorprendió que un proceso tan recurrente y con tanto dinero en
             juego siguiera dependiendo de papeles a mano, fotos en WhatsApp y
             la memoria de las partes. Notarios y peritos resuelven el problema
-            pero son caros y lentos. Necesitabamos una herramienta entre
-            medio: digital, formal pero accesible, y suficientemente solida
+            pero son caros y lentos. Necesitábamos una herramienta entre
+            medio: digital, formal pero accesible, y suficientemente sólida
             para servir como respaldo.
           </p>
           <p>
-            Asi nacio CertiFoto. Una plataforma que combina lo mejor de la
-            documentacion fotografica (organizada por ambiente, con
-            descripciones asistidas por IA) con tecnologia forense (hash
-            criptografico, metadatos EXIF, deteccion de alteraciones) y firma
+            Así nació CertiFoto. Una plataforma que combina lo mejor de la
+            documentación fotográfica (organizada por ambiente, con
+            descripciones asistidas por IA) con tecnología forense (hash
+            criptográfico, metadatos EXIF, detección de alteraciones) y firma
             digital simple. Todo en un PDF que puedes descargar y archivar.
           </p>
         </div>
@@ -62,7 +62,7 @@ export function SobrePage() {
       <section className="bg-gray-50 border-y border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight text-center mb-10">
-            En que creemos
+            En qué creemos
           </h2>
           <div className="grid md:grid-cols-3 gap-5">
             <ValueCard
@@ -73,12 +73,12 @@ export function SobrePage() {
             <ValueCard
               icon={<Heart className="h-6 w-6" />}
               title="Honestidad"
-              description="No prometemos validez legal absoluta ni reemplazamos a peritos. Somos un respaldo documental ordenado y verificable, ni mas ni menos."
+              description="No prometemos validez legal absoluta ni reemplazamos a peritos. Somos un respaldo documental ordenado y verificable, ni más ni menos."
             />
             <ValueCard
               icon={<Users className="h-6 w-6" />}
               title="Accesibilidad"
-              description="Documentar bien no deberia ser un lujo. Por eso el uso personal es gratis y los planes profesionales tienen precios accesibles."
+              description="Documentar bien no debería ser un lujo. Por eso el uso personal es gratis y los planes profesionales tienen precios accesibles."
             />
           </div>
         </div>
@@ -87,17 +87,17 @@ export function SobrePage() {
       {/* Equipo */}
       <section className="max-w-3xl mx-auto px-4 py-16">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-6">
-          Quienes somos
+          Quiénes somos
         </h2>
         <div className="space-y-5 text-base text-gray-700 leading-relaxed">
           <p>
             CertiFoto fue creado por un equipo chileno con experiencia en
-            tecnologia y mercados inmobiliarios. Combinamos desarrollo de
-            software, vision computacional y conocimiento del corretaje de
+            tecnología y mercados inmobiliarios. Combinamos desarrollo de
+            software, visión computacional y conocimiento del corretaje de
             propiedades.
           </p>
           <p>
-            Trabajamos en estrecha colaboracion con corredores, abogados y
+            Trabajamos en estrecha colaboración con corredores, abogados y
             usuarios reales para que la herramienta resuelva problemas concretos
             y no agregue complejidad innecesaria.
           </p>

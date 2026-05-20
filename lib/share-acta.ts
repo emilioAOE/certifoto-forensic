@@ -120,7 +120,7 @@ export async function importActaFromShareFile(
 
   const manifestFile = zip.file("manifest.json");
   if (!manifestFile) {
-    throw new Error("Archivo invalido: falta manifest.json");
+    throw new Error("Archivo inválido: falta manifest.json");
   }
   const manifest = JSON.parse(await manifestFile.async("string")) as ShareManifest;
   if (manifest.app !== "CertiFoto" || manifest.format !== "single-acta") {
@@ -128,12 +128,12 @@ export async function importActaFromShareFile(
   }
   if (manifest.version > FORMAT_VERSION) {
     throw new Error(
-      `Version del archivo (${manifest.version}) es mayor a la soportada (${FORMAT_VERSION}). Actualiza CertiFoto.`
+      `Versión del archivo (${manifest.version}) es mayor a la soportada (${FORMAT_VERSION}). Actualiza CertiFoto.`
     );
   }
 
   const actaFile = zip.file("acta.json");
-  if (!actaFile) throw new Error("Archivo invalido: falta acta.json");
+  if (!actaFile) throw new Error("Archivo inválido: falta acta.json");
   const rawActa = JSON.parse(await actaFile.async("string")) as Acta &
     Partial<Pick<Acta, "certifiedAt" | "legacyCertified">>;
 

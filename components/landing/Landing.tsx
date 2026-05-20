@@ -49,16 +49,16 @@ export function Landing() {
               El estado en que se entrega un inmueble —en un arriendo o en una
               compraventa— casi siempre queda a la palabra de las partes.
               CertiFoto lo deja documentado: fotos con respaldo forense,
-              descripciones con IA y firma de cada parte. Creala gratis; pagas
+              descripciones con IA y firma de cada parte. Créala gratis; pagas
               solo cuando la certificas.
             </p>
 
             <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 max-w-xl">
               <ShieldAlert className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
               <p className="text-sm text-amber-900 leading-relaxed">
-                <span className="font-semibold">El dano aparece despues.</span>{" "}
-                La prueba tiene que existir antes. Sin un acta, la discusion de
-                la garantia o de los desperfectos es tu palabra contra la otra.
+                <span className="font-semibold">El daño aparece después.</span>{" "}
+                La prueba tiene que existir antes. Sin un acta, la discusión de
+                la garantía o de los desperfectos es tu palabra contra la otra.
               </p>
             </div>
 
@@ -85,7 +85,7 @@ export function Landing() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Pago unico, sin suscripcion
+                Pago único, sin suscripción
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
@@ -111,7 +111,7 @@ export function Landing() {
           <TrustItem
             icon={<Sparkles className="h-5 w-5" />}
             label="IA descriptiva"
-            value="Asiste la revision"
+            value="Asiste la revisión"
           />
           <TrustItem
             icon={<FileSignature className="h-5 w-5" />}
@@ -150,7 +150,7 @@ export function Landing() {
           <Audience
             icon={<Eye className="h-6 w-6" />}
             title="Arrendatarios y compradores"
-            description="Protege lo que recibes con un registro fotografico fechado y firmado por ambas partes el dia de la entrega."
+            description="Protege lo que recibes con un registro fotográfico fechado y firmado por ambas partes el día de la entrega."
           />
           <Audience
             icon={<Building2 className="h-6 w-6" />}
@@ -160,7 +160,7 @@ export function Landing() {
           <Audience
             icon={<Award className="h-6 w-6" />}
             title="Administradoras"
-            description="Documenta tu cartera completa de propiedades con un mismo estandar y trazabilidad de cada inspeccion."
+            description="Documenta tu cartera completa de propiedades con un mismo estándar y trazabilidad de cada inspección."
           />
         </div>
       </section>
@@ -181,21 +181,21 @@ export function Landing() {
             <UseCase
               icon={<KeyRound className="h-6 w-6" />}
               title="Entrega de arriendo"
-              description="Documenta el estado al inicio del contrato y respalda lo que despues se devuelve."
+              description="Documenta el estado al inicio del contrato y respalda lo que después se devuelve."
             />
             <UseCase
               icon={<Home className="h-6 w-6" />}
-              title="Recepcion de compraventa"
-              description="Deja registro del estado de entrega de un departamento o casa el dia de la escritura o la recepcion."
+              title="Recepción de compraventa"
+              description="Deja registro del estado de entrega de un departamento o casa el día de la escritura o la recepción."
             />
             <UseCase
               icon={<Scale className="h-6 w-6" />}
-              title="Devolucion y garantia"
-              description="Compara contra la entrega y evita que la discusion del mes de garantia quede a la palabra."
+              title="Devolución y garantía"
+              description="Compara contra la entrega y evita que la discusión del mes de garantía quede a la palabra."
             />
             <UseCase
               icon={<Clock className="h-6 w-6" />}
-              title="Inspeccion periodica"
+              title="Inspección periódica"
               description="Revisa el estado durante el contrato y mantiene trazabilidad de cada visita."
             />
           </div>
@@ -211,31 +211,31 @@ export function Landing() {
                 La plataforma
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
-                Mas que un acta. Un registro digital ordenado y verificable.
+                Más que un acta. Un registro digital ordenado y verificable.
               </h2>
               <p className="text-gray-600 mt-4 leading-relaxed">
-                Cada fotografia que cargas se ordena por ambiente, recibe una
-                descripcion automatica del estado y queda con su huella digital
+                Cada fotografía que cargas se ordena por ambiente, recibe una
+                descripción automática del estado y queda con su huella digital
                 forense. Si alguna foto se modifica posteriormente, queda
-                evidencia tecnica de la alteracion.
+                evidencia técnica de la alteración.
               </p>
 
               <div className="mt-6 space-y-3">
-                <Bullet>Organizacion clara por ambiente y categoria</Bullet>
+                <Bullet>Organización clara por ambiente y categoría</Bullet>
                 <Bullet>
                   Descripciones referenciales generadas con IA, revisables por
                   las partes
                 </Bullet>
                 <Bullet>Hash SHA-256 y pHash de cada imagen</Bullet>
                 <Bullet>
-                  Datos EXIF: fecha, hora, dispositivo y ubicacion GPS si esta
+                  Datos EXIF: fecha, hora, dispositivo y ubicación GPS si está
                   disponible
                 </Bullet>
                 <Bullet>
                   Firma digital simple para cada parte, con opciones de
                   conformidad u observaciones
                 </Bullet>
-                <Bullet>Generacion de PDF formal listo para compartir</Bullet>
+                <Bullet>Generación de PDF formal listo para compartir</Bullet>
               </div>
             </div>
 
@@ -250,7 +250,7 @@ export function Landing() {
               />
               <FeatureCard
                 icon={<Hash className="h-5 w-5" />}
-                title="Hash criptografico"
+                title="Hash criptográfico"
               />
               <FeatureCard
                 icon={<MapPin className="h-5 w-5" />}
@@ -273,13 +273,13 @@ export function Landing() {
       <section className="max-w-6xl mx-auto px-4 py-20" id="como-funciona">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
-            Como funciona
+            Cómo funciona
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             En cinco pasos tienes tu acta firmada
           </h2>
           <p className="text-gray-600 mt-3">
-            Desde la creacion hasta el PDF final. Sin papeles, sin reuniones
+            Desde la creación hasta el PDF final. Sin papeles, sin reuniones
             adicionales y sin instalar aplicaciones.
           </p>
         </div>
@@ -288,17 +288,17 @@ export function Landing() {
           <Step
             n={1}
             title="Crea el acta"
-            description="Elige el tipo (entrega, devolucion, inspeccion o inventario) e ingresa los datos de la propiedad y de las partes que participan."
+            description="Elige el tipo (entrega, devolución, inspección o inventario) e ingresa los datos de la propiedad y de las partes que participan."
           />
           <Step
             n={2}
             title="Sube fotos por ambiente"
-            description="Selecciona los espacios a documentar y carga las fotos. La plataforma calcula la huella digital y extrae los metadatos automaticamente."
+            description="Selecciona los espacios a documentar y carga las fotos. La plataforma calcula la huella digital y extrae los metadatos automáticamente."
           />
           <Step
             n={3}
             title="Revisa con apoyo de IA"
-            description="Cada foto recibe una descripcion objetiva. Las partes pueden agregar observaciones, comentarios y marcar discrepancias."
+            description="Cada foto recibe una descripción objetiva. Las partes pueden agregar observaciones, comentarios y marcar discrepancias."
           />
           <Step
             n={4}
@@ -308,7 +308,7 @@ export function Landing() {
           <Step
             n={5}
             title="Descarga el PDF"
-            description="Obten un documento formal con fotos, descripciones, observaciones, firmas y registro tecnico de cada evidencia."
+            description="Obtén un documento formal con fotos, descripciones, observaciones, firmas y registro técnico de cada evidencia."
           />
         </div>
       </section>
@@ -318,7 +318,7 @@ export function Landing() {
         <div className="max-w-6xl mx-auto px-4 py-20">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
-              Quienes lo usan
+              Quiénes lo usan
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
               Pensado para quienes documentan en serio
@@ -327,19 +327,19 @@ export function Landing() {
 
           <div className="grid md:grid-cols-3 gap-5">
             <Testimonial
-              quote="Antes de cada entrega imprimia un cuadernillo con fotos. Ahora todo queda en un PDF firmado por las dos partes en menos de 30 minutos."
-              name="Maria F."
+              quote="Antes de cada entrega imprimía un cuadernillo con fotos. Ahora todo queda en un PDF firmado por las dos partes en menos de 30 minutos."
+              name="María F."
               role="Corredora de propiedades, Providencia"
             />
             <Testimonial
-              quote="Como administradora de 80 unidades, tener un mismo estandar de inspeccion para todas marcaba la diferencia. CertiFoto nos lo dio."
+              quote="Como administradora de 80 unidades, tener un mismo estándar de inspección para todas marcaba la diferencia. CertiFoto nos lo dio."
               name="Carolina M."
               role="Administradora, Las Condes"
             />
             <Testimonial
-              quote="Lo use el dia que recibi el departamento que compre. Tener fotos firmadas del estado de entrega me dejo tranquilo frente a la inmobiliaria."
+              quote="Lo usé el día que recibí el departamento que compré. Tener fotos firmadas del estado de entrega me dejó tranquilo frente a la inmobiliaria."
               name="Diego S."
-              role="Comprador, Nunoa"
+              role="Comprador, Ñuñoa"
             />
           </div>
         </div>
@@ -364,7 +364,7 @@ export function Landing() {
           <p className="text-gray-300 mt-4 max-w-xl mx-auto">
             Crea tu acta gratis en minutos. Pagas un pack solo cuando la
             certificas: el sello inmutable que la deja lista para entregar.
-            Desde $2.990, pago unico.
+            Desde $2.990, pago único.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
             <Link
@@ -455,7 +455,7 @@ function HeroVisual() {
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-[10px] text-amber-800">
               <ShieldAlert className="h-3 w-3 text-amber-600 shrink-0" />
-              <span>Rayadura leve en cubierta · requiere revision humana</span>
+              <span>Rayadura leve en cubierta · requiere revisión humana</span>
             </div>
           </div>
 

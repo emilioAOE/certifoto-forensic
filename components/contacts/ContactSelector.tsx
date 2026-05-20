@@ -154,7 +154,7 @@ export function ContactSelector({
       {!open && value.trim().length > 0 && suggestions.length === 0 && (
         <p className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
           <Search className="h-2.5 w-2.5" />
-          Nuevo contacto · se guardara en tu agenda
+          Nuevo contacto · se guardará en tu agenda
         </p>
       )}
 

@@ -55,7 +55,7 @@ export function ContactList() {
         </h1>
         <p className="text-sm text-gray-500 mt-1">
           {contacts.length} contacto{contacts.length !== 1 ? "s" : ""} guardado
-          {contacts.length !== 1 ? "s" : ""}. Se agregan automaticamente cuando
+          {contacts.length !== 1 ? "s" : ""}. Se agregan automáticamente cuando
           creas actas.
         </p>
       </div>
@@ -163,11 +163,11 @@ function EmptyState({ hasContacts }: { hasContacts: boolean }) {
       <p className="text-sm text-gray-700">
         {hasContacts
           ? "No hay contactos que coincidan con el filtro"
-          : "Aun no tienes contactos en tu agenda"}
+          : "Aún no tienes contactos en tu agenda"}
       </p>
       {!hasContacts && (
         <p className="text-xs text-gray-500 mt-1">
-          Los contactos se agregan automaticamente cuando creas actas con
+          Los contactos se agregan automáticamente cuando creas actas con
           arrendadores, arrendatarios o testigos
         </p>
       )}

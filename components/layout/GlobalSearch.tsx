@@ -60,7 +60,7 @@ export function GlobalSearch({ onClose }: { onClose: () => void }) {
       className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-[15vh] px-4"
       role="dialog"
       aria-modal="true"
-      aria-label="Busqueda global"
+      aria-label="Búsqueda global"
       onClick={onClose}
     >
       <div

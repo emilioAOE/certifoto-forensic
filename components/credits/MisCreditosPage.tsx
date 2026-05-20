@@ -22,10 +22,10 @@ import { useToast } from "@/components/ui/Toast";
 
 const REASON_LABEL: Record<CreditEntry["reason"], string> = {
   pack_purchased: "Compra de pack",
-  redeem_code: "Canje de codigo",
+  redeem_code: "Canje de código",
   manual_grant: "Carga manual",
   dev_seed: "Carga de prueba",
-  certify_acta: "Certificacion de acta",
+  certify_acta: "Certificación de acta",
   refund: "Reverso",
 };
 
@@ -55,8 +55,8 @@ export function MisCreditosPage() {
     );
     if (result.ok) {
       toast.success(
-        "Creditos cargados",
-        `+${amount} creditos. Saldo: ${result.balanceAfter}.`
+        "Créditos cargados",
+        `+${amount} créditos. Saldo: ${result.balanceAfter}.`
       );
     } else {
       toast.error("No se pudo cargar", result.error ?? "Error");
@@ -71,10 +71,10 @@ export function MisCreditosPage() {
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       <header>
         <h1 className="text-2xl font-bold text-gray-900 font-mono tracking-tight">
-          Mis creditos
+          Mis créditos
         </h1>
         <p className="text-sm text-muted mt-1">
-          Cada vez que certificas un acta consumes 1 credito. La app sigue
+          Cada vez que certificas un acta consumes 1 crédito. La app sigue
           siendo gratis y los borradores son ilimitados.
         </p>
       </header>
@@ -90,7 +90,7 @@ export function MisCreditosPage() {
             {balance}
           </div>
           <div className="text-sm text-gray-600 mt-1">
-            credito{balance === 1 ? "" : "s"}
+            crédito{balance === 1 ? "" : "s"}
             {balance === 0 && " · compra un pack para empezar a certificar"}
           </div>
         </div>
@@ -110,14 +110,14 @@ export function MisCreditosPage() {
           <div className="text-xs text-gray-700 leading-relaxed">
             <p className="mb-2">
               Por ahora los packs se activan manualmente. Cuando solicitas un
-              pack desde el formulario de contacto, coordinamos el pago via
-              transferencia o WhatsApp y luego cargamos los creditos en este
+              pack desde el formulario de contacto, coordinamos el pago vía
+              transferencia o WhatsApp y luego cargamos los créditos en este
               navegador.
             </p>
             <p>
-              Limitacion: si limpias el navegador o cambias de dispositivo, los
-              creditos no usados se pierden. Recomendamos certificar las actas
-              a medida que se completan. Pronto tendras una cuenta en la nube.
+              Limitación: si limpias el navegador o cambias de dispositivo, los
+              créditos no usados se pierden. Recomendamos certificar las actas
+              a medida que se completan. Pronto tendrás una cuenta en la nube.
             </p>
           </div>
         </div>
@@ -131,8 +131,8 @@ export function MisCreditosPage() {
             Modo desarrollo
           </div>
           <p className="text-xs text-purple-700 mb-3 leading-relaxed">
-            Estos botones solo aparecen en localhost. En produccion los creditos
-            solo entran via packs activados manualmente.
+            Estos botones solo aparecen en localhost. En producción los créditos
+            solo entran vía packs activados manualmente.
           </p>
           <div className="flex flex-wrap gap-2">
             {[1, 3, 10].map((n) => (
@@ -164,8 +164,8 @@ export function MisCreditosPage() {
         </h2>
         {history.length === 0 ? (
           <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 py-8 px-4 text-center text-sm text-muted">
-            Aun no tienes movimientos. Compra un pack o certifica un acta para
-            ver el historial aqui.
+            Aún no tienes movimientos. Compra un pack o certifica un acta para
+            ver el historial aquí.
           </div>
         ) : (
           <ul className="rounded-lg border border-gray-200 bg-white divide-y divide-gray-100">

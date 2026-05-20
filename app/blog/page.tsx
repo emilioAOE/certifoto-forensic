@@ -7,7 +7,7 @@ import { BLOG_POSTS } from "@/lib/blog-posts";
 export const metadata = {
   title: "Blog",
   description:
-    "Articulos sobre actas digitales, arriendos, evidencia fotografica e inteligencia artificial aplicada a la documentacion de propiedades.",
+    "Artículos sobre actas digitales, arriendos, evidencia fotográfica e inteligencia artificial aplicada a la documentación de propiedades.",
   alternates: { canonical: "/blog" },
 };
 
@@ -30,10 +30,10 @@ export default function BlogIndex() {
               Blog
             </p>
             <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
-              Aprende sobre arriendos, evidencia y documentacion digital
+              Aprende sobre arriendos, evidencia y documentación digital
             </h1>
             <p className="text-lg text-gray-600 mt-4">
-              Guias practicas y articulos tecnicos para arrendadores,
+              Guías prácticas y artículos técnicos para arrendadores,
               arrendatarios, corredores y administradoras que quieren
               profesionalizar la forma en que documentan propiedades.
             </p>
@@ -79,7 +79,7 @@ export default function BlogIndex() {
                   <span>{formatDate(featured.date)}</span>
                 </div>
                 <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-dark">
-                  Leer articulo completo
+                  Leer artículo completo
                   <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
@@ -91,7 +91,7 @@ export default function BlogIndex() {
       {/* Grid */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-6">
-          Mas articulos
+          Más artículos
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {rest.map((p) => (

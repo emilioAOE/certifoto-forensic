@@ -52,7 +52,7 @@ export function VerificarPage() {
       setResult(r);
       toast.success(
         r.isUpdate ? "Acta actualizada" : "Acta importada",
-        `Se cargo el contenido a tu plataforma local.`
+        `Se cargó el contenido a tu plataforma local.`
       );
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Error desconocido";
@@ -73,9 +73,9 @@ export function VerificarPage() {
           Recibir un acta para firmar o revisar
         </h1>
         <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-          Si alguien te envio un archivo <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded">.certifoto</code>, subelo aqui para
+          Si alguien te envió un archivo <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded">.certifoto</code>, súbelo aquí para
           revisar el acta, agregar tu firma localmente y devolverla. El archivo
-          se procesa en tu navegador, no se envia a ningun servidor.
+          se procesa en tu navegador, no se envía a ningún servidor.
         </p>
       </header>
 
@@ -109,7 +109,7 @@ export function VerificarPage() {
               <p className="text-xs mt-1 leading-relaxed text-gray-700">
                 {hashLookup.found
                   ? "El hash del QR coincide con un acta guardada localmente. Significa que el documento no fue alterado desde que lo guardaste."
-                  : "El hash de este QR no coincide con ningun acta en este navegador. Si esperabas tenerlo aqui, revisa que estes en el dispositivo correcto o importa el archivo .certifoto."}
+                  : "El hash de este QR no coincide con ningún acta en este navegador. Si esperabas tenerlo aquí, revisa que estés en el dispositivo correcto o importa el archivo .certifoto."}
               </p>
               <div className="text-[10px] font-mono text-gray-500 mt-2 flex items-center gap-1">
                 <Hash className="h-3 w-3" />
@@ -151,7 +151,7 @@ export function VerificarPage() {
                   Subir archivo .certifoto
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  O arrastrarlo aqui. Solo archivos generados desde CertiFoto
+                  O arrastrarlo aquí. Solo archivos generados desde CertiFoto
                   &ldquo;Compartir para firma&rdquo;.
                 </div>
               </>
@@ -189,7 +189,7 @@ export function VerificarPage() {
               <p className="text-xs text-emerald-800 mt-0.5">
                 {result.contactsAdded > 0 &&
                   `${result.contactsAdded} contacto(s) agregado(s) a tu agenda. `}
-                Ya esta lista en tu plataforma local.
+                Ya está lista en tu plataforma local.
               </p>
             </div>
           </div>
@@ -220,7 +220,7 @@ export function VerificarPage() {
 
       <section className="rounded-xl border border-gray-200 bg-white p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-2">
-          Como funciona el flujo de firma compartida
+          Cómo funciona el flujo de firma compartida
         </h3>
         <ol className="space-y-2 text-xs text-gray-700 leading-relaxed list-decimal list-inside">
           <li>
@@ -229,11 +229,11 @@ export function VerificarPage() {
             Recibe un archivo <code className="bg-gray-100 px-1 rounded">.certifoto</code>.
           </li>
           <li>
-            <strong>Lo envia</strong> por WhatsApp, email o cualquier medio a la
+            <strong>Lo envía</strong> por WhatsApp, email o cualquier medio a la
             otra parte (arrendatario, arrendador o testigo).
           </li>
           <li>
-            <strong>El receptor</strong> entra a esta pagina (/verificar), sube el
+            <strong>El receptor</strong> entra a esta página (/verificar), sube el
             archivo, revisa el acta en su CertiFoto local y agrega su firma.
           </li>
           <li>
@@ -241,15 +241,15 @@ export function VerificarPage() {
             para firma&rdquo; nuevamente y se la manda al primero.
           </li>
           <li>
-            <strong>El primero importa</strong> la version firmada y queda con
+            <strong>El primero importa</strong> la versión firmada y queda con
             todas las firmas en su acta.
           </li>
         </ol>
         <p className="text-[11px] text-gray-500 mt-3 leading-relaxed">
-          Este flujo es asincrono pero offline-friendly. No requiere que las
-          partes esten en el mismo dispositivo, ni un backend para gestionar
+          Este flujo es asíncrono pero offline-friendly. No requiere que las
+          partes estén en el mismo dispositivo, ni un backend para gestionar
           links de firma. La integridad se respalda con los hashes
-          criptograficos de cada foto y del documento al firmar.
+          criptográficos de cada foto y del documento al firmar.
         </p>
       </section>
     </div>

@@ -5,7 +5,7 @@ import { faqFlatQA } from "@/lib/faq-data";
 
 export const metadata = {
   title: "Preguntas frecuentes",
-  description: "Resolvemos las dudas mas comunes sobre actas digitales, firma, evidencia fotografica e inteligencia artificial en CertiFoto.",
+  description: "Resolvemos las dudas más comunes sobre actas digitales, firma, evidencia fotográfica e inteligencia artificial en CertiFoto.",
   alternates: { canonical: "/faq" },
 };
 

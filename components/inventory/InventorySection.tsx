@@ -24,7 +24,7 @@ import { cn } from "@/lib/cn";
 
 const CATEGORY_LABEL: Record<InventoryCategory, string> = {
   furniture: "Muebles",
-  appliance: "Electrodomestico",
+  appliance: "Electrodoméstico",
   accessory: "Accesorio",
   key: "Llave",
   control: "Control",
@@ -76,7 +76,7 @@ export function InventorySection({
       ...a,
       inventoryItems: [...a.inventoryItems, newItem],
     }));
-    toast.success("Item agregado al inventario");
+    toast.success("Ítem agregado al inventario");
     setAdding(false);
   };
 
@@ -91,8 +91,8 @@ export function InventorySection({
 
   const handleDelete = async (id: string) => {
     const ok = await confirm({
-      title: "Eliminar item del inventario",
-      message: "Esta accion no se puede deshacer.",
+      title: "Eliminar ítem del inventario",
+      message: "Esta acción no se puede deshacer.",
       variant: "warn",
       confirmLabel: "Eliminar",
     });
@@ -101,7 +101,7 @@ export function InventorySection({
       ...a,
       inventoryItems: a.inventoryItems.filter((it) => it.id !== id),
     }));
-    toast.info("Item eliminado");
+    toast.info("Ítem eliminado");
   };
 
   return (
@@ -117,7 +117,7 @@ export function InventorySection({
             className="inline-flex items-center gap-1 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-medium hover:bg-accent-dim"
           >
             <Plus className="h-3.5 w-3.5" />
-            Agregar item
+            Agregar ítem
           </button>
         )}
       </div>
@@ -132,7 +132,7 @@ export function InventorySection({
             }
             className="bg-white border border-gray-200 rounded-md px-2.5 py-1 text-xs text-gray-700 focus:outline-none focus:border-accent"
           >
-            <option value="all">Todas las categorias</option>
+            <option value="all">Todas las categorías</option>
             {(Object.keys(CATEGORY_LABEL) as InventoryCategory[]).map((c) => (
               <option key={c} value={c}>
                 {CATEGORY_LABEL[c]}
@@ -167,8 +167,8 @@ export function InventorySection({
       {filtered.length === 0 ? (
         <div className="rounded-md border border-dashed border-gray-200 bg-gray-50 py-6 text-center text-sm text-gray-500">
           {items.length === 0
-            ? "Sin items registrados. Agrega muebles, electrodomesticos, llaves o cualquier elemento del inmueble."
-            : "Ningun item coincide con el filtro"}
+            ? "Sin ítems registrados. Agrega muebles, electrodomésticos, llaves o cualquier elemento del inmueble."
+            : "Ningún ítem coincide con el filtro"}
         </div>
       ) : (
         <div className="space-y-2">
@@ -358,7 +358,7 @@ function InventoryItemForm({
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
         <input
           type="text"
-          placeholder="Nombre del item (ej. Sofa de cuero)"
+          placeholder="Nombre del ítem (ej. Sofá de cuero)"
           value={name}
           onChange={(e) => setName(e.target.value)}
           autoFocus

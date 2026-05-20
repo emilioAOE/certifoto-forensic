@@ -47,7 +47,7 @@ function checkDateConsistency(a: PartialAnalysis): ConsistencyCheck {
       "date-consistency",
       "Fechas",
       "pass",
-      "Todas las fechas son consistentes entre si"
+      "Todas las fechas son consistentes entre sí"
     );
   }
 
@@ -64,7 +64,7 @@ function checkDateConsistency(a: PartialAnalysis): ConsistencyCheck {
     "date-consistency",
     "Fechas",
     "fail",
-    `Diferencia significativa de ${Math.round(maxDiff / 86400000)} dias entre campos de fecha`
+    `Diferencia significativa de ${Math.round(maxDiff / 86400000)} días entre campos de fecha`
   );
 }
 
@@ -80,7 +80,7 @@ function checkSuspiciousSoftware(a: PartialAnalysis): ConsistencyCheck {
       "suspicious-software",
       "Software",
       "info",
-      "No se detecto informacion de software"
+      "No se detectó información de software"
     );
   }
 
@@ -90,7 +90,7 @@ function checkSuspiciousSoftware(a: PartialAnalysis): ConsistencyCheck {
         "suspicious-software",
         "Software",
         "fail",
-        `Software de generacion IA detectado: ${pattern}`
+        `Software de generación IA detectado: ${pattern}`
       );
     }
   }
@@ -101,7 +101,7 @@ function checkSuspiciousSoftware(a: PartialAnalysis): ConsistencyCheck {
         "suspicious-software",
         "Software",
         "warn",
-        `Software de edicion detectado: ${pattern}`
+        `Software de edición detectado: ${pattern}`
       );
     }
   }
@@ -120,7 +120,7 @@ function checkThumbnailMatch(a: PartialAnalysis): ConsistencyCheck {
       "thumbnail-match",
       "Thumbnail",
       "info",
-      "No se encontro thumbnail embebido"
+      "No se encontró thumbnail embebido"
     );
   }
 
@@ -135,7 +135,7 @@ function checkThumbnailMatch(a: PartialAnalysis): ConsistencyCheck {
         "thumbnail-match",
         "Thumbnail",
         "fail",
-        "Proporciones del thumbnail no coinciden con la imagen — posible manipulacion"
+        "Proporciones del thumbnail no coinciden con la imagen — posible manipulación"
       );
     }
   }
@@ -215,16 +215,16 @@ function checkResolutionCoherence(a: PartialAnalysis): ConsistencyCheck {
   if (!exifW || !exifH || !realW || !realH) {
     return check(
       "resolution-coherence",
-      "Resolucion",
+      "Resolución",
       "info",
-      "No se pudo comparar resolucion EXIF vs real"
+      "No se pudo comparar resolución EXIF vs real"
     );
   }
 
   if (exifW === realW && exifH === realH) {
     return check(
       "resolution-coherence",
-      "Resolucion",
+      "Resolución",
       "pass",
       `${realW}x${realH} — EXIF coincide con dimensiones reales`
     );
@@ -234,9 +234,9 @@ function checkResolutionCoherence(a: PartialAnalysis): ConsistencyCheck {
   if (exifW === realH && exifH === realW) {
     return check(
       "resolution-coherence",
-      "Resolucion",
+      "Resolución",
       "pass",
-      `Dimensiones coinciden (rotacion por orientacion EXIF)`
+      `Dimensiones coinciden (rotación por orientación EXIF)`
     );
   }
 
@@ -254,7 +254,7 @@ function checkMakerNotes(a: PartialAnalysis): ConsistencyCheck {
       "makernotes-presence",
       "MakerNotes",
       "pass",
-      "MakerNotes propietarios presentes — indica imagen de camara real"
+      "MakerNotes propietarios presentes — indica imagen de cámara real"
     );
   }
 
@@ -271,7 +271,7 @@ function checkMakerNotes(a: PartialAnalysis): ConsistencyCheck {
     "makernotes-presence",
     "MakerNotes",
     "info",
-    "Sin MakerNotes ni informacion de dispositivo"
+    "Sin MakerNotes ni información de dispositivo"
   );
 }
 
@@ -307,7 +307,7 @@ function checkAiGeneration(a: PartialAnalysis): ConsistencyCheck {
         "ai-generation",
         "IA",
         "fail",
-        `DigitalSourceType indica generacion IA: ${aiType}`
+        `DigitalSourceType indica generación IA: ${aiType}`
       );
     }
   }
@@ -328,7 +328,7 @@ function checkAiGeneration(a: PartialAnalysis): ConsistencyCheck {
         "ai-generation",
         "IA",
         "fail",
-        `Indicador de generacion IA detectado en metadata: ${pattern}`
+        `Indicador de generación IA detectado en metadata: ${pattern}`
       );
     }
   }
@@ -337,7 +337,7 @@ function checkAiGeneration(a: PartialAnalysis): ConsistencyCheck {
     "ai-generation",
     "IA",
     "pass",
-    "No se detectaron indicadores de generacion por IA"
+    "No se detectaron indicadores de generación por IA"
   );
 }
 
@@ -373,7 +373,7 @@ function checkMetadataCompleteness(a: PartialAnalysis): ConsistencyCheck {
       "metadata-completeness",
       "Completitud",
       "info",
-      `Metadata minima (${score}/8 campos clave)`
+      `Metadata mínima (${score}/8 campos clave)`
     );
   }
   return check(

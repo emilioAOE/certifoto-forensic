@@ -50,7 +50,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
     return {
       ok: false,
       error: "internal",
-      errorMessage: "Ya hay una certificacion en curso para esta acta",
+      errorMessage: "Ya hay una certificación en curso para esta acta",
     };
   }
   const acta = getActa(actaId);
@@ -61,7 +61,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
     return {
       ok: false,
       error: "already_certified",
-      errorMessage: "Esta acta ya esta certificada",
+      errorMessage: "Esta acta ya está certificada",
     };
   }
   // Defense-in-depth: la UI ya valida antes de mostrar el boton, pero alguien
@@ -74,7 +74,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
       error: "not_ready",
       errorMessage:
         validation.errors[0] ??
-        "El acta no tiene contenido minimo para certificarse",
+        "El acta no tiene contenido mínimo para certificarse",
       validationErrors: validation.errors,
     };
   }
@@ -82,7 +82,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
     return {
       ok: false,
       error: "no_credits",
-      errorMessage: "No tienes creditos suficientes para certificar",
+      errorMessage: "No tienes créditos suficientes para certificar",
     };
   }
 
@@ -95,12 +95,12 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
       return {
         ok: false,
         error: "already_certified",
-        errorMessage: "Esta acta ya esta certificada",
+        errorMessage: "Esta acta ya está certificada",
       };
     }
 
     const hash = await computeDocumentHash(acta);
-    const consume = consumeCredit("certify_acta", `Certificacion de acta`, {
+    const consume = consumeCredit("certify_acta", `Certificación de acta`, {
       actaId: acta.id,
       actaType: acta.type,
     });
@@ -108,7 +108,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
       return {
         ok: false,
         error: "no_credits",
-        errorMessage: consume.error ?? "No se pudo consumir el credito",
+        errorMessage: consume.error ?? "No se pudo consumir el crédito",
       };
     }
 

@@ -15,23 +15,23 @@ import type {
 
 export const ACTA_TYPE_LABEL: Record<ActaType, string> = {
   entrega: "Acta de Entrega",
-  devolucion: "Acta de Devolucion",
-  inspeccion: "Acta de Inspeccion",
+  devolucion: "Acta de Devolución",
+  inspeccion: "Acta de Inspección",
   inventario: "Inventario de Propiedad",
 };
 
 export const ACTA_TYPE_DESCRIPTION: Record<ActaType, string> = {
   entrega: "Documenta el estado de la propiedad al inicio del arriendo",
-  devolucion: "Documenta el estado al termino del arriendo",
-  inspeccion: "Revision intermedia durante el contrato",
-  inventario: "Listado de muebles, electrodomesticos y accesorios",
+  devolucion: "Documenta el estado al término del arriendo",
+  inspeccion: "Revisión intermedia durante el contrato",
+  inventario: "Listado de muebles, electrodomésticos y accesorios",
 };
 
 export const ACTA_STATUS_LABEL: Record<ActaStatus, string> = {
   draft: "Borrador",
   evidence_collection: "Recopilando evidencia",
   ai_processing: "Procesando con IA",
-  review: "En revision",
+  review: "En revisión",
   pending_signatures: "Pendiente de firma",
   signed_with_conformity: "Firmada conforme",
   signed_with_observations: "Firmada con observaciones",
@@ -132,7 +132,7 @@ export const DAMAGE_TYPE_LABEL: Record<DamageType, string> = {
   floor_damage: "Daño en piso",
   glass_damage: "Daño en vidrio",
   furniture_damage: "Daño en mueble",
-  appliance_damage: "Daño en electrodomestico",
+  appliance_damage: "Daño en electrodoméstico",
   other: "Otro",
 };
 
@@ -141,7 +141,7 @@ export const DAMAGE_SEVERITY_LABEL: Record<DamageSeverity, string> = {
   minor: "Menor",
   moderate: "Moderado",
   severe: "Severo",
-  review_required: "Requiere revision humana",
+  review_required: "Requiere revisión humana",
 };
 
 export const DAMAGE_SEVERITY_COLOR: Record<DamageSeverity, string> = {
@@ -157,10 +157,10 @@ export const DAMAGE_SEVERITY_COLOR: Record<DamageSeverity, string> = {
 // ============================================
 
 export const STANDARD_ACCEPTANCE_TEXT =
-  "Declaro haber revisado el contenido de esta acta, incluyendo fotografias, observaciones y descripciones generadas con apoyo de inteligencia artificial. Entiendo que las descripciones de IA son referenciales y no vinculantes, y que tengo la oportunidad de dejar observaciones manuales antes de firmar. Acepto que mi firma digital simple constituye consentimiento del contenido del documento en su version actual.";
+  "Declaro haber revisado el contenido de esta acta, incluyendo fotografías, observaciones y descripciones generadas con apoyo de inteligencia artificial. Entiendo que las descripciones de IA son referenciales y no vinculantes, y que tengo la oportunidad de dejar observaciones manuales antes de firmar. Acepto que mi firma digital simple constituye consentimiento del contenido del documento en su versión actual.";
 
 export const PDF_DISCLAIMER =
-  "Este documento es un registro digital del estado declarado y observado de la propiedad en la fecha indicada. CertiFoto NO constituye una pericia judicial, no reemplaza un servicio notarial ni una opinion de perito profesional. Las descripciones generadas mediante inteligencia artificial son referenciales y fueron puestas a disposicion de las partes para su revision; la IA puede cometer errores y NO atribuye responsabilidades. La firma digital simple registrada implica que las partes tuvieron la oportunidad de revisar, comentar, aceptar u observar el contenido. La validez probatoria del documento dependera del caso y de la valoracion que haga, en su caso, una autoridad competente. Las partes son responsables de la veracidad de los datos ingresados, de la autenticidad de las fotografias cargadas y del consentimiento de las personas que figuran en el acta. CertiFoto se proporciona sin garantia de disponibilidad continua y no se hace responsable de daños directos o indirectos derivados de su uso.";
+  "Este documento es un registro digital del estado declarado y observado de la propiedad en la fecha indicada. CertiFoto NO constituye una pericia judicial, no reemplaza un servicio notarial ni una opinión de perito profesional. Las descripciones generadas mediante inteligencia artificial son referenciales y fueron puestas a disposición de las partes para su revisión; la IA puede cometer errores y NO atribuye responsabilidades. La firma digital simple registrada implica que las partes tuvieron la oportunidad de revisar, comentar, aceptar u observar el contenido. La validez probatoria del documento dependerá del caso y de la valoración que haga, en su caso, una autoridad competente. Las partes son responsables de la veracidad de los datos ingresados, de la autenticidad de las fotografías cargadas y del consentimiento de las personas que figuran en el acta. CertiFoto se proporciona sin garantía de disponibilidad continua y no se hace responsable de daños directos o indirectos derivados de su uso.";
 
 export const AI_USAGE_NOTICE =
-  "Las descripciones generadas por inteligencia artificial son una herramienta de asistencia y no reemplazan el criterio humano. Pueden contener errores, falsos positivos o interpretaciones incorrectas. Las partes deben revisar y, cuando corresponda, corregir manualmente cada descripcion antes de firmar.";
+  "Las descripciones generadas por inteligencia artificial son una herramienta de asistencia y no reemplazan el criterio humano. Pueden contener errores, falsos positivos o interpretaciones incorrectas. Las partes deben revisar y, cuando corresponda, corregir manualmente cada descripción antes de firmar.";

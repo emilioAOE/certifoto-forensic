@@ -94,7 +94,7 @@ export function LandingFooter() {
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
                 <Link href="/terminos" className="hover:text-accent-dark">
-                  Terminos de uso
+                  Términos de uso
                 </Link>
               </li>
               <li>
@@ -111,7 +111,7 @@ export function LandingFooter() {
             © {new Date().getFullYear()} CertiFoto · Hecho en Chile
           </p>
           <p className="text-xs text-gray-500 max-w-2xl text-right">
-            CertiFoto es un registro digital con respaldo tecnico. Las
+            CertiFoto es un registro digital con respaldo técnico. Las
             descripciones generadas con inteligencia artificial son referenciales
             y deben ser revisadas por las partes antes de firmar.
           </p>

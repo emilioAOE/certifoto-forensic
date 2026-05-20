@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Fingerprint, ArrowRight, Menu, X } from "lucide-react";
 
 const PUBLIC_LINKS = [
-  { href: "/#como-funciona", label: "Como funciona" },
+  { href: "/#como-funciona", label: "Cómo funciona" },
   { href: "/precios", label: "Precios" },
   { href: "/blog", label: "Blog" },
   { href: "/faq", label: "Preguntas" },
@@ -50,7 +50,7 @@ export function LandingHeader() {
           <button
             onClick={() => setOpen(!open)}
             className="md:hidden p-1.5 text-gray-700"
-            aria-label="Menu"
+            aria-label="Menú"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

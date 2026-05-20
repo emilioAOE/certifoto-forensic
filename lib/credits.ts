@@ -124,7 +124,7 @@ export function consumeCredit(
   metadata: Record<string, unknown> = {}
 ): ConsumeResult {
   if (cache.balance < 1) {
-    return { ok: false, error: "Sin creditos suficientes" };
+    return { ok: false, error: "Sin créditos suficientes" };
   }
   cache.balance -= 1;
   const entry: CreditEntry = {
@@ -155,7 +155,7 @@ export function addCredits(
   metadata: Record<string, unknown> = {}
 ): AddResult {
   if (!Number.isFinite(amount) || amount <= 0 || !Number.isInteger(amount)) {
-    return { ok: false, error: "Monto invalido" };
+    return { ok: false, error: "Monto inválido" };
   }
   cache.balance += amount;
   const entry: CreditEntry = {

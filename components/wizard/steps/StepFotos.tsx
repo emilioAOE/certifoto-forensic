@@ -202,12 +202,12 @@ export function StepFotos({
           </div>
         </div>
         <p className="mt-4 text-xs text-gray-700 leading-relaxed">
-          ¿Quieres subir mas fotos?{" "}
+          ¿Quieres subir más fotos?{" "}
           <button
             onClick={() => setMode("uploading")}
             className="text-accent-dark font-semibold hover:underline"
           >
-            Agregar mas
+            Agregar más
           </button>{" "}
           o continuar al siguiente paso.
         </p>
@@ -223,7 +223,7 @@ export function StepFotos({
       </h2>
       <p className="text-sm text-muted mb-5">
         Sube las fotos ahora y la IA va a detectar los ambientes
-        automaticamente. Tambien podes saltar este paso y subirlas mas tarde.
+        automáticamente. También podés saltar este paso y subirlas más tarde.
       </p>
 
       <div className="mb-5 grid sm:grid-cols-2 gap-3">
@@ -245,8 +245,8 @@ export function StepFotos({
           </div>
           <p className="text-xs text-gray-700 leading-relaxed flex-1">
             Selecciona o arrastra todas las fotos del inmueble. La IA mira
-            cada una y crea automaticamente los ambientes (cocina, baño,
-            dormitorios, terraza, etc.). Tu solo revisas.
+            cada una y crea automáticamente los ambientes (cocina, baño,
+            dormitorios, terraza, etc.). Tú solo revisas.
           </p>
           <span className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-bold">
             <ImagePlus className="h-3.5 w-3.5" />
@@ -261,12 +261,12 @@ export function StepFotos({
               <Camera className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-semibold text-gray-900">
-              Despues, foto por ambiente
+              Después, foto por ambiente
             </h4>
           </div>
           <p className="text-xs text-gray-700 leading-relaxed flex-1">
-            Saltar por ahora — vas a poder subir fotos despues de crear el
-            acta, una por una en cada ambiente, o todas juntas como aca.
+            Saltar por ahora — vas a poder subir fotos después de crear el
+            acta, una por una en cada ambiente, o todas juntas como acá.
           </p>
           <span className="mt-3 inline-flex items-center gap-1 text-xs text-gray-500 italic">
             Click en &ldquo;Siguiente&rdquo; para continuar
@@ -286,14 +286,14 @@ export function StepFotos({
           <ChevronDown className="h-3.5 w-3.5" />
         )}
         {showManualPreselect
-          ? "Ocultar pre-seleccion de ambientes"
+          ? "Ocultar pre-selección de ambientes"
           : "¿Prefieres pre-seleccionar ambientes a mano? (opcional)"}
       </button>
 
       {showManualPreselect && (
         <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
           <p className="text-xs text-muted mb-3 leading-relaxed">
-            Si ya sabes que ambientes tiene la propiedad, marcalos aqui. La IA
+            Si ya sabes qué ambientes tiene la propiedad, márcalos aquí. La IA
             igual puede crear los que falten cuando subas fotos.
           </p>
           <ManualRoomChips rooms={rooms} onChangeRooms={onChangeRooms} />

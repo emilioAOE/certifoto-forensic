@@ -128,7 +128,7 @@ export function ComunaCombobox({
             >
               <div className="text-sm font-medium text-gray-900">{item.name}</div>
               <div className="text-xs text-gray-500">
-                Region: {item.region.name}
+                Región: {item.region.name}
               </div>
             </button>
           ))}

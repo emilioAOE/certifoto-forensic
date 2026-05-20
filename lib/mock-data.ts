@@ -278,7 +278,7 @@ export function getWizardMockData(): WizardMockData {
       internalCode: sampleProp.internalCode,
       rolSii: sampleProp.rolSii,
       observations:
-        "Propiedad recientemente pintada. Se entrega con todos los servicios al dia.",
+        "Propiedad recientemente pintada. Se entrega con todos los servicios al día.",
       ownerId: null,
       organizationId: null,
       contractMonthlyAmount: 450000,
@@ -545,7 +545,7 @@ export async function seedSampleActa(
     generalCondition: ["bueno", "bueno", "regular", "bueno", "bueno"][i] as ConditionLevel,
     aiSummary: null,
     manualObservations:
-      i === 2 ? "Se observa pequena humedad en techo, no relevante." : null,
+      i === 2 ? "Se observa pequeña humedad en techo, no relevante." : null,
     photoIds: [],
   }));
 
@@ -601,7 +601,7 @@ export async function seedSampleActa(
     documentHash: null,
     aiSummary: null,
     manualSummary:
-      "Acta de ejemplo generada automaticamente para probar el flujo. Las fotos son placeholders.",
+      "Acta de ejemplo generada automáticamente para probar el flujo. Las fotos son placeholders.",
     disclaimerAccepted: false,
     certifiedAt: null,
     legacyCertified: false,

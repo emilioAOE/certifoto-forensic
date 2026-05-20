@@ -255,7 +255,7 @@ export function RoomEvidenceSection({
     const ok = await confirm({
       title: "Eliminar foto",
       message:
-        "Se eliminara esta foto y su analisis IA. Esta accion no se puede deshacer.",
+        "Se eliminará esta foto y su análisis IA. Esta acción no se puede deshacer.",
       variant: "warn",
       confirmLabel: "Eliminar",
     });
@@ -348,7 +348,7 @@ export function RoomEvidenceSection({
                   onClick={() => cameraInputRef.current?.click()}
                   disabled={uploading}
                   className="aspect-square rounded-lg border-2 border-dashed border-accent/50 hover:border-accent bg-accent-softer/30 flex flex-col items-center justify-center gap-1 text-accent-dark hover:text-accent transition-colors disabled:opacity-50"
-                  title="Tomar foto con la camara (mobile) o seleccionar archivo"
+                  title="Tomar foto con la cámara (mobile) o seleccionar archivo"
                 >
                   {uploading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -363,7 +363,7 @@ export function RoomEvidenceSection({
                   onClick={() => galleryInputRef.current?.click()}
                   disabled={uploading}
                   className="aspect-square rounded-lg border-2 border-dashed border-gray-200 hover:border-gray-300 bg-gray-50 flex flex-col items-center justify-center gap-1 text-muted hover:text-gray-700 transition-colors disabled:opacity-50"
-                  title="Subir foto desde la galeria"
+                  title="Subir foto desde la galería"
                 >
                   <ImagePlus className="h-5 w-5" />
                   <span className="text-xs">Subir foto</span>
@@ -435,7 +435,7 @@ export function RoomEvidenceSection({
               value={room.manualObservations ?? ""}
               onChange={(e) => updateRoomObservations(e.target.value)}
               rows={2}
-              placeholder="Cualquier observacion, contexto o nota relevante para este ambiente..."
+              placeholder="Cualquier observación, contexto o nota relevante para este ambiente..."
               className="w-full bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5 text-sm text-gray-800 placeholder-muted resize-none focus:outline-none focus:border-accent/50 disabled:opacity-50"
             />
           </div>

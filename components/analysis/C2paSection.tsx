@@ -48,8 +48,8 @@ export function C2paSection({ data }: C2paSectionProps) {
             </span>
           </div>
           <p className="text-xs text-muted mt-1">
-            Esta imagen no contiene Content Credentials. Esto es normal para la mayoria de fotos actuales.
-            C2PA es un estandar emergente adoptado por Adobe, Google, Microsoft y fabricantes de camaras.
+            Esta imagen no contiene Content Credentials. Esto es normal para la mayoría de fotos actuales.
+            C2PA es un estándar emergente adoptado por Adobe, Google, Microsoft y fabricantes de cámaras.
           </p>
         </div>
       )}

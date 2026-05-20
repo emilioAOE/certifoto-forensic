@@ -17,7 +17,7 @@ export function ThumbnailSection({ thumbnail, previewUrl }: ThumbnailSectionProp
           icon={<ImageIcon className="h-4 w-4" />}
           title="Thumbnail embebido"
         />
-        <p className="text-sm text-muted">No se encontro thumbnail EXIF</p>
+        <p className="text-sm text-muted">No se encontró thumbnail EXIF</p>
       </div>
     );
   }
@@ -67,7 +67,7 @@ export function ThumbnailSection({ thumbnail, previewUrl }: ThumbnailSectionProp
 
       <p className="text-xs text-muted mt-2 flex items-center gap-1">
         <AlertTriangle className="h-3 w-3" />
-        Si el thumbnail difiere significativamente de la imagen real, la foto puede haber sido manipulada despues de su captura.
+        Si el thumbnail difiere significativamente de la imagen real, la foto puede haber sido manipulada después de su captura.
       </p>
     </div>
   );

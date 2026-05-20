@@ -33,7 +33,7 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
       if (oversized.length > 0) {
         toast.warn(
           `${oversized.length} archivo(s) descartado(s)`,
-          `Exceden el limite de ${formatBytes(MAX_FILE_SIZE_BYTES)}: ${oversized.join(", ")}`
+          `Exceden el límite de ${formatBytes(MAX_FILE_SIZE_BYTES)}: ${oversized.join(", ")}`
         );
       }
       if (files.length > 0) onFilesSelected(files);
@@ -94,7 +94,7 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
 
         <div>
           <p className="text-gray-800 font-medium">
-            Arrastra fotos aqui o{" "}
+            Arrastra fotos aquí o{" "}
             <button
               type="button"
               className="text-accent hover:text-accent-dim underline underline-offset-2"
@@ -104,7 +104,7 @@ export function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
             </button>
           </p>
           <p className="text-xs text-muted mt-2">
-            JPEG, PNG, TIFF, HEIF, WebP, AVIF — Max {formatBytes(MAX_FILE_SIZE_BYTES)} por archivo
+            JPEG, PNG, TIFF, HEIF, WebP, AVIF — Máx {formatBytes(MAX_FILE_SIZE_BYTES)} por archivo
           </p>
         </div>
       </div>

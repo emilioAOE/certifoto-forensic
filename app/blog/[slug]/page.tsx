@@ -18,7 +18,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
-  if (!post) return { title: "Articulo no encontrado" };
+  if (!post) return { title: "Artículo no encontrado" };
   return {
     title: post.title,
     description: post.excerpt,
@@ -125,7 +125,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         {/* CTA inline */}
         <div className="mt-12 rounded-2xl border border-accent-light bg-accent-softer p-6 sm:p-8">
           <h3 className="text-xl font-bold text-gray-900 mb-2">
-            ¿Te resulto util este articulo?
+            ¿Te resultó útil este artículo?
           </h3>
           <p className="text-sm text-gray-600 mb-5">
             Empieza a documentar tus arriendos con CertiFoto. Sin registro y
@@ -146,7 +146,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <section className="bg-gray-50 border-t border-gray-100">
           <div className="max-w-6xl mx-auto px-4 py-16">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-5">
-              Articulos relacionados
+              Artículos relacionados
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {related.map((p) => (

@@ -58,15 +58,15 @@ export const PACKS: Pack[] = [
     "p1",
     1,
     2990,
-    "1 certificacion",
-    "Para una entrega o devolucion puntual"
+    "1 certificación",
+    "Para una entrega o devolución puntual"
   ),
   makePack(
     "p3",
     3,
     7990,
     "3 certificaciones",
-    "Ideal para arrendadores con varios contratos al ano",
+    "Ideal para arrendadores con varios contratos al año",
     true,
     "Popular"
   ),

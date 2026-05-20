@@ -285,7 +285,7 @@ export function BulkPhotoUploader({
             generalCondition: "no_evaluado" as ConditionLevel,
             aiSummary: null,
             manualObservations:
-              "Ambiente creado automaticamente para fotos sin asignar. Puedes mover las fotos al ambiente correcto cuando sea claro.",
+              "Ambiente creado automáticamente para fotos sin asignar. Puedes mover las fotos al ambiente correcto cuando sea claro.",
             photoIds: [],
           };
           fallbackRoom = newSinClasificar;
@@ -525,7 +525,7 @@ export function BulkPhotoUploader({
                 Subir todas las fotos juntas
               </h2>
               <p className="text-xs text-muted">
-                La IA propone a que ambiente pertenece cada una. Puedes
+                La IA propone a qué ambiente pertenece cada una. Puedes
                 ajustarlas antes de guardar.
               </p>
             </div>
@@ -626,7 +626,7 @@ function SelectStage({
       </p>
       <p className="text-xs text-gray-500 mb-4 max-w-md mx-auto leading-relaxed">
         Carga juntas las fotos de todos los ambientes. Procesamos cada foto y
-        la IA propone a que ambiente pertenece. Despues revisas y ajustas.
+        la IA propone a qué ambiente pertenece. Después revisas y ajustas.
       </p>
       <button
         onClick={() => inputRef.current?.click()}
@@ -705,17 +705,17 @@ function ReviewStage({
     <div className="space-y-3">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <p className="text-xs text-gray-700 leading-relaxed flex-1 min-w-[200px]">
-          Revisa la asignacion sugerida. Las fotos sin asignar se guardaran en
-          un ambiente &ldquo;Sin clasificar&rdquo; que podras renombrar despues.
+          Revisa la asignación sugerida. Las fotos sin asignar se guardarán en
+          un ambiente &ldquo;Sin clasificar&rdquo; que podrás renombrar después.
         </p>
         <div className="flex items-center gap-2 flex-wrap">
           {extraRoomsCount > 0 && (
             <span
               className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-medium text-emerald-800"
-              title="Ambientes creados automaticamente por IA segun el contenido de las fotos"
+              title="Ambientes creados automáticamente por IA según el contenido de las fotos"
             >
               <Brain className="h-3 w-3" />
-              IA creo {extraRoomsCount} ambiente
+              IA creó {extraRoomsCount} ambiente
               {extraRoomsCount === 1 ? "" : "s"} nuevo
               {extraRoomsCount === 1 ? "" : "s"}
             </span>
@@ -823,7 +823,7 @@ function SuggestionBadge({ photo: p }: { photo: ProcessedPhoto }) {
   }
   if (p.aiStatus === "failed") {
     return (
-      <span className="text-amber-700">IA fallo — asigna manualmente</span>
+      <span className="text-amber-700">IA falló — asigna manualmente</span>
     );
   }
   return (

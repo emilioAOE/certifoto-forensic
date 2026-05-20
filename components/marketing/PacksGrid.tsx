@@ -57,10 +57,10 @@ function PackCard({ pack, compact }: { pack: Pack; compact: boolean }) {
         <span className="text-3xl font-bold text-gray-900 tracking-tight">
           {formatCLP(pack.priceCLP)}
         </span>
-        <span className="text-xs text-gray-500 ml-1.5">CLP, pago unico</span>
+        <span className="text-xs text-gray-500 ml-1.5">CLP, pago único</span>
       </div>
       <div className="text-[11px] text-muted mb-4">
-        {formatCLP(pack.unitPriceCLP)} por certificacion
+        {formatCLP(pack.unitPriceCLP)} por certificación
         {pack.savingsPercent > 0 && (
           <span className="text-accent-dark font-medium ml-1">
             · ahorras {pack.savingsPercent}%
@@ -89,11 +89,11 @@ function PackCard({ pack, compact }: { pack: Pack; compact: boolean }) {
           </li>
           <li className="flex items-start gap-1.5">
             <Check className="h-3 w-3 text-accent-dark shrink-0 mt-0.5" />
-            <span>Los creditos no caducan</span>
+            <span>Los créditos no caducan</span>
           </li>
           <li className="flex items-start gap-1.5">
             <Check className="h-3 w-3 text-accent-dark shrink-0 mt-0.5" />
-            <span>Pago unico, sin suscripcion</span>
+            <span>Pago único, sin suscripción</span>
           </li>
         </ul>
       )}

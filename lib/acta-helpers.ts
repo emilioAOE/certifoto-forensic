@@ -95,7 +95,7 @@ export function validateActaForReview(acta: Acta): ValidationResult {
     (p) => p.aiStatus === "pending" || p.aiStatus === "processing"
   );
   if (pendingAi.length > 0) {
-    warnings.push(`${pendingAi.length} foto(s) con analisis IA pendiente.`);
+    warnings.push(`${pendingAi.length} foto(s) con análisis IA pendiente.`);
   }
 
   const noExif = acta.photos.filter(

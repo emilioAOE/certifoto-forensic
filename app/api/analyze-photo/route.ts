@@ -100,7 +100,7 @@ export async function POST(
     body = (await req.json()) as RequestBody;
   } catch {
     return NextResponse.json(
-      { ok: false, error: "JSON invalido" },
+      { ok: false, error: "JSON inválido" },
       { status: 400 }
     );
   }
@@ -121,7 +121,7 @@ export async function POST(
 
   if (body.imageBase64.length > MAX_BASE64_BYTES) {
     return NextResponse.json(
-      { ok: false, error: "Imagen muy grande (max 4.5 MB descomprimida)" },
+      { ok: false, error: "Imagen muy grande (máx 4.5 MB descomprimida)" },
       { status: 413 }
     );
   }
@@ -251,7 +251,7 @@ Reglas estrictas:
     const textBlock = response.content.find((b) => b.type === "text");
     if (!textBlock || textBlock.type !== "text") {
       return NextResponse.json(
-        { ok: false, error: "Respuesta vacia del modelo" },
+        { ok: false, error: "Respuesta vacía del modelo" },
         { status: 502 }
       );
     }
@@ -261,7 +261,7 @@ Reglas estrictas:
       parsed = JSON.parse(textBlock.text) as AnalysisOut;
     } catch {
       return NextResponse.json(
-        { ok: false, error: "Respuesta de IA no es JSON valido" },
+        { ok: false, error: "Respuesta de IA no es JSON válido" },
         { status: 502 }
       );
     }

@@ -76,19 +76,19 @@ export function ExifSection({ temporal, device, capture, image }: ExifSectionPro
       {activeTab === "capture" && (
         <div>
           <DataRow label="Apertura" value={capture.fNumber !== null ? `f/${capture.fNumber}` : null} />
-          <DataRow label="Exposicion" value={capture.exposureTimeFormatted} />
+          <DataRow label="Exposición" value={capture.exposureTimeFormatted} />
           <DataRow label="ISO" value={capture.iso} />
           <DataRow label="Focal" value={capture.focalLength !== null ? `${capture.focalLength} mm` : null} />
           <DataRow label="Focal (35mm eq.)" value={capture.focalLength35mm !== null ? `${capture.focalLength35mm} mm` : null} />
           <DataRow label="Flash" value={capture.flash} />
           <DataRow label="Balance blancos" value={capture.whiteBalance} />
-          <DataRow label="Medicion" value={capture.meteringMode} />
-          <DataRow label="Modo exposicion" value={capture.exposureMode} />
+          <DataRow label="Medición" value={capture.meteringMode} />
+          <DataRow label="Modo exposición" value={capture.exposureMode} />
           <DataRow label="Programa" value={capture.exposureProgram} />
           <DataRow label="Escena" value={capture.sceneCaptureType} />
           <DataRow label="Zoom digital" value={capture.digitalZoomRatio} />
           <DataRow label="Contraste" value={capture.contrast} />
-          <DataRow label="Saturacion" value={capture.saturation} />
+          <DataRow label="Saturación" value={capture.saturation} />
           <DataRow label="Nitidez" value={capture.sharpness} />
         </div>
       )}
@@ -97,12 +97,12 @@ export function ExifSection({ temporal, device, capture, image }: ExifSectionPro
         <div>
           <DataRow label="Ancho" value={image.imageWidth !== null ? `${image.imageWidth} px` : null} />
           <DataRow label="Alto" value={image.imageHeight !== null ? `${image.imageHeight} px` : null} />
-          <DataRow label="Orientacion" value={image.orientation} />
+          <DataRow label="Orientación" value={image.orientation} />
           <DataRow label="Espacio de color" value={image.colorSpace} />
           <DataRow label="Bits por muestra" value={image.bitsPerSample} />
-          <DataRow label="Compresion" value={image.compression} />
-          <DataRow label="Resolucion X" value={image.xResolution} />
-          <DataRow label="Resolucion Y" value={image.yResolution} />
+          <DataRow label="Compresión" value={image.compression} />
+          <DataRow label="Resolución X" value={image.xResolution} />
+          <DataRow label="Resolución Y" value={image.yResolution} />
         </div>
       )}
     </div>

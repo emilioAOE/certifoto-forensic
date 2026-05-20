@@ -31,7 +31,7 @@ export function LegalPage({
             <p className="text-lg text-gray-600 mt-3">{subtitle}</p>
           )}
           <p className="text-xs text-gray-500 mt-4">
-            Ultima actualizacion: {lastUpdated}
+            Última actualización: {lastUpdated}
           </p>
         </div>
       </section>

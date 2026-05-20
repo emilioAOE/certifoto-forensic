@@ -47,7 +47,7 @@ export function CookieBanner() {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-gray-900 mb-1">
-            Usamos cookies tecnicas
+            Usamos cookies técnicas
           </p>
           <p className="text-xs text-gray-600 leading-relaxed">
             Solo usamos cookies estrictamente necesarias para que la plataforma
@@ -56,7 +56,7 @@ export function CookieBanner() {
               href="/privacidad"
               className="text-accent-dark hover:underline font-medium"
             >
-              Mas info
+              Más info
             </Link>
             .
           </p>

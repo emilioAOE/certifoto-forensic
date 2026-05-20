@@ -29,7 +29,7 @@ export function organizationSchema(): Record<string, unknown> {
       height: 512,
     },
     description:
-      "Plataforma chilena para crear actas digitales del estado de propiedades arrendadas, con respaldo forense de fotografias, descripciones asistidas con IA y firma digital de las partes.",
+      "Plataforma chilena para crear actas digitales del estado de propiedades arrendadas, con respaldo forense de fotografías, descripciones asistidas con IA y firma digital de las partes.",
     areaServed: { "@type": "Country", name: "Chile" },
     email: "contacto@certifoto.cl",
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
@@ -57,14 +57,14 @@ export function softwareApplicationSchema(): Record<string, unknown> {
     url: SITE_URL,
     inLanguage: "es-CL",
     description:
-      "Crea actas digitales de entrega, devolucion e inspeccion de propiedades arrendadas. Subis las fotos, la IA detecta los ambientes y extrae los datos del contrato, y certificas el documento con un sello inmutable.",
+      "Crea actas digitales de entrega, devolución e inspección de propiedades arrendadas. Subes las fotos, la IA detecta los ambientes y extrae los datos del contrato, y certificas el documento con un sello inmutable.",
     publisher: { "@id": ORG_ID },
     offers: PACKS.map((p) => ({
       "@type": "Offer",
       name: p.label,
       price: p.priceCLP,
       priceCurrency: "CLP",
-      description: `${p.size} certificacion(es) de actas. Pago unico, sin suscripcion.`,
+      description: `${p.size} certificación(es) de actas. Pago único, sin suscripción.`,
       url: `${SITE_URL}/precios`,
     })),
   };
@@ -121,9 +121,9 @@ export function pricingProductSchema(): Record<string, unknown> {
         name: p.label,
         price: p.priceCLP,
         priceCurrency: "CLP",
-        description: `${p.size} certificacion(es) · ${formatCLP(
+        description: `${p.size} certificación(es) · ${formatCLP(
           p.unitPriceCLP
-        )} por certificacion`,
+        )} por certificación`,
         url: `${SITE_URL}/precios`,
         availability: "https://schema.org/InStock",
       })),

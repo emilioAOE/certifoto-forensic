@@ -22,10 +22,10 @@ export function PreciosPage() {
             Paga solo cuando certificas.
           </h1>
           <p className="text-lg text-gray-600 mt-4 leading-relaxed">
-            La app es gratis e ilimitada. Cuando un acta esta lista para
+            La app es gratis e ilimitada. Cuando un acta está lista para
             entregarse formalmente al cliente, la certificas — se sella el
             documento, se quita la marca de agua y queda inmutable. Cada
-            certificacion consume 1 credito de tu pack.
+            certificación consume 1 crédito de tu pack.
           </p>
         </div>
       </section>
@@ -37,19 +37,19 @@ export function PreciosPage() {
             icon={<Coins className="h-5 w-5" />}
             step="1"
             title="Compra un pack"
-            description="Pago unico, sin suscripcion. Mientras mas grande el pack, menor el precio por certificacion."
+            description="Pago único, sin suscripción. Mientras más grande el pack, menor el precio por certificación."
           />
           <ExplainCard
             icon={<Lock className="h-5 w-5" />}
             step="2"
             title="Trabaja gratis"
-            description="Crea, edita y revisa actas todo lo que necesites. Sube fotos, recolecta firmas. Sin limites mientras esten en borrador."
+            description="Crea, edita y revisa actas todo lo que necesites. Sube fotos, recolecta firmas. Sin límites mientras estén en borrador."
           />
           <ExplainCard
             icon={<Award className="h-5 w-5" />}
             step="3"
             title="Certifica al final"
-            description="Cuando el acta esta lista, la sellas con 1 credito. El PDF queda sin marca de agua, con QR y sello inmutable, listo para tu cliente."
+            description="Cuando el acta está lista, la sellas con 1 crédito. El PDF queda sin marca de agua, con QR y sello inmutable, listo para tu cliente."
           />
         </div>
       </section>
@@ -58,7 +58,7 @@ export function PreciosPage() {
       <section className="max-w-6xl mx-auto px-4 pt-4 pb-16">
         <PacksGrid />
         <p className="text-center text-xs text-muted mt-6 max-w-xl mx-auto leading-relaxed">
-          Precios en pesos chilenos (CLP). Pago unico por pack — los creditos
+          Precios en pesos chilenos (CLP). Pago único por pack — los créditos
           no caducan y se acumulan.
         </p>
       </section>
@@ -74,28 +74,28 @@ export function PreciosPage() {
             a="No. La app es gratis para crear, editar y revisar actas. Solo pagas cuando certificas — es decir, cuando el acta queda lista para entregarse formalmente."
           />
           <FaqMini
-            q="¿Que significa exactamente certificar un acta?"
-            a="Sellar el documento. Se calcula un hash SHA-256 final, se elimina la marca de agua del PDF, se inserta un QR de verificacion y el acta queda inmutable. Tambien se puede compartir como archivo .certifoto verificable. Esto requiere 1 credito."
+            q="¿Qué significa exactamente certificar un acta?"
+            a="Sellar el documento. Se calcula un hash SHA-256 final, se elimina la marca de agua del PDF, se inserta un QR de verificación y el acta queda inmutable. También se puede compartir como archivo .certifoto verificable. Esto requiere 1 crédito."
           />
           <FaqMini
-            q="¿Caducan los creditos?"
-            a="No. Una vez que compras un pack, los creditos no caducan. Usalos a tu ritmo."
+            q="¿Caducan los créditos?"
+            a="No. Una vez que compras un pack, los créditos no caducan. Úsalos a tu ritmo."
           />
           <FaqMini
-            q="¿Como me cobran?"
-            a="Por ahora estamos activando los packs manualmente. Cuando solicitas un pack desde el formulario de contacto, coordinamos el pago via transferencia o WhatsApp y activamos tus creditos. Pronto vamos a integrar pago directo con tarjeta."
+            q="¿Cómo me cobran?"
+            a="Por ahora estamos activando los packs manualmente. Cuando solicitas un pack desde el formulario de contacto, coordinamos el pago vía transferencia o WhatsApp y activamos tus créditos. Pronto vamos a integrar pago directo con tarjeta."
           />
           <FaqMini
-            q="¿Que pasa si limpio mi navegador?"
-            a="Hoy los creditos viven en tu navegador (igual que tus actas). Si limpias datos o cambias de dispositivo, perderias los creditos no usados. Por eso recomendamos certificar las actas a medida que se completan. En la siguiente fase agregaremos cuenta y respaldo en la nube."
+            q="¿Qué pasa si limpio mi navegador?"
+            a="Hoy los créditos viven en tu navegador (igual que tus actas). Si limpias datos o cambias de dispositivo, perderías los créditos no usados. Por eso recomendamos certificar las actas a medida que se completan. En la siguiente fase agregaremos cuenta y respaldo en la nube."
           />
           <FaqMini
-            q="¿Y si necesito mas de 50 certificaciones al mes?"
-            a="Escribenos a contacto@certifoto.cl. Para corredoras y administradoras grandes preparamos paquetes a medida con marca propia y panel multi-usuario."
+            q="¿Y si necesito más de 50 certificaciones al mes?"
+            a="Escríbenos a contacto@certifoto.cl. Para corredoras y administradoras grandes preparamos paquetes a medida con marca propia y panel multi-usuario."
           />
           <FaqMini
-            q="¿Puedo regalar o transferir creditos?"
-            a="Por ahora los creditos viven asociados al navegador donde compraste el pack. Si necesitas transferirlos, escribenos y lo hacemos manualmente."
+            q="¿Puedo regalar o transferir créditos?"
+            a="Por ahora los créditos viven asociados al navegador donde compraste el pack. Si necesitas transferirlos, escríbenos y lo hacemos manualmente."
           />
         </div>
       </section>

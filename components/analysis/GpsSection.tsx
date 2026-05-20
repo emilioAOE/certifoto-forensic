@@ -25,7 +25,7 @@ export function GpsSection({ data }: GpsSectionProps) {
     return (
       <div>
         <SectionHeader icon={<MapPin className="h-4 w-4" />} title="GPS" />
-        <p className="text-sm text-muted">Sin datos de geolocalizacion</p>
+        <p className="text-sm text-muted">Sin datos de geolocalización</p>
       </div>
     );
   }
@@ -56,7 +56,7 @@ export function GpsSection({ data }: GpsSectionProps) {
           }
         />
         <DataRow
-          label="Direccion"
+          label="Dirección"
           value={
             data.direction !== null
               ? `${data.direction.toFixed(1)}\u00B0 ${data.directionRef ?? ""}`

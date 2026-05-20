@@ -137,7 +137,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
       doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
       doc.setFontSize(6);
       doc.setTextColor(150, 150, 150);
-      doc.text("Verificacion", qrX + qrSize / 2, qrY + qrSize + 3, { align: "center" });
+      doc.text("Verificación", qrX + qrSize / 2, qrY + qrSize + 3, { align: "center" });
     } catch (err) {
       console.warn("Failed to embed QR:", err);
     }
@@ -153,12 +153,12 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   drawRow("ID del Acta", acta.id, true);
   drawRow("Estado", ACTA_STATUS_LABEL[acta.status]);
   drawRow(
-    "Fecha de creacion",
+    "Fecha de creación",
     new Date(acta.createdAt).toLocaleString("es-CL")
   );
   if (acta.inspectionDate) {
     drawRow(
-      "Fecha de inspeccion",
+      "Fecha de inspección",
       new Date(acta.inspectionDate).toLocaleDateString("es-CL", {
         weekday: "long",
         year: "numeric",
@@ -180,17 +180,17 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   // Property
   drawSectionTitle("Propiedad");
   drawRow(
-    "Direccion",
+    "Dirección",
     `${property.address}${property.unit ? ` ${property.unit}` : ""}`
   );
   drawRow("Comuna", property.commune);
   drawRow("Ciudad", property.city);
-  drawRow("Pais", property.country);
+  drawRow("País", property.country);
   drawRow("Tipo", PROPERTY_TYPE_LABEL[property.propertyType]);
   drawRow(
     "Amoblada",
     property.furnished === "yes"
-      ? "Si"
+      ? "Sí"
       : property.furnished === "partial"
       ? "Parcialmente"
       : "No"
@@ -204,7 +204,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
       .filter(Boolean)
       .join(", ") || null
   );
-  drawRow("Codigo interno", property.internalCode);
+  drawRow("Código interno", property.internalCode);
   drawRow("Rol SII", property.rolSii);
   if (property.observations) {
     drawRow("Observaciones", property.observations);
@@ -262,7 +262,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   ).length;
 
   drawText(
-    `Esta acta documenta ${totalRooms} ambiente(s) con un total de ${totalPhotos} fotografia(s). El analisis automatizado con IA detecto ${totalFindings} hallazgo(s) que pueden requerir revision humana. ${photosWithExif} de las fotos contienen fecha EXIF original, y ${photosWithGps} contienen geolocalizacion GPS.`
+    `Esta acta documenta ${totalRooms} ambiente(s) con un total de ${totalPhotos} fotografía(s). El análisis automatizado con IA detectó ${totalFindings} hallazgo(s) que pueden requerir revisión humana. ${photosWithExif} de las fotos contienen fecha EXIF original, y ${photosWithGps} contienen geolocalización GPS.`
   );
 
   if (acta.aiSummary) {
@@ -292,7 +292,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
         : "Sin evaluar"
     );
     drawRow("Cantidad de fotos", String(photos.length));
-    drawRow("Obligatorio", room.required ? "Si" : "No");
+    drawRow("Obligatorio", room.required ? "Sí" : "No");
 
     if (room.aiSummary) {
       y += 2;
@@ -323,7 +323,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8);
       doc.setTextColor(110, 110, 110);
-      doc.text("Evidencia fotografica:", margin, y);
+      doc.text("Evidencia fotográfica:", margin, y);
       y += 5;
 
       const photosPerRow = 2;
@@ -560,7 +560,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
         y += 4;
 
         const details: string[] = [];
-        details.push(`Categoria: ${item.category}`);
+        details.push(`Categoría: ${item.category}`);
         details.push(`Estado: ${item.condition}`);
         if (item.brand) details.push(`Marca: ${item.brand}`);
         if (item.model) details.push(`Modelo: ${item.model}`);
@@ -593,10 +593,10 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   // ============================================
   doc.addPage();
   y = margin;
-  drawSectionTitle("Anexo tecnico - Trazabilidad de evidencia");
+  drawSectionTitle("Anexo técnico - Trazabilidad de evidencia");
 
   drawText(
-    "Cada fotografia incluida en este acta tiene los siguientes elementos tecnicos calculados al momento de su carga:",
+    "Cada fotografía incluida en este acta tiene los siguientes elementos técnicos calculados al momento de su carga:",
     8
   );
   y += 2;
@@ -657,7 +657,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
       doc.setFont("helvetica", "italic");
       doc.setFontSize(7);
       doc.setTextColor(180, 100, 50);
-      doc.text("(sin analisis forense disponible)", margin + 3, y);
+      doc.text("(sin análisis forense disponible)", margin + 3, y);
       y += 4;
     }
   }
@@ -731,7 +731,7 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
     }
 
     doc.setFontSize(6.5);
-    doc.text(`Pagina ${p} de ${totalPages}`, pageW - margin - 25, pageH - 8);
+    doc.text(`Página ${p} de ${totalPages}`, pageW - margin - 25, pageH - 8);
   }
 
   // Save

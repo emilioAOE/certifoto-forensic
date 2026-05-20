@@ -19,7 +19,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
         Revisa antes de crear
       </h2>
       <p className="text-sm text-muted mb-5">
-        Confirma los datos. Despues de crear el acta podras subir fotos por
+        Confirma los datos. Después de crear el acta podrás subir fotos por
         ambiente y solicitar firmas.
       </p>
 
@@ -45,7 +45,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
 
         <Section
           icon={<Calendar className="h-4 w-4" />}
-          title="Fecha de inspeccion"
+          title="Fecha de inspección"
         >
           <p className="text-sm text-gray-800">
             {new Date(data.inspectionDate).toLocaleDateString("es-CL", {
@@ -113,11 +113,11 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
 
       <div className="mt-5 rounded-lg border border-info/30 bg-info/5 p-3">
         <p className="text-xs text-gray-700 leading-relaxed">
-          Despues de crear el acta podras subir fotos
+          Después de crear el acta podrás subir fotos
           {data.rooms.length === 0
             ? " (la IA va a detectar y crear los ambientes), "
             : " por ambiente, "}
-          agregar observaciones y solicitar firmas. El acta se guardara en estado{" "}
+          agregar observaciones y solicitar firmas. El acta se guardará en estado{" "}
           <span className="text-accent font-medium">recopilando evidencia</span>.
         </p>
       </div>

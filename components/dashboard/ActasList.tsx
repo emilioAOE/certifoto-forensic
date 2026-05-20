@@ -69,7 +69,7 @@ export function ActasList() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por direccion..."
+            placeholder="Buscar por dirección..."
             className="w-full bg-white border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm text-gray-800 placeholder-muted focus:outline-none focus:border-accent/50"
           />
         </div>
@@ -107,7 +107,7 @@ export function ActasList() {
           <FileSignature className="h-10 w-10 text-gray-300 mx-auto mb-3" />
           <p className="text-sm text-gray-700">
             {actas.length === 0
-              ? "Aun no tienes actas creadas"
+              ? "Aún no tienes actas creadas"
               : "No hay actas que coincidan con el filtro"}
           </p>
           {actas.length === 0 && (

@@ -154,7 +154,7 @@ export function AddressAutocomplete({
       )}
 
       <p className="text-[10px] text-gray-400 mt-1">
-        Datos de OpenStreetMap. Si no encuentras tu direccion, ingresala a mano.
+        Datos de OpenStreetMap. Si no encuentras tu dirección, ingrésala a mano.
       </p>
     </div>
   );

@@ -139,7 +139,7 @@ export function CompareView({ actaId }: { actaId: string }) {
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Comparacion de actas
+            Comparación de actas
           </h1>
           {property && (
             <p className="text-sm text-gray-600 mt-1">
@@ -163,7 +163,7 @@ export function CompareView({ actaId }: { actaId: string }) {
           </div>
           <ActaCard
             acta={after}
-            label="Despues"
+            label="Después"
             isCurrent={acta.id === after?.id}
           />
         </div>
@@ -197,7 +197,7 @@ export function CompareView({ actaId }: { actaId: string }) {
             No hay otra acta para comparar
           </p>
           <p className="text-xs text-amber-800 mt-1">
-            Crea un acta de devolucion (o entrega) para esta propiedad y vuelve aqui.
+            Crea un acta de devolución (o entrega) para esta propiedad y vuelve aquí.
           </p>
         </div>
       )}
@@ -208,7 +208,7 @@ export function CompareView({ actaId }: { actaId: string }) {
 
           <section>
             <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Comparacion por ambiente ({comparison.rooms.length})
+              Comparación por ambiente ({comparison.rooms.length})
             </h2>
             <div className="space-y-3">
               {comparison.rooms.map((room, i) => (
@@ -232,7 +232,7 @@ export function CompareView({ actaId }: { actaId: string }) {
               )}
               {comparison.addedRooms.length > 0 && (
                 <p className="text-xs text-amber-800">
-                  · Ambientes solo en el despues:{" "}
+                  · Ambientes solo en el después:{" "}
                   <span className="font-medium">
                     {comparison.addedRooms.map((r) => r.name).join(", ")}
                   </span>
@@ -242,9 +242,9 @@ export function CompareView({ actaId }: { actaId: string }) {
           )}
 
           <div className="rounded-lg bg-gray-50 border border-gray-200 p-4 text-[11px] text-gray-600 leading-relaxed">
-            <strong>Como leer esta comparacion:</strong> el pareo de fotos usa
+            <strong>Cómo leer esta comparación:</strong> el pareo de fotos usa
             el hash perceptual (pHash) calculado al momento de cargar cada
-            imagen. La distancia de Hamming entre dos pHashes cuantifica que
+            imagen. La distancia de Hamming entre dos pHashes cuantifica qué
             tan distintas son visualmente. Esta herramienta es referencial: las
             partes deben revisar manualmente cualquier hallazgo antes de
             atribuir responsabilidades.
@@ -322,13 +322,13 @@ function SummaryCard({
         />
         <Stat label="Fotos comparadas" value={s.photosCompared} />
         <Stat
-          label="Solo en devolucion"
+          label="Solo en devolución"
           value={s.photosOnlyInAfter}
           accent={s.photosOnlyInAfter > 0 ? "warn" : "ok"}
         />
       </div>
       <div className="mt-3 pt-3 border-t border-gray-100">
-        <span className="text-xs text-gray-500">Cambio mas relevante: </span>
+        <span className="text-xs text-gray-500">Cambio más relevante: </span>
         <span
           className={cn(
             "text-xs font-mono uppercase tracking-wider px-2 py-0.5 rounded border ml-1",
@@ -391,7 +391,7 @@ function RoomComparisonCard({ room }: { room: RoomComparison }) {
           <div className="text-xs text-gray-500">
             {room.pairs.length} foto(s) comparada(s)
             {room.unmatchedAfter.length > 0 &&
-              ` · ${room.unmatchedAfter.length} solo en despues`}
+              ` · ${room.unmatchedAfter.length} solo en después`}
           </div>
         </div>
       </summary>
@@ -412,7 +412,7 @@ function RoomComparisonCard({ room }: { room: RoomComparison }) {
             </div>
             <div className="rounded-md bg-gray-50 border border-gray-200 p-2">
               <div className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">
-                Estado despues
+                Estado después
               </div>
               <div className="text-gray-800">{room.conditionAfter ?? "—"}</div>
               {room.observationsAfter && (
@@ -432,7 +432,7 @@ function RoomComparisonCard({ room }: { room: RoomComparison }) {
         {room.unmatchedAfter.length > 0 && (
           <div>
             <h4 className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider mb-2">
-              Solo en devolucion (sin par en entrega)
+              Solo en devolución (sin par en entrega)
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
               {room.unmatchedAfter.map((p) => (
@@ -485,16 +485,16 @@ function PhotoPairCard({ pair }: { pair: PhotoPair }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={pair.after.dataUrl}
-              alt="Despues"
+              alt="Después"
               className="w-full h-full object-cover"
             />
             <span className="absolute top-1 left-1 text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-900/70 text-white">
-              Despues
+              Después
             </span>
           </div>
         ) : (
           <div className="aspect-square bg-gray-50 flex items-center justify-center text-[10px] text-gray-400 px-2 text-center">
-            Sin par en devolucion
+            Sin par en devolución
           </div>
         )}
       </div>

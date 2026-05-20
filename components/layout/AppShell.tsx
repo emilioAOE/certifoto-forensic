@@ -29,10 +29,10 @@ const NAV_ITEMS = [
   { href: "/actas", label: "Actas", icon: FileSignature },
   { href: "/propiedades", label: "Propiedades", icon: Building2 },
   { href: "/contactos", label: "Contactos", icon: Users },
-  { href: "/mis-creditos", label: "Mis creditos", icon: Coins },
+  { href: "/mis-creditos", label: "Mis créditos", icon: Coins },
   { href: "/forensic", label: "Verificar evidencia", icon: Shield },
   { href: "/verificar", label: "Recibir acta", icon: Share2 },
-  { href: "/configuracion", label: "Configuracion", icon: Settings },
+  { href: "/configuracion", label: "Configuración", icon: Settings },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -100,7 +100,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
           <span>
             No se pudo cargar el almacenamiento local. Tus datos en memoria
-            funcionaran solo durante esta sesion.
+            funcionarán solo durante esta sesión.
           </span>
         </div>
       )}
@@ -115,7 +115,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Sidebar desktop */}
       <aside
         className="hidden lg:flex flex-col w-60 border-r border-gray-200 bg-white sticky top-0 h-screen"
-        aria-label="Navegacion principal"
+        aria-label="Navegación principal"
       >
         <SidebarContent
           pathname={pathname}
@@ -135,7 +135,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           "lg:hidden fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform",
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
-        aria-label="Navegacion principal"
+        aria-label="Navegación principal"
         aria-hidden={!mobileMenuOpen}
       >
         <SidebarContent
@@ -154,7 +154,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className="lg:hidden sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            aria-label="Abrir menu"
+            aria-label="Abrir menú"
             className="text-gray-600 hover:text-gray-900"
           >
             <Menu className="h-5 w-5" />
@@ -220,7 +220,7 @@ function SidebarContent({
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            aria-label="Cerrar menu"
+            aria-label="Cerrar menú"
             className="lg:hidden text-gray-500 hover:text-gray-900"
           >
             <X className="h-4 w-4" />
@@ -280,10 +280,10 @@ function SidebarContent({
         <Link
           href="/"
           className="flex items-center justify-center gap-2 w-full rounded-md bg-gray-50 border border-gray-200 hover:border-gray-300 px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
-          title="Volver al sitio publico"
+          title="Volver al sitio público"
         >
           <LogOut className="h-3.5 w-3.5" />
-          Cerrar sesion
+          Cerrar sesión
         </Link>
         <p className="text-[10px] text-gray-400 text-center">v0.5 · Beta</p>
       </div>
@@ -330,7 +330,7 @@ function CurrentUserCard() {
     <Link
       href="/configuracion"
       className="block px-3 py-2.5 mx-2 mt-2 rounded-md bg-gray-50 border border-gray-100 hover:border-gray-200 transition-colors"
-      title="Editar perfil en configuracion"
+      title="Editar perfil en configuración"
     >
       <div className="flex items-center gap-2.5">
         <div className="h-8 w-8 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold">

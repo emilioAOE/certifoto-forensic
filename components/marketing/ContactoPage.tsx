@@ -34,7 +34,7 @@ export function ContactoPage() {
         prev.message ||
         `Hola, quiero comprar el ${pack.label} (${formatCLP(
           pack.priceCLP
-        )} CLP). ¿Como coordinamos el pago?`,
+        )} CLP). ¿Cómo coordinamos el pago?`,
     }));
   }, []);
 
@@ -60,8 +60,8 @@ export function ContactoPage() {
               Hablemos
             </h1>
             <p className="text-lg text-gray-600 mt-4 leading-relaxed">
-              Si eres corredor, administradora o estas interesado en una
-              integracion, escribenos. Respondemos en menos de 48 horas.
+              Si eres corredor, administradora o estás interesado en una
+              integración, escríbenos. Respondemos en menos de 48 horas.
             </p>
 
             <div className="mt-8 space-y-4">
@@ -73,7 +73,7 @@ export function ContactoPage() {
               />
               <ContactItem
                 icon={<MapPin className="h-4 w-4" />}
-                label="Ubicacion"
+                label="Ubicación"
                 value="Santiago, Chile"
               />
               <ContactItem
@@ -88,9 +88,9 @@ export function ContactoPage() {
                 Para corredores y administradoras
               </h3>
               <p className="text-sm text-gray-700 leading-relaxed">
-                Si manejas mas de 10 propiedades al mes, agendemos una demo
-                personalizada para mostrarte como CertiFoto puede integrarse a
-                tu operacion.
+                Si manejas más de 10 propiedades al mes, agendemos una demo
+                personalizada para mostrarte cómo CertiFoto puede integrarse a
+                tu operación.
               </p>
             </div>
           </div>
@@ -122,11 +122,11 @@ export function ContactoPage() {
                         Solicitando: {selectedPack.label}
                       </p>
                       <p>
-                        {selectedPack.size} certificacion
+                        {selectedPack.size} certificación
                         {selectedPack.size === 1 ? "" : "es"} ·{" "}
-                        {formatCLP(selectedPack.priceCLP)} CLP, pago unico.
+                        {formatCLP(selectedPack.priceCLP)} CLP, pago único.
                         Coordinamos el pago por transferencia o WhatsApp y
-                        activamos tus creditos.
+                        activamos tus créditos.
                       </p>
                     </div>
                   </div>
@@ -170,7 +170,7 @@ export function ContactoPage() {
                     <option value="empresa">
                       Corredora / administradora grande
                     </option>
-                    <option value="soporte">Soporte tecnico</option>
+                    <option value="soporte">Soporte técnico</option>
                     <option value="prensa">Prensa</option>
                   </select>
                 </div>
@@ -186,7 +186,7 @@ export function ContactoPage() {
                       setForm({ ...form, message: e.target.value })
                     }
                     className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent resize-none"
-                    placeholder="Cuentanos en que podemos ayudarte..."
+                    placeholder="Cuéntanos en qué podemos ayudarte..."
                   />
                 </div>
                 <button

@@ -42,7 +42,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AnalyzeRespon
     const formData = await req.formData().catch(() => null);
     if (!formData) {
       return NextResponse.json(
-        { ok: false, error: "Cuerpo de la peticion invalido", code: "INVALID_BODY" },
+        { ok: false, error: "Cuerpo de la petición inválido", code: "INVALID_BODY" },
         { status: 400 }
       );
     }
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AnalyzeRespon
 
     if (!file || !(file instanceof Blob)) {
       return NextResponse.json(
-        { ok: false, error: "No se recibio archivo", code: "NO_FILE" },
+        { ok: false, error: "No se recibió archivo", code: "NO_FILE" },
         { status: 400 }
       );
     }
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AnalyzeRespon
       return NextResponse.json(
         {
           ok: false,
-          error: `Archivo demasiado grande (max ${MAX_FILE_BYTES / 1024 / 1024}MB para procesamiento server-side; el cliente lo procesara localmente)`,
+          error: `Archivo demasiado grande (máx ${MAX_FILE_BYTES / 1024 / 1024}MB para procesamiento server-side; el cliente lo procesará localmente)`,
           code: "FILE_TOO_LARGE",
         },
         { status: 413 }
@@ -143,7 +143,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AnalyzeRespon
     return NextResponse.json(
       {
         ok: false,
-        error: "El servidor no pudo procesar la imagen. El cliente seguira con sus propios calculos forenses.",
+        error: "El servidor no pudo procesar la imagen. El cliente seguirá con sus propios cálculos forenses.",
         code: "INTERNAL_ERROR",
       },
       { status: 500 }

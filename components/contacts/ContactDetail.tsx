@@ -103,7 +103,7 @@ export function ContactDetail({ contactId }: { contactId: string }) {
     const ok = await confirm({
       title: "Eliminar contacto",
       message:
-        "Se eliminara este contacto de tu agenda. Las actas existentes mantienen sus datos.",
+        "Se eliminará este contacto de tu agenda. Las actas existentes mantienen sus datos.",
       variant: "warn",
       confirmLabel: "Eliminar",
     });
@@ -155,7 +155,7 @@ export function ContactDetail({ contactId }: { contactId: string }) {
             {showData.rolesUsed.length > 1 && (
               <span className="text-gray-400">
                 {" "}
-                · y {showData.rolesUsed.length - 1} rol(es) mas
+                · y {showData.rolesUsed.length - 1} rol(es) más
               </span>
             )}
           </p>
@@ -217,7 +217,7 @@ export function ContactDetail({ contactId }: { contactId: string }) {
           />
           <Field
             icon={<Phone className="h-3.5 w-3.5" />}
-            label="Telefono"
+            label="Teléfono"
             value={showData.phone}
             editing={editing}
             onChange={(v) => update("phone", v || null)}

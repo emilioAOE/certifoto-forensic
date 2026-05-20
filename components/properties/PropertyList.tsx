@@ -105,7 +105,7 @@ export function PropertyList() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar por direccion, comuna, codigo..."
+          placeholder="Buscar por dirección, comuna, código..."
           className="w-full bg-white border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
         />
       </div>
@@ -163,7 +163,7 @@ function PropertyCard({
         {property.lastActa && (
           <span className="inline-flex items-center gap-1 truncate">
             <Calendar className="h-3 w-3" />
-            Ultima:{" "}
+            Última:{" "}
             {ACTA_TYPE_LABEL[property.lastActa.type].replace("Acta de ", "")}
           </span>
         )}
@@ -195,12 +195,12 @@ function EmptyState({ hasProperties }: { hasProperties: boolean }) {
       <p className="text-sm text-gray-700">
         {hasProperties
           ? "No hay propiedades que coincidan con el filtro"
-          : "Aun no tienes propiedades documentadas"}
+          : "Aún no tienes propiedades documentadas"}
       </p>
       {!hasProperties && (
         <>
           <p className="text-xs text-gray-500 mt-1 mb-4">
-            Las propiedades se crean automaticamente cuando creas tu primera acta
+            Las propiedades se crean automáticamente cuando creas tu primera acta
           </p>
           <Link
             href="/actas/nueva"

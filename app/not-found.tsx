@@ -13,11 +13,11 @@ export default function NotFound() {
           Error 404
         </p>
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-3">
-          Pagina no encontrada
+          Página no encontrada
         </h1>
         <p className="text-gray-600 leading-relaxed mb-8">
-          La pagina que buscas no existe o fue movida. Si llegaste aca desde un
-          enlace externo, avisanos.
+          La página que buscas no existe o fue movida. Si llegaste acá desde un
+          enlace externo, avísanos.
         </p>
 
         <div className="flex flex-wrap gap-2 justify-center">

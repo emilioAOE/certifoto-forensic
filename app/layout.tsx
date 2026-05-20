@@ -31,10 +31,10 @@ export const metadata: Metadata = {
     "Documenta el estado de propiedades arrendadas con fotos respaldadas, descripciones asistidas con IA y firma digital de las partes. Diseñado para arrendadores, arrendatarios, corredores y administradoras.",
   keywords: [
     "acta de entrega",
-    "acta de devolucion",
+    "acta de devolución",
     "arriendo Chile",
-    "inspeccion propiedad",
-    "evidencia fotografica",
+    "inspección propiedad",
+    "evidencia fotográfica",
     "firma digital",
     "corredor de propiedades",
     "administradora",

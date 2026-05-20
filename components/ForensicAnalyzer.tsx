@@ -133,8 +133,8 @@ export function ForensicAnalyzer() {
             Verificar evidencia
           </h1>
           <p className="text-sm text-muted mt-1">
-            Analisis forense de metadata para verificar la autenticidad de imagenes.
-            Util para validar fotos antes o despues de cargarlas a un acta.
+            Análisis forense de metadata para verificar la autenticidad de imágenes.
+            Útil para validar fotos antes o después de cargarlas a un acta.
           </p>
         </div>
 
@@ -181,7 +181,7 @@ export function ForensicAnalyzer() {
           <div className="text-center py-12">
             <Shield className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <p className="text-muted text-sm">
-              Sube una o mas fotos para analizar su metadata, verificar su
+              Sube una o más fotos para analizar su metadata, verificar su
               autenticidad y generar un informe pericial.
             </p>
           </div>

@@ -26,9 +26,9 @@ export function IccSection({ data }: IccSectionProps) {
       <SectionHeader icon={<Palette className="h-4 w-4" />} title="Perfil ICC" />
       <DataRow label="Nombre" value={data.profileName} />
       <DataRow label="Espacio de color" value={data.colorSpace} />
-      <DataRow label="Espacio conexion" value={data.connectionSpace} />
+      <DataRow label="Espacio conexión" value={data.connectionSpace} />
       <DataRow label="Creador" value={data.creator} />
-      <DataRow label="Descripcion" value={data.description} />
+      <DataRow label="Descripción" value={data.description} />
     </div>
   );
 }

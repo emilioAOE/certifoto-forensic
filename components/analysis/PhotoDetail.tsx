@@ -36,7 +36,7 @@ export function PhotoDetail({ analysis }: PhotoDetailProps) {
         <div>
           <SectionHeader
             icon={<ShieldCheck className="h-4 w-4" />}
-            title="Senales de integridad"
+            title="Señales de integridad"
           />
           <ConsistencyPanel checks={analysis.consistency} />
         </div>

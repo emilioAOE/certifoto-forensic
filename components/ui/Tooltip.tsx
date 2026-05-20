@@ -27,7 +27,7 @@ export function Tooltip({
   content,
   children,
   side = "top",
-  iconLabel = "Mas informacion",
+  iconLabel = "Más información",
   className,
 }: TooltipProps) {
   const [open, setOpen] = useState(false);

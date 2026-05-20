@@ -413,7 +413,7 @@ export function ActaWizard() {
             <button
               onClick={handleAutoFill}
               className="inline-flex items-center gap-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 px-2 py-1 text-[11px] hover:bg-purple-100 transition-colors"
-              title="Llena el wizard con datos de ejemplo y salta a la revision"
+              title="Llena el wizard con datos de ejemplo y salta a la revisión"
             >
               <Sparkles className="h-3 w-3" />
               Auto-llenar

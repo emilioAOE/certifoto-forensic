@@ -238,7 +238,7 @@ function SignatureRow({
               onChange={(e) => setObservations(e.target.value)}
               rows={2}
               className="w-full bg-white border border-gray-200 rounded-md px-2.5 py-1.5 text-sm text-gray-800 resize-none focus:outline-none focus:border-accent/50"
-              placeholder="Indica aqui cualquier observacion o discrepancia..."
+              placeholder="Indica aquí cualquier observación o discrepancia..."
             />
           </div>
 
@@ -250,7 +250,7 @@ function SignatureRow({
               className="mt-0.5 accent-accent"
             />
             <span className="text-xs text-gray-700">
-              He leido el contenido de esta acta y acepto firmarla.
+              He leído el contenido de esta acta y acepto firmarla.
             </span>
           </label>
 

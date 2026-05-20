@@ -174,7 +174,7 @@ function ToastItem({
       </div>
       <button
         onClick={onDismiss}
-        aria-label="Cerrar notificacion"
+        aria-label="Cerrar notificación"
         className="text-gray-400 hover:text-gray-600 shrink-0"
       >
         <X className="h-3.5 w-3.5" />

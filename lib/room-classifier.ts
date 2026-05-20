@@ -43,9 +43,9 @@ export async function classifyRoomWithAI(
       ok: false,
       roomId: null,
       confidence: "baja",
-      reasoning: "DataURL invalido",
+      reasoning: "DataURL inválido",
       source: "error",
-      errorMessage: "DataURL invalido",
+      errorMessage: "DataURL inválido",
     };
   }
 
@@ -84,7 +84,7 @@ export async function classifyRoomWithAI(
         ok: false,
         roomId: null,
         confidence: "baja",
-        reasoning: data.error ?? "Error en clasificacion",
+        reasoning: data.error ?? "Error en clasificación",
         source: "error",
         errorMessage: data.error,
       };

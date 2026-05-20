@@ -15,7 +15,7 @@ export function FileDataSection({ data }: FileDataSectionProps) {
       <SectionHeader icon={<FileText className="h-4 w-4" />} title="Archivo" />
       <div className="space-y-0">
         <DataRow label="Nombre" value={data.name} />
-        <DataRow label="Tamano" value={`${data.sizeHuman} (${data.size.toLocaleString()} bytes)`} />
+        <DataRow label="Tamaño" value={`${data.sizeHuman} (${data.size.toLocaleString()} bytes)`} />
         <DataRow label="Tipo MIME" value={data.mimeType} />
         <DataRow
           label="Dimensiones"

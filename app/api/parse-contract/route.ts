@@ -141,7 +141,7 @@ export async function POST(
     body = (await req.json()) as RequestBody;
   } catch {
     return NextResponse.json(
-      { ok: false, error: "JSON invalido" },
+      { ok: false, error: "JSON inválido" },
       { status: 400 }
     );
   }
@@ -181,7 +181,7 @@ export async function POST(
     );
     if (totalBytes > MAX_BASE64_BYTES) {
       return NextResponse.json(
-        { ok: false, error: "Imagenes muy grandes (max ~3 MB total)" },
+        { ok: false, error: "Imágenes muy grandes (máx ~3 MB total)" },
         { status: 413 }
       );
     }
@@ -214,7 +214,7 @@ export async function POST(
   } else if (body.pdfBase64) {
     if (body.pdfBase64.length > MAX_BASE64_BYTES) {
       return NextResponse.json(
-        { ok: false, error: "PDF muy grande (max ~3 MB)" },
+        { ok: false, error: "PDF muy grande (máx ~3 MB)" },
         { status: 413 }
       );
     }
@@ -238,7 +238,7 @@ export async function POST(
     }
     if (body.imageBase64.length > MAX_BASE64_BYTES) {
       return NextResponse.json(
-        { ok: false, error: "Imagen muy grande (max ~3 MB)" },
+        { ok: false, error: "Imagen muy grande (máx ~3 MB)" },
         { status: 413 }
       );
     }
@@ -362,7 +362,7 @@ export async function POST(
     const textBlock = response.content.find((b) => b.type === "text");
     if (!textBlock || textBlock.type !== "text") {
       return NextResponse.json(
-        { ok: false, error: "Respuesta vacia del modelo" },
+        { ok: false, error: "Respuesta vacía del modelo" },
         { status: 502 }
       );
     }
@@ -372,7 +372,7 @@ export async function POST(
       parsed = JSON.parse(textBlock.text) as ParsedContract;
     } catch {
       return NextResponse.json(
-        { ok: false, error: "Respuesta de IA no es JSON valido" },
+        { ok: false, error: "Respuesta de IA no es JSON válido" },
         { status: 502 }
       );
     }

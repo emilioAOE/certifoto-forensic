@@ -31,13 +31,13 @@ export function IptcXmpSection({ iptc, xmp }: IptcXmpSectionProps) {
       {hasIptc && (
         <div>
           <SectionHeader icon={<Tag className="h-4 w-4" />} title="IPTC" />
-          <DataRow label="Titulo" value={iptc.objectName} />
-          <DataRow label="Descripcion" value={iptc.caption} />
+          <DataRow label="Título" value={iptc.objectName} />
+          <DataRow label="Descripción" value={iptc.caption} />
           <DataRow label="Autor" value={iptc.byline} />
           <DataRow label="Copyright" value={iptc.copyright} />
           <DataRow label="Fuente" value={iptc.source} />
           <DataRow label="Ciudad" value={iptc.city} />
-          <DataRow label="Pais" value={iptc.country} />
+          <DataRow label="País" value={iptc.country} />
           {iptc.keywords.length > 0 && (
             <div className="flex justify-between gap-4 py-1.5 border-b border-gray-200">
               <span className="text-muted text-sm shrink-0">Keywords</span>

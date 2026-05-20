@@ -23,8 +23,8 @@ export function FaqPage() {
             Preguntas frecuentes
           </h1>
           <p className="text-lg text-gray-600 mt-4">
-            Resolvemos las dudas mas comunes sobre actas digitales, firma,
-            evidencia fotografica e inteligencia artificial.
+            Resolvemos las dudas más comunes sobre actas digitales, firma,
+            evidencia fotográfica e inteligencia artificial.
           </p>
         </div>
       </section>
@@ -44,7 +44,7 @@ export function FaqPage() {
             ¿Quedaste con dudas?
           </h3>
           <p className="text-sm text-gray-600 mb-5">
-            Escribenos a contacto@certifoto.cl o ingresa a la plataforma y
+            Escríbenos a contacto@certifoto.cl o ingresa a la plataforma y
             empieza a probar gratis.
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -52,7 +52,7 @@ export function FaqPage() {
               href="/contacto"
               className="inline-flex items-center gap-1.5 rounded-md bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-accent hover:text-accent-dark transition-colors"
             >
-              Contactanos
+              Contáctanos
             </Link>
             <Link
               href="/dashboard"

@@ -70,7 +70,7 @@ export async function POST(
     body = (await req.json()) as RequestBody;
   } catch {
     return NextResponse.json(
-      { ok: false, error: "JSON invalido" },
+      { ok: false, error: "JSON inválido" },
       { status: 400 }
     );
   }
@@ -82,7 +82,7 @@ export async function POST(
     body.rooms.length === 0
   ) {
     return NextResponse.json(
-      { ok: false, error: "Faltan campos requeridos o lista de ambientes vacia" },
+      { ok: false, error: "Faltan campos requeridos o lista de ambientes vacía" },
       { status: 400 }
     );
   }
@@ -96,7 +96,7 @@ export async function POST(
 
   if (body.imageBase64.length > MAX_BASE64_BYTES) {
     return NextResponse.json(
-      { ok: false, error: "Imagen muy grande (max 4.5 MB descomprimida)" },
+      { ok: false, error: "Imagen muy grande (máx 4.5 MB descomprimida)" },
       { status: 413 }
     );
   }
@@ -179,7 +179,7 @@ Recuerda: es mejor devolver null que asignar mal. El usuario revisa antes de gua
     const textBlock = response.content.find((b) => b.type === "text");
     if (!textBlock || textBlock.type !== "text") {
       return NextResponse.json(
-        { ok: false, error: "Respuesta vacia del modelo" },
+        { ok: false, error: "Respuesta vacía del modelo" },
         { status: 502 }
       );
     }
@@ -191,7 +191,7 @@ Recuerda: es mejor devolver null que asignar mal. El usuario revisa antes de gua
       return NextResponse.json(
         {
           ok: false,
-          error: "Respuesta de IA no es JSON valido",
+          error: "Respuesta de IA no es JSON válido",
         },
         { status: 502 }
       );

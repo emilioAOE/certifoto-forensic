@@ -131,14 +131,14 @@ export async function extractContractData(
     onProgress?.({
       stage: "parsing",
       pct: 0.1,
-      message: "Renderizando primeras paginas del PDF...",
+      message: "Renderizando primeras páginas del PDF...",
     });
     try {
       const images = await renderPdfPagesToJpegs(file, onProgress);
       onProgress?.({
         stage: "parsing",
         pct: 0.6,
-        message: "La IA esta analizando el contrato...",
+        message: "La IA está analizando el contrato...",
       });
       const aiResult = await tryParseImagesWithAI(images);
       if (aiResult) {
@@ -183,7 +183,7 @@ export async function extractContractData(
     onProgress?.({
       stage: "ocr_loading_model",
       pct: 0,
-      message: "Cargando modelo OCR (espanol). Primera vez ~12MB.",
+      message: "Cargando modelo OCR (español). Primera vez ~12MB.",
     });
     const text = await ocrImage(file, (pct) =>
       onProgress?.({
@@ -195,7 +195,7 @@ export async function extractContractData(
     onProgress?.({
       stage: "parsing",
       pct: 1,
-      message: "Procesando datos extraidos...",
+      message: "Procesando datos extraídos...",
     });
     const result = await parseContractTextSmart(text, 1);
     onProgress?.({ stage: "done", pct: 1, message: "Listo" });
@@ -237,7 +237,7 @@ export async function extractContractData(
       pct: i / totalPages,
       page: i,
       totalPages,
-      message: `Leyendo pagina ${i}/${totalPages}...`,
+      message: `Leyendo página ${i}/${totalPages}...`,
     });
   }
 
@@ -272,7 +272,7 @@ export async function extractContractData(
       pct: (i - 1) / totalPages,
       page: i,
       totalPages,
-      message: `Preparando pagina ${i}/${totalPages} para OCR...`,
+      message: `Preparando página ${i}/${totalPages} para OCR...`,
     });
     const page = await pdfDoc.getPage(i);
     const viewport = page.getViewport({ scale: 2 });
@@ -289,7 +289,7 @@ export async function extractContractData(
         pct: ((i - 1) + pct) / totalPages,
         page: i,
         totalPages,
-        message: `OCR pagina ${i}/${totalPages}: ${Math.round(pct * 100)}%`,
+        message: `OCR página ${i}/${totalPages}: ${Math.round(pct * 100)}%`,
       })
     );
     ocrText += pageText + "\n";
@@ -351,7 +351,7 @@ async function renderPdfPagesToJpegs(
       pct: (i - 1) / pagesToRender,
       page: i,
       totalPages: pagesToRender,
-      message: `Renderizando pagina ${i}/${pagesToRender}...`,
+      message: `Renderizando página ${i}/${pagesToRender}...`,
     });
     const page = await pdfDoc.getPage(i);
     const viewport = page.getViewport({ scale: 1.5 });
