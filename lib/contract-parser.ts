@@ -43,7 +43,11 @@ export interface ContractExtraction {
     startDate: string | null; // YYYY-MM-DD
     endDate: string | null; // YYYY-MM-DD
     deposit: number | null; // mes(es) de garantia o monto
+    /** Si la garantia se expreso en meses o en monto en pesos. */
+    depositKind?: "months" | "amount" | null;
   };
+  /** Observaciones de la IA (ej: "monto en UF", "incluye gastos comunes"). */
+  notes?: string | null;
   confidence: {
     address: number;
     landlord: number;
@@ -594,7 +598,9 @@ function mergeAIWithLocal(
       startDate: ai.contract.startDate ?? local.contract.startDate,
       endDate: ai.contract.endDate ?? local.contract.endDate,
       deposit: finalDeposit,
+      depositKind: ai.contract.depositKind ?? null,
     },
+    notes: ai.notes ?? null,
     confidence: {
       address: addressConf,
       landlord: landlordConf,

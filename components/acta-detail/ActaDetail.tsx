@@ -205,6 +205,15 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           router.push("/precios");
           return;
         }
+        if (result.error === "not_ready") {
+          setValidationModal({
+            title: "El acta no esta lista para certificar",
+            items: (result.validationErrors ?? [
+              result.errorMessage ?? "Falta contenido minimo",
+            ]).map((m) => ({ level: "error" as const, message: m })),
+          });
+          return;
+        }
         toast.error(
           "No se pudo certificar",
           result.errorMessage ?? "Error desconocido"

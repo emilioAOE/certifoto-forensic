@@ -36,7 +36,10 @@ export function StepPartes({ parties, onChange }: StepPartesProps) {
       represents: "self" as RepresentsTarget,
       canUploadEvidence: role === "broker" || role === "property_manager",
       canComment: true,
-      canSign: role !== "witness" || true,
+      // Por defecto pueden firmar todos salvo los testigos. El usuario puede
+      // tildar manualmente el checkbox de "firmar" si quiere que un testigo
+      // tambien firme.
+      canSign: role !== "witness",
     };
     onChange([...parties, newParty]);
     setEditing(tempId);

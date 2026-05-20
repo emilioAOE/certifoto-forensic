@@ -169,28 +169,48 @@ export function ActaWizard() {
   };
 
   const handleContractExtracted = (extraction: ContractExtraction) => {
-    // Aplicar a la propiedad
-    setData((prev) => ({
-      ...prev,
-      property: {
-        ...prev.property,
-        address: extraction.property.address ?? prev.property.address,
-        unit: extraction.property.unit ?? prev.property.unit,
-        commune: extraction.property.commune ?? prev.property.commune,
-        region: extraction.property.region?.code ?? prev.property.region,
-        city: extraction.property.city ?? prev.property.city,
-        contractMonthlyAmount:
-          extraction.contract.monthlyAmount ?? prev.property.contractMonthlyAmount,
-        contractStartDate:
-          extraction.contract.startDate ?? prev.property.contractStartDate,
-        contractEndDate:
-          extraction.contract.endDate ?? prev.property.contractEndDate,
-        contractDeposit:
-          extraction.contract.deposit ?? prev.property.contractDeposit,
-      },
-      // Crear/actualizar partes con lo que extrajimos
-      parties: mergePartiesFromExtraction(prev.parties, extraction),
-    }));
+    // Componer observaciones: lo que ya habia + las notas que devolvio la IA
+    // (ej: "monto en UF", "incluye gastos comunes", "garantia en X meses").
+    const aiNote = extraction.notes?.trim();
+    const depositNote =
+      extraction.contract.depositKind === "amount"
+        ? "Garantia expresada como monto en pesos."
+        : extraction.contract.depositKind === "months"
+        ? "Garantia expresada en meses de renta."
+        : null;
+    const extraNotes = [aiNote, depositNote].filter(Boolean).join(" ");
+
+    setData((prev) => {
+      const prevObs = prev.property.observations?.trim() ?? "";
+      const mergedObs = extraNotes
+        ? prevObs
+          ? `${prevObs}\n${extraNotes}`
+          : extraNotes
+        : prev.property.observations;
+      return {
+        ...prev,
+        property: {
+          ...prev.property,
+          address: extraction.property.address ?? prev.property.address,
+          unit: extraction.property.unit ?? prev.property.unit,
+          commune: extraction.property.commune ?? prev.property.commune,
+          region: extraction.property.region?.code ?? prev.property.region,
+          city: extraction.property.city ?? prev.property.city,
+          contractMonthlyAmount:
+            extraction.contract.monthlyAmount ??
+            prev.property.contractMonthlyAmount,
+          contractStartDate:
+            extraction.contract.startDate ?? prev.property.contractStartDate,
+          contractEndDate:
+            extraction.contract.endDate ?? prev.property.contractEndDate,
+          contractDeposit:
+            extraction.contract.deposit ?? prev.property.contractDeposit,
+          observations: mergedObs,
+        },
+        // Crear/actualizar partes con lo que extrajimos
+        parties: mergePartiesFromExtraction(prev.parties, extraction),
+      };
+    });
     // Si estabamos en el paso 1 (Tipo), saltar al 2 (Propiedad) para mostrar lo extraido
     if (step <= 1) setStep(2);
   };

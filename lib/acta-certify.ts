@@ -15,12 +15,17 @@
 
 import type { Acta } from "./acta-types";
 import { getActa, saveActa, isActaCertified } from "./storage";
-import { appendAuditLog, computeDocumentHash } from "./acta-helpers";
+import {
+  appendAuditLog,
+  computeDocumentHash,
+  validateActaForReview,
+} from "./acta-helpers";
 import { consumeCredit, getCreditsBalance } from "./credits";
 
 export type CertifyError =
   | "not_found"
   | "already_certified"
+  | "not_ready"
   | "no_credits"
   | "internal";
 
@@ -28,10 +33,26 @@ export interface CertifyResult {
   ok: boolean;
   error?: CertifyError;
   errorMessage?: string;
+  /** Si error === "not_ready", lista de razones por las que no se puede aun. */
+  validationErrors?: string[];
   acta?: Acta;
 }
 
+/**
+ * Lock en memoria de actas en proceso de certificacion. Evita que dos
+ * llamadas concurrentes (doble-click + await del confirm dialog que cede el
+ * event loop) consuman 2 creditos por la misma acta cuando el saldo es >= 2.
+ */
+const certifyingActas = new Set<string>();
+
 export async function certifyActa(actaId: string): Promise<CertifyResult> {
+  if (certifyingActas.has(actaId)) {
+    return {
+      ok: false,
+      error: "internal",
+      errorMessage: "Ya hay una certificacion en curso para esta acta",
+    };
+  }
   const acta = getActa(actaId);
   if (!acta) {
     return { ok: false, error: "not_found", errorMessage: "Acta no encontrada" };
@@ -43,6 +64,20 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
       errorMessage: "Esta acta ya esta certificada",
     };
   }
+  // Defense-in-depth: la UI ya valida antes de mostrar el boton, pero alguien
+  // que llame esto directo (DevTools, race condition) podria gastar un credito
+  // sobre un acta sin contenido minimo.
+  const validation = validateActaForReview(acta);
+  if (!validation.valid) {
+    return {
+      ok: false,
+      error: "not_ready",
+      errorMessage:
+        validation.errors[0] ??
+        "El acta no tiene contenido minimo para certificarse",
+      validationErrors: validation.errors,
+    };
+  }
   if (getCreditsBalance() < 1) {
     return {
       ok: false,
@@ -51,7 +86,19 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
     };
   }
 
+  certifyingActas.add(actaId);
   try {
+    // Re-chequear adentro del lock: otra llamada pudo haber certificado el
+    // acta mientras esperabamos (entre el getActa de arriba y aca).
+    const fresh = getActa(actaId);
+    if (fresh && isActaCertified(fresh)) {
+      return {
+        ok: false,
+        error: "already_certified",
+        errorMessage: "Esta acta ya esta certificada",
+      };
+    }
+
     const hash = await computeDocumentHash(acta);
     const consume = consumeCredit("certify_acta", `Certificacion de acta`, {
       actaId: acta.id,
@@ -92,5 +139,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
       errorMessage:
         err instanceof Error ? err.message : "Error desconocido al certificar",
     };
+  } finally {
+    certifyingActas.delete(actaId);
   }
 }

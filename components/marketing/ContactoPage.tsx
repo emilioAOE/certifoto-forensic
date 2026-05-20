@@ -1,18 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, MapPin, MessageSquare, Send, CheckCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Mail, MapPin, MessageSquare, Send, CheckCircle, Coins } from "lucide-react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
+import { PACKS, formatCLP, type Pack } from "@/lib/packs";
 
 export function ContactoPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
     type: "consulta",
     message: "",
   });
+
+  // Leer ?pack=N de la URL (sin useSearchParams para no forzar Suspense
+  // boundary y evitar la de-opt de Next). Pre-llena el form si viene de un CTA
+  // de "Comprar pack".
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const packSize = params.get("pack");
+    if (!packSize) return;
+    const pack = PACKS.find((p) => String(p.size) === packSize);
+    if (!pack) return;
+    setSelectedPack(pack);
+    setForm((prev) => ({
+      ...prev,
+      type: "pack",
+      message:
+        prev.message ||
+        `Hola, quiero comprar el ${pack.label} (${formatCLP(
+          pack.priceCLP
+        )} CLP). ¿Como coordinamos el pago?`,
+    }));
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +112,25 @@ export function ContactoPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {selectedPack && (
+                  <div className="rounded-lg border border-accent-light bg-accent-softer p-3 flex items-start gap-2.5">
+                    <div className="rounded-md bg-white border border-accent-light p-1.5 text-accent-dark shrink-0">
+                      <Coins className="h-4 w-4" />
+                    </div>
+                    <div className="text-xs text-gray-800 leading-relaxed">
+                      <p className="font-semibold text-accent-dark">
+                        Solicitando: {selectedPack.label}
+                      </p>
+                      <p>
+                        {selectedPack.size} certificacion
+                        {selectedPack.size === 1 ? "" : "es"} ·{" "}
+                        {formatCLP(selectedPack.priceCLP)} CLP, pago unico.
+                        Coordinamos el pago por transferencia o WhatsApp y
+                        activamos tus creditos.
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Nombre completo
@@ -122,9 +165,11 @@ export function ContactoPage() {
                     className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
                   >
                     <option value="consulta">Consulta general</option>
+                    <option value="pack">Comprar un pack de certificaciones</option>
                     <option value="demo">Solicitar demo</option>
-                    <option value="pro">Plan Pro Corredores</option>
-                    <option value="business">Plan Business</option>
+                    <option value="empresa">
+                      Corredora / administradora grande
+                    </option>
                     <option value="soporte">Soporte tecnico</option>
                     <option value="prensa">Prensa</option>
                   </select>
