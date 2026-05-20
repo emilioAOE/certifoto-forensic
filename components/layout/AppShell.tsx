@@ -17,9 +17,12 @@ import {
   Share2,
   LogOut,
   Coins,
+  Loader2,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { GlobalSearch } from "./GlobalSearch";
+import { useStorageReady } from "@/components/StorageProvider";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
@@ -34,6 +37,7 @@ const NAV_ITEMS = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { ready, error } = useStorageReady();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -72,8 +76,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  // Las paginas de la app dependen del cache sincrono hidratado desde
+  // IndexedDB. Esperamos a que este listo (las paginas publicas no pasan
+  // por aca, asi se renderizan en el servidor para SEO/GEO).
+  if (!ready) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center" role="status" aria-live="polite">
+          <Loader2
+            className="h-6 w-6 text-accent animate-spin mx-auto mb-3"
+            aria-hidden="true"
+          />
+          <p className="text-sm text-gray-500">Cargando tu plataforma...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
+      {error && (
+        <div className="fixed top-0 inset-x-0 z-[55] bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs text-amber-800 flex items-center gap-2 justify-center">
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+          <span>
+            No se pudo cargar el almacenamiento local. Tus datos en memoria
+            funcionaran solo durante esta sesion.
+          </span>
+        </div>
+      )}
       {/* Skip-to-content link para accesibilidad por teclado */}
       <a
         href="#main-content"
