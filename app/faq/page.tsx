@@ -1,10 +1,19 @@
 import { FaqPage } from "@/components/marketing/FaqPage";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { faqPageSchema } from "@/lib/structured-data";
+import { faqFlatQA } from "@/lib/faq-data";
 
 export const metadata = {
-  title: "Preguntas frecuentes - CertiFoto",
+  title: "Preguntas frecuentes",
   description: "Resolvemos las dudas mas comunes sobre actas digitales, firma, evidencia fotografica e inteligencia artificial en CertiFoto.",
+  alternates: { canonical: "/faq" },
 };
 
 export default function Faq() {
-  return <FaqPage />;
+  return (
+    <>
+      <JsonLd data={faqPageSchema(faqFlatQA())} />
+      <FaqPage />
+    </>
+  );
 }

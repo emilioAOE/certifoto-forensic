@@ -1,7 +1,10 @@
 import { LegalPage } from "@/components/marketing/LegalPage";
 
 export const metadata = {
-  title: "Terminos de uso - CertiFoto",
+  title: "Terminos de uso",
+  description:
+    "Terminos y condiciones de uso de CertiFoto, plataforma de actas digitales para arriendos en Chile.",
+  alternates: { canonical: "/terminos" },
 };
 
 const CONTENT = `Bienvenido a CertiFoto. Estos terminos regulan el uso de nuestra plataforma. Al ingresar y utilizar el servicio aceptas estas condiciones.

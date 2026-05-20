@@ -5,9 +5,10 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
 export const metadata = {
-  title: "Blog - CertiFoto",
+  title: "Blog",
   description:
     "Articulos sobre actas digitales, arriendos, evidencia fotografica e inteligencia artificial aplicada a la documentacion de propiedades.",
+  alternates: { canonical: "/blog" },
 };
 
 export default function BlogIndex() {

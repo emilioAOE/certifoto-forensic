@@ -4,6 +4,7 @@ export const metadata = {
   title: "Politica de privacidad",
   description:
     "Como CertiFoto trata los datos personales conforme a la Ley 19.628 de Chile. Datos almacenados localmente, sin compartir con terceros.",
+  alternates: { canonical: "/privacidad" },
 };
 
 const CONTENT = `En CertiFoto nos importa tu privacidad. Esta politica explica que datos manejamos, como los manejamos y que derechos tienes. Esta politica esta alineada con la Ley N° 19.628 sobre Proteccion de la Vida Privada de Chile.

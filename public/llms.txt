@@ -1,0 +1,53 @@
+# CertiFoto
+
+> Plataforma chilena para crear actas digitales del estado de propiedades arrendadas, con respaldo forense de fotografias, descripciones asistidas con inteligencia artificial y firma digital de las partes. Sirve para documentar entregas, devoluciones, inspecciones e inventarios de arriendos en Chile.
+
+CertiFoto es una aplicacion web (mobile-first) que funciona sin necesidad de crear cuenta: los datos se guardan localmente en el navegador del usuario. Esta pensada para arrendadores, arrendatarios, corredores de propiedades y administradoras.
+
+## Como funciona
+
+- Crear y editar actas es **gratis e ilimitado**. La app no cobra por crear documentos.
+- Se paga **solo al certificar** un acta. Certificar sella el documento de forma inmutable (congela su hash criptografico, quita la marca de agua de "BORRADOR" y lo deja listo para compartir como archivo verificable `.certifoto`). Cada certificacion consume 1 credito.
+- Los creditos se compran en **packs one-time** (pago unico, sin suscripciones).
+- Flujo: subir o completar los datos del contrato y la propiedad → subir fotos (la IA detecta los ambientes automaticamente) → agregar partes y firmas → revisar → certificar.
+
+## Inteligencia artificial
+
+- La IA describe de forma objetiva cada foto, identifica elementos visibles (muros, piso, muebles) y marca posibles hallazgos (manchas, rayaduras, suciedad) con un nivel de confianza.
+- La IA **no atribuye responsabilidades ni determina culpas**. Las descripciones son referenciales y deben ser revisadas por las partes humanas.
+- Tambien lee contratos (PDF o foto, incluso escaneados) para autocompletar los datos del acta.
+
+## Respaldo forense de las fotos
+
+Cada foto recibe hash criptografico SHA-256 (huella unica), pHash (huella visual), extraccion de metadatos EXIF (fecha, hora, dispositivo, GPS) y verificaciones de consistencia. Si una foto se altera despues, su hash cambia y queda evidencia tecnica.
+
+## Precios (CLP, pago unico)
+
+- 1 certificacion: $2.990
+- 3 certificaciones: $7.990
+- 10 certificaciones: $24.900
+- 50 certificaciones: $99.900 (corredoras y administradoras con cartera grande)
+
+Los creditos no caducan. Detalle en https://certifoto.cl/precios
+
+## Validez legal
+
+CertiFoto utiliza firma digital simple (equivalente a aceptar terminos en una plataforma online). Tiene valor probatorio como evidencia, especialmente combinado con el respaldo forense, pero no equivale a firma electronica avanzada. Para casos contenciosos se recomienda asesoria legal. CertiFoto no es un servicio juridico, notarial ni pericial.
+
+## Paginas principales
+
+- [Inicio](https://certifoto.cl/): que es CertiFoto y como funciona.
+- [Precios](https://certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
+- [Preguntas frecuentes](https://certifoto.cl/faq): dudas sobre actas, firma, evidencia e IA.
+- [Sobre nosotros](https://certifoto.cl/sobre): la mision del proyecto.
+- [Contacto](https://certifoto.cl/contacto): contacto@certifoto.cl
+- [Terminos de uso](https://certifoto.cl/terminos)
+- [Privacidad](https://certifoto.cl/privacidad)
+
+## Blog
+
+- [Como hacer una acta de entrega de arriendo paso a paso](https://certifoto.cl/blog/como-hacer-acta-entrega-arriendo)
+- [Diferencia entre acta de entrega y acta de devolucion](https://certifoto.cl/blog/diferencia-acta-entrega-devolucion)
+- [Como respaldar fotos de un arriendo para que tengan validez](https://certifoto.cl/blog/respaldo-fotografico-arriendo)
+- [El rol de la inteligencia artificial en las actas de arriendo](https://certifoto.cl/blog/ia-vision-actas-arriendo)
+- [La garantia del arriendo: como evitar discusiones al final](https://certifoto.cl/blog/garantia-arriendo-discusion)

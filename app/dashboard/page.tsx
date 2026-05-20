@@ -1,7 +1,7 @@
 import { Dashboard } from "@/components/dashboard/Dashboard";
 
 export const metadata = {
-  title: "Dashboard - CertiFoto",
+  title: "Dashboard",
 };
 
 export default function DashboardPage() {
