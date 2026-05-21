@@ -13,7 +13,7 @@ import {
   Camera,
 } from "lucide-react";
 import {
-  verifyCertifotoFile,
+  verifyCertificateFile,
   type CertifotoVerifyResult,
 } from "@/lib/share-acta";
 import { ACTA_TYPE_LABEL } from "@/lib/acta-constants";
@@ -34,7 +34,7 @@ export function CertificateVerifier() {
     setResult(null);
     setVerifying(true);
     try {
-      const r = await verifyCertifotoFile(file);
+      const r = await verifyCertificateFile(file);
       setResult(r);
     } catch {
       setResult({
@@ -60,9 +60,10 @@ export function CertificateVerifier() {
           Verificar certificado
         </h1>
         <p className="text-sm text-muted mt-1 leading-relaxed">
-          Sube un archivo <span className="font-mono">.certifoto</span> emitido
-          por CertiFoto para comprobar que es auténtico y que su contenido no
-          fue alterado desde que se selló. No se guarda nada: la verificación es
+          Sube el <span className="font-medium">PDF del certificado</span> (o un
+          archivo <span className="font-mono">.certifoto</span>) emitido por
+          CertiFoto para comprobar que es auténtico y que su contenido no fue
+          alterado desde que se selló. No se guarda nada: la verificación es
           local.
         </p>
       </div>
@@ -84,7 +85,7 @@ export function CertificateVerifier() {
           <>
             <Upload className="h-6 w-6 text-gray-400 mx-auto mb-2" />
             <div className="text-sm font-medium text-gray-800">
-              Subir certificado .certifoto
+              Subir certificado (PDF o .certifoto)
             </div>
             <div className="text-xs text-muted mt-1">
               Arrastra el archivo o haz clic para elegirlo
@@ -95,7 +96,7 @@ export function CertificateVerifier() {
       <input
         ref={inputRef}
         type="file"
-        accept=".certifoto,application/zip"
+        accept=".pdf,application/pdf,.certifoto,application/zip"
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];

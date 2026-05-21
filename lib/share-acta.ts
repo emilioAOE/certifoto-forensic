@@ -28,6 +28,7 @@ import {
 } from "./storage";
 import { syncContactsFromActa } from "./contacts";
 import { computeDocumentHash } from "./acta-helpers";
+import { extractEmbeddedPayload } from "./cert-embed";
 
 const FORMAT_VERSION = 1;
 
@@ -307,4 +308,56 @@ export async function verifyCertifotoFile(
         : "El contenido no coincide con el sello original: el certificado pudo haber sido alterado."
       : "Certificado sin huella digital (versión antigua): no se puede verificar la integridad criptográfica.",
   };
+}
+
+/**
+ * Verifica un certificado emitido por CertiFoto. Acepta el PDF (con datos de
+ * verificacion embebidos) o el archivo .certifoto. Detecta el tipo por los
+ * bytes magicos del archivo.
+ */
+export async function verifyCertificateFile(
+  file: File | Blob
+): Promise<CertifotoVerifyResult> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const head = String.fromCharCode(...bytes.subarray(0, 5));
+
+  if (head.startsWith("%PDF")) {
+    const payload = extractEmbeddedPayload(bytes);
+    if (!payload) {
+      return {
+        isCertifoto: false,
+        documentHashPresent: false,
+        integrityValid: false,
+        storedHash: null,
+        recomputedHash: null,
+        certifiedAt: null,
+        acta: null,
+        property: null,
+        reason:
+          "Este PDF no tiene datos de verificación embebidos. Asegúrate de que sea un certificado emitido por CertiFoto (no un borrador, ni un PDF re-guardado por otro programa).",
+      };
+    }
+    const recomputedHash = await computeDocumentHash(payload.acta);
+    const storedHash = payload.documentHash;
+    const documentHashPresent = !!storedHash;
+    const integrityValid = documentHashPresent && storedHash === recomputedHash;
+    return {
+      isCertifoto: true,
+      documentHashPresent,
+      integrityValid,
+      storedHash,
+      recomputedHash,
+      certifiedAt: payload.certifiedAt,
+      acta: payload.acta,
+      property: payload.property,
+      reason: documentHashPresent
+        ? integrityValid
+          ? undefined
+          : "El contenido no coincide con el sello original: el certificado pudo haber sido alterado."
+        : "Certificado sin huella digital (versión antigua): no se puede verificar la integridad criptográfica.",
+    };
+  }
+
+  // No es PDF: intentar como archivo .certifoto (ZIP).
+  return verifyCertifotoFile(file);
 }

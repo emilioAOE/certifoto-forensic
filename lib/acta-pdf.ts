@@ -24,6 +24,8 @@ import {
   PDF_DISCLAIMER,
 } from "./acta-constants";
 import { isActaCertified } from "./storage";
+import { buildEmbeddedBlock } from "./cert-embed";
+import { downloadBlob } from "./export-import";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
@@ -736,7 +738,24 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
 
   // Save
   const suffix = certified ? "" : "-borrador";
-  doc.save(`acta-${acta.type}-${acta.id.slice(0, 12)}${suffix}.pdf`);
+  const fileName = `acta-${acta.type}-${acta.id.slice(0, 12)}${suffix}.pdf`;
+
+  if (certified) {
+    // PDF certificado: lo hacemos auto-verificable anexando el contenido
+    // canonico + huella despues del %%EOF (los lectores lo ignoran; nuestro
+    // verificador lo lee). Asi se puede verificar el PDF, no solo el .certifoto.
+    const pdfBytes = new Uint8Array(doc.output("arraybuffer") as ArrayBuffer);
+    const block = new TextEncoder().encode(buildEmbeddedBlock(acta, property));
+    const combined = new Uint8Array(pdfBytes.byteLength + block.byteLength);
+    combined.set(pdfBytes, 0);
+    combined.set(block, pdfBytes.byteLength);
+    downloadBlob(
+      new Blob([combined], { type: "application/pdf" }),
+      fileName
+    );
+  } else {
+    doc.save(fileName);
+  }
 }
 
 /**
