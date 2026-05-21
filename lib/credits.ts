@@ -17,6 +17,13 @@ import { idbGetMeta, idbSetMeta } from "./storage-idb";
 
 const META_KEY = "credits";
 
+/**
+ * TEMPORAL — creditos de prueba. Mientras no haya pasarela de pago, todo
+ * usuario sin registro de creditos parte con este saldo para poder probar la
+ * certificacion. Poner en 0 (o borrar el seed) antes del lanzamiento real.
+ */
+const TEST_SEED_CREDITS = 10;
+
 export type CreditChangeReason =
   | "pack_purchased" // compra de pack
   | "redeem_code" // canje de codigo
@@ -76,8 +83,19 @@ export function hydrateCredits(): Promise<void> {
       if (stored) {
         cache.balance = typeof stored.balance === "number" ? stored.balance : 0;
         cache.history = Array.isArray(stored.history) ? stored.history : [];
+        cache.hydrated = true;
+      } else {
+        // Usuario nuevo (sin registro): sembrar creditos de prueba una sola vez.
+        cache.hydrated = true;
+        if (TEST_SEED_CREDITS > 0) {
+          addCredits(
+            TEST_SEED_CREDITS,
+            "dev_seed",
+            "Créditos de prueba",
+            { seeded: true }
+          );
+        }
       }
-      cache.hydrated = true;
     } catch (err) {
       console.error("[credits] hydration failed:", err);
       cache.hydrated = true; // continue with empty state

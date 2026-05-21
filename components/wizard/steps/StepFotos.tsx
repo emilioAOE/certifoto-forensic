@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ImagePlus, Camera, ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
 import type {
   Acta,
   PhotoEvidence,
@@ -39,8 +39,8 @@ export function StepFotos({
   detectedRooms,
   onChangeDetectedRooms,
 }: StepFotosProps) {
-  const [mode, setMode] = useState<"chooser" | "uploading" | "done">(
-    pendingPhotos.length > 0 ? "done" : "chooser"
+  const [mode, setMode] = useState<"uploading" | "done">(
+    pendingPhotos.length > 0 ? "done" : "uploading"
   );
   const [showManualPreselect, setShowManualPreselect] = useState(rooms.length > 0);
 
@@ -124,11 +124,12 @@ export function StepFotos({
     return (
       <div>
         <h2 className="text-lg font-semibold text-gray-900 mb-1">
-          Subir fotos
+          Fotos del inmueble
         </h2>
         <p className="text-sm text-muted mb-4">
-          Selecciona o arrastra todas las fotos del inmueble. La IA va a leer
-          cada una y crear los ambientes que detecte.
+          Sube todas las fotos juntas: la IA detecta los ambientes y describe el
+          estado de cada foto. Revisar o editar es opcional. También puedes
+          continuar sin fotos y subirlas más tarde.
         </p>
         <BulkPhotoUploader
           variant="inline"
@@ -136,12 +137,34 @@ export function StepFotos({
           onUpdate={handleUpdate}
           onClose={handleBulkDone}
         />
-        <button
-          onClick={() => setMode("chooser")}
-          className="mt-3 text-xs text-muted hover:text-gray-800"
-        >
-          ← Volver
-        </button>
+
+        {/* Pre-seleccion manual de ambientes (opcional) */}
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={() => setShowManualPreselect((s) => !s)}
+            className="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            {showManualPreselect ? (
+              <ChevronUp className="h-3.5 w-3.5" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5" />
+            )}
+            {showManualPreselect
+              ? "Ocultar pre-selección de ambientes"
+              : "¿Prefieres marcar los ambientes a mano? (opcional)"}
+          </button>
+
+          {showManualPreselect && (
+            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <p className="text-xs text-muted mb-3 leading-relaxed">
+                Si ya sabes qué ambientes tiene la propiedad, márcalos aquí. La
+                IA igual puede crear los que falten cuando subas fotos.
+              </p>
+              <ManualRoomChips rooms={rooms} onChangeRooms={onChangeRooms} />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -192,7 +215,7 @@ export function StepFotos({
                 onClick={() => {
                   onChangePhotos([]);
                   onChangeDetectedRooms([]);
-                  setMode("chooser");
+                  setMode("uploading");
                 }}
                 className="mt-3 text-xs text-emerald-800 hover:underline"
               >
@@ -215,92 +238,7 @@ export function StepFotos({
     );
   }
 
-  // mode === "chooser"
-  return (
-    <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">
-        Fotos del inmueble
-      </h2>
-      <p className="text-sm text-muted mb-5">
-        Sube las fotos ahora y la IA va a detectar los ambientes
-        automáticamente. También podés saltar este paso y subirlas más tarde.
-      </p>
-
-      <div className="mb-5 grid sm:grid-cols-2 gap-3">
-        {/* Recomendado */}
-        <button
-          onClick={() => setMode("uploading")}
-          className="group relative text-left rounded-xl border-2 border-accent shadow-md hover:shadow-lg hover:bg-accent-softer/40 transition-all bg-white p-4 flex flex-col"
-        >
-          <span className="absolute -top-2 left-4 inline-flex items-center rounded-full bg-accent text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm">
-            Recomendado
-          </span>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="rounded-lg bg-accent text-white p-2">
-              <ImagePlus className="h-5 w-5" />
-            </div>
-            <h4 className="text-sm font-bold text-gray-900">
-              Subir todas las fotos juntas
-            </h4>
-          </div>
-          <p className="text-xs text-gray-700 leading-relaxed flex-1">
-            Selecciona o arrastra todas las fotos del inmueble. La IA mira
-            cada una y crea automáticamente los ambientes (cocina, baño,
-            dormitorios, terraza, etc.). Tú solo revisas.
-          </p>
-          <span className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-3 py-1.5 text-xs font-bold">
-            <ImagePlus className="h-3.5 w-3.5" />
-            Subir fotos ahora
-          </span>
-        </button>
-
-        {/* Manual / saltar */}
-        <div className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="rounded-lg bg-gray-100 text-gray-600 p-2">
-              <Camera className="h-5 w-5" />
-            </div>
-            <h4 className="text-sm font-semibold text-gray-900">
-              Después, foto por ambiente
-            </h4>
-          </div>
-          <p className="text-xs text-gray-700 leading-relaxed flex-1">
-            Saltar por ahora — vas a poder subir fotos después de crear el
-            acta, una por una en cada ambiente, o todas juntas como acá.
-          </p>
-          <span className="mt-3 inline-flex items-center gap-1 text-xs text-gray-500 italic">
-            Click en &ldquo;Siguiente&rdquo; para continuar
-          </span>
-        </div>
-      </div>
-
-      {/* Manual preselection (collapsed) */}
-      <button
-        type="button"
-        onClick={() => setShowManualPreselect((s) => !s)}
-        className="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
-      >
-        {showManualPreselect ? (
-          <ChevronUp className="h-3.5 w-3.5" />
-        ) : (
-          <ChevronDown className="h-3.5 w-3.5" />
-        )}
-        {showManualPreselect
-          ? "Ocultar pre-selección de ambientes"
-          : "¿Prefieres pre-seleccionar ambientes a mano? (opcional)"}
-      </button>
-
-      {showManualPreselect && (
-        <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-          <p className="text-xs text-muted mb-3 leading-relaxed">
-            Si ya sabes qué ambientes tiene la propiedad, márcalos aquí. La IA
-            igual puede crear los que falten cuando subas fotos.
-          </p>
-          <ManualRoomChips rooms={rooms} onChangeRooms={onChangeRooms} />
-        </div>
-      )}
-    </div>
-  );
+  return null;
 }
 
 const CATEGORIES = [
