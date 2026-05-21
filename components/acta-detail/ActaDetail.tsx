@@ -33,7 +33,7 @@ import {
   getCreditsBalance,
   subscribeToCreditsChanges,
 } from "@/lib/credits";
-import type { Acta, Property } from "@/lib/acta-types";
+import type { Acta, Property, PhotoEvidence } from "@/lib/acta-types";
 import { cn } from "@/lib/cn";
 import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
@@ -46,7 +46,7 @@ import {
   ValidationModal,
   type ValidationItem,
 } from "@/components/ui/ValidationModal";
-import { Award, Lock, ImagePlus, Sparkles } from "lucide-react";
+import { Award, Lock, ImagePlus, Sparkles, Shield, Hash } from "lucide-react";
 
 interface ValidationModalState {
   title: string;
@@ -625,6 +625,26 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         />
       )}
 
+      {/* Respaldo forense de las fotos (certificacion + metadata) */}
+      {acta.photos.length > 0 && (
+        <section className="rounded-lg border border-gray-200 bg-white p-4">
+          <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <Shield className="h-3.5 w-3.5" />
+            Respaldo forense de las fotos
+          </h3>
+          <p className="text-xs text-muted mb-3 leading-relaxed">
+            Cada foto queda con su huella criptográfica (SHA-256) y sus
+            metadatos. Si una foto se altera, su huella cambia y deja de
+            coincidir. Este respaldo también va en el PDF del certificado.
+          </p>
+          <div className="space-y-2">
+            {acta.photos.map((photo) => (
+              <ForensicPhotoRow key={photo.id} photo={photo} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Inventario (si la propiedad es amoblada o el acta es de tipo inventario) */}
       {(acta.type === "inventario" ||
         property?.furnished === "yes" ||
@@ -710,6 +730,51 @@ function Info({ label, value }: { label: string; value: string }) {
     <div>
       <div className="text-xs text-muted">{label}</div>
       <div className="text-sm text-gray-800">{value}</div>
+    </div>
+  );
+}
+
+function ForensicPhotoRow({ photo }: { photo: PhotoEvidence }) {
+  const f = photo.forensic;
+  return (
+    <div className="flex gap-3 rounded-md border border-gray-100 bg-gray-50 p-2">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={photo.thumbnailDataUrl ?? photo.dataUrl}
+        alt={photo.fileName}
+        className="h-12 w-12 rounded object-cover border border-gray-200 shrink-0"
+      />
+      <div className="min-w-0 flex-1 text-xs">
+        <div className="text-gray-800 truncate font-medium">
+          {photo.fileName}
+        </div>
+        {f ? (
+          <div className="mt-1 space-y-0.5 text-muted">
+            <div className="flex items-center gap-1 font-mono text-[10px]">
+              <Hash className="h-3 w-3 shrink-0" />
+              <span className="truncate" title={f.file.sha256}>
+                {f.file.sha256}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px]">
+              {f.exifTemporal.dateTimeOriginal && (
+                <span>EXIF: {f.exifTemporal.dateTimeOriginal}</span>
+              )}
+              {f.gps.latitude != null && (
+                <span>
+                  GPS: {f.gps.latitude.toFixed(5)},{" "}
+                  {f.gps.longitude?.toFixed(5)}
+                </span>
+              )}
+              {f.file.phash && <span>pHash: {f.file.phash.slice(0, 12)}…</span>}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-1 text-[10px] text-muted italic">
+            Sin metadatos forenses disponibles para esta foto.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

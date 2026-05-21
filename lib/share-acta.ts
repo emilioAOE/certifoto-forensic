@@ -27,6 +27,7 @@ import {
   isActaCertified,
 } from "./storage";
 import { syncContactsFromActa } from "./contacts";
+import { computeDocumentHash } from "./acta-helpers";
 
 const FORMAT_VERSION = 1;
 
@@ -199,4 +200,111 @@ export async function importActaFromShareFile(
   syncContactsFromActa(acta);
 
   return { acta, property, contactsAdded, isUpdate };
+}
+
+// ============================================
+// Verificacion de autenticidad de un certificado emitido
+// ============================================
+
+export interface CertifotoVerifyResult {
+  /** El archivo es un certificado CertiFoto valido en estructura. */
+  isCertifoto: boolean;
+  /** El certificado trae huella digital (documentHash). */
+  documentHashPresent: boolean;
+  /** El contenido coincide con el sello original (no fue alterado). */
+  integrityValid: boolean;
+  storedHash: string | null;
+  recomputedHash: string | null;
+  certifiedAt: string | null;
+  acta: Acta | null;
+  property: Property | null;
+  reason?: string;
+}
+
+/**
+ * Verifica un archivo .certifoto SIN guardarlo: confirma que es un certificado
+ * emitido por CertiFoto y recalcula su huella para comprobar que el contenido
+ * no fue alterado desde que se sello.
+ */
+export async function verifyCertifotoFile(
+  file: File | Blob
+): Promise<CertifotoVerifyResult> {
+  const base: CertifotoVerifyResult = {
+    isCertifoto: false,
+    documentHashPresent: false,
+    integrityValid: false,
+    storedHash: null,
+    recomputedHash: null,
+    certifiedAt: null,
+    acta: null,
+    property: null,
+  };
+
+  const JSZipModule = await import("jszip");
+  const JSZip = JSZipModule.default;
+  let zip: Awaited<ReturnType<typeof JSZip.loadAsync>>;
+  try {
+    zip = await JSZip.loadAsync(file);
+  } catch {
+    return {
+      ...base,
+      reason: "No se pudo leer el archivo. ¿Es un .certifoto válido?",
+    };
+  }
+
+  const manifestFile = zip.file("manifest.json");
+  const actaFile = zip.file("acta.json");
+  if (!manifestFile || !actaFile) {
+    return {
+      ...base,
+      reason: "El archivo no tiene la estructura de un certificado CertiFoto.",
+    };
+  }
+
+  let manifest: ShareManifest;
+  let acta: Acta;
+  try {
+    manifest = JSON.parse(await manifestFile.async("string")) as ShareManifest;
+    acta = JSON.parse(await actaFile.async("string")) as Acta;
+  } catch {
+    return { ...base, reason: "El contenido del archivo está corrupto." };
+  }
+
+  if (manifest.app !== "CertiFoto" || manifest.format !== "single-acta") {
+    return {
+      ...base,
+      reason: "Este archivo no es un certificado emitido por CertiFoto.",
+    };
+  }
+
+  let property: Property | null = null;
+  const propertyFile = zip.file("property.json");
+  if (propertyFile) {
+    try {
+      property = JSON.parse(await propertyFile.async("string")) as Property;
+    } catch {
+      property = null;
+    }
+  }
+
+  const storedHash = acta.documentHash ?? manifest.documentHash ?? null;
+  const recomputedHash = await computeDocumentHash(acta);
+  const documentHashPresent = !!storedHash;
+  const integrityValid = documentHashPresent && storedHash === recomputedHash;
+
+  return {
+    isCertifoto: true,
+    documentHashPresent,
+    integrityValid,
+    storedHash,
+    recomputedHash,
+    certifiedAt: acta.certifiedAt ?? null,
+    acta,
+    property,
+    reason: documentHashPresent
+      ? integrityValid
+        ? undefined
+        : "El contenido no coincide con el sello original: el certificado pudo haber sido alterado."
+      : "Certificado sin huella digital (versión antigua): no se puede verificar la integridad criptográfica.",
+  };
 }

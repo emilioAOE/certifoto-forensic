@@ -30,7 +30,7 @@ const NAV_ITEMS = [
   { href: "/propiedades", label: "Propiedades", icon: Building2 },
   { href: "/contactos", label: "Contactos", icon: Users },
   { href: "/mis-creditos", label: "Mis créditos", icon: Coins },
-  { href: "/forensic", label: "Verificar evidencia", icon: Shield },
+  { href: "/forensic", label: "Verificar certificado", icon: Shield },
   { href: "/verificar", label: "Recibir acta", icon: Share2 },
   { href: "/configuracion", label: "Configuración", icon: Settings },
 ];
