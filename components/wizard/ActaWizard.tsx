@@ -5,8 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
-  Check,
   Sparkles,
+  ShieldCheck,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type {
@@ -31,6 +32,7 @@ import {
   getProperty,
 } from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
+import { certifyActa } from "@/lib/acta-certify";
 import { syncContactsFromActa } from "@/lib/contacts";
 import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
@@ -59,7 +61,7 @@ const STEPS = [
   { id: 2, label: "Propiedad" },
   { id: 3, label: "Fotos" },
   { id: 4, label: "Partes" },
-  { id: 5, label: "Revisar" },
+  { id: 5, label: "Certificar" },
 ];
 
 const initialData: WizardData = {
@@ -105,6 +107,7 @@ export function ActaWizard() {
   const [creatorName, setCreatorName] = useState("Usuario");
   const [creatorRole, setCreatorRole] = useState<PartyRole>("broker");
   const [linkedPropertyId, setLinkedPropertyId] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     const u = getCurrentUser();
@@ -243,8 +246,8 @@ export function ActaWizard() {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleCreate = () => {
-    if (!data.type) return;
+  const createActa = (): string | null => {
+    if (!data.type) return null;
 
     // 1. Save property — reusar si viene de ?property=id
     const now = new Date().toISOString();
@@ -400,7 +403,26 @@ export function ActaWizard() {
     saveActa(withAudit);
     // Sincronizar partes con la agenda de contactos
     syncContactsFromActa(withAudit);
-    router.push(`/actas/${actaId}`);
+    return actaId;
+  };
+
+  const handleGenerateCertificate = async () => {
+    if (generating) return;
+    setGenerating(true);
+    const actaId = createActa();
+    if (!actaId) {
+      setGenerating(false);
+      return;
+    }
+    const result = await certifyActa(actaId);
+    if (result.error === "no_credits") {
+      // Sin creditos: llevar a precios para comprar un pack.
+      router.push(`/precios?from=certify`);
+    } else {
+      // ok / not_ready / internal: ir al acta. Si quedo certificada, muestra el
+      // certificado; si falto algo, el detalle guia para completarlo y sellar.
+      router.push(`/actas/${actaId}`);
+    }
   };
 
   return (
@@ -555,11 +577,16 @@ export function ActaWizard() {
           </button>
         ) : (
           <button
-            onClick={handleCreate}
-            className="inline-flex items-center gap-1 rounded-lg bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim"
+            onClick={handleGenerateCertificate}
+            disabled={generating}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <Check className="h-4 w-4" />
-            Crear acta
+            {generating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ShieldCheck className="h-4 w-4" />
+            )}
+            {generating ? "Generando certificado…" : "Generar certificado"}
           </button>
         )}
       </div>

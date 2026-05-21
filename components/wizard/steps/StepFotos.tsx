@@ -1,16 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, ChevronUp, CheckCircle2, Sparkles } from "lucide-react";
 import type {
   Acta,
   PhotoEvidence,
   Room,
+  RoomType,
   ConditionLevel,
   PartyRole,
 } from "@/lib/acta-types";
 import { ROOM_TEMPLATES } from "@/lib/acta-constants";
 import { BulkPhotoUploader } from "@/components/acta-detail/BulkPhotoUploader";
+import { analyzePhotoVision } from "@/lib/photo-analyzer";
 import { getCurrentUser } from "@/lib/storage";
 import { cn } from "@/lib/cn";
 
@@ -43,6 +45,68 @@ export function StepFotos({
     pendingPhotos.length > 0 ? "done" : "uploading"
   );
   const [showManualPreselect, setShowManualPreselect] = useState(rooms.length > 0);
+
+  // ── Analisis IA por foto (descripcion del estado) ───────────────────────
+  // En el wizard, el BulkPhotoUploader (modo inline) NO corre el analisis por
+  // foto para evitar stale-closures al desmontarse. Lo corremos aca, sobre el
+  // estado del wizard, que es la fuente de verdad. Usamos un ref para no
+  // pisar actualizaciones concurrentes y otro para no re-analizar.
+  const photosRef = useRef<PhotoEvidence[]>(pendingPhotos);
+  const analyzingRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    photosRef.current = pendingPhotos;
+  }, [pendingPhotos]);
+
+  const onChangePhotosRef = useRef(onChangePhotos);
+  useEffect(() => {
+    onChangePhotosRef.current = onChangePhotos;
+  }, [onChangePhotos]);
+
+  useEffect(() => {
+    const roomLookup = new Map<string, { name: string; type: RoomType }>();
+    for (const r of detectedRooms) {
+      roomLookup.set(r.id, { name: r.name, type: r.type });
+    }
+    for (const r of rooms) {
+      roomLookup.set(`manual:${r.tempId}`, { name: r.name, type: r.type });
+    }
+
+    const patchPhoto = (id: string, patch: Partial<PhotoEvidence>) => {
+      const next = photosRef.current.map((p) =>
+        p.id === id ? { ...p, ...patch } : p
+      );
+      photosRef.current = next;
+      onChangePhotosRef.current(next);
+    };
+
+    for (const photo of pendingPhotos) {
+      if (photo.aiStatus !== "pending") continue;
+      if (analyzingRef.current.has(photo.id)) continue;
+      analyzingRef.current.add(photo.id);
+      patchPhoto(photo.id, { aiStatus: "processing" });
+      const room = roomLookup.get(photo.roomId);
+      analyzePhotoVision(
+        photo.dataUrl,
+        room?.name ?? "Ambiente",
+        (room?.type ?? "otro") as RoomType,
+        {
+          fileName: photo.fileName,
+          fileSize: photo.fileSize,
+          width: photo.width,
+          height: photo.height,
+        }
+      )
+        .then((analysis) => {
+          patchPhoto(photo.id, { aiAnalysis: analysis, aiStatus: "complete" });
+        })
+        .catch(() => {
+          patchPhoto(photo.id, { aiStatus: "error" });
+        })
+        .finally(() => {
+          analyzingRef.current.delete(photo.id);
+        });
+    }
+  }, [pendingPhotos, detectedRooms, rooms]);
 
   // Construir un acta-borrador para alimentar al BulkPhotoUploader. Mezcla
   // los rooms manuales (convertidos a Room real con id sintetico) con los
@@ -211,13 +275,37 @@ export function StepFotos({
                   })}
                 </div>
               )}
+              {(() => {
+                const done = pendingPhotos.filter(
+                  (p) => p.aiStatus === "complete"
+                ).length;
+                const pending = pendingPhotos.filter(
+                  (p) => p.aiStatus === "pending" || p.aiStatus === "processing"
+                ).length;
+                return (
+                  <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-800">
+                    <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                    {pending > 0 ? (
+                      <span>
+                        Describiendo el estado de las fotos con IA… {done}/
+                        {pendingPhotos.length}
+                      </span>
+                    ) : (
+                      <span>
+                        {done} foto{done === 1 ? "" : "s"} con descripción de
+                        estado generada
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
               <button
                 onClick={() => {
                   onChangePhotos([]);
                   onChangeDetectedRooms([]);
                   setMode("uploading");
                 }}
-                className="mt-3 text-xs text-emerald-800 hover:underline"
+                className="mt-3 block text-xs text-emerald-800 hover:underline"
               >
                 Empezar de cero
               </button>
