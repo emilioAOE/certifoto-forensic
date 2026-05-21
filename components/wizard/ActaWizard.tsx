@@ -32,6 +32,7 @@ import {
   getProperty,
 } from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
+import { certifyActa } from "@/lib/acta-certify";
 import { syncContactsFromActa } from "@/lib/contacts";
 import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
@@ -405,7 +406,7 @@ export function ActaWizard() {
     return actaId;
   };
 
-  const handleFinish = () => {
+  const handleGenerateCertificate = async () => {
     if (generating) return;
     setGenerating(true);
     const actaId = createActa();
@@ -413,10 +414,15 @@ export function ActaWizard() {
       setGenerating(false);
       return;
     }
-    // El acta queda en borrador y caemos al detalle, que es el resumen final
-    // con la ultima oportunidad de revisar/editar antes de generar el
-    // certificado (ahi esta el boton "Generar certificado").
-    router.push(`/actas/${actaId}`);
+    // Generamos el certificado AQUI: se consume 1 credito y el acta queda
+    // sellada e inmutable. Al caer al detalle, ya esta certificada (solo
+    // lectura + descarga). Sin creditos -> a comprar un pack.
+    const result = await certifyActa(actaId);
+    if (result.error === "no_credits") {
+      router.push(`/precios?from=certify`);
+    } else {
+      router.push(`/actas/${actaId}`);
+    }
   };
 
   return (
@@ -571,16 +577,16 @@ export function ActaWizard() {
           </button>
         ) : (
           <button
-            onClick={handleFinish}
+            onClick={handleGenerateCertificate}
             disabled={generating}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim disabled:opacity-60 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {generating ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <ShieldCheck className="h-4 w-4" />
             )}
-            {generating ? "Abriendo resumen…" : "Revisar y certificar"}
+            {generating ? "Generando certificado…" : "Generar certificado"}
           </button>
         )}
       </div>
