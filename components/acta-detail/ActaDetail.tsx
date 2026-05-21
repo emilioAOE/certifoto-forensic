@@ -6,17 +6,14 @@ import Link from "next/link";
 import {
   ArrowLeft,
   Camera,
-  FileSignature,
   CheckCircle,
   AlertCircle,
   MapPin,
   Calendar,
   Users,
   FileDown,
-  Send,
   Trash2,
   GitCompare,
-  Share2,
 } from "lucide-react";
 import { getActa, getProperty, saveActa, deleteActa, isActaCertified } from "@/lib/storage";
 import {
@@ -40,12 +37,9 @@ import type { Acta, Property } from "@/lib/acta-types";
 import { cn } from "@/lib/cn";
 import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
-import { SignaturesPanel } from "./SignaturesPanel";
 import { BulkPhotoUploader } from "./BulkPhotoUploader";
 import { InventorySection } from "@/components/inventory/InventorySection";
 import { generateActaPdf } from "@/lib/acta-pdf";
-import { exportActaAsShareFile } from "@/lib/share-acta";
-import { downloadBlob } from "@/lib/export-import";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 import {
@@ -116,47 +110,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const proceedRequestSignatures = () => {
-    if (!acta) return;
-    updateActa((a) =>
-      appendAuditLog(
-        { ...a, status: "pending_signatures" },
-        a.createdByName,
-        a.createdByRole,
-        null,
-        "signature_requested",
-        { partiesCount: a.parties.filter((p) => p.canSign).length }
-      )
-    );
-    toast.success("Firmas solicitadas", "El acta está lista para que las partes firmen.");
-  };
-
-  const handleRequestSignatures = () => {
-    if (!acta) return;
-    const validation = validateActaForReview(acta);
-
-    if (!validation.valid || validation.warnings.length > 0) {
-      const items: ValidationItem[] = [
-        ...validation.errors.map((m) => ({ level: "error" as const, message: m })),
-        ...validation.warnings.map((m) => ({ level: "warning" as const, message: m })),
-      ];
-      setValidationModal({
-        title: validation.valid
-          ? "Hay advertencias antes de solicitar firmas"
-          : "No se puede solicitar firmas",
-        items,
-        onContinue: validation.valid ? proceedRequestSignatures : undefined,
-      });
-      return;
-    }
-    proceedRequestSignatures();
-  };
-
   const handleCertify = async () => {
     if (!acta) return;
-    // Para certificar requerimos contenido basico (rooms + fotos minimas).
-    // Las firmas faltantes solo bloquean si el usuario abandono el flujo —
-    // muchos firman por canal externo y solo certifican el respaldo.
     const reviewValidation = validateActaForReview(acta);
     if (!reviewValidation.valid) {
       const items: ValidationItem[] = reviewValidation.errors.map((m) => ({
@@ -164,7 +119,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         message: m,
       }));
       setValidationModal({
-        title: "No se puede certificar el acta todavía",
+        title: "No se puede generar el certificado todavía",
         items,
       });
       return;
@@ -173,23 +128,19 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       const ok = await confirm({
         title: "Sin créditos disponibles",
         message:
-          "Para certificar un acta necesitas al menos 1 crédito. ¿Quieres ir a comprar un pack?",
+          "Para generar el certificado necesitas al menos 1 crédito. ¿Quieres ir a comprar un pack?",
         variant: "default",
         confirmLabel: "Ver packs",
       });
       if (ok) router.push("/precios");
       return;
     }
-    const missingSignatures =
-      progress.signaturesObtained < progress.signaturesRequired;
-    const sigWarning = missingSignatures
-      ? ` Aviso: faltan ${progress.signaturesRequired - progress.signaturesObtained} firma(s). Si las firmas se gestionan por otro canal, puedes certificar igual.`
-      : "";
     const ok = await confirm({
-      title: "Certificar este acta",
-      message: `Al certificar consumes 1 crédito y el acta queda inmutable. Se sella el hash del documento, se quita la marca de agua del PDF y queda lista para compartir como .certifoto. Esta acción no se puede deshacer.${sigWarning}`,
-      variant: missingSignatures ? "warn" : "default",
-      confirmLabel: "Sí, certificar (1 crédito)",
+      title: "Generar el certificado",
+      message:
+        "Se sella el documento (queda inmutable, con su huella digital), se quita la marca de agua del PDF y se consume 1 crédito. Después de generarlo ya no podrás editarlo. Esta acción no se puede deshacer.",
+      variant: "default",
+      confirmLabel: "Sí, generar certificado (1 crédito)",
     });
     if (!ok) return;
 
@@ -224,8 +175,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         setActa(result.acta);
       }
       toast.success(
-        "Acta certificada",
-        "El documento quedó sellado e inmutable. Ya puedes compartirlo como .certifoto."
+        "Certificado generado",
+        "El documento quedó sellado e inmutable. Ya puedes descargar el certificado."
       );
     } finally {
       setCertifying(false);
@@ -267,30 +218,6 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     router.push("/actas");
   };
 
-  const handleShareForSign = async () => {
-    if (!acta) return;
-    if (!isActaCertified(acta)) {
-      toast.info(
-        "Certifica el acta primero",
-        "Solo las actas certificadas se pueden compartir como .certifoto. Así te aseguras de que la otra parte recibe un documento sellado."
-      );
-      return;
-    }
-    try {
-      const result = await exportActaAsShareFile(acta.id);
-      downloadBlob(result.blob, result.fileName);
-      toast.success(
-        "Archivo descargado",
-        `Envía el archivo ${result.fileName} por WhatsApp o email a la otra parte. Esa persona lo importa en CertiFoto, firma, y te lo manda de regreso.`
-      );
-    } catch (err) {
-      toast.error(
-        "No se pudo crear el archivo",
-        err instanceof Error ? err.message : "Error desconocido"
-      );
-    }
-  };
-
   if (!mounted) return null;
 
   if (!acta) {
@@ -317,7 +244,6 @@ export function ActaDetail({ actaId }: { actaId: string }) {
   const isReadOnly =
     certified || acta.status === "closed" || acta.status === "archived";
   const validation = validateActaForReview(acta);
-  const canCertify = !certified && validation.valid;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
@@ -379,14 +305,6 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               Comparar
             </Link>
           )}
-          <button
-            onClick={handleShareForSign}
-            className="inline-flex items-center gap-1 rounded-lg bg-purple-50 border border-purple-200 px-3 py-1.5 text-xs text-purple-700 hover:bg-purple-100"
-            title="Genera un archivo .certifoto para enviar a otra persona y que firme"
-          >
-            <Share2 className="h-3.5 w-3.5" />
-            Compartir para firma
-          </button>
           {!isReadOnly && (
             <button
               onClick={handleDelete}
@@ -399,10 +317,19 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           <button
             onClick={handleGeneratePdf}
             disabled={generatingPdf}
-            className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+            className={cn(
+              "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium disabled:opacity-50",
+              certified
+                ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                : "bg-gray-100 border border-gray-200 text-gray-700 hover:bg-gray-200"
+            )}
           >
             <FileDown className="h-3.5 w-3.5" />
-            {generatingPdf ? "Generando..." : "Descargar PDF"}
+            {generatingPdf
+              ? "Generando..."
+              : certified
+              ? "Descargar certificado"
+              : "Descargar PDF (borrador)"}
           </button>
         </div>
       </header>
@@ -483,56 +410,47 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             label="IA completada"
             value={`${progress.photosWithAI}/${progress.totalPhotos}`}
           />
-          <ProgressStat
-            icon={<FileSignature className="h-3 w-3" />}
-            label="Firmas"
-            value={`${progress.signaturesObtained}/${progress.signaturesRequired}`}
-          />
         </div>
 
-        {/* Action buttons based on status */}
-        <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap gap-2">
-          {(acta.status === "evidence_collection" || acta.status === "review") &&
-            !isReadOnly && (
-              <button
-                onClick={handleRequestSignatures}
-                disabled={!validation.valid}
-                className="inline-flex items-center gap-1 rounded-lg bg-accent text-white px-3 py-1.5 text-xs font-medium hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <Send className="h-3.5 w-3.5" />
-                Solicitar firmas
-              </button>
-            )}
-          {canCertify && (
+        {/* Accion principal: generar el certificado */}
+        {!certified && (
+          <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap items-center gap-2">
             <button
               onClick={handleCertify}
-              disabled={certifying}
-              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-medium hover:bg-emerald-700 disabled:opacity-30"
+              disabled={certifying || !validation.valid}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed"
               title={
                 credits >= 1
                   ? "Sella el acta y la deja inmutable. Consume 1 crédito."
-                  : "Necesitas comprar un pack de créditos para certificar"
+                  : "Necesitas un pack de créditos para generar el certificado"
               }
             >
-              <Award className="h-3.5 w-3.5" />
+              <Award className="h-4 w-4" />
               {certifying
-                ? "Certificando..."
+                ? "Generando certificado…"
                 : credits >= 1
-                ? "Certificar acta (1 crédito)"
-                : "Certificar (sin créditos)"}
+                ? "Generar certificado (1 crédito)"
+                : "Generar certificado"}
             </button>
-          )}
-
-          {!validation.valid && acta.status !== "closed" && (
-            <div className="text-xs text-amber-600 flex items-start gap-1">
-              <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <div>
-                <span className="font-medium">Pendiente:</span>{" "}
-                {validation.errors[0]}
+            {credits < 1 && (
+              <span className="text-xs text-muted">
+                No tienes créditos —{" "}
+                <Link href="/precios" className="text-accent underline">
+                  ver packs
+                </Link>
+              </span>
+            )}
+            {!validation.valid && (
+              <div className="text-xs text-amber-600 flex items-start gap-1">
+                <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <div>
+                  <span className="font-medium">Pendiente:</span>{" "}
+                  {validation.errors[0]}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Property info */}
@@ -582,7 +500,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           <Users className="h-3.5 w-3.5" />
           Partes ({acta.parties.length})
         </h3>
-        <PartiesSummary parties={acta.parties} signatures={acta.signatures} />
+        <PartiesSummary parties={acta.parties} />
       </section>
 
       {/* Rooms / Evidence */}
@@ -714,25 +632,6 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           readOnly={isReadOnly}
           onUpdate={updateActa}
         />
-      )}
-
-      {/* Signatures */}
-      {(acta.status === "pending_signatures" ||
-        acta.signatures.length > 0 ||
-        acta.status === "signed_with_conformity" ||
-        acta.status === "signed_with_observations" ||
-        acta.status === "closed") && (
-        <section className="rounded-lg border border-gray-200 bg-white p-4">
-          <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
-            <FileSignature className="h-3.5 w-3.5" />
-            Firmas
-          </h3>
-          <SignaturesPanel
-            acta={acta}
-            readOnly={isReadOnly}
-            onUpdate={updateActa}
-          />
-        </section>
       )}
 
       {/* Disclaimer */}

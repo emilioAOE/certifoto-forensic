@@ -61,20 +61,18 @@ export function validateActaForReview(acta: Acta): ValidationResult {
   if (acta.parties.length < 1) {
     errors.push("El acta debe tener al menos una parte registrada.");
   }
-  const requireSign = acta.parties.filter((p) => p.canSign);
-  if (requireSign.length < 1) {
-    errors.push("Al menos una parte debe poder firmar.");
-  }
 
+  // El certificado siempre se puede generar: lo siguiente son recomendaciones
+  // (avisos), no bloqueos. Asi el usuario decide cuando sellar el documento.
   if (acta.rooms.length === 0) {
-    errors.push("Debes seleccionar al menos un ambiente.");
+    warnings.push("Aún no hay ambientes con fotos en el acta.");
   }
 
   for (const room of acta.rooms) {
     if (room.required) {
       const photos = acta.photos.filter((p) => p.roomId === room.id);
       if (photos.length === 0) {
-        errors.push(`El ambiente "${room.name}" es obligatorio y no tiene fotos.`);
+        warnings.push(`El ambiente "${room.name}" no tiene fotos.`);
       } else if (photos.length < room.minPhotos) {
         warnings.push(
           `El ambiente "${room.name}" tiene ${photos.length} foto(s), se recomendaba al menos ${room.minPhotos}.`

@@ -48,11 +48,11 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
   return (
     <div>
       <h2 className="text-lg font-semibold text-gray-900 mb-1">
-        Revisa y genera tu certificado
+        Revisa el acta
       </h2>
       <p className="text-sm text-muted mb-5">
-        Esto es lo que va a quedar registrado. Revisa y, si está todo bien,
-        genera el certificado.
+        Esto es lo que va a quedar registrado. En el siguiente paso revisas el
+        acta completa y generas el certificado.
       </p>
 
       <div className="space-y-3">
@@ -149,9 +149,9 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
         <div className="flex items-start gap-2">
           <ShieldCheck className="h-4 w-4 text-accent-dark shrink-0 mt-0.5" />
           <p className="text-xs text-gray-700 leading-relaxed">
-            Al generar el certificado se sella el documento (queda inmutable,
-            con su huella digital) y se consume 1 crédito. Las firmas de las
-            partes se pueden agregar después.
+            En el siguiente paso revisas el acta completa y, cuando esté lista,
+            generas el certificado: se sella el documento (queda inmutable, con
+            su huella digital), se consume 1 crédito y ya no se podrá editar.
           </p>
         </div>
       </div>

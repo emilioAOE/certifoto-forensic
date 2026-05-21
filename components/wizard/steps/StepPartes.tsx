@@ -71,8 +71,8 @@ export function StepPartes({ parties, onChange }: StepPartesProps) {
         Datos de las partes
       </h2>
       <p className="text-sm text-muted mb-5">
-        Agrega a las personas que participarán en el acta. Al menos una parte
-        debe poder firmar.
+        Agrega a las personas que participarán en el acta (arrendador,
+        arrendatario, corredor, etc.).
       </p>
 
       {/* Add buttons */}
@@ -245,8 +245,7 @@ function PartyRow({
                 content={
                   <>
                     Estos permisos definen qué puede hacer esta parte sobre el
-                    acta. Si no puede firmar, no aparece en la lista de firmas
-                    requeridas.
+                    acta.
                   </>
                 }
               />
@@ -261,11 +260,6 @@ function PartyRow({
                 label="Puede comentar"
                 checked={party.canComment}
                 onChange={(v) => onUpdate({ canComment: v })}
-              />
-              <Checkbox
-                label="Puede firmar"
-                checked={party.canSign}
-                onChange={(v) => onUpdate({ canSign: v })}
               />
             </div>
           </div>

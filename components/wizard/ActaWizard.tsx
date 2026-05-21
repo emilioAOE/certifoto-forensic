@@ -32,7 +32,6 @@ import {
   getProperty,
 } from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
-import { certifyActa } from "@/lib/acta-certify";
 import { syncContactsFromActa } from "@/lib/contacts";
 import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
@@ -406,7 +405,7 @@ export function ActaWizard() {
     return actaId;
   };
 
-  const handleGenerateCertificate = async () => {
+  const handleFinish = () => {
     if (generating) return;
     setGenerating(true);
     const actaId = createActa();
@@ -414,15 +413,10 @@ export function ActaWizard() {
       setGenerating(false);
       return;
     }
-    const result = await certifyActa(actaId);
-    if (result.error === "no_credits") {
-      // Sin creditos: llevar a precios para comprar un pack.
-      router.push(`/precios?from=certify`);
-    } else {
-      // ok / not_ready / internal: ir al acta. Si quedo certificada, muestra el
-      // certificado; si falto algo, el detalle guia para completarlo y sellar.
-      router.push(`/actas/${actaId}`);
-    }
+    // El acta queda en borrador y caemos al detalle, que es el resumen final
+    // con la ultima oportunidad de revisar/editar antes de generar el
+    // certificado (ahi esta el boton "Generar certificado").
+    router.push(`/actas/${actaId}`);
   };
 
   return (
@@ -577,7 +571,7 @@ export function ActaWizard() {
           </button>
         ) : (
           <button
-            onClick={handleGenerateCertificate}
+            onClick={handleFinish}
             disabled={generating}
             className="inline-flex items-center gap-1.5 rounded-lg bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim disabled:opacity-60 disabled:cursor-not-allowed"
           >
@@ -586,7 +580,7 @@ export function ActaWizard() {
             ) : (
               <ShieldCheck className="h-4 w-4" />
             )}
-            {generating ? "Generando certificado…" : "Generar certificado"}
+            {generating ? "Abriendo resumen…" : "Revisar y certificar"}
           </button>
         )}
       </div>
