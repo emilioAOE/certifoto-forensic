@@ -372,7 +372,9 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         </section>
       )}
 
-      {/* Progress + actions */}
+      {/* Progreso + accion de generar. Solo en borrador: una vez certificada
+          el acta es definitiva, no tiene sentido mostrar progreso. */}
+      {!certified && (
       <section className="rounded-lg border border-gray-200 bg-white p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-muted uppercase tracking-wider">
@@ -452,6 +454,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           </div>
         )}
       </section>
+      )}
 
       {/* Property info */}
       {property && (
