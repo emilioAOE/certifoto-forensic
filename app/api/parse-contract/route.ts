@@ -53,10 +53,14 @@ interface ParsedContract {
   landlord: {
     name: string | null;
     rut: string | null;
+    email: string | null;
+    phone: string | null;
   };
   tenant: {
     name: string | null;
     rut: string | null;
+    email: string | null;
+    phone: string | null;
   };
   contract: {
     monthlyAmount: number | null;
@@ -103,10 +107,14 @@ PROPIEDAD:
 ARRENDADOR (el dueno o quien entrega el inmueble en arriendo):
 - name: nombre completo
 - rut: RUT en formato chileno con puntos y guion (ej: "12.345.678-9"). NO inventes RUTs.
+- email: correo electronico si aparece (ej: en la clausula de notificaciones). null si no aparece.
+- phone: telefono de contacto si aparece. null si no aparece.
 
 ARRENDATARIO (quien recibe el inmueble en arriendo):
 - name: nombre completo
 - rut: RUT en formato chileno con puntos y guion
+- email: correo electronico si aparece. null si no aparece.
+- phone: telefono de contacto si aparece. null si no aparece.
 
 CONTRATO:
 - monthlyAmount: monto mensual del arriendo en pesos chilenos. Solo el numero (ej: 450000 para "$450.000"). Si esta en UF, devuelve null y menciona en notes.
@@ -314,8 +322,10 @@ export async function POST(
                 properties: {
                   name: { type: ["string", "null"] },
                   rut: { type: ["string", "null"] },
+                  email: { type: ["string", "null"] },
+                  phone: { type: ["string", "null"] },
                 },
-                required: ["name", "rut"],
+                required: ["name", "rut", "email", "phone"],
                 additionalProperties: false,
               },
               tenant: {
@@ -323,8 +333,10 @@ export async function POST(
                 properties: {
                   name: { type: ["string", "null"] },
                   rut: { type: ["string", "null"] },
+                  email: { type: ["string", "null"] },
+                  phone: { type: ["string", "null"] },
                 },
-                required: ["name", "rut"],
+                required: ["name", "rut", "email", "phone"],
                 additionalProperties: false,
               },
               contract: {

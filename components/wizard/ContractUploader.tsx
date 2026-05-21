@@ -263,11 +263,15 @@ function ExtractionPreview({
         <PreviewSection title="Arrendador">
           <PreviewField label="Nombre" value={extraction.landlord.name} />
           <PreviewField label="RUT" value={extraction.landlord.rut} />
+          <PreviewField label="Email" value={extraction.landlord.email} />
+          <PreviewField label="Teléfono" value={extraction.landlord.phone} />
         </PreviewSection>
 
         <PreviewSection title="Arrendatario">
           <PreviewField label="Nombre" value={extraction.tenant.name} />
           <PreviewField label="RUT" value={extraction.tenant.rut} />
+          <PreviewField label="Email" value={extraction.tenant.email} />
+          <PreviewField label="Teléfono" value={extraction.tenant.phone} />
         </PreviewSection>
 
         <PreviewSection title="Contrato">

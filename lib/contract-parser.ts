@@ -19,7 +19,13 @@
  */
 
 import { findComunaByName, type Region } from "./chile-comunas";
-import { cleanRut, isValidRut, formatRut, parseChileanDate } from "./validators";
+import {
+  cleanRut,
+  isValidRut,
+  formatRut,
+  parseChileanDate,
+  isValidEmail,
+} from "./validators";
 
 export interface ContractExtraction {
   rawText: string;
@@ -33,10 +39,14 @@ export interface ContractExtraction {
   landlord: {
     name: string | null;
     rut: string | null;
+    email: string | null;
+    phone: string | null;
   };
   tenant: {
     name: string | null;
     rut: string | null;
+    email: string | null;
+    phone: string | null;
   };
   contract: {
     monthlyAmount: number | null;
@@ -59,6 +69,36 @@ export interface ContractExtraction {
     pages: number;
     chars: number;
   };
+}
+
+/** Shape de la respuesta del endpoint /api/parse-contract. */
+interface AIContractData {
+  property: {
+    address: string | null;
+    unit: string | null;
+    commune: string | null;
+    city: string | null;
+  };
+  landlord: {
+    name: string | null;
+    rut: string | null;
+    email: string | null;
+    phone: string | null;
+  };
+  tenant: {
+    name: string | null;
+    rut: string | null;
+    email: string | null;
+    phone: string | null;
+  };
+  contract: {
+    monthlyAmount: number | null;
+    startDate: string | null;
+    endDate: string | null;
+    deposit: number | null;
+    depositKind: "months" | "amount" | null;
+  };
+  notes: string | null;
 }
 
 // ============================================
@@ -395,24 +435,7 @@ async function tryParseImagesWithAI(
     if (!res.ok) return null;
     const data = (await res.json()) as {
       ok?: boolean;
-      data?: {
-        property: {
-          address: string | null;
-          unit: string | null;
-          commune: string | null;
-          city: string | null;
-        };
-        landlord: { name: string | null; rut: string | null };
-        tenant: { name: string | null; rut: string | null };
-        contract: {
-          monthlyAmount: number | null;
-          startDate: string | null;
-          endDate: string | null;
-          deposit: number | null;
-          depositKind: "months" | "amount" | null;
-        };
-        notes: string | null;
-      };
+      data?: AIContractData;
     };
     if (!data.ok || !data.data) return null;
     return mergeAIWithLocal(
@@ -439,8 +462,8 @@ function buildEmptyLocal(): ContractExtraction {
       region: null,
       city: null,
     },
-    landlord: { name: null, rut: null },
-    tenant: { name: null, rut: null },
+    landlord: { name: null, rut: null, email: null, phone: null },
+    tenant: { name: null, rut: null, email: null, phone: null },
     contract: {
       monthlyAmount: null,
       startDate: null,
@@ -482,24 +505,7 @@ async function parseContractTextSmart(
     }
     const data = (await res.json()) as {
       ok?: boolean;
-      data?: {
-        property: {
-          address: string | null;
-          unit: string | null;
-          commune: string | null;
-          city: string | null;
-        };
-        landlord: { name: string | null; rut: string | null };
-        tenant: { name: string | null; rut: string | null };
-        contract: {
-          monthlyAmount: number | null;
-          startDate: string | null;
-          endDate: string | null;
-          deposit: number | null;
-          depositKind: "months" | "amount" | null;
-        };
-        notes: string | null;
-      };
+      data?: AIContractData;
     };
     if (!data.ok || !data.data) return local;
 
@@ -516,31 +522,16 @@ async function parseContractTextSmart(
  * Resuelve la region a partir del nombre de comuna y normaliza/valida RUTs.
  */
 function mergeAIWithLocal(
-  ai: {
-    property: {
-      address: string | null;
-      unit: string | null;
-      commune: string | null;
-      city: string | null;
-    };
-    landlord: { name: string | null; rut: string | null };
-    tenant: { name: string | null; rut: string | null };
-    contract: {
-      monthlyAmount: number | null;
-      startDate: string | null;
-      endDate: string | null;
-      deposit: number | null;
-      depositKind: "months" | "amount" | null;
-    };
-    notes: string | null;
-  },
+  ai: AIContractData,
   local: ContractExtraction,
   rawText: string,
   pages: number
 ): ContractExtraction {
-  // Normalizar y validar RUTs de AI. Si AI devolvio basura, caer a local.
-  const aiLandlordRut = normalizeRut(ai.landlord.rut);
-  const aiTenantRut = normalizeRut(ai.tenant.rut);
+  // Normalizar RUTs de AI. Conservamos el RUT aunque el DV no valide (suele
+  // ser un digito mal leido por OCR/vision): es mejor mostrarlo para que el
+  // usuario corrija que descartarlo y dejar el campo vacio.
+  const aiLandlordRut = normalizeRutSoft(ai.landlord.rut);
+  const aiTenantRut = normalizeRutSoft(ai.tenant.rut);
 
   // Resolver comuna → region usando nuestro catalogo. Si AI dio una comuna
   // valida la priorizamos sobre la del heuristico.
@@ -588,10 +579,14 @@ function mergeAIWithLocal(
     landlord: {
       name: ai.landlord.name ?? local.landlord.name,
       rut: aiLandlordRut ?? local.landlord.rut,
+      email: normalizeEmail(ai.landlord.email) ?? local.landlord.email,
+      phone: normalizePhone(ai.landlord.phone) ?? local.landlord.phone,
     },
     tenant: {
       name: ai.tenant.name ?? local.tenant.name,
       rut: aiTenantRut ?? local.tenant.rut,
+      email: normalizeEmail(ai.tenant.email) ?? local.tenant.email,
+      phone: normalizePhone(ai.tenant.phone) ?? local.tenant.phone,
     },
     contract: {
       monthlyAmount: ai.contract.monthlyAmount ?? local.contract.monthlyAmount,
@@ -616,15 +611,33 @@ function mergeAIWithLocal(
 }
 
 /**
- * Normaliza un RUT a formato canonico ("12.345.678-9") y valida con DV.
- * Retorna null si no es un RUT valido.
+ * Normaliza un RUT a formato "12.345.678-9" SIN exigir que el DV valide.
+ * Solo descarta entradas que no parezcan un RUT (muy cortas o con cuerpo no
+ * numerico). Asi, si la IA leyo un RUT con un digito mal, igual se muestra y
+ * el usuario lo corrige en vez de tener que escribirlo entero.
  */
-function normalizeRut(raw: string | null): string | null {
+function normalizeRutSoft(raw: string | null): string | null {
   if (!raw) return null;
   const cleaned = cleanRut(raw);
-  if (!cleaned) return null;
-  if (!isValidRut(cleaned)) return null;
+  if (cleaned.length < 2) return null;
+  const body = cleaned.slice(0, -1);
+  if (!/^\d+$/.test(body)) return null;
   return formatRut(cleaned);
+}
+
+/** Devuelve el email si parece valido; null si no. */
+function normalizeEmail(raw: string | null): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  return isValidEmail(trimmed) ? trimmed : null;
+}
+
+/** Limpia un telefono dejando digitos y el "+" inicial. null si queda muy corto. */
+function normalizePhone(raw: string | null): string | null {
+  if (!raw) return null;
+  const cleaned = raw.trim().replace(/(?!^\+)[^\d]/g, "");
+  const digits = cleaned.replace(/\D/g, "");
+  return digits.length >= 7 ? cleaned : null;
 }
 
 // ============================================
@@ -811,10 +824,14 @@ export function parseContractText(
     landlord: {
       name: landlordName,
       rut: landlordRut,
+      email: null,
+      phone: null,
     },
     tenant: {
       name: tenantName,
       rut: tenantRut,
+      email: null,
+      phone: null,
     },
     contract: {
       monthlyAmount,

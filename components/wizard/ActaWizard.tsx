@@ -584,24 +584,27 @@ function mergePartiesFromExtraction(
   const ensureParty = (
     role: PartyRole,
     name: string | null,
-    rut: string | null
+    rut: string | null,
+    email: string | null,
+    phone: string | null
   ) => {
-    if (!name && !rut) return;
+    if (!name && !rut && !email && !phone) return;
     const idx = updated.findIndex((p) => p.role === role);
     if (idx >= 0) {
       updated[idx] = {
         ...updated[idx],
         name: updated[idx].name || name || updated[idx].name,
-        documentId:
-          updated[idx].documentId || rut || updated[idx].documentId,
+        documentId: updated[idx].documentId || rut || updated[idx].documentId,
+        email: updated[idx].email || email || updated[idx].email,
+        phone: updated[idx].phone || phone || updated[idx].phone,
       };
     } else {
       const tempId = `t_${Date.now()}_${Math.random().toString(36).slice(2, 6)}_${role}`;
       updated.push({
         tempId,
         name: name ?? "",
-        email: null,
-        phone: null,
+        email: email ?? null,
+        phone: phone ?? null,
         documentId: rut,
         role,
         represents: "self" as RepresentsTarget,
@@ -612,8 +615,20 @@ function mergePartiesFromExtraction(
     }
   };
 
-  ensureParty("landlord", extraction.landlord.name, extraction.landlord.rut);
-  ensureParty("tenant", extraction.tenant.name, extraction.tenant.rut);
+  ensureParty(
+    "landlord",
+    extraction.landlord.name,
+    extraction.landlord.rut,
+    extraction.landlord.email,
+    extraction.landlord.phone
+  );
+  ensureParty(
+    "tenant",
+    extraction.tenant.name,
+    extraction.tenant.rut,
+    extraction.tenant.email,
+    extraction.tenant.phone
+  );
 
   return updated;
 }
