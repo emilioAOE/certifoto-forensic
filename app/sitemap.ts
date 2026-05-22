@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

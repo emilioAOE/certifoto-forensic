@@ -19,7 +19,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

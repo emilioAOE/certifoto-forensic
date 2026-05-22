@@ -28,7 +28,7 @@ Cada foto recibe hash criptográfico SHA-256 (huella única), pHash (huella visu
 - 10 certificaciones: $24.900
 - 50 certificaciones: $99.900 (corredoras y administradoras con cartera grande)
 
-Los créditos no caducan. Detalle en https://certifoto.cl/precios
+Los créditos no caducan. Detalle en https://www.certifoto.cl/precios
 
 ## Validez legal
 
@@ -36,18 +36,18 @@ CertiFoto utiliza firma digital simple (equivalente a aceptar términos en una p
 
 ## Páginas principales
 
-- [Inicio](https://certifoto.cl/): qué es CertiFoto y cómo funciona.
-- [Precios](https://certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
-- [Preguntas frecuentes](https://certifoto.cl/faq): dudas sobre actas, firma, evidencia e IA.
-- [Sobre nosotros](https://certifoto.cl/sobre): la misión del proyecto.
-- [Contacto](https://certifoto.cl/contacto): contacto@certifoto.cl
-- [Términos de uso](https://certifoto.cl/terminos)
-- [Privacidad](https://certifoto.cl/privacidad)
+- [Inicio](https://www.certifoto.cl/): qué es CertiFoto y cómo funciona.
+- [Precios](https://www.certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
+- [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, firma, evidencia e IA.
+- [Sobre nosotros](https://www.certifoto.cl/sobre): la misión del proyecto.
+- [Contacto](https://www.certifoto.cl/contacto): contacto@certifoto.cl
+- [Términos de uso](https://www.certifoto.cl/terminos)
+- [Privacidad](https://www.certifoto.cl/privacidad)
 
 ## Blog
 
-- [Cómo hacer una acta de entrega de arriendo paso a paso](https://certifoto.cl/blog/como-hacer-acta-entrega-arriendo)
-- [Diferencia entre acta de entrega y acta de devolución](https://certifoto.cl/blog/diferencia-acta-entrega-devolucion)
-- [Cómo respaldar fotos de un arriendo para que tengan validez](https://certifoto.cl/blog/respaldo-fotografico-arriendo)
-- [El rol de la inteligencia artificial en las actas de arriendo](https://certifoto.cl/blog/ia-vision-actas-arriendo)
-- [La garantía del arriendo: cómo evitar discusiones al final](https://certifoto.cl/blog/garantia-arriendo-discusion)
+- [Cómo hacer una acta de entrega de arriendo paso a paso](https://www.certifoto.cl/blog/como-hacer-acta-entrega-arriendo)
+- [Diferencia entre acta de entrega y acta de devolución](https://www.certifoto.cl/blog/diferencia-acta-entrega-devolucion)
+- [Cómo respaldar fotos de un arriendo para que tengan validez](https://www.certifoto.cl/blog/respaldo-fotografico-arriendo)
+- [El rol de la inteligencia artificial en las actas de arriendo](https://www.certifoto.cl/blog/ia-vision-actas-arriendo)
+- [La garantía del arriendo: cómo evitar discusiones al final](https://www.certifoto.cl/blog/garantia-arriendo-discusion)

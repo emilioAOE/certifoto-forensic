@@ -7,4 +7,4 @@ Disallow: /actas
 Disallow: /api
 Disallow: /forensic
 
-Sitemap: https://certifoto.cl/sitemap.xml
+Sitemap: https://www.certifoto.cl/sitemap.xml

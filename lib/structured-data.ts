@@ -10,7 +10,7 @@
 import { PACKS, formatCLP } from "./packs";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
 const ORG_ID = `${SITE_URL}/#organization`;
 const WEBSITE_ID = `${SITE_URL}/#website`;

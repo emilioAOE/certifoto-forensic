@@ -28,7 +28,7 @@ import { buildEmbeddedBlock } from "./cert-embed";
 import { downloadBlob } from "./export-import";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifoto.cl";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
 async function generateQrCodeDataUrl(text: string): Promise<string | null> {
   try {
