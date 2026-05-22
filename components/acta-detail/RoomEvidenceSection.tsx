@@ -372,6 +372,49 @@ export function RoomEvidenceSection({
             )}
           </div>
 
+          {/* Descripcion del estado por foto (generada por IA / editada) */}
+          {photos.some((p) => p.aiAnalysis || p.userCaption) && (
+            <div className="space-y-2">
+              <p className="text-xs text-muted uppercase tracking-wider">
+                Descripción del estado por foto
+              </p>
+              {photos.map((photo) => {
+                const a = photo.aiAnalysis;
+                if (!a && !photo.userCaption) return null;
+                const findings = a?.damageFindings ?? [];
+                return (
+                  <div
+                    key={photo.id}
+                    className="flex gap-2.5 rounded-md border border-gray-100 bg-gray-50 p-2"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photo.thumbnailDataUrl ?? photo.dataUrl}
+                      alt={photo.fileName}
+                      className="h-12 w-12 rounded object-cover border border-gray-200 shrink-0"
+                    />
+                    <div className="min-w-0 flex-1 text-xs">
+                      <p className="text-gray-800 leading-snug">
+                        {photo.userCaption ||
+                          a?.caption ||
+                          a?.conditionSummary ||
+                          "Sin descripción"}
+                      </p>
+                      {findings.length > 0 && (
+                        <p className="text-[11px] text-amber-700 mt-0.5">
+                          {findings.length} hallazgo
+                          {findings.length === 1 ? "" : "s"}
+                          {findings.some((f) => f.needsHumanReview) &&
+                            " · revisar"}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           <input
             ref={cameraInputRef}
             type="file"
