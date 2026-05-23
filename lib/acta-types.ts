@@ -32,8 +32,6 @@ export type ActaStatus =
   | "closed"
   | "archived";
 
-export type ActaModality = "directa" | "gestionada" | "organizacion";
-
 // ============================================
 // Property
 // ============================================
@@ -411,7 +409,6 @@ export interface AuditLogEntry {
 export interface Acta {
   id: string;
   type: ActaType;
-  modality: ActaModality;
   status: ActaStatus;
 
   // Relaciones
@@ -463,18 +460,6 @@ export interface Acta {
 // ============================================
 // Helper / DTO types
 // ============================================
-
-export interface CreateActaInput {
-  type: ActaType;
-  modality: ActaModality;
-  property: Omit<Property, "id" | "createdAt" | "updatedAt">;
-  parties: Omit<Party, "id" | "invitationToken" | "invitationStatus">[];
-  brokerRole?: BrokerActaRole;
-  rooms: Omit<Room, "id" | "photoIds" | "aiSummary">[];
-  inspectionDate?: string;
-  createdByName: string;
-  createdByRole: PartyRole;
-}
 
 export interface ActaSummary {
   id: string;

@@ -127,9 +127,9 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
   doc.setTextColor(110, 110, 110);
   doc.text("Registro digital con respaldo forense de evidencia", margin, y);
 
-  // QR de verificacion (esquina superior derecha)
-  const verifyHash = acta.documentHash ?? acta.id;
-  const verifyUrl = `${SITE_URL}/verificar?h=${verifyHash}`;
+  // QR de verificacion: lleva al verificador de certificados, donde se sube
+  // este PDF para comprobar autenticidad e integridad.
+  const verifyUrl = `${SITE_URL}/forensic`;
   const qrDataUrl = await generateQrCodeDataUrl(verifyUrl);
   if (qrDataUrl) {
     try {

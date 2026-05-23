@@ -127,7 +127,6 @@ export function StepFotos({
     return {
       id: DRAFT_ACTA_ID,
       type: "entrega",
-      modality: "gestionada",
       status: "evidence_collection",
       propertyId: "wizard-draft-property",
       parties: [],

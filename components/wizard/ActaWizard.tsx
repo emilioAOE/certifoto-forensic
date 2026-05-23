@@ -358,9 +358,6 @@ export function ActaWizard() {
     const acta: Acta = {
       id: actaId,
       type: data.type,
-      // Modalidad fija — el campo se mantiene en el tipo por compatibilidad,
-      // pero ya no es una decision del usuario en el wizard.
-      modality: "gestionada",
       status: "evidence_collection",
       propertyId,
       parties: partiesWithIds,

@@ -34,7 +34,7 @@ Si nos escribes por el formulario de contacto, recibimos tu nombre, email, telé
 
 ### Datos sensibles (firmas, RUT)
 
-Las firmas digitales son datos biométricos en sentido amplio (signature_pad genera una imagen del trazado). Los RUT pueden considerarse datos personales especiales. CertiFoto los procesa exclusivamente en tu navegador. Si compartes el PDF generado con terceros, eres responsable de su uso posterior.
+Los RUT y datos de contacto pueden considerarse datos personales. CertiFoto los procesa exclusivamente en tu navegador. Si compartes el PDF generado con terceros, eres responsable de su uso posterior.
 
 ## 3. Bases legales del tratamiento
 

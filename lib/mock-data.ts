@@ -18,7 +18,6 @@ import type {
   RepresentsTarget,
   ConditionLevel,
   ActaType,
-  ActaModality,
   AIPhotoAnalysis,
 } from "./acta-types";
 import { ROOM_TEMPLATES } from "./acta-constants";
@@ -178,7 +177,6 @@ async function sha256OfString(text: string): Promise<string> {
 
 export interface WizardMockData {
   type: ActaType;
-  modality: ActaModality;
   property: {
     address: string;
     unit: string | null;
@@ -263,7 +261,6 @@ export function getWizardMockData(): WizardMockData {
 
   return {
     type: "entrega",
-    modality: "gestionada",
     property: {
       address: sampleProp.address,
       unit: sampleProp.unit,
@@ -581,7 +578,6 @@ export async function seedSampleActa(
   const acta: Acta = {
     id: actaId,
     type: data.type,
-    modality: data.modality,
     status: "evidence_collection",
     propertyId,
     parties,

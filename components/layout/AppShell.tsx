@@ -14,7 +14,6 @@ import {
   Search,
   Menu,
   X,
-  Share2,
   LogOut,
   Coins,
   Loader2,
@@ -31,7 +30,6 @@ const NAV_ITEMS = [
   { href: "/contactos", label: "Contactos", icon: Users },
   { href: "/mis-creditos", label: "Mis créditos", icon: Coins },
   { href: "/forensic", label: "Verificar certificado", icon: Shield },
-  { href: "/verificar", label: "Recibir acta", icon: Share2 },
   { href: "/configuracion", label: "Configuración", icon: Settings },
 ];
 
