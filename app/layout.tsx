@@ -7,6 +7,7 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { StorageProvider } from "@/components/StorageProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import { ConfirmDialogProvider } from "@/components/ui/ConfirmDialog";
+import ExpansielAnalytics from "@/components/ExpansielAnalytics";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -116,6 +117,7 @@ export default function RootLayout({
           </ConfirmDialogProvider>
         </ToastProvider>
         <Analytics />
+        <ExpansielAnalytics />
       </body>
     </html>
   );
