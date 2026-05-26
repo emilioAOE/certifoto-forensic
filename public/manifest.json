@@ -1,7 +1,7 @@
 {
   "name": "CertiFoto",
   "short_name": "CertiFoto",
-  "description": "Actas digitales para arriendos en Chile, con respaldo forense de fotografias y firma de las partes.",
+  "description": "Actas con respaldo forense para entrega de propiedades en Chile (arriendo o compraventa). Fotos con hash SHA-256, IA y certificado en PDF verificable.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
