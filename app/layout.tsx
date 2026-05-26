@@ -25,18 +25,20 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "CertiFoto — Actas digitales para arriendos en Chile",
+    default: "CertiFoto — Actas con respaldo forense para entrega de propiedades",
     template: "%s — CertiFoto",
   },
   description:
-    "Documenta el estado de propiedades arrendadas con fotos respaldadas, descripciones asistidas con IA y firma digital de las partes. Diseñado para arrendadores, arrendatarios, corredores y administradoras.",
+    "Documenta el estado de una propiedad al entregarla o recibirla (arriendo o compraventa) con fotos respaldadas con hash SHA-256, descripciones asistidas con IA y un certificado en PDF verificable. Sin registro previo.",
   keywords: [
     "acta de entrega",
     "acta de devolución",
     "arriendo Chile",
+    "compraventa propiedad",
     "inspección propiedad",
     "evidencia fotográfica",
-    "firma digital",
+    "certificado verificable",
+    "respaldo forense fotos",
     "corredor de propiedades",
     "administradora",
     "inventario amoblado",
@@ -52,9 +54,9 @@ export const metadata: Metadata = {
     locale: "es_CL",
     url: SITE_URL,
     siteName: "CertiFoto",
-    title: "CertiFoto — Actas digitales para arriendos en Chile",
+    title: "CertiFoto — Actas con respaldo forense para entrega de propiedades",
     description:
-      "Documenta el estado de propiedades arrendadas con fotos respaldadas, descripciones con IA y firma digital. Sin registro previo.",
+      "Fotos con hash SHA-256, descripciones con IA y certificado en PDF verificable. Para arriendo y compraventa, sin registro.",
     images: [
       {
         url: "/opengraph-image",
@@ -66,9 +68,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CertiFoto — Actas digitales para arriendos en Chile",
+    title: "CertiFoto — Actas con respaldo forense para entrega de propiedades",
     description:
-      "Documenta el estado de propiedades con fotos respaldadas, IA y firma digital. Sin registro.",
+      "Fotos respaldadas con SHA-256, descripciones con IA y certificado en PDF verificable. Arriendo y compraventa.",
     images: ["/opengraph-image"],
   },
   robots: {

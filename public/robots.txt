@@ -5,6 +5,9 @@ Allow: /
 Disallow: /dashboard
 Disallow: /actas
 Disallow: /api
-Disallow: /forensic
+Disallow: /propiedades
+Disallow: /contactos
+Disallow: /mis-creditos
+Disallow: /configuracion
 
 Sitemap: https://www.certifoto.cl/sitemap.xml

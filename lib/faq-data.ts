@@ -26,15 +26,15 @@ export const FAQ_SECTIONS: FaqSection[] = [
     items: [
       {
         q: "¿Qué es exactamente CertiFoto?",
-        a: "CertiFoto es una plataforma chilena que te permite documentar el estado de una propiedad arrendada con fotos, descripciones automáticas asistidas con inteligencia artificial y firma digital de las partes. Sirve para crear actas de entrega, devolución, inspección o inventario.",
+        a: "CertiFoto es una plataforma chilena que te permite documentar el estado de una propiedad al entregarla o recibirla (arriendo o compraventa) con fotos respaldadas con hash criptográfico SHA-256, descripciones asistidas por IA y un certificado en PDF verificable. Sirve para crear actas de entrega, devolución, inspección o inventario.",
       },
       {
         q: "¿Por qué usar una herramienta digital y no papel?",
-        a: "Una acta digital queda fechada con precisión técnica, las fotos guardan su huella criptográfica, las observaciones quedan vinculadas a cada foto y todo se firma desde el celular o computador sin necesidad de juntarse físicamente. Además, el PDF se puede compartir y archivar al instante.",
+        a: "Una acta digital queda fechada con precisión técnica, las fotos guardan su huella criptográfica (SHA-256, pHash y EXIF) y todo queda consolidado en un único PDF auto-verificable. Si la foto o el documento se alteran después, el verificador lo detecta. Además se comparte y archiva al instante.",
       },
       {
         q: "¿Necesito crear una cuenta para usarlo?",
-        a: "No. CertiFoto te permite ingresar a la plataforma y crear actas sin registro previo. Tus datos se guardan localmente en tu navegador. Para casos profesionales con múltiples propiedades estamos preparando un plan con cuenta y respaldo en la nube.",
+        a: "No. CertiFoto te permite ingresar a la plataforma y crear actas sin registro previo. Tus datos se guardan localmente en tu navegador (IndexedDB). Es lo que llamamos arquitectura sin backend: cero fricción, sin login.",
       },
       {
         q: "¿Cuánto cuesta?",
@@ -53,27 +53,27 @@ export const FAQ_SECTIONS: FaqSection[] = [
       {
         q: "¿Qué tipos de acta puedo crear?",
         a: [
-          "Acta de Entrega: documenta el estado de la propiedad cuando inicia el arriendo.",
+          "Acta de Entrega: documenta el estado de la propiedad cuando inicia el arriendo o se entrega tras una compraventa.",
           "Acta de Devolución: documenta el estado al final del arriendo, idealmente para comparar contra la entrega.",
           "Acta de Inspección: revisión intermedia durante el contrato.",
           "Inventario de Propiedad: listado de muebles, electrodomésticos y accesorios en propiedades amobladas.",
         ],
       },
       {
-        q: "¿Quiénes pueden firmar el acta?",
-        a: "Cualquier parte que agregues con permiso de firma. Típicamente arrendador y arrendatario, pero también puedes incluir corredor, administrador o testigos. Cada parte firma de manera independiente y puede dejar observaciones antes de hacerlo.",
+        q: "¿Sirve también para compraventa, no solo arriendo?",
+        a: "Sí. El acta documenta el estado del inmueble al momento de la entrega, independiente del tipo de contrato. Es útil tanto para corredores y arrendadores como para compradores y vendedores que quieren dejar constancia técnica del estado en que se entrega la propiedad.",
       },
       {
-        q: "¿Puedo invitar al arrendador o arrendatario por email?",
-        a: "Estamos terminando esa funcionalidad. Hoy puedes generar el PDF firmado por una parte y compartirlo, o que ambas partes firmen desde el mismo dispositivo durante la inspección. Pronto podrás enviar links únicos de firma a cada parte por email o WhatsApp.",
+        q: "¿Quiénes pueden aparecer como partes en el acta?",
+        a: "Las partes que tú agregues — típicamente arrendador y arrendatario, o comprador y vendedor — y opcionalmente corredor, administrador o testigos. Cada parte queda registrada con nombre, RUT y rol.",
       },
       {
         q: "¿Se puede modificar un acta después de certificada?",
-        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua del PDF y queda lista para compartirse como .certifoto. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento esté verdaderamente listo (firmas obtenidas, fotos completas).",
+        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua del PDF y queda lista para compartirse como certificado verificable. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento esté verdaderamente listo.",
       },
       {
-        q: "¿Qué pasa si una parte no quiere firmar?",
-        a: "El acta queda registrada igual con la firma de quien sí firmó. La parte que no firma no tiene su nombre en la firma final, pero el documento queda con constancia de quién firmó y quién no. También existe la opción de Rechazar, donde la parte deja por escrito el motivo del rechazo.",
+        q: "¿El certificado consume 1 crédito cada vez?",
+        a: "Sí. Cada vez que generas un certificado se consume 1 crédito. Crear y editar el acta es gratis e ilimitado — el cobro ocurre solo al sellarla. Los créditos no caducan.",
       },
     ],
   },
@@ -83,11 +83,11 @@ export const FAQ_SECTIONS: FaqSection[] = [
     items: [
       {
         q: "¿Qué es el respaldo forense de las fotos?",
-        a: "Cada foto que subes recibe un análisis técnico automático que incluye: hash criptográfico SHA-256 (huella digital única), pHash (huella visual), extracción de metadatos EXIF (fecha, hora, dispositivo, GPS si está disponible), y verificaciones de consistencia. Si una foto se modifica posteriormente, su hash cambia y queda evidencia técnica de la alteración.",
+        a: "Cada foto que subes recibe un análisis técnico automático que incluye: hash criptográfico SHA-256 (huella digital única), pHash (huella visual), extracción de metadatos EXIF (fecha, hora, dispositivo, GPS si está disponible), detección de marcas C2PA y verificaciones de consistencia. Si una foto se modifica posteriormente, su hash cambia y queda evidencia técnica de la alteración.",
       },
       {
         q: "¿Dónde se almacenan las fotos?",
-        a: "Por defecto se almacenan localmente en tu navegador. Las fotos no se suben a servidores externos para el análisis forense. En la versión con cuenta tendrás la opción de respaldo en la nube si lo quieres.",
+        a: "Localmente en tu navegador (IndexedDB). No se suben a servidores externos. El cálculo forense (hash, pHash, EXIF) ocurre en tu dispositivo. La única excepción es el análisis con IA: la imagen se envía cifrada (HTTPS) al proveedor de IA solo para generar la descripción y vuelve.",
       },
       {
         q: "¿Qué pasa si tomo la foto desde la app vs si la subo de la galería?",
@@ -97,10 +97,6 @@ export const FAQ_SECTIONS: FaqSection[] = [
         q: "¿Qué tipo de imágenes acepta?",
         a: "JPEG, PNG, TIFF, HEIF, WebP y AVIF. Ideal son fotos directas del celular sin filtros. Las fotos editadas pasan igual pero la plataforma marca que tienen indicios de edición.",
       },
-      {
-        q: "¿Puedo verificar la autenticidad de una foto que no fue tomada en CertiFoto?",
-        a: "Sí. Tenemos un módulo separado en /forensic donde puedes subir cualquier foto y obtener su análisis: hash, metadatos EXIF, GPS, detección de software de edición y más. Útil para verificar fotos antes de firmar un acta o para cualquier otra revisión.",
-      },
     ],
   },
   {
@@ -109,7 +105,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
     items: [
       {
         q: "¿Qué hace exactamente la IA?",
-        a: "La IA observa cada foto y genera una descripción objetiva del ambiente, identifica los elementos visibles (muros, piso, muebles, etc.) y marca posibles hallazgos como manchas, rayaduras o suciedad. También indica el nivel de confianza de cada hallazgo.",
+        a: "Tres cosas: (1) lee tu contrato (PDF o foto, incluso escaneado) y autocompleta dirección, partes, RUTs, monto, fechas y garantía; (2) detecta automáticamente los ambientes de cada foto (living, cocina, baño, dormitorio, etc.); y (3) describe de manera objetiva el estado de cada foto e identifica posibles hallazgos (manchas, rayaduras, suciedad) con un nivel de confianza.",
       },
       {
         q: "¿Las descripciones de IA son obligatorias?",
@@ -126,24 +122,24 @@ export const FAQ_SECTIONS: FaqSection[] = [
     ],
   },
   {
-    title: "Sobre la firma y el PDF",
-    description: "Validez del documento generado",
+    title: "Sobre el certificado y la verificación",
+    description: "Qué obtienes al certificar y cómo se verifica",
     items: [
       {
-        q: "¿Cómo funciona la firma digital?",
-        a: "Cada parte firma con el dedo o el cursor en un cuadro de firma. Al firmar se registra la fecha, hora, identificación del firmante, su rol y un hash del documento al momento de la firma. Si después alguien modifica el contenido, ese hash deja de coincidir.",
+        q: "¿Qué es exactamente el certificado?",
+        a: "Es el PDF inmutable que entrega CertiFoto al certificar el acta. Incluye portada, datos de la propiedad y partes, fotos por ambiente con sus descripciones, y un anexo técnico con los hashes SHA-256 de cada foto y del documento completo. Después del %%EOF lleva embebido un bloque verificable que permite recalcular su huella sin recurrir a un servidor.",
       },
       {
-        q: "¿La firma digital de CertiFoto tiene la misma validez que una firma manuscrita?",
-        a: "CertiFoto utiliza firma digital simple, equivalente a aceptar términos en cualquier plataforma online. Tiene valor probatorio como evidencia, especialmente combinado con el respaldo forense de las fotos. Para firma electrónica avanzada con valor legal pleno se requiere certificación de proveedores acreditados, lo cual estamos evaluando para versiones futuras.",
+        q: "¿Cómo se verifica un certificado de CertiFoto?",
+        a: "En /forensic cualquiera sube el PDF (o el archivo .certifoto) y el verificador recalcula la huella embebida en el documento. Si la huella coincide, el certificado es auténtico e íntegro. Si fue alterado, el verificador lo detecta. La verificación es local en el navegador — no guardamos ni el archivo ni los datos.",
       },
       {
-        q: "¿El PDF que descargo es definitivo?",
-        a: "Sí. El PDF incluye toda la información: portada, datos de la propiedad y partes, fotos por ambiente, descripciones, observaciones, firmas con timestamp y un anexo técnico con los hashes de cada foto y del documento completo.",
+        q: "¿Qué tan seguro es el certificado frente a falsificación?",
+        a: "El certificado detecta alteraciones (cualquier cambio rompe el hash). Sin embargo, hoy la huella es keyless y la lógica de generación es pública, por lo que el sistema demuestra integridad pero no es a prueba de falsificación absoluta. Una firma criptográfica infalsificable requiere un backend que firme con llave privada — está diseñado y queda como próximo paso, junto con la pasarela de pago.",
       },
       {
-        q: "¿Puedo usar el PDF como evidencia en un juicio?",
-        a: "El PDF puede acompañar una demanda o defensa como respaldo documental, igual que cualquier registro digital. Su utilidad final depende del caso y de la valoración del tribunal. Recomendamos siempre asesorarte con un abogado para casos contenciosos.",
+        q: "¿Puedo usar el certificado como evidencia en un juicio?",
+        a: "El PDF puede acompañar una demanda o defensa como respaldo documental, igual que cualquier registro digital con trazabilidad técnica. Su utilidad final depende del caso y de la valoración del tribunal. Recomendamos siempre asesorarte con un abogado para casos contenciosos. CertiFoto no es un servicio jurídico, notarial ni pericial.",
       },
     ],
   },
@@ -152,11 +148,11 @@ export const FAQ_SECTIONS: FaqSection[] = [
     items: [
       {
         q: "¿Qué datos guardan?",
-        a: "Mientras uses CertiFoto sin cuenta, todos tus datos (actas, fotos, firmas) se guardan localmente en tu navegador. No los recibimos en nuestros servidores. Si en el futuro creas cuenta para sincronización en la nube, lo haremos con tu consentimiento explícito.",
+        a: "Mientras uses CertiFoto sin cuenta, todos tus datos (actas, propiedades, fotos) se guardan localmente en tu navegador. No los recibimos en nuestros servidores. La única excepción es el contenido de las fotos cuando pides análisis de IA: se envía cifrado (HTTPS) al proveedor solo para generar la descripción y no se retiene.",
       },
       {
         q: "¿Comparten datos con terceros?",
-        a: "No. CertiFoto no vende ni comparte datos con terceros. Para servicios de IA usaremos proveedores que cumplan con políticas estrictas de privacidad y solo enviaremos lo necesario para procesar la solicitud.",
+        a: "No. CertiFoto no vende ni comparte datos con terceros. Los servicios de IA que usamos están bajo políticas estrictas de privacidad y no entrenan modelos con tu contenido.",
       },
       {
         q: "¿Puedo borrar mis actas?",

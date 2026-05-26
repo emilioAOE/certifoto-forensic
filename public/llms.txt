@@ -1,25 +1,33 @@
 # CertiFoto
 
-> Plataforma chilena para crear actas digitales del estado de propiedades arrendadas, con respaldo forense de fotografías, descripciones asistidas con inteligencia artificial y firma digital de las partes. Sirve para documentar entregas, devoluciones, inspecciones e inventarios de arriendos en Chile.
+> Plataforma chilena para documentar el estado de un inmueble al entregarlo o recibirlo (arriendo o compraventa), con fotos respaldadas con hash criptográfico SHA-256, descripciones asistidas con inteligencia artificial y un certificado en PDF auto-verificable. Pensada para arrendadores, arrendatarios, compradores, corredores y administradoras.
 
-CertiFoto es una aplicación web (mobile-first) que funciona sin necesidad de crear cuenta: los datos se guardan localmente en el navegador del usuario. Está pensada para arrendadores, arrendatarios, corredores de propiedades y administradoras.
+CertiFoto es una aplicación web (mobile-first) que funciona sin necesidad de crear cuenta: los datos viven localmente en el navegador del usuario (IndexedDB). No tiene backend ni login.
 
 ## Cómo funciona
 
 - Crear y editar actas es **gratis e ilimitado**. La app no cobra por crear documentos.
-- Se paga **solo al certificar** un acta. Certificar sella el documento de forma inmutable (congela su hash criptográfico, quita la marca de agua de "BORRADOR" y lo deja listo para compartir como archivo verificable `.certifoto`). Cada certificación consume 1 crédito.
+- Se paga **solo al certificar** un acta. Certificar sella el documento de forma inmutable (congela su hash criptográfico, quita la marca de agua de "BORRADOR" y lo deja como certificado descargable y verificable). Cada certificación consume 1 crédito.
 - Los créditos se compran en **packs one-time** (pago único, sin suscripciones).
-- Flujo: subir o completar los datos del contrato y la propiedad → subir fotos (la IA detecta los ambientes automáticamente) → agregar partes y firmas → revisar → certificar.
+- Flujo: subir o completar los datos del contrato y la propiedad → subir fotos (la IA detecta los ambientes y describe el estado automáticamente) → agregar partes → revisar → generar certificado.
 
 ## Inteligencia artificial
 
-- La IA describe de forma objetiva cada foto, identifica elementos visibles (muros, piso, muebles) y marca posibles hallazgos (manchas, rayaduras, suciedad) con un nivel de confianza.
+- Lee contratos (PDF o foto, incluso escaneados) y autocompleta dirección, partes, RUTs, monto, fechas y garantía.
+- Clasifica automáticamente cada foto en un ambiente (living, cocina, baño, dormitorio, etc.).
+- Describe de forma objetiva el estado de cada foto y marca posibles hallazgos (manchas, rayaduras, suciedad) con un nivel de confianza.
 - La IA **no atribuye responsabilidades ni determina culpas**. Las descripciones son referenciales y deben ser revisadas por las partes humanas.
-- También lee contratos (PDF o foto, incluso escaneados) para autocompletar los datos del acta.
 
 ## Respaldo forense de las fotos
 
-Cada foto recibe hash criptográfico SHA-256 (huella única), pHash (huella visual), extracción de metadatos EXIF (fecha, hora, dispositivo, GPS) y verificaciones de consistencia. Si una foto se altera después, su hash cambia y queda evidencia técnica.
+Cada foto recibe hash criptográfico SHA-256 (huella única), pHash (huella visual), extracción de metadatos EXIF (fecha, hora, dispositivo, GPS), detección de marcas C2PA y verificaciones de consistencia. Si una foto se altera después, su hash cambia y queda evidencia técnica.
+
+## Certificado y verificación
+
+- El certificado es un PDF inmutable que incluye los datos de la propiedad y partes, las fotos por ambiente con sus descripciones, y un anexo técnico con los hashes SHA-256 de cada foto y del documento completo.
+- Tras el `%%EOF` el PDF lleva embebido un bloque verificable que permite recalcular su huella sin recurrir a un servidor.
+- Cualquiera puede verificar la autenticidad de un certificado en https://www.certifoto.cl/forensic subiendo el PDF (o el archivo `.certifoto`). La verificación es local en el navegador y no guarda nada.
+- **Limitación honesta:** la huella es keyless y la lógica es pública, por lo que CertiFoto detecta alteraciones pero **no es a prueba de falsificación absoluta**. Una firma criptográfica infalsificable requiere un backend con llave privada — está diseñado y pendiente de implementar.
 
 ## Precios (CLP, pago único)
 
@@ -32,13 +40,14 @@ Los créditos no caducan. Detalle en https://www.certifoto.cl/precios
 
 ## Validez legal
 
-CertiFoto utiliza firma digital simple (equivalente a aceptar términos en una plataforma online). Tiene valor probatorio como evidencia, especialmente combinado con el respaldo forense, pero no equivale a firma electrónica avanzada. Para casos contenciosos se recomienda asesoría legal. CertiFoto no es un servicio jurídico, notarial ni pericial.
+CertiFoto entrega un respaldo documental con huella criptográfica y trazabilidad técnica. No es un servicio jurídico, notarial ni pericial, ni equivale a firma electrónica avanzada. El certificado puede acompañar una demanda o defensa como evidencia documental; su utilidad final depende del caso y de la valoración del tribunal. Para casos contenciosos se recomienda asesoría legal.
 
 ## Páginas principales
 
 - [Inicio](https://www.certifoto.cl/): qué es CertiFoto y cómo funciona.
 - [Precios](https://www.certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
-- [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, firma, evidencia e IA.
+- [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, evidencia, IA y certificado.
+- [Verificar certificado](https://www.certifoto.cl/forensic): subir un PDF o `.certifoto` y comprobar autenticidad.
 - [Sobre nosotros](https://www.certifoto.cl/sobre): la misión del proyecto.
 - [Contacto](https://www.certifoto.cl/contacto): contacto@certifoto.cl
 - [Términos de uso](https://www.certifoto.cl/terminos)

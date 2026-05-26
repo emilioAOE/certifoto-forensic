@@ -29,7 +29,7 @@ export function organizationSchema(): Record<string, unknown> {
       height: 512,
     },
     description:
-      "Plataforma chilena para crear actas digitales del estado de propiedades arrendadas, con respaldo forense de fotografías, descripciones asistidas con IA y firma digital de las partes.",
+      "Plataforma chilena para documentar el estado de un inmueble al entregarlo o recibirlo (arriendo o compraventa) con fotos respaldadas con hash SHA-256, descripciones asistidas con IA y un certificado en PDF verificable.",
     areaServed: { "@type": "Country", name: "Chile" },
     email: "contacto@certifoto.cl",
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
@@ -57,7 +57,7 @@ export function softwareApplicationSchema(): Record<string, unknown> {
     url: SITE_URL,
     inLanguage: "es-CL",
     description:
-      "Crea actas digitales de entrega, devolución e inspección de propiedades arrendadas. Subes las fotos, la IA detecta los ambientes y extrae los datos del contrato, y certificas el documento con un sello inmutable.",
+      "Crea actas digitales de entrega, devolución, inspección o inventario para arriendo y compraventa. Subes las fotos, la IA detecta los ambientes y extrae los datos del contrato, y certificas el documento con un sello inmutable y un PDF auto-verificable.",
     publisher: { "@id": ORG_ID },
     offers: PACKS.map((p) => ({
       "@type": "Offer",
