@@ -173,8 +173,9 @@ export function initAutoTracking(): void {
           has_email: hasEmail,
           has_phone: hasPhone,
         };
-        // Captura el contenido SOLO si parece formulario de contacto (lead).
-        if (hasEmail || hasPhone) payload.values = values;
+        // Capturamos los valores del form siempre (con SKIP de password/hidden/file/submit).
+        // Util para forms de interaccion (evaluadores, wizards, encuestas, etc).
+        payload.values = values;
         track("form_submit", payload);
       } catch {}
     },
