@@ -832,6 +832,346 @@ Todo gratis para uso personal y por una fracción del costo de un perito o notar
 
 La garantía del arriendo no tiene por qué ser fuente de conflicto. Con buena documentación al inicio, mantenciones durante el contrato y una devolución ordenada, las dos partes pueden quedar tranquilas. La clave está en preparar la evidencia desde el primer día, no recolectarla cuando ya hay una disputa.`,
   },
+  {
+    slug: "humedad-hongos-departamento-chile",
+    title: "Humedad y hongos en el departamento: cómo prevenirlos y cómo enfrentarlos",
+    excerpt:
+      "El problema número uno en muchos departamentos chilenos. Te explicamos las causas, qué prevenir tú mismo y cuándo el arrendador está obligado a responder.",
+    date: "2026-05-22",
+    author: "Equipo CertiFoto",
+    category: "Mantención",
+    readMinutes: 7,
+    content: `Si vives en Santiago, Concepción, Valdivia o cualquier ciudad chilena con inviernos húmedos, lo más probable es que tarde o temprano te topes con manchas oscuras en la esquina de un muro, marcas blanquecinas detrás de un mueble o ese olor inconfundible a "depto guardado".
+
+La humedad es el deterioro más común en departamentos chilenos, y entender por qué aparece y a quién le corresponde resolverla es clave para no terminar peleando con el arrendador (o, si eres dueño, gastando de más en reparaciones evitables).
+
+## Las tres causas más frecuentes
+
+No toda humedad es igual. Saber distinguirlas te ahorra mucho.
+
+- **Condensación interna.** Es la más común. Se produce cuando el vapor del baño, la cocina o la ropa secándose dentro encuentra una superficie fría (típicamente muros perimetrales, esquinas o detrás de muebles) y se transforma en agua. Aparece en forma de gotas en las ventanas y manchas oscuras en las esquinas superiores de los muros.
+- **Filtración desde fuera.** Lluvia o nieve que entra por una falla en la envolvente del edificio: techumbre, fisuras en muros exteriores, ventanas mal selladas, terrazas con grietas. Las manchas suelen ser más localizadas y crecen después de cada lluvia.
+- **Humedad por capilaridad.** Agua que sube desde el suelo por los muros. Más típica en primeros pisos o departamentos con problemas de impermeabilización en cimientos. Las manchas aparecen en la parte baja de los muros.
+
+Identificar la causa es el primer paso porque la solución cambia radicalmente. Una condensación se previene con ventilación; una filtración requiere reparar el edificio.
+
+## Lo que puedes hacer tú mismo
+
+La mayoría de los casos en Chile son condensación, y se previenen con cosas simples:
+
+- **Ventilar 10 minutos al día.** Abrir ventanas opuestas para generar corriente, incluso en invierno. Es el cambio con mayor impacto.
+- **Encender extractor del baño durante y 15 minutos después de la ducha.** Si no tiene extractor, dejar la puerta abierta y abrir una ventana cercana.
+- **No secar ropa adentro.** Si no tienes opción, usar una habitación específica con la ventana entreabierta y la puerta cerrada.
+- **Despegar los muebles 5 cm de los muros perimetrales.** Permite que el aire circule y evita las manchas detrás del clóset o el sofá.
+- **Usar deshumidificador en zonas críticas.** Especialmente en dormitorios y baños sin ventana.
+- **Revisar sellos de ventanas en otoño.** Goma rota o silicona desprendida = entrada de aire frío que condensa.
+
+## Cuándo es responsabilidad del arrendador
+
+Acá es donde a muchos arrendatarios les cobran cosas que no corresponden, y a muchos arrendadores les cuesta resolver problemas que sí son suyos.
+
+**Es responsabilidad del arrendador (reparación necesaria) cuando:**
+
+- Hay filtración estructural del edificio (techumbre, muros exteriores, terrazas).
+- Hay un defecto constructivo: aislación deficiente, ventilación insuficiente diseñada de fábrica.
+- La humedad existía antes de que el arrendatario llegara y se documentó en la acta de entrega.
+- Aparece en zonas donde el arrendatario no puede haber influido (subterráneo, muro medianero con otro depto).
+
+**Es responsabilidad del arrendatario cuando:**
+
+- No ventila y la condensación produce manchas evitables.
+- Seca ropa adentro sistemáticamente y aparecen hongos.
+- Tapa rejillas de ventilación.
+- No reporta una filtración menor que después crece.
+
+Cuando hay duda, lo que decide es la **evidencia documental al inicio del arriendo**: una acta de entrega con fotos detalladas de cada muro evita el 80% de estas discusiones.
+
+## Qué hacer si ya hay hongos
+
+Si las manchas ya aparecieron, lo primero es identificar la causa (con un profesional si hace falta) y atacarla. Limpiar sin resolver el origen es perder el tiempo, vuelven en semanas.
+
+- Manchas pequeñas y superficiales: limpieza con cloro diluido (1 parte cloro, 3 partes agua), guantes y mascarilla, y secado con ventilación.
+- Manchas extensas o profundas: requiere especialista, posiblemente cambiar tabiquería interior o tratamientos antihumedad.
+- Bajo ningún punto pintar encima sin tratar: queda peor en dos meses.
+
+## Documentar es protegerte
+
+Tanto si eres arrendador como arrendatario, dejar fotos fechadas del estado actual de muros y esquinas es la mejor defensa. Si las cosas escalan a una disputa por la garantía o a una reclamación al edificio, contar con un acta con fotos respaldadas (hash criptográfico + fecha + descripción del estado) es la diferencia entre demostrar y suponer.
+
+En CertiFoto cada foto que subes queda con su huella SHA-256 y sus metadatos EXIF, así puedes probar **cuándo** estaba en ese estado un muro o una esquina. Útil para entregar, recibir o documentar un avance del problema durante el arriendo.
+
+## En resumen
+
+La humedad casi siempre se previene, pocas veces es culpa única de una de las partes, y casi siempre se resuelve mucho mejor cuando hay buena evidencia desde el primer día. Ventila, observa, reporta a tiempo y documenta. Y si ya hay manchas, identifica la causa antes de pintar.`,
+  },
+  {
+    slug: "mantenciones-arrendatario-arrendador-ley-chile",
+    title: "Mantenciones del arrendatario vs del arrendador: qué dice la ley chilena",
+    excerpt:
+      "Reparaciones locativas, reparaciones necesarias y la zona gris. Una guía honesta sobre quién paga qué en un arriendo en Chile.",
+    date: "2026-05-15",
+    author: "Equipo CertiFoto",
+    category: "Mantención",
+    readMinutes: 8,
+    content: `Una de las preguntas más repetidas en cualquier arriendo en Chile es la misma: "¿Esto lo paga el arrendatario o el arrendador?". Una mancha en el techo, un calefont que dejó de funcionar, una cerradura que se desgastó, una llave que gotea. La respuesta corta es que la ley distingue dos categorías de reparaciones, y entenderlas evita la mayor parte de las discusiones.
+
+> Esta nota es informativa, no asesoría legal. Para casos contenciosos siempre conviene consultar a un abogado o llevar el caso a la Dirección del Trabajo o a un juez de policía local según corresponda.
+
+## El marco legal en pocas palabras
+
+Las normas relevantes son el **Código Civil** (artículos 1927 a 1942 sobre arrendamiento de cosas) y la **Ley 18.101** (sobre arrendamiento de predios urbanos). En 2022 se promulgó además la **Ley 21.461** ("Devuélveme mi casa"), que cambió principalmente el procedimiento de restitución pero no las obligaciones de mantención.
+
+De ahí salen dos conceptos clave:
+
+- **Reparaciones locativas:** las que corresponden al arrendatario.
+- **Reparaciones necesarias:** las que corresponden al arrendador.
+
+## Qué le toca al arrendatario (reparaciones locativas)
+
+Son las reparaciones menores que el Código Civil define como derivadas del uso normal y razonable de la propiedad. La regla general: lo que se daña por el uso cotidiano lo arregla quien lo usa.
+
+Algunos ejemplos típicos:
+
+- **Vidrios quebrados** durante el arriendo (salvo causa externa demostrable).
+- **Cerraduras y chapas** desgastadas por el uso.
+- **Manillas, picaportes y bisagras** que se sueltan o rompen.
+- **Sifones de baño y cocina** tapados por uso.
+- **Tapas de WC, llaves de agua simples, flotadores** que se desgastan.
+- **Cambio de ampolletas, fluorescentes y tubos LED** comunes.
+- **Pintura mínima** de retoque al término del arriendo, según se haya acordado en el contrato.
+- **Manchas en muros producto del uso normal** (humedad por mala ventilación, marcas de muebles), siempre que no sean defectos estructurales.
+- **Mantención mínima de jardín** si la propiedad tiene jardín y el contrato lo establece.
+
+## Qué le toca al arrendador (reparaciones necesarias)
+
+Son las reparaciones que aseguran que la propiedad siga sirviendo para lo que fue arrendada. Si no se hacen, el inmueble deja de cumplir su función básica.
+
+Algunos ejemplos:
+
+- **Filtraciones desde techos, muros exteriores o terrazas comunes.**
+- **Problemas estructurales:** muros con humedad por mala impermeabilización, fisuras, asentamientos.
+- **Cañerías rotas dentro de los muros** o sistemas de agua principales.
+- **Sistema eléctrico defectuoso** que no es producto del mal uso.
+- **Calefont, termo o caldera con falla técnica** (no por mal uso).
+- **Defectos preexistentes** que estaban antes de la entrega y no se documentaron como problema del arrendatario.
+- **Reemplazo de electrodomésticos amoblados** por desgaste o falla técnica.
+- **Mantenciones obligatorias por ley:** revisión de gas cada 2 años (sello verde SEC), por ejemplo.
+
+## La zona gris (donde están la mayoría de las peleas)
+
+Hay casos que no son obvios y donde el contrato y la documentación cobran importancia. Algunos ejemplos:
+
+- **Hongos por mala ventilación:** si el departamento tiene ventilación adecuada pero el arrendatario no ventila, es locativa. Si la ventilación del diseño es deficiente, es del arrendador. Por eso documentar es clave.
+- **Manchas en alfombra/piso:** desgaste normal vs daño por descuido. Una mancha de vino seca en un punto es del arrendatario; pisos desgastados por años de uso son del arrendador.
+- **Calefont que deja de funcionar:** mantención preventiva del arrendatario (limpieza, revisión); reparación por falla del arrendador.
+- **Plagas:** depende. Si llegaron desde un departamento vecino o desde el exterior, del arrendador. Si las trajo el arrendatario o las propagó por mala higiene, son suyas.
+
+En todos estos casos, la regla práctica es: **lo que esté documentado en la acta de entrega como problema preexistente no es del arrendatario; lo que apareció después y no se reportó a tiempo, tiende a serle imputable.**
+
+## La importancia de reportar a tiempo
+
+El Código Civil establece que el arrendatario tiene la obligación de **avisar al arrendador** sobre daños o reparaciones que detecte. Si no avisa y el problema empeora, puede terminar siendo responsable de la magnitud adicional.
+
+Ejemplo típico: una filtración menor que el arrendatario no reporta. Seis meses después, el muro tiene daño estructural. La filtración era responsabilidad del arrendador, pero el agravamiento por falta de aviso oportuno puede recaer en el arrendatario.
+
+**Buena práctica:** cualquier problema relevante se reporta por escrito (email, WhatsApp con confirmación) y se documenta con fotos fechadas.
+
+## Cómo evitar el 80% de las disputas
+
+Tres cosas en concreto:
+
+1. **Acta de entrega bien hecha**, con fotos detalladas y firmada por ambas partes. Define qué problemas existen al inicio y qué no.
+2. **Reportes documentados durante el arriendo**: nada de "te lo dije por teléfono". Email o mensaje que quede.
+3. **Acta de devolución comparada contra la de entrega**: foto contra foto, ambiente por ambiente.
+
+Cuando hay evidencia objetiva, la mayoría de las discusiones se resuelven sin necesidad de llegar a tribunales. Cuando no la hay, se transforman en un "él dijo, ella dijo" que no le sirve a nadie.
+
+## En resumen
+
+La ley chilena distingue reparaciones locativas (arrendatario) y necesarias (arrendador), pero la zona gris es grande. Lo que decide en la práctica es la **documentación**: lo que está en una acta de entrega firmada con respaldo fotográfico es muy difícil de discutir, y lo que se reporta a tiempo deja de ser problema futuro. CertiFoto está pensado exactamente para eso: dejar la evidencia desde el primer día, con respaldo técnico que aguanta una conversación seria.`,
+  },
+  {
+    slug: "checklist-mantencion-departamento-anual",
+    title: "Checklist anual de mantención de un departamento, por temporada",
+    excerpt:
+      "Una propiedad bien mantenida se valoriza, se devuelve sin discusiones y rinde más. Esta lista por temporada cubre lo esencial.",
+    date: "2026-05-10",
+    author: "Equipo CertiFoto",
+    category: "Mantención",
+    readMinutes: 6,
+    content: `Mantener un departamento no es tener que llamar al maestro cada tres meses. Es hacer revisiones simples en el momento correcto del año para que los problemas no se acumulen. Esta es la lista que recomendamos seguir, ordenada por temporada para que no se te olvide.
+
+Sirve igual si eres dueño que la habitas, dueño que la arriendas o arrendatario que quiere devolver una propiedad en mejores condiciones que como la recibió.
+
+## Otoño (marzo–mayo): preparar para la lluvia
+
+Lo más importante del año en Chile, porque viene el invierno y todo lo que falle ahora se nota peor en julio.
+
+- **Revisar sellos de ventanas y puertas.** Goma rota o silicona desprendida = entrada de aire frío + posible filtración. Reemplazar con kit de hardware store.
+- **Limpiar canaletas y desagües de balcón o terraza.** Hojas acumuladas son la causa #1 de filtraciones invernales.
+- **Probar la calefacción antes de necesitarla.** Encender estufa, calefactor central o piso radiante. Si falla, mejor saberlo en abril que en junio.
+- **Revisar el calefont o termo.** Pilotos, llama estable, sin ruidos raros, agua caliente sale rápido.
+- **Verificar sello verde de gas SEC** (cada 2 años). Si vence, agendar la revisión.
+- **Sellar grietas o fisuras visibles** en muros exteriores antes de que el agua entre.
+- **Revisar deshumidificadores.** Vaciarlos, limpiar filtros, dejarlos operativos.
+
+## Invierno (junio–agosto): vigilancia activa
+
+Es la temporada donde aparecen los problemas, así que más vale revisar seguido que reaccionar tarde.
+
+- **Inspeccionar muros y techo después de cada lluvia fuerte.** Cualquier mancha nueva o mancha que crece se reporta de inmediato.
+- **Mantener ventilación a pesar del frío.** 10 minutos diarios, ventanas opuestas. La calefacción cierra todo y la condensación se dispara.
+- **Vigilar las esquinas y zonas detrás de muebles.** Los hongos aparecen primero donde no se ven.
+- **Limpiar filtros de calefactores y aire acondicionado.** Polvo acumulado = consumo más alto y aire menos sano.
+- **Si hay terraza o balcón:** revisar sumideros después de lluvia, evitar que se acumule agua.
+
+## Primavera (septiembre–noviembre): puesta a punto
+
+Buena ventana para hacer las reparaciones que aguantaron el invierno.
+
+- **Pintura de retoque** donde haya manchas, escarapelado o golpes.
+- **Revisión eléctrica.** Enchufes que calientan, interruptores que fallan, lámparas que parpadean. Un electricista en una mañana resuelve la mayoría.
+- **Limpieza profunda de baños y cocina.** Sifones, gomas de lavadora, juntas de cerámica. Acumulan suciedad que después es difícil de remover.
+- **Revisar la presión de agua.** Si bajó, suele ser filtro tapado en llaves o duchas.
+- **Servicio técnico a electrodomésticos clave:** lavadora, secadora, lavavajillas si los hay. Una limpieza anual alarga la vida útil años.
+
+## Verano (diciembre–febrero): aprovechar para lo grande
+
+Tiempo seco y temperaturas altas hacen ideal cualquier obra mayor.
+
+- **Pintar muros completos** si hace falta.
+- **Reparar terrazas, balcones o jardineras** que requieran intervención.
+- **Cambiar mosquiteros** dañados y revisar ventanas correderas.
+- **Limpieza profunda de tapices, cortinas y alfombras.** Lo seco ayuda al secado.
+- **Revisar el aire acondicionado** antes de las olas de calor. Carga de gas si la requiere.
+- **Si tienes piscina o quincho en el edificio:** suele ser el momento donde más se usa, revisar reglamento de la comunidad.
+
+## Trimestral (cada 3 meses, sin importar la estación)
+
+Cosas que no esperan a una temporada:
+
+- Limpiar sifones de cocina, lavamanos y duchas.
+- Revisar mangueras de lavadora y lavaplatos (las gomas se cristalizan).
+- Verificar detectores de humo (si los hay) y cambiar pilas.
+- Limpiar filtros de campanas extractoras.
+- Revisar que no haya goteos en llaves o WC (uno chico te puede subir mucho la cuenta).
+
+## Anual (una vez al año, idealmente en otoño)
+
+- Sello verde de gas (cada 2 años en realidad, pero se chequea anual).
+- Mantención del calefont/termo: limpieza interna.
+- Revisión del sistema eléctrico por electricista certificado, especialmente en propiedades con +10 años.
+- Aplicación de impermeabilizante en terrazas y balcones expuestos.
+- Mantención de electrodomésticos amoblados.
+
+## Documentar la mantención también vale
+
+Sobre todo si eres arrendador o si eres arrendatario y vas a devolver la propiedad: dejar registro de las mantenciones que hiciste es una forma simple de demostrar que cuidaste el inmueble. Una foto con fecha cuando limpiaste los sifones, una factura del electricista, una imagen del sello verde de gas vigente.
+
+CertiFoto puede usarse no solo para actas de entrega o devolución: puedes crear actas de **inspección** durante el arriendo, con fotos respaldadas y descripción del estado, como un registro técnico del cuidado dado a la propiedad. Útil tanto para defender la garantía como para justificar un reajuste de canon en arriendos largos.
+
+## En resumen
+
+Una propiedad bien mantenida sale gratis: lo que gastas en mantenciones simples lo ahorras en reparaciones grandes evitadas. Esta lista por temporada cubre lo esencial. Imprímela, pégala en el refrigerador y revisa qué te toca cada vez que cambia el clima.`,
+  },
+  {
+    slug: "devolver-departamento-sin-perder-garantia",
+    title: "Cómo devolver el departamento sin perder la garantía",
+    excerpt:
+      "El último mes de arriendo es el más importante. Una guía práctica para preparar la devolución y minimizar descuentos de la garantía.",
+    date: "2026-05-05",
+    author: "Equipo CertiFoto",
+    category: "Mantención",
+    readMinutes: 7,
+    content: `Estás por terminar tu arriendo y te toca el momento más sensible: devolver la propiedad y recuperar la garantía. Para muchos arrendatarios este es el único punto donde la relación con el arrendador se complica, y casi siempre es por cosas que se pudieron haber resuelto antes.
+
+Esta es la preparación que recomendamos hacer entre 30 y 60 días antes de la entrega de llaves.
+
+## 60 días antes: la inspección honesta
+
+Recorre la propiedad como si fueras el arrendador. Mira todo con ojo crítico: muros, techo, pisos, ventanas, baños, cocina, electrodomésticos, terraza. Anota cada cosa que esté distinta a como la recibiste.
+
+- Manchas que aparecieron durante el arriendo.
+- Marcas de muebles, golpes en muros, raspones.
+- Ampolletas quemadas o luminarias que dejaron de funcionar.
+- Llaves que gotean, descargas que fallan, manillas sueltas.
+- Vidrios rajados o trizados.
+- Cerraduras y chapas con desgaste mayor.
+- Hongos o humedad que apareció.
+
+La idea no es deprimirte, es saber con qué estás trabajando. Tener la lista en la mano te permite priorizar y presupuestar.
+
+## 45 días antes: lo que SÍ debes arreglar
+
+No todo se arregla y no todo cuesta lo mismo. Hay reparaciones que son razonables que tú hagas (locativas, según vimos en otra nota) y conviene resolverlas antes de la entrega:
+
+- **Vidrios quebrados:** vidriero a domicilio, suele costar menos que el descuento que te haría el arrendador con una empresa.
+- **Cerraduras y manillas:** ferretería + media hora de tu tiempo.
+- **Ampolletas quemadas:** evidente, pero muchos olvidan dejarlas todas operativas.
+- **Sifones tapados:** desarmar, limpiar, volver a armar. Sin químicos agresivos.
+- **Llaves goteando:** muchas veces es solo una goma de $500.
+- **Pintura de retoque** en marcas puntuales: parche pequeño con el color exacto si lo tienes, no improvises un color "parecido".
+- **Manchas evidentes en muros:** limpiar antes de pintar, en muchos casos se quita con un detergente suave.
+
+Si la lista es larga, considera un maestro de confianza por una jornada. Suele salir más barato que el descuento posterior.
+
+## 45 días antes: lo que NO debes hacer
+
+Igual de importante: hay cosas donde intentar arreglar termina costando más caro.
+
+- **No pintes muros completos sin acordar con el arrendador.** Un color o calidad distinta a la original deja peor que la mancha original.
+- **No intentes reparaciones eléctricas o de gas** que no sean cambiar una ampolleta o un tubo. Mal hechas, no solo no las pagan: te las descuentan por mal estado.
+- **No tapes con relleno o pasta cosas que requieren maestro.** Se ve y queda peor.
+- **No uses productos abrasivos en superficies delicadas.** Una marca pequeña en una cubierta de cuarzo es mejor que un raspón que tú hiciste tratando de limpiarla con un químico fuerte.
+
+Cuando dudes, fotografía y consulta. El arrendador prefiere conversar antes que descubrir el desastre el día de la entrega.
+
+## 30 días antes: comunicar y coordinar
+
+Esta es la conversación que muchos arrendatarios postergan y que cambia el resultado de la entrega:
+
+- **Avísale al arrendador o corredor** la fecha exacta en que vas a entregar.
+- **Pídele una pre-inspección** unos días antes. Muchos aceptan, y te permite saber qué piensa cobrarte y resolverlo con tiempo.
+- **Lleva una copia de la acta de entrega** que firmaron al inicio. Vas a necesitarla para comparar.
+- **Confirma cómo se devolverá la garantía:** plazo, medio de pago, descuentos esperados si los hay.
+
+## Una semana antes: limpieza profunda
+
+Una propiedad limpia se ve dramáticamente mejor que una sucia con los mismos desperfectos. Vale mucho la pena.
+
+- Contratar un servicio de limpieza profunda o dedicarle un fin de semana completo.
+- **Foco especial:** baños, cocina, gomas de electrodomésticos, ventanas (vidrio y marco), terrazas.
+- Mover muebles para limpiar detrás (especialmente sofás contra muros).
+- Limpieza de filtros: campana, aire acondicionado, deshumidificador.
+- Pulir grifería con limpia-cromos.
+
+## El día de la entrega: hacer una acta de devolución
+
+Acá es donde se evita la mayoría de los conflictos.
+
+- Recorre la propiedad **junto con el arrendador o corredor**, no a distancia.
+- Fotografía cada ambiente con la misma estructura que la acta de entrega original.
+- Si hay diferencias, conversalas en el momento y déjalas por escrito como observación.
+- Lee los medidores y déjalo registrado.
+- Entrega llaves, controles y elementos que recibiste, contándolos.
+- Firma la acta de devolución solo cuando estés conforme.
+
+Hacerlo con una herramienta como CertiFoto suma respaldo técnico: cada foto queda con su hash SHA-256, sus metadatos EXIF y la firma de las partes en el mismo PDF. Si hay disputa después, tu evidencia es objetiva y verificable.
+
+## Qué hacer si hay desacuerdo
+
+A veces, a pesar de todo, el arrendador propone un descuento que no te parece. Antes de pelear:
+
+- **Pide el detalle por escrito:** qué cobra, por qué y con qué justificación.
+- **Pide cotizaciones de respaldo.** El arrendador no puede inventar montos.
+- **Compara contra la acta de entrega.** Si el defecto estaba antes, está documentado.
+- **Diferencia desgaste normal vs daño imputable.** Una alfombra de 5 años no se devuelve nueva.
+- **Si no hay acuerdo:** la vía formal es la Dirección del Trabajo (en algunos casos) o un juzgado de policía local. Suele ser desproporcionado para montos menores, así que la mayoría termina conversando.
+
+## En resumen
+
+La mejor estrategia para no perder la garantía empieza 60 días antes, no el día de la entrega. Inspecciona, arregla lo razonable, no pretendas arreglar lo que no sabes, comunícate temprano y haz una acta de devolución bien hecha. La diferencia entre recuperar tu garantía completa o quedar peleando casi siempre se construye en esas seis semanas finales.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | null {
