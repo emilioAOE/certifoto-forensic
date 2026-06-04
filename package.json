@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit",
     "preflight": "npm run type-check && npm run lint && npm run build",
     "favicons": "node scripts/generate-favicons.js",
+    "indexnow": "node scripts/indexnow.js",
     "copy-pdf-worker": "node scripts/copy-pdf-worker.js",
     "postinstall": "node scripts/copy-pdf-worker.js"
   },
