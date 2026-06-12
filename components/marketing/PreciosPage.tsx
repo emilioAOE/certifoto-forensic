@@ -91,7 +91,7 @@ export function PreciosPage() {
           />
           <FaqMini
             q="¿Y si necesito más de 50 certificaciones al mes?"
-            a="Escríbenos a contacto@certifoto.cl. Para corredoras y administradoras grandes preparamos paquetes a medida con marca propia y panel multi-usuario."
+            a="Contáctanos a través del formulario en /contacto. Para corredoras y administradoras grandes preparamos paquetes a medida con marca propia y panel multi-usuario."
           />
           <FaqMini
             q="¿Puedo regalar o transferir créditos?"

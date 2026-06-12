@@ -66,12 +66,6 @@ export function ContactoPage() {
 
             <div className="mt-8 space-y-4">
               <ContactItem
-                icon={<Mail className="h-4 w-4" />}
-                label="Email"
-                value="contacto@certifoto.cl"
-                href="mailto:contacto@certifoto.cl"
-              />
-              <ContactItem
                 icon={<MapPin className="h-4 w-4" />}
                 label="Ubicación"
                 value="Santiago, Chile"

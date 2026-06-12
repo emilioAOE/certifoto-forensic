@@ -26,7 +26,8 @@ export function LandingFooter() {
                 <MapPin className="h-3.5 w-3.5" /> Santiago, Chile
               </p>
               <p className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5" /> contacto@certifoto.cl
+                <Mail className="h-3.5 w-3.5" />
+                <a href="/contacto" className="hover:text-gray-700 transition-colors">Contáctanos</a>
               </p>
             </div>
           </div>

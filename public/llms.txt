@@ -49,7 +49,7 @@ CertiFoto entrega un respaldo documental con huella criptográfica y trazabilida
 - [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, evidencia, IA y certificado.
 - [Verificar certificado](https://www.certifoto.cl/forensic): subir un PDF o `.certifoto` y comprobar autenticidad.
 - [Sobre nosotros](https://www.certifoto.cl/sobre): la misión del proyecto.
-- [Contacto](https://www.certifoto.cl/contacto): contacto@certifoto.cl
+- [Contacto](https://www.certifoto.cl/contacto): formulario de contacto.
 - [Términos de uso](https://www.certifoto.cl/terminos)
 - [Privacidad](https://www.certifoto.cl/privacidad)
 

@@ -57,7 +57,7 @@ Podemos actualizar estos términos. Las modificaciones se publicarán en esta p�
 
 ## 9. Contacto
 
-Para consultas sobre estos términos puedes contactarnos en contacto@certifoto.cl.`;
+Para consultas sobre estos términos usa el formulario de contacto en /contacto.`;
 
 export default function Terminos() {
   return (

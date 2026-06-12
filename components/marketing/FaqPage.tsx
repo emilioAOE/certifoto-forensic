@@ -44,8 +44,8 @@ export function FaqPage() {
             ¿Quedaste con dudas?
           </h3>
           <p className="text-sm text-gray-600 mb-5">
-            Escríbenos a contacto@certifoto.cl o ingresa a la plataforma y
-            empieza a probar gratis.
+            Ingresa a la plataforma y empieza a probar gratis, o{" "}
+            <a href="/contacto" className="text-accent-dark hover:underline">escríbenos</a>.
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Link

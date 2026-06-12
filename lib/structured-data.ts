@@ -37,13 +37,6 @@ export function organizationSchema(): Record<string, unknown> {
       addressCountry: "CL",
     },
     areaServed: { "@type": "Country", name: "Chile" },
-    email: "contacto@certifoto.cl",
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "customer service",
-      email: "contacto@certifoto.cl",
-      availableLanguage: "es",
-    },
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
   };
 }

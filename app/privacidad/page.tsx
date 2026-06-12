@@ -11,7 +11,7 @@ const CONTENT = `En CertiFoto nos importa tu privacidad. Esta política explica 
 
 ## 1. Responsable del tratamiento
 
-CertiFoto es una iniciativa con domicilio en Santiago, Chile. Para preguntas o ejercer derechos sobre tus datos, contáctanos en contacto@certifoto.cl.
+CertiFoto es una iniciativa con domicilio en Santiago, Chile. Para preguntas o ejercer derechos sobre tus datos, contáctanos a través del formulario en /contacto.
 
 ## 2. Qué datos recolectamos
 
@@ -81,7 +81,7 @@ Tienes derecho a:
 - **Oposición:** puedes dejar de usar la plataforma en cualquier momento.
 - **Portabilidad:** las actas se exportan como PDF/JSON; en el futuro habrá un export ZIP completo.
 
-Para ejercer cualquier derecho, escribe a contacto@certifoto.cl. Respondemos en un plazo máximo de 15 días hábiles.
+Para ejercer cualquier derecho, usa el formulario de contacto en /contacto. Respondemos en un plazo máximo de 15 días hábiles.
 
 ## 8. Retencion de datos
 
@@ -116,10 +116,7 @@ Podemos actualizar esta política. Las modificaciones se publicarán aquí con l
 
 ## 13. Contacto
 
-Para preguntas, ejercicio de derechos o reclamos:
-
-- Email: contacto@certifoto.cl
-- Asunto sugerido: "Privacidad" o "Datos personales"
+Para preguntas, ejercicio de derechos o reclamos, usa el formulario en /contacto.
 
 En Chile, ante la falta de respuesta o respuesta insatisfactoria, puedes acudir al Consejo para la Transparencia o tribunales competentes.`;
 

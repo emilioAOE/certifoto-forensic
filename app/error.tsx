@@ -57,12 +57,12 @@ export default function GlobalError({
         </div>
 
         <p className="text-xs text-gray-400 mt-10">
-          Si el error persiste, contactanos en{" "}
+          Si el error persiste,{" "}
           <a
-            href="mailto:contacto@certifoto.cl"
+            href="/contacto"
             className="text-accent-dark hover:underline"
           >
-            contacto@certifoto.cl
+            contáctanos
           </a>
           .
         </p>
