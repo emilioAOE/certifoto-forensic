@@ -26,6 +26,256 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: "que-hacer-si-arrendatario-niega-danos",
+    title: "¿Qué hacer si el arrendatario niega los daños? Guía paso a paso para arrendadores",
+    excerpt:
+      "La frase más temida al cierre de un arriendo: 'eso ya estaba así'. Te explicamos cómo documentar, comunicar y recuperar los costos cuando hay disputas de daños.",
+    date: "2026-06-05",
+    author: "Equipo CertiFoto",
+    category: "Guías",
+    readMinutes: 8,
+    content: `Terminó el arriendo, recorriste la propiedad y encontraste daños que no estaban al inicio: una quemadura en la cubierta de la cocina, una mancha profunda en la alfombra, el espejo del baño partido. Le comentas al arrendatario y escuchas la frase más frecuente en arriendos chilenos: "eso ya estaba así cuando llegué".
+
+En ese momento tienes dos opciones: resignarte y devolver la garantía completa, o tener la evidencia para respaldar el descuento.
+
+Esta guía explica qué hacer cuando el arrendatario niega los daños, desde la primera conversación hasta el Juzgado de Policía Local si es necesario.
+
+## Por qué la negación suele funcionar sin documentación
+
+Cuando no hay acta de entrega con fotos respaldadas, la disputa es palabra contra palabra. Y en esas condiciones, el arrendatario tiene una ventaja estructural: no tiene que probar que el daño era preexistente; solo tiene que crear duda suficiente. El arrendador, en cambio, debe demostrar que el daño es nuevo.
+
+Sin evidencia del estado inicial, esa demostración es casi imposible. La memoria humana es selectiva y poco confiable para este tipo de detalle, y los tribunales lo saben.
+
+Si tienes un acta de entrega con fotos detalladas, timestamp confiable y hash de integridad, la situación se invierte: ahora es el arrendatario quien tiene que explicar la diferencia entre lo que muestra el acta y el estado actual.
+
+## Antes de cualquier conversación: reúne la evidencia
+
+Antes de confrontar al arrendatario, organiza tu evidencia. No es para intimidar, es para que la conversación sea sobre hechos, no sobre opiniones.
+
+Lo que necesitas tener ordenado:
+
+- El acta de entrega original con fotos del estado inicial.
+- Fotos del estado actual, tomadas el día de la devolución.
+- La lista específica de daños que estás imputando.
+- Para cada daño: foto del estado inicial (del acta) vs. foto actual.
+
+Si usaste CertiFoto u otra herramienta con hash criptográfico, cada foto del acta de entrega tiene su huella SHA-256, que demuestra que la imagen no fue alterada desde que se tomó. Eso hace muy difícil argumentar que "esa foto no es de cuando llegué".
+
+Si tu acta es un Word con fotos pegadas, todavía sirve, pero es más fácil de cuestionar. Úsalo como base y complementa con emails o mensajes de esa época si los tienes.
+
+## Paso 1: La conversación directa y documentada
+
+Antes de descontar un peso, comunícate por escrito con el arrendatario. No basta con decírselo en persona o por teléfono.
+
+Envía un correo o mensaje con al menos:
+
+- La lista específica de los daños encontrados.
+- Para cada daño, foto del estado inicial y foto actual.
+- El monto estimado de reparación (con cotización si ya la tienes).
+- Un plazo para responder (7 a 10 días es razonable).
+- Una invitación a revisitar la propiedad juntos si quiere verificar.
+
+El tono debe ser descriptivo, no acusatorio. "Se observa una quemadura de aproximadamente 8 cm en la cubierta de la cocina que no figura en el acta de entrega" es mucho más sólido que "destrozaste la cocina".
+
+## Paso 2: La revisión conjunta (si acepta)
+
+Si el arrendatario quiere revisar la propiedad, acepta. Hazlo con las fotos del acta de entrega en mano y compara cada punto en el lugar.
+
+Algunas reglas prácticas para esta revisión:
+
+- Lleva una copia impresa o digital del acta de entrega para comparar in situ.
+- Documenta la revisión con fotos adicionales.
+- Si hay acuerdo en algún punto, déjalo por escrito en el momento (incluso un mensaje de WhatsApp confirmando es mejor que nada).
+- Si no hay acuerdo, déjalo registrado como punto en disputa.
+
+No firmes nada bajo presión. Si el arrendatario propone soluciones o montos distintos, tienes derecho a pensarlo.
+
+## Paso 3: Obtén cotizaciones formales
+
+Para retener parte de la garantía debes justificar el monto con cotizaciones reales. No puedes inventar cifras ni usar precios de lista internos.
+
+Busca al menos dos cotizaciones independientes para cada reparación. Las cotizaciones deben indicar:
+
+- Descripción del trabajo.
+- Materiales y mano de obra.
+- Nombre del prestador y fecha.
+
+Esto cumple dos funciones: justifica el monto ante el arrendatario, y es la prueba que necesitas si terminas en el JPL.
+
+## Paso 4: Notificación formal de descuentos
+
+Con la evidencia y las cotizaciones listas, envía una notificación formal por escrito al arrendatario antes de hacer cualquier descuento. El contenido mínimo:
+
+- Detalle de cada daño con fotos comparativas.
+- Monto descontado por ítem con justificación.
+- Monto total de la garantía a devolver (si aplica descuento parcial).
+- Plazo en que se hará el depósito.
+- Adjunta las cotizaciones.
+
+Envíalo por correo electrónico y guarda el comprobante. Si el arrendatario no responde, igual tienes constancia de que notificaste.
+
+## La diferencia entre daño imputable y desgaste normal
+
+Este punto es crítico, porque descontar por desgaste normal es uno de los errores más comunes y una de las causas frecuentes de reclamos en el JPL.
+
+Daño imputable al arrendatario (puedes descontar):
+
+- Quemaduras en cubierta de cocina o en pisos.
+- Hoyos grandes en muros (más allá de marcas de clavos).
+- Manchas profundas en alfombras o pisos que no responden a limpieza.
+- Vidrios quebrados durante el arriendo.
+- Muebles rotos o con daños que exceden el uso normal.
+- Componentes faltantes que se entregaron (llaves, controles, electrodomésticos amoblados).
+
+Desgaste normal (no puedes descontar):
+
+- Pintura levemente amarillada o con marcas tenues de roce.
+- Desgaste superficial de pisos flotantes por años de uso.
+- Marcas leves de muebles en paredes o pisos.
+- Ampolletas quemadas y consumibles menores.
+- Grietas pequeñas por contracción térmica.
+- Manchas de agua en tinas o lavamanos que responden a limpieza.
+
+Si descontas por desgaste normal, el JPL suele fallar en contra del arrendador.
+
+## Cuándo ir al Juzgado de Policía Local
+
+Si no hay acuerdo después de notificar formalmente y el arrendatario reclama la devolución completa, el JPL es el tribunal competente. El proceso es:
+
+- La demanda puede presentarla cualquiera de las partes (arrendador o arrendatario).
+- No es obligatorio tener abogado para montos menores.
+- El juicio es breve: un comparendo donde cada parte presenta su evidencia.
+- El juez falla en base a los documentos y testimonios presentados.
+
+Tu posición ante el JPL depende directamente de la calidad de tu evidencia: acta de entrega con fotos, cotizaciones de reparación, y la comunicación escrita con el arrendatario. Con esos tres elementos bien organizados, estás en buena posición.
+
+Sin acta de entrega, la posición se debilita considerablemente. El JPL tiende a dar el beneficio de la duda al arrendatario en ausencia de prueba del estado inicial.
+
+## Cómo evitarlo la próxima vez
+
+La mejor prevención es una acta de entrega bien hecha antes de que el arrendatario ponga un pie en la propiedad. Si tienes fotos detalladas de cada ambiente, huellas digitales criptográficas de cada imagen y la firma de ambas partes en el mismo PDF, la conversación de "eso ya estaba así" simplemente no puede prosperar.
+
+CertiFoto fue diseñado exactamente para esto: cada foto queda con su hash SHA-256 y metadata EXIF, y el PDF es auto-verificable. El arrendatario ve en el acta el estado inicial y no puede argumentar que fue alterado. Si quieres probar el flujo para tu próximo arriendo, puedes crear una acta gratis sin registrarte.
+
+## En resumen
+
+Cuando el arrendatario niega daños: organiza tu evidencia antes de hablar, comunícate por escrito, obtén cotizaciones formales, y notifica el descuento con detalle. El JPL es el último recurso, pero requiere evidencia sólida para prosperar. La mejor inversión es una acta de entrega bien hecha desde el primer día.`,
+  },
+  {
+    slug: "como-recuperar-garantia-arriendo-chile",
+    title: "Cómo recuperar la garantía de arriendo en Chile: plazos, derechos y pasos a seguir",
+    excerpt:
+      "El arrendador no te devuelve la garantía o te hace descuentos que no corresponden. Te explicamos qué dice la Ley 18.101, qué plazos tienes y cómo actuar.",
+    date: "2026-05-30",
+    author: "Equipo CertiFoto",
+    category: "Guías",
+    readMinutes: 7,
+    content: `Terminaste el arriendo, devolviste la propiedad en buen estado y esperas que te devuelvan la garantía. Pasan los días y no llega nada. O llega un email con un listado de "daños" que nunca existieron. O te devuelven solo la mitad sin explicación.
+
+Esta situación es más común de lo que debería ser. En esta guía te explicamos qué dice la ley, qué plazos rigen, qué hacer paso a paso y cuándo vale la pena ir al Juzgado de Policía Local.
+
+## Lo que dice la Ley 18.101
+
+La Ley 18.101 sobre arrendamiento de predios urbanos en Chile establece que el depósito de garantía debe devolverse en un plazo de 60 días contados desde la restitución del inmueble.
+
+Ese es el plazo legal. No es "cuando el arrendador quiera" ni "una vez que revise todos los gastos". Son 60 días desde que entregaste las llaves.
+
+El arrendador puede retener parte del depósito si:
+
+- Hay daños imputables al arrendatario que excedan el desgaste normal por uso.
+- Hay cuentas pendientes de servicios básicos que corresponden al período de arriendo.
+- El contrato establece alguna condición específica justificada.
+
+Lo que no puede descontar:
+
+- Desgaste normal por uso adecuado (pintura envejecida, marcas leves, alfombra gastada por años).
+- Reparaciones que corresponden al arrendador (filtraciones estructurales, fallas técnicas de electrodomésticos).
+- Gastos de limpieza rutinaria si el departamento fue devuelto limpio.
+- Montos inventados sin cotización que los respalde.
+
+## Los primeros pasos cuando el plazo vence
+
+Si llegaron los 60 días y no tienes respuesta:
+
+**Paso 1 — Comunicación escrita.**
+Envía un email o mensaje de texto al arrendador (o corredor) recordando el vencimiento del plazo y solicitando la devolución. Guarda el comprobante. Esto crea un registro de que reclamaste a tiempo.
+
+**Paso 2 — Plazo adicional voluntario.**
+En la práctica, muchos arriendos se resuelven con un poco más de tiempo y buena comunicación. Dale 5 a 7 días adicionales antes de escalar. Pero nunca en silencio: el reclamo escrito debe quedar.
+
+**Paso 3 — Escalada formal.**
+Si no hay respuesta o te ofrecen descuentos que no corresponden, tienes dos vías:
+
+- SERNAC: puedes presentar un reclamo formal si el arrendador es una inmobiliaria o empresa. Para arrendadores particulares, el alcance de SERNAC es limitado.
+- Juzgado de Policía Local (JPL): la vía más directa para conflictos entre particulares sobre garantías de arriendo.
+
+## Cómo funciona el JPL para recuperar la garantía
+
+El Juzgado de Policía Local es el tribunal que maneja conflictos de arriendo en Chile. Para iniciar el proceso:
+
+- Puedes presentar la demanda directamente, sin necesidad de abogado para montos menores.
+- La demanda debe ir al JPL de la comuna donde está el inmueble.
+- Necesitas llevar: copia del contrato de arriendo, evidencia de la restitución del inmueble (fecha de entrega de llaves), evidencia de que solicitaste la devolución y no fue respondida, y cualquier documentación sobre el estado de la propiedad al devolver.
+
+El proceso es relativamente rápido: se fija una audiencia, ambas partes presentan su posición, y el juez falla. Para montos bajos (hasta un par de meses de canon) no suele valer contratar abogado, pero para montos mayores puede ser conveniente.
+
+**Importante:** si el arrendador propone descuentos que no corresponden, el JPL puede ordenar la devolución completa más intereses y costas si el juez considera que hubo mala fe. El registro de tus comunicaciones escritas vale mucho acá.
+
+## Qué documentos necesitas tener listos
+
+Para tener una posición sólida, ya sea para negociar o para ir al JPL, necesitas:
+
+- Copia del contrato de arriendo (firmado por ambas partes).
+- Recibo o comprobante del pago de la garantía al inicio del arriendo.
+- Evidencia de la fecha en que entregaste las llaves (email de confirmación, mensaje, acta de devolución).
+- Acta de entrega original si la tienen (prueba del estado inicial).
+- Acta de devolución si se firmó al devolver (prueba del estado al terminar).
+- Registro escrito de tus comunicaciones reclamando la garantía.
+
+Si no tienes acta de entrega ni de devolución, la situación es más difícil pero no imposible. El contrato, los correos y testigos sirven como respaldo.
+
+## Si el arrendador dice que hay daños que tú niegas
+
+Esta es la variante más complicada. El arrendador retiene parte de la garantía alegando daños que tú crees que eran preexistentes o que corresponden a desgaste normal.
+
+Qué hacer:
+
+**1. Pide el detalle por escrito.** Tienes derecho a saber exactamente qué se descuenta y por qué. Si el arrendador se niega a enviarlo en detalle, eso ya te dice algo.
+
+**2. Pide las cotizaciones.** El arrendador debe justificar los montos con cotizaciones reales. Cifras inventadas no son válidas.
+
+**3. Compara contra el acta de entrega.** Si tienes el acta de entrega firmada al inicio, compara cada punto: si el "daño" ya estaba documentado como preexistente, no te pueden cobrar.
+
+**4. Diferencia desgaste normal de daño imputable.** El arrendador no puede cobrarte por envejecimiento natural. Pintura amarillada en paredes antiguas, alfombra con desgaste homogéneo por años de uso, marcas suaves por mobilisado — eso es desgaste, no daño.
+
+**5. Propón un monto de acuerdo.** Si hay daños reales mezclados con cobros injustificados, a veces conviene negociar un monto intermedio antes de ir a tribunales. El JPL toma tiempo, y para montos pequeños puede no valer la pena.
+
+## La importancia del acta de devolución
+
+Si no firmaste un acta de devolución el día que devolviste las llaves, el arrendador tiene más espacio para alegar daños que no existían. Si firmaste una, y queda registro del estado en que entregaste, esa es tu mejor defensa.
+
+Idealmente el acta de devolución tiene:
+
+- Fotos por ambiente del estado al devolver.
+- Lecturas de medidores.
+- Listado de llaves y controles entregados.
+- Firma de ambas partes.
+
+Sin eso, la conversación vuelve a ser palabra contra palabra, y en ausencia de prueba el tribunal tiende a buscar una solución intermedia que puede no favorecerte.
+
+## Cómo prepararte para el próximo arriendo
+
+Si ya pasaste por esto una vez, la mejor inversión para el próximo arriendo es un acta de devolución bien hecha. El mismo día que devuelves las llaves, documentas el estado de la propiedad por ambiente, con fotos que quedan respaldadas con hash criptográfico y timestamp verificable, y las firmas de ambas partes.
+
+Con eso en mano, cualquier descuento posterior que no corresponda es fácil de refutar. Y cualquier arrendador razonable lo sabe.
+
+CertiFoto te permite crear esa acta de devolución (o de entrega) gratis, sin registro previo. La certificación es solo si quieres el PDF formal con sello; el flujo de documentación base es completamente gratuito.
+
+## En resumen
+
+La Ley 18.101 te da 60 días de plazo. Reclama por escrito, guarda los comprobantes, y si no hay respuesta o los descuentos no corresponden, el JPL es tu vía. Para ir al JPL necesitas evidencia: contrato, comprobante de pago de garantía, registro de la restitución y ojalá un acta de devolución con fotos. La próxima vez, arma el acta de devolución el mismo día que devuelves las llaves.`,
+  },
+  {
     slug: "acta-entrega-propiedad-arriendo-que-incluir",
     title: "Acta de entrega de propiedad: qué incluir para evitar disputas en arriendo (2026)",
     excerpt:

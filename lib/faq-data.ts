@@ -144,6 +144,32 @@ export const FAQ_SECTIONS: FaqSection[] = [
     ],
   },
   {
+    title: "Sobre disputas y recuperación de garantía",
+    description: "Qué hacer cuando hay desacuerdo sobre daños o la garantía no se devuelve",
+    items: [
+      {
+        q: "¿Qué hago si el arrendatario niega los daños que encontré?",
+        a: "La evidencia del acta de entrega es tu principal recurso. Compara las fotos del inicio del arriendo con el estado actual: si la diferencia es visible y el daño no figura como preexistente en el acta original, tienes respaldo para retener parte de la garantía. Lo recomendado: obtén cotizaciones de reparación, envíalas por escrito al arrendatario con el detalle de los descuentos propuestos, y deja un plazo de respuesta. Sin acuerdo, el Juzgado de Policía Local (JPL) es el tribunal competente para conflictos de arriendo en Chile.",
+      },
+      {
+        q: "¿En qué plazo debe devolver la garantía el arrendador?",
+        a: "La Ley 18.101 establece 60 días contados desde la restitución del inmueble. El arrendador puede retener parte del monto solo si hay daños imputables al arrendatario que excedan el desgaste normal y los justifica con evidencia. Si no devuelve dentro del plazo sin justificación válida, el arrendatario puede demandar en el JPL.",
+      },
+      {
+        q: "¿Puedo retener la garantía si hay daños en la propiedad?",
+        a: "Sí, con condiciones: los daños deben ser imputables al arrendatario (no desgaste normal), debes tener evidencia del estado original (acta de entrega con fotos), y los montos descontados deben ser proporcionales y justificables con cotizaciones. No puedes retener por desgaste normal: pintura levemente amarillada, marcas suaves de muebles o desgaste razonable por uso no son daños imputables.",
+      },
+      {
+        q: "¿Qué es el Juzgado de Policía Local y cuándo conviene recurrir a él?",
+        a: "El Juzgado de Policía Local (JPL) es el tribunal competente para conflictos entre arrendador y arrendatario en Chile: disputas de garantía, devolución de inmueble y cobro de daños. Es gratuito para el demandante y relativamente accesible. Conviene usarlo cuando hay una disputa clara de dinero (garantía no devuelta, retención injustificada) respaldada por evidencia suficiente. Para montos pequeños sin evidencia, puede no valer el tiempo.",
+      },
+      {
+        q: "¿Cómo acredito el estado de la propiedad si no hubo acta de entrega?",
+        a: "Sin acta firmada la disputa se vuelve muy subjetiva. Puedes apoyarte en: correos electrónicos del período de entrega que describan el estado, fotos con fecha enviadas por correo (que preserven metadata), testigos presentes en la entrega, y el contrato si describe la condición. Dicho eso, la probabilidad de ganar una disputa sin acta es considerablemente menor — es la razón principal para documentar siempre antes de entregar las llaves.",
+      },
+    ],
+  },
+  {
     title: "Sobre privacidad y datos",
     items: [
       {

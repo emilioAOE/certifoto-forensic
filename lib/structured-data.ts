@@ -18,7 +18,7 @@ const WEBSITE_ID = `${SITE_URL}/#website`;
 /** Entidad CertiFoto — la "ficha" canonica de la marca. */
 export function organizationSchema(): Record<string, unknown> {
   return {
-    "@type": "Organization",
+    "@type": ["Organization", "LocalBusiness"],
     "@id": ORG_ID,
     name: "CertiFoto",
     url: SITE_URL,
@@ -30,8 +30,20 @@ export function organizationSchema(): Record<string, unknown> {
     },
     description:
       "Plataforma chilena para documentar el estado de un inmueble al entregarlo o recibirlo (arriendo o compraventa) con fotos respaldadas con hash SHA-256, descripciones asistidas con IA y un certificado en PDF verificable.",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Santiago",
+      addressRegion: "Región Metropolitana",
+      addressCountry: "CL",
+    },
     areaServed: { "@type": "Country", name: "Chile" },
     email: "contacto@certifoto.cl",
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      email: "contacto@certifoto.cl",
+      availableLanguage: "es",
+    },
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
   };
 }
