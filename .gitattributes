@@ -1,0 +1,14 @@
+# Tratar binarios como binarios: sin conversión de fin de línea ni diff de texto.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary

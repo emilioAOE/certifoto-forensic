@@ -47,6 +47,7 @@ CertiFoto entrega un respaldo documental con huella criptográfica y trazabilida
 - [Inicio](https://www.certifoto.cl/): qué es CertiFoto y cómo funciona.
 - [Precios](https://www.certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
 - [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, evidencia, IA y certificado.
+- [Plantilla de acta de entrega (PDF gratis)](https://www.certifoto.cl/plantilla): descarga gratuita de una plantilla de acta de entrega para arriendo o compraventa (checklist por ambiente, medidores, llaves, inventario y firmas).
 - [Verificar certificado](https://www.certifoto.cl/forensic): subir un PDF o `.certifoto` y comprobar autenticidad.
 - [Sobre nosotros](https://www.certifoto.cl/sobre): la misión del proyecto.
 - [Contacto](https://www.certifoto.cl/contacto): formulario de contacto.
@@ -55,6 +56,26 @@ CertiFoto entrega un respaldo documental con huella criptográfica y trazabilida
 
 ## Blog
 
+- [Contrato de arriendo en Chile: qué debe incluir (con modelo 2026)](https://www.certifoto.cl/blog/contrato-arriendo-que-incluir-modelo)
+- [Cómo terminar un contrato de arriendo antes de tiempo](https://www.certifoto.cl/blog/terminar-contrato-arriendo-antes-de-tiempo)
+- [Qué hacer si el arrendatario no paga el arriendo](https://www.certifoto.cl/blog/arrendatario-no-paga-que-hacer)
+- [Reajuste del arriendo con IPC: cómo se calcula y cada cuánto](https://www.certifoto.cl/blog/reajuste-arriendo-ipc-como-se-calcula)
+- [¿Cuánto puedo subir el arriendo legalmente en Chile?](https://www.certifoto.cl/blog/cuanto-puedo-subir-el-arriendo)
+- [Garantía de arriendo: cuánto es, para qué sirve y cuándo se devuelve](https://www.certifoto.cl/blog/garantia-arriendo-cuanto-es-como-funciona)
+- [Ley 21.461 'Devuélveme mi Casa': cómo funciona el desalojo](https://www.certifoto.cl/blog/ley-devuelveme-mi-casa-21461-desalojo)
+- [Aviso de término de contrato de arriendo: plazos y carta modelo](https://www.certifoto.cl/blog/aviso-termino-contrato-arriendo-carta-modelo)
+- [Gastos comunes en el arriendo: ¿los paga el arrendador o el arrendatario?](https://www.certifoto.cl/blog/gastos-comunes-quien-paga-arriendo)
+- [Cómo declarar el arriendo en el SII y qué impuestos pagar](https://www.certifoto.cl/blog/declarar-arriendo-sii-impuestos)
+- [Cómo arrendar tu departamento por primera vez: guía completa](https://www.certifoto.cl/blog/arrendar-departamento-primera-vez-guia)
+- [Qué documentos pedir antes de arrendar (screening de arrendatarios)](https://www.certifoto.cl/blog/documentos-pedir-arrendatario-screening)
+- [Contrato de arriendo a plazo fijo vs indefinido: cuál conviene](https://www.certifoto.cl/blog/contrato-arriendo-plazo-fijo-vs-indefinido)
+- [Cláusulas abusivas en contratos de arriendo: cómo detectarlas](https://www.certifoto.cl/blog/clausulas-abusivas-contrato-arriendo)
+- [Renovación automática del contrato de arriendo: cómo funciona](https://www.certifoto.cl/blog/renovacion-automatica-contrato-arriendo)
+- [Subarriendo en Chile: ¿es legal y cómo se hace bien?](https://www.certifoto.cl/blog/subarriendo-chile-legal)
+- [¿Puede el arrendador prohibir mascotas en el arriendo?](https://www.certifoto.cl/blog/mascotas-en-arriendo-puede-prohibir)
+- [Aval y codeudor solidario en el arriendo: qué son y qué riesgos implican](https://www.certifoto.cl/blog/aval-codeudor-solidario-arriendo)
+- [Comisión del corredor de propiedades en un arriendo: cuánto y quién paga](https://www.certifoto.cl/blog/comision-corredor-propiedades-arriendo)
+- [Derechos y deberes del arrendatario en Chile](https://www.certifoto.cl/blog/derechos-deberes-arrendatario-chile)
 - [¿Qué hacer si el arrendatario niega los daños? Guía para arrendadores](https://www.certifoto.cl/blog/que-hacer-si-arrendatario-niega-danos)
 - [Cómo recuperar la garantía de arriendo en Chile: plazos, derechos y pasos](https://www.certifoto.cl/blog/como-recuperar-garantia-arriendo-chile)
 - [Acta de entrega de propiedad: qué incluir para evitar disputas (2026)](https://www.certifoto.cl/blog/acta-entrega-propiedad-arriendo-que-incluir)

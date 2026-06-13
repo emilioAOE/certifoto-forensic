@@ -71,6 +71,11 @@ export function LandingFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/plantilla" className="hover:text-accent-dark">
+                  Plantilla gratis (PDF)
+                </Link>
+              </li>
+              <li>
                 <Link href="/faq" className="hover:text-accent-dark">
                   Preguntas frecuentes
                 </Link>
