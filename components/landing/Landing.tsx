@@ -37,7 +37,7 @@ export function Landing() {
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent-softer border border-accent-light px-3 py-1 text-xs font-medium text-accent-dark mb-5">
               <Shield className="h-3.5 w-3.5" />
-              <span>Hecho en Chile · Arriendos y compraventas</span>
+              <span>La forma profesional de entregar propiedades · Chile</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1]">
@@ -154,8 +154,8 @@ export function Landing() {
           />
           <Audience
             icon={<Building2 className="h-6 w-6" />}
-            title="Corredores"
-            description="Profesionaliza arriendos y compraventas con actas digitales que reducen disputas y respaldan tu trabajo ante los clientes."
+            title="Corredores inmobiliarios"
+            description="La forma profesional de entregar propiedades. Actas digitales con respaldo forense que reducen disputas y respaldan tu trabajo ante propietarios y clientes."
           />
           <Audience
             icon={<Award className="h-6 w-6" />}
