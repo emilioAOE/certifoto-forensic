@@ -3588,6 +3588,116 @@ La diferencia entre ganar y perder un punto probatorio muchas veces está en hab
 
 CertiFoto te permite certificar capturas de pantalla, audios y archivos exportados de WhatsApp en minutos, con hash SHA-256, timestamp verificable y un PDF listo para presentar en tribunales. Es la forma más rápida y económica de convertir una conversación de WhatsApp en evidencia técnicamente sólida.`,
   },
+  {
+    slug: "captura-de-pantalla-como-prueba-validez-chile",
+    title: "¿Una captura de pantalla sirve como prueba en Chile? Valor legal, metadatos y cadena de custodia",
+    excerpt:
+      "Una captura de pantalla puede ser prueba válida en un juicio chileno, pero su peso depende de los metadatos, el hash y la cadena de custodia digital. Te explicamos cómo lograr que el tribunal la valore.",
+    date: "2026-06-16",
+    author: "Equipo CertiFoto",
+    category: "Evidencia Digital",
+    readMinutes: 11,
+    content: `Hoy casi cualquier conflicto deja rastro digital: una transferencia que nunca llegó, una amenaza por mensaje, una publicación que difama, un correo que confirma un acuerdo, una foto que muestra un daño. Lo primero que hace la mayoría de las personas es tomar una captura de pantalla. Es rápido, es intuitivo y queda guardado en el teléfono. El problema aparece después: cuando esa captura tiene que servir como prueba en un tribunal y la contraparte simplemente dice "esa imagen está editada".
+
+La pregunta de fondo es sencilla y la recibimos todo el tiempo: ¿una captura de pantalla sirve realmente como prueba en Chile? La respuesta corta es sí, pero con un matiz enorme. Una captura por sí sola es una de las pruebas más débiles que existen. Una captura respaldada con metadatos, hash criptográfico y cadena de custodia puede transformarse en evidencia sólida. Esta guía explica esa diferencia y cómo cruzar de un lado al otro.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## Qué dice la ley chilena sobre las pruebas digitales
+
+En Chile no existe una ley única que regule "la captura de pantalla". Lo que existe es un conjunto de normas que, leídas en conjunto, permiten que una imagen digital se incorpore a un juicio como prueba.
+
+La Ley 19.799 sobre documentos electrónicos y firma electrónica es la base. Reconoce que los documentos electrónicos tienen validez jurídica y producen efectos legales. Una captura de pantalla es, técnicamente, un documento electrónico, por lo que entra dentro de esta categoría.
+
+El Código de Procedimiento Civil regula cómo se presentan los documentos en juicio. Las capturas suelen incorporarse como prueba documental, normalmente impresas o como soporte digital acompañado al expediente. El punto clave del CPC es el de la objeción de documentos: la contraparte tiene un plazo para objetar la autenticidad o integridad de lo presentado, y aquí es donde una captura sin respaldo se cae.
+
+En materia de familia, la Ley 19.968 establece libertad probatoria: las partes pueden usar cualquier medio de prueba obtenido lícitamente, y el tribunal valora según las reglas de la sana crítica. En materia penal y laboral rige una lógica parecida de valoración según la sana crítica.
+
+La conclusión jurídica es importante: en Chile la captura de pantalla es admisible. Lo que está en juego no es si el tribunal la deja entrar, sino cuánto peso le da. Y ese peso depende casi por completo de cómo se preservó.
+
+## Por qué una captura "a secas" vale poco
+
+El juez sabe algo que conviene tener claro: una captura de pantalla es trivial de fabricar. Con herramientas de edición básicas, en minutos, cualquiera puede cambiar el texto de un mensaje, alterar un monto, modificar una fecha o inventar una conversación completa. Existen incluso aplicaciones diseñadas para generar conversaciones falsas de WhatsApp con fines de broma.
+
+Por eso, cuando se presenta una captura suelta y la contraparte la objeta diciendo que está editada, el tribunal queda en una posición incómoda: no tiene forma técnica de distinguir entre una imagen auténtica y una fabricada. En ese escenario, lo prudente para el juez es restarle valor.
+
+A esto se suma un problema silencioso: al tomar una captura, recortarla, reenviarla por WhatsApp o pegarla en un documento, se pierden los metadatos originales y la imagen se vuelve todavía más difícil de autenticar. La prueba se degrada en cada paso.
+
+## Metadatos EXIF: la información invisible de una foto
+
+Cuando hablamos de fotografías digitales (no de capturas de pantalla, sino de fotos tomadas con la cámara del teléfono), entra en juego un elemento técnico decisivo: los metadatos EXIF.
+
+EXIF es información que la cámara guarda automáticamente dentro del archivo de imagen. Puede incluir:
+
+- La fecha y hora exactas en que se tomó la foto.
+- El modelo de teléfono o cámara que la capturó.
+- Las coordenadas GPS del lugar (si la geolocalización estaba activada).
+- Parámetros técnicos como la apertura, el ISO o si se usó flash.
+
+Estos metadatos son valiosísimos como prueba. Para certificar un daño en un accidente, demostrar el estado de una propiedad en una fecha concreta o acreditar dónde y cuándo ocurrió algo, los EXIF aportan contexto que el ojo no ve.
+
+El problema es que son frágiles. Si envías una foto por WhatsApp, la aplicación la comprime y elimina la mayoría de los metadatos. Si la subes a redes sociales, ocurre lo mismo. Cuando llega el momento de usarla como prueba, esa foto ya perdió la información que la hacía valiosa. Por eso, una foto que podría ser determinante debe preservarse desde el archivo original, sin reenviarla ni comprimirla.
+
+Una aclaración técnica importante: una captura de pantalla normalmente no conserva los EXIF de la imagen original que aparece en la pantalla. Una captura solo registra los píxeles mostrados. Esa es otra razón por la que, cuando es posible, conviene preservar el archivo original además de la captura.
+
+## La cadena de custodia digital
+
+El concepto que conecta todo esto es la cadena de custodia digital. En el mundo físico, la cadena de custodia es el registro de quién tuvo una evidencia, cuándo y qué se hizo con ella, para garantizar que no fue alterada. En el mundo digital ocurre lo mismo, con herramientas distintas.
+
+Los tres pilares de una buena cadena de custodia digital son:
+
+- El hash criptográfico. Un hash (por ejemplo SHA-256) es una huella digital única del archivo. Si el archivo cambia aunque sea un solo píxel, el hash cambia por completo. Calcular el hash al momento de preservar la evidencia permite demostrar más adelante que el archivo no fue modificado: basta recalcularlo y comprobar que coincide.
+
+- El timestamp verificable. Es el sello de tiempo que prueba que el archivo existía en un momento determinado. Acredita que la evidencia se preservó en una fecha concreta y no fue creada después, a conveniencia.
+
+- El registro de integridad. Un documento que reúne el hash, la fecha y hora de preservación, la descripción del archivo y la identificación de quién lo certificó. Es lo que convierte un montón de imágenes sueltas en un conjunto probatorio ordenado.
+
+Cuando una captura de pantalla o una foto se presenta con estos tres elementos, la objeción "está editada" pierde fuerza. La contraparte tendría que explicar cómo se fabricó una evidencia que tiene hash coincidente y sello de tiempo anterior al conflicto, lo cual es técnicamente muy difícil.
+
+## Casos donde las capturas y fotos son prueba clave
+
+Las situaciones en que esta evidencia resulta decisiva son cada vez más frecuentes en Chile:
+
+- Conflictos laborales. Capturas de correos, mensajes del jefe fuera de horario, instrucciones por chat, comprobantes de pago o su ausencia. En sede laboral, donde rige la sana crítica, una conversación bien preservada puede acreditar acoso, despido injustificado o el contenido real de un acuerdo.
+
+- Accidentes y daños. Fotos del estado de un vehículo, de una propiedad inundada, de lesiones o de los daños tras un siniestro. Aquí los EXIF que acreditan fecha y lugar son especialmente valiosos para una compañía de seguros o un juicio civil.
+
+- Juzgados de Policía Local. En infracciones de tránsito, choques menores, ruidos molestos o conflictos vecinales, las fotos y videos suelen ser la prueba principal. Una imagen certificada tiene mucho más peso que una mostrada desde el teléfono.
+
+- Estafas y transferencias. Capturas de comprobantes, de conversaciones donde se prometió algo, de publicaciones de venta. Preservarlas a tiempo, antes de que el estafador borre su cuenta, es muchas veces la única evidencia que queda.
+
+- Difamación e injurias en redes. Publicaciones que pueden borrarse en cualquier momento. Capturarlas y certificarlas de inmediato evita que la prueba desaparezca.
+
+## El error más caro: no preservar a tiempo
+
+Hay un patrón que se repite en todos estos casos: la persona piensa "después la guardo bien" y para cuando el conflicto escala, el mensaje fue borrado, la cuenta desapareció, la foto se reenvió mil veces y perdió sus metadatos, o el teléfono se cambió.
+
+La regla práctica es simple: en el momento en que sospechas que algo podría terminar en un tribunal, presérvalo de inmediato. No mañana. Captura, conserva el archivo original cuando exista, y certifícalo con hash y timestamp lo antes posible. La evidencia digital es perecible.
+
+## Cómo certificar una captura correctamente
+
+El proceso para convertir una captura débil en una prueba sólida no requiere ser perito informático:
+
+- Conserva el original. Si es una foto, guarda el archivo tal como salió de la cámara, sin reenviarlo. Si es una conversación, exporta el chat completo además de tomar capturas.
+- Captura con contexto. Pantalla completa, mostrando nombre, fecha, hora y todo lo necesario para entender la secuencia. Nada de recortes que dejen fuera información.
+- Calcula el hash. Obtén el SHA-256 de cada archivo al momento de preservarlo.
+- Sella la fecha. Registra un timestamp verificable de la preservación.
+- Genera un informe. Un documento que reúna las imágenes, los hashes, las fechas y la descripción del contexto, listo para acompañar al expediente.
+
+## Cuándo conviene un peritaje informático
+
+En casos donde la contraparte impugna con fuerza la autenticidad, o donde se discute si un mensaje fue realmente enviado desde cierto dispositivo, el tribunal puede ordenar o las partes ofrecer un peritaje informático. El perito examina el dispositivo original, analiza la metadata a fondo y emite un informe técnico.
+
+El peritaje es la herramienta más robusta, pero también la más cara y lenta. Para la gran mayoría de los conflictos cotidianos, una certificación digital bien hecha con hash y timestamp es suficiente para que el tribunal valore la prueba favorablemente, a una fracción del costo. Lo ideal es escalar al peritaje solo cuando el caso lo justifica.
+
+## En resumen
+
+Una captura de pantalla sí sirve como prueba en Chile, pero su valor real lo determina la forma en que se preservó. Una imagen suelta, recortada y reenviada vale poco frente a una objeción. Una imagen respaldada con metadatos, hash criptográfico, timestamp y un informe de integridad se vuelve muy difícil de desacreditar.
+
+La diferencia entre ganar y perder un punto probatorio casi siempre se decide antes de pisar el tribunal: en el momento en que decides preservar bien la evidencia, o dejarla a su suerte en la galería del teléfono.
+
+CertiFoto te permite certificar capturas de pantalla y fotografías en minutos: la plataforma calcula el hash SHA-256 de cada archivo, registra la fecha y hora de la certificación y genera un PDF con todo el respaldo técnico necesario para presentar en tribunales chilenos. Es la forma más rápida y económica de convertir una captura común en evidencia digital sólida.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | null {
