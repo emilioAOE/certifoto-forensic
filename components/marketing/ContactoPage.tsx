@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, MapPin, MessageSquare, Send, CheckCircle, Coins } from "lucide-react";
+import { MapPin, MessageSquare, Send, CheckCircle, Coins } from "lucide-react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { PACKS, formatCLP, type Pack } from "@/lib/packs";
