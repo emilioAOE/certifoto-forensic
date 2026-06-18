@@ -138,7 +138,25 @@ Desde la Ley 21.461 ("Devuélveme mi Casa"), el incumplimiento del arrendatario 
 
 ## En resumen
 
-Un buen contrato de arriendo en Chile debe individualizar a las partes con RUT, describir el inmueble con precisión, fijar renta, reajuste, garantía, plazo, destino y restricciones, y regular claramente los gastos, las multas y la restitución. Complementa siempre el contrato con un acta de entrega fotográfica: es el respaldo que hace la diferencia cuando hay discrepancias al término. [Crea tu acta gratis en CertiFoto](/dashboard) y tenla lista para el día de entrega de llaves.`,
+Un buen contrato de arriendo en Chile debe individualizar a las partes con RUT, describir el inmueble con precisión, fijar renta, reajuste, garantía, plazo, destino y restricciones, y regular claramente los gastos, las multas y la restitución. Complementa siempre el contrato con un acta de entrega fotográfica: es el respaldo que hace la diferencia cuando hay discrepancias al término. [Crea tu acta gratis en CertiFoto](/dashboard) y tenla lista para el día de entrega de llaves.
+
+## Preguntas frecuentes
+
+### ¿Es obligatorio firmar el contrato de arriendo ante notario?
+
+No. El contrato de arriendo es válido entre las partes aunque sea un documento privado, porque la Ley 18.101 no exige escritura pública. Firmar ante notario (o con firma electrónica avanzada bajo la Ley 19.799) no cambia las obligaciones, pero facilita la prueba de la fecha y de la identidad de quienes firmaron si después hay un juicio.
+
+### ¿Qué cláusulas son nulas aunque estén escritas en el contrato?
+
+Son nulas las cláusulas que renuncian a derechos que la ley reconoce al arrendatario, como una supuesta renuncia general "a todos sus derechos legales" o autorizaciones para que el arrendador corte servicios básicos o ingrese al inmueble sin aviso. Aunque aparezcan firmadas, un Juzgado de Policía Local no las hará valer.
+
+### ¿Sirve de algo el contrato si no hice un acta de entrega?
+
+Sirve para acreditar la relación de arriendo, la renta y el plazo, pero no para acreditar el estado del inmueble. Sin acta de entrega con fotos, al término del contrato es muy difícil probar qué daños existían al inicio, y la discusión sobre la garantía suele resolverse caso a caso según la sana crítica del tribunal.
+
+### ¿Puedo modificar el contrato después de firmado?
+
+Sí, siempre que arrendador y arrendatario estén de acuerdo. Las modificaciones conviene hacerlas por escrito mediante un anexo firmado por ambas partes, indicando qué cláusula se cambia. Un cambio acordado solo de palabra es difícil de probar si después surge un desacuerdo.`,
   },
   {
     slug: "terminar-contrato-arriendo-antes-de-tiempo",
@@ -229,7 +247,25 @@ Algunos puntos a tener en cuenta:
 
 ## En resumen
 
-Terminar un contrato de arriendo antes de tiempo es posible para ambas partes, pero exige respetar los procedimientos: avisos oportunos, acuerdos por escrito y, sobre todo, una entrega documentada del inmueble. Las salidas anticipadas que se manejan bien —con comunicación clara y registro formal— rara vez terminan en conflicto. Las que se hacen de forma abrupta o sin documentación son las que generan disputas que pueden durar meses. Si tienes dudas sobre tu situación específica, consulta a un abogado antes de dar el primer paso.`,
+Terminar un contrato de arriendo antes de tiempo es posible para ambas partes, pero exige respetar los procedimientos: avisos oportunos, acuerdos por escrito y, sobre todo, una entrega documentada del inmueble. Las salidas anticipadas que se manejan bien —con comunicación clara y registro formal— rara vez terminan en conflicto. Las que se hacen de forma abrupta o sin documentación son las que generan disputas que pueden durar meses. Si tienes dudas sobre tu situación específica, consulta a un abogado antes de dar el primer paso.
+
+## Preguntas frecuentes
+
+### ¿Puedo terminar el contrato antes del plazo sin pagar multa?
+
+Depende de lo pactado. Si el contrato tiene una cláusula de salida anticipada con aviso previo, basta cumplir ese aviso. Si no la tiene y es a plazo fijo, terminar antes puede generar la obligación de indemnizar al arrendador por las rentas que faltan, salvo que lleguen a un mutuo acuerdo para poner término.
+
+### ¿Cómo formalizo el término por mutuo acuerdo?
+
+Lo ideal es firmar un documento de término de común acuerdo donde ambas partes declaren la fecha de restitución, el estado en que se devuelve el inmueble y la situación de la garantía. Acompañarlo de un acta de devolución con fotos evita reclamos posteriores por daños o por rentas supuestamente impagas.
+
+### ¿Qué pasa con la garantía si me voy antes de tiempo?
+
+La garantía sigue las mismas reglas: cubre rentas impagas, cuentas pendientes y daños que excedan el desgaste normal. Si te vas anticipadamente cumpliendo el aviso o el mutuo acuerdo y entregas el inmueble en buen estado, el arrendador debe devolverla; las retenciones solo proceden por conceptos reales y demostrables.
+
+### ¿Tengo que dar aviso aunque el contrato ya esté por vencer?
+
+Sí, conviene dar siempre el aviso de no renovación con la anticipación pactada o la que indique la ley, porque de lo contrario el contrato puede prorrogarse por tácita reconducción. El aviso por escrito, con constancia de envío, evita discusiones sobre si se notificó a tiempo.`,
   },
   {
     slug: "arrendatario-no-paga-que-hacer",
@@ -309,7 +345,25 @@ CertiFoto permite crear esa acta con fotos certificadas con hash SHA-256, lo que
 
 ## En resumen
 
-Si el arrendatario no paga, el protocolo correcto es: comunicación escrita, requerimiento formal, revisión de garantía y codeudor, y si nada funciona, vía judicial ante el Juzgado de Letras. La Ley 21.461 mejoró los plazos para la restitución, pero no elimina la necesidad de documentación sólida ni reemplaza la asesoría de un abogado. Y nunca, bajo ninguna circunstancia, recurras a la autotutela: las consecuencias legales para el arrendador pueden ser peores que la deuda misma.`,
+Si el arrendatario no paga, el protocolo correcto es: comunicación escrita, requerimiento formal, revisión de garantía y codeudor, y si nada funciona, vía judicial ante el Juzgado de Letras. La Ley 21.461 mejoró los plazos para la restitución, pero no elimina la necesidad de documentación sólida ni reemplaza la asesoría de un abogado. Y nunca, bajo ninguna circunstancia, recurras a la autotutela: las consecuencias legales para el arrendador pueden ser peores que la deuda misma.
+
+## Preguntas frecuentes
+
+### ¿Puedo cambiar la chapa o cortar los servicios si el arrendatario no paga?
+
+No. La autotutela está prohibida: cambiar la cerradura, sacar las cosas del arrendatario o cortar luz y agua puede exponerte a acciones legales en tu contra. El camino correcto es el requerimiento de pago y, si persiste la mora, la demanda de término de contrato por no pago ante el Juzgado de Policía Local o tribunal competente.
+
+### ¿Cuándo puedo iniciar la demanda por no pago?
+
+El no pago de la renta es causal de término del arriendo. Conviene primero un requerimiento escrito de pago dejando constancia, y si el arrendatario no regulariza, presentar la demanda. La Ley 18.101 contempla el reconvenirle el pago en el juicio, y la Ley 21.461 agrega un procedimiento monitorio más expedito para estos casos.
+
+### ¿De qué sirve el codeudor solidario en este escenario?
+
+El codeudor solidario responde por las mismas obligaciones que el arrendatario y sin beneficio de excusión, por lo que puedes dirigir el cobro de las rentas impagas directamente contra él. Por eso conviene que sus datos estén bien individualizados en el contrato y que haya firmado el mismo documento.
+
+### ¿La garantía cubre los meses que no pagó?
+
+La garantía puede imputarse a rentas impagas, cuentas pendientes y daños, pero suele equivaler a uno o dos meses y rara vez cubre una mora prolongada. No reemplaza la acción de cobro: aunque la apliques, puedes demandar la diferencia adeudada y el término del contrato.`,
   },
   {
     slug: "reajuste-arriendo-ipc-como-se-calcula",
@@ -443,7 +497,25 @@ En CertiFoto puedes crear tu acta de entrega gratis y, cuando necesites certific
 - La periodicidad más común es anual, pero puede ser semestral, trimestral o mensual según lo pactado.
 - La alternativa es fijar la renta en UF, que se reajusta automáticamente cada mes sin cláusula adicional.
 - Si el contrato no tiene cláusula de reajuste, la renta queda fija hasta que se renueve o suscriba un nuevo contrato.
-- Siempre consulta el valor oficial del IPC en el sitio del INE antes de aplicar el cálculo.`,
+- Siempre consulta el valor oficial del IPC en el sitio del INE antes de aplicar el cálculo.
+
+## Preguntas frecuentes
+
+### ¿Puede el arrendador reajustar la renta si el contrato no dice nada?
+
+No de forma unilateral. El reajuste tiene que estar pactado en el contrato (por ejemplo, "renta reajustable según IPC cada cierto periodo"). Si no hay cláusula de reajuste, la renta se mantiene durante la vigencia del contrato, y un alza solo podría acordarse de común acuerdo o al renovar.
+
+### ¿Cada cuánto se puede aplicar el reajuste por IPC?
+
+La periodicidad es la que las partes pacten: lo habitual es semestral o anual. El IPC lo publica el INE, y el reajuste se aplica acumulando la variación del periodo correspondiente. Lo importante es que la fórmula y la frecuencia queden claras en el contrato para evitar discusiones sobre el monto.
+
+### ¿Qué conviene más, reajustar en UF o en IPC?
+
+Pactar la renta en UF traslada el reajuste a un valor que ya sigue la inflación día a día, lo que da previsibilidad. Reajustar en pesos según IPC mantiene el monto fijo entre cada actualización. Ninguna es mejor en abstracto: depende de cuánta estabilidad mensual quieran las partes; lo esencial es que el mecanismo esté escrito.
+
+### ¿El reajuste se aplica también a la garantía?
+
+Solo si el contrato lo establece. En muchos contratos la garantía se fija en un monto equivalente a la renta inicial y no se reajusta automáticamente. Conviene revisar la cláusula respectiva, porque si la renta sube con el tiempo, la garantía puede quedar por debajo de un mes de arriendo.`,
   },
   {
     slug: "cuanto-puedo-subir-el-arriendo",
@@ -550,7 +622,25 @@ En CertiFoto puedes crear o actualizar tu acta de entrega gratis. Si necesitas d
 - Al renovar o en un nuevo contrato, el monto es de libre acuerdo entre las partes. No existe un tope legal porcentual en Chile.
 - Para contratos indefinidos, se requiere aviso de al menos dos meses para terminar o modificar condiciones.
 - El mercado limita las alzas en la práctica: una propiedad vacía dos meses puede costar más que mantener un alza moderada.
-- La transparencia, el aviso anticipado y los datos de mercado son las mejores herramientas para negociar un alza sin conflictos.`,
+- La transparencia, el aviso anticipado y los datos de mercado son las mejores herramientas para negociar un alza sin conflictos.
+
+## Preguntas frecuentes
+
+### ¿Hay un tope legal para subir el arriendo en Chile?
+
+Durante la vigencia del contrato, la renta solo puede variar según el reajuste pactado (por ejemplo, IPC o UF); no puedes subirla por sobre eso de forma unilateral. Al renovar o firmar un contrato nuevo existe libertad para acordar el monto, ya que la ley chilena no fija un tope general de precios para el arriendo.
+
+### ¿Puedo subir la renta a mitad del contrato porque subió la plusvalía?
+
+No, salvo que ambas partes lo acuerden por escrito. Mientras el contrato esté vigente rige lo pactado, y la plusvalía o el valor de mercado no habilitan un alza unilateral. El momento para ajustar el precio a mercado es al término del plazo, al ofrecer la renovación o un nuevo contrato.
+
+### ¿Qué aviso debo dar si quiero subir el arriendo al renovar?
+
+Conviene avisar con la anticipación pactada en el contrato o la que indique la ley para la no renovación, comunicando por escrito la nueva renta propuesta. Así el arrendatario decide si acepta o se va, y se evita que el contrato se prorrogue automáticamente en las condiciones antiguas por tácita reconducción.
+
+### ¿El reajuste por IPC cuenta como "subir" el arriendo?
+
+No en sentido estricto. El reajuste por IPC solo mantiene el poder adquisitivo de la renta frente a la inflación; no es un aumento real del precio. Un alza es modificar el valor por sobre ese reajuste, y eso requiere acuerdo de las partes, normalmente al renovar.`,
   },
   {
     slug: "garantia-arriendo-cuanto-es-como-funciona",
@@ -681,7 +771,25 @@ Con CertiFoto puedes crear el acta de entrega de tu propiedad sin costo. Subes l
 - Cubre daños causados por el arrendatario, rentas impagas y cuentas pendientes. No cubre el desgaste normal por el uso.
 - La ley no fija plazo de devolución; el contrato y la costumbre apuntan a 30-60 días hábiles desde la entrega de llaves.
 - El acta de entrega con respaldo fotográfico es la herramienta más efectiva para proteger la garantía, tanto para el arrendatario como para el arrendador.
-- Si hay disputa, el camino es la negociación con evidencia y, si no hay acuerdo, la vía judicial.`,
+- Si hay disputa, el camino es la negociación con evidencia y, si no hay acuerdo, la vía judicial.
+
+## Preguntas frecuentes
+
+### ¿Cuánto puede pedir el arrendador como garantía?
+
+El monto lo fijan las partes; en la práctica suele equivaler a uno o dos meses de renta. No hay una cifra única obligatoria por ley, por lo que conviene que el contrato indique con claridad el monto, en qué se puede imputar y cuándo se devuelve.
+
+### ¿Qué puede descontar el arrendador de la garantía?
+
+La garantía cubre rentas o cuentas impagas y daños que excedan el desgaste normal por uso. No puede usarse para cobrar deterioro razonable (ligero amarillamiento de muros, marcas suaves de muebles). Cobrar por desgaste normal es una causa frecuente de reclamos en el Juzgado de Policía Local.
+
+### ¿En qué plazo deben devolverme la garantía?
+
+El plazo y las condiciones dependen de lo pactado y de la situación del inmueble al restituirlo. Lo razonable es que se devuelva una vez verificado el estado de la propiedad y pagadas las cuentas pendientes. Si el arrendador retiene sin causa justificada, el arrendatario puede reclamar judicialmente.
+
+### ¿Cómo protejo mi garantía desde el inicio?
+
+Con un acta de entrega detallada y fotos fechadas al inicio del arriendo, y otra al momento de devolver. Tener evidencia comparable del estado inicial y final reduce drásticamente la discusión sobre qué es daño imputable y qué es desgaste normal, que en disputa evalúa el tribunal según la sana crítica.`,
   },
   {
     slug: "ley-devuelveme-mi-casa-21461-desalojo",
@@ -759,7 +867,25 @@ Para entender el contexto más amplio de qué hacer cuando el arrendatario no pa
 
 ## En resumen
 
-La Ley 21.461 "Devuélveme mi Casa" introdujo un procedimiento monitorio ante el Juzgado de Letras que permite obtener una orden de restitución más rápidamente cuando existe un contrato escrito y mora acreditada. Si el arrendatario no se opone, el proceso es significativamente más ágil que antes. Pero si hay oposición o el contrato es verbal, las ventajas se reducen. La documentación sólida —contrato, comprobantes y acta de entrega— sigue siendo el pilar de cualquier proceso exitoso, y la asesoría de un abogado es indispensable para navegar el procedimiento correctamente.`,
+La Ley 21.461 "Devuélveme mi Casa" introdujo un procedimiento monitorio ante el Juzgado de Letras que permite obtener una orden de restitución más rápidamente cuando existe un contrato escrito y mora acreditada. Si el arrendatario no se opone, el proceso es significativamente más ágil que antes. Pero si hay oposición o el contrato es verbal, las ventajas se reducen. La documentación sólida —contrato, comprobantes y acta de entrega— sigue siendo el pilar de cualquier proceso exitoso, y la asesoría de un abogado es indispensable para navegar el procedimiento correctamente.
+
+## Preguntas frecuentes
+
+### ¿Qué hace distinta a la Ley 21.461 frente a un juicio de arriendo común?
+
+La Ley 21.461 ("Devuélveme mi Casa") incorpora un procedimiento monitorio para el cobro de rentas y la restitución del inmueble por no pago, pensado para ser más rápido que el juicio ordinario. Si el arrendatario no se opone fundadamente dentro del plazo, el tribunal puede ordenar antes la restitución.
+
+### ¿Puedo desalojar por mi cuenta usando esta ley?
+
+No. La ley agiliza el procedimiento judicial, pero el desalojo siempre lo ordena y ejecuta el tribunal con auxilio de la fuerza pública si corresponde. Sacar al arrendatario, cambiar la chapa o cortar servicios por cuenta propia sigue siendo autotutela prohibida, aunque exista mora.
+
+### ¿Qué necesito para iniciar el procedimiento por no pago?
+
+Necesitas el contrato de arriendo y acreditar la mora. Conviene haber dejado constancia escrita del requerimiento de pago. Que el contrato individualice bien a las partes con RUT, fije la renta y el medio de pago facilita la prueba y evita demoras en la tramitación.
+
+### ¿Sirve para cualquier causal de término o solo por no pago?
+
+El procedimiento monitorio está orientado principalmente al término por no pago de rentas. Otras causales (por ejemplo, daños graves o destinos no autorizados) pueden requerir las vías de la Ley 18.101. Por eso conviene revisar con un abogado cuál es el procedimiento adecuado a tu caso.`,
   },
   {
     slug: "aviso-termino-contrato-arriendo-carta-modelo",
@@ -872,7 +998,25 @@ Es fundamental levantar un **acta de devolución** el día de la entrega. Ese do
 
 ## En resumen
 
-La carta de aviso de término de arriendo debe enviarse con la anticipación que establece la ley o el contrato, contener los datos básicos de identificación y la fecha de término, y entregarse por un medio que deje constancia fehaciente de la recepción. La carta certificada es la opción más accesible; la notarial, la más robusta. Usar el modelo como base y ajustarlo a tu caso reduce el riesgo de errores que pueden invalidar el aviso o extender el contrato más de lo deseado.`,
+La carta de aviso de término de arriendo debe enviarse con la anticipación que establece la ley o el contrato, contener los datos básicos de identificación y la fecha de término, y entregarse por un medio que deje constancia fehaciente de la recepción. La carta certificada es la opción más accesible; la notarial, la más robusta. Usar el modelo como base y ajustarlo a tu caso reduce el riesgo de errores que pueden invalidar el aviso o extender el contrato más de lo deseado.
+
+## Preguntas frecuentes
+
+### ¿Con cuánta anticipación debo enviar el aviso de término?
+
+Depende del tipo de contrato y de lo pactado. En contratos de plazo indefinido o mes a mes suele exigirse un desahucio con anticipación, mientras que en los de plazo fijo el contrato termina al vencer si se avisa la no renovación a tiempo. Lo clave es respetar el plazo del contrato y de la Ley 18.101 para que el aviso surta efecto.
+
+### ¿Cómo debo notificar el aviso para que tenga validez?
+
+Conviene notificar por un medio que deje constancia: carta por correo certificado, notificación notarial o correo electrónico si el contrato lo admite como medio válido. Guardar el comprobante de envío y la fecha es lo que después permite acreditar que el aviso se hizo dentro de plazo.
+
+### ¿Qué debe contener la carta de aviso?
+
+La individualización de las partes y del inmueble, la referencia al contrato, la manifestación de no renovar o de poner término según la causal, y la fecha en que debe restituirse la propiedad. Un texto claro y fechado evita discusiones sobre el alcance del aviso.
+
+### ¿Qué pasa si no envío el aviso a tiempo?
+
+El contrato puede renovarse o prorrogarse por tácita reconducción en las mismas condiciones, obligándote a esperar un nuevo periodo. Por eso el aviso oportuno y con constancia es la forma más simple de cerrar el contrato en la fecha que corresponde.`,
   },
   {
     slug: "gastos-comunes-quien-paga-arriendo",
@@ -1002,7 +1146,25 @@ Tanto el pago de la garantía como el estado de los gastos comunes al inicio del
 - La obligación ante el condominio siempre recae sobre el propietario (arrendador), aunque internamente sea el arrendatario quien deba pagarlos.
 - La morosidad en gastos comunes genera intereses y puede consumir la garantía al término del contrato.
 - Pedir un certificado de gastos al día al inicio y al término del arriendo es una práctica preventiva clave.
-- El acta de entrega debe dejar constancia del estado de los gastos comunes al momento de la entrega.`,
+- El acta de entrega debe dejar constancia del estado de los gastos comunes al momento de la entrega.
+
+## Preguntas frecuentes
+
+### Por regla general, ¿quién paga los gastos comunes en un arriendo?
+
+En la práctica de mercado, los gastos comunes ordinarios (los del uso y mantención corriente del edificio) suelen quedar a cargo del arrendatario, mientras que los extraordinarios y las cuentas asociadas a la propiedad como inversión tienden a ser del arrendador. Lo decisivo es lo que el contrato establezca expresamente.
+
+### ¿Cuál es la diferencia entre gastos comunes ordinarios y extraordinarios?
+
+Los ordinarios cubren la operación habitual (aseo, conserjería, electricidad de espacios comunes). Los extraordinarios financian obras o mejoras mayores no habituales, como reparar un ascensor o pintar la fachada. Esa distinción suele usarse para repartir quién paga qué, por lo que conviene dejarla escrita en el contrato.
+
+### ¿Qué pasa si el arrendatario no paga los gastos comunes?
+
+La deuda de gastos comunes recae sobre la unidad y puede afectar al propietario frente a la comunidad. Por eso conviene pactar que el arrendatario acredite los pagos y que la garantía pueda imputarse a gastos comunes impagos. Pedir el certificado de deuda al término del arriendo evita sorpresas.
+
+### ¿Conviene dejar registrado el estado de cuentas al entregar?
+
+Sí. Incluir en el acta de entrega y en la de devolución las lecturas de medidores y el estado de las cuentas (gastos comunes, luz, agua, gas) deja claro qué consumos corresponden a cada periodo y a quién, reduciendo discusiones al cierre del contrato.`,
   },
   {
     slug: "declarar-arriendo-sii-impuestos",
@@ -1090,7 +1252,25 @@ Y si estás comenzando el proceso de arrendar, nuestra guía sobre [cómo arrend
 
 ## En resumen
 
-Los ingresos por arriendo en Chile son tributables y deben declararse en el Impuesto Global Complementario a través de la Operación Renta. El beneficio DFL2 existe pero tiene condiciones específicas que debes confirmar con el SII o un contador. El IVA no aplica en la mayoría de los arriendos habitacionales, pero hay excepciones. Guarda todos tus comprobantes, declara cada año, y si tienes dudas, un contador es la inversión más inteligente que puedes hacer.`,
+Los ingresos por arriendo en Chile son tributables y deben declararse en el Impuesto Global Complementario a través de la Operación Renta. El beneficio DFL2 existe pero tiene condiciones específicas que debes confirmar con el SII o un contador. El IVA no aplica en la mayoría de los arriendos habitacionales, pero hay excepciones. Guarda todos tus comprobantes, declara cada año, y si tienes dudas, un contador es la inversión más inteligente que puedes hacer.
+
+## Preguntas frecuentes
+
+### ¿Tengo que declarar al SII lo que recibo por arriendo?
+
+Por regla general, las rentas de arrendamiento son ingresos que deben declararse. Tratándose de personas naturales, suelen formar parte de la base del Impuesto Global Complementario en la declaración anual de renta. La situación concreta depende del tipo de propiedad y del régimen, por lo que conviene confirmarla con el SII o un contador.
+
+### ¿El arriendo de viviendas paga IVA?
+
+El arrendamiento de inmuebles para habitación, sin muebles ni instalaciones que permitan una actividad comercial o industrial, generalmente no está afecto a IVA. La situación cambia cuando se arrienda amoblado o con instalaciones que habilitan una actividad, donde sí puede aplicar. Es un punto que conviene verificar caso a caso.
+
+### ¿Qué es el beneficio DFL2 y a quién aplica?
+
+Las viviendas acogidas al DFL2 tienen beneficios tributarios establecidos por esa normativa, sujetos a requisitos y límites que han variado en el tiempo. Si tu propiedad es DFL2, conviene revisar las condiciones vigentes con el SII, porque no todas las viviendas ni todos los propietarios califican igual.
+
+### ¿Qué comprobantes debo guardar?
+
+Conviene conservar el contrato, los comprobantes de pago de la renta (transferencias o recibos) y los documentos de gastos asociados que sean deducibles según el régimen aplicable. Tener respaldo ordenado facilita la declaración y la respuesta ante cualquier revisión del SII.`,
   },
   {
     slug: "arrendar-departamento-primera-vez-guia",
@@ -1205,7 +1385,25 @@ Si tienes más de una propiedad o no quieres encargarte de la administración, c
 
 ## En resumen
 
-Arrendar por primera vez requiere preparación: adecuar la propiedad, fijar un precio justo, publicar con buenas fotos, seleccionar al arrendatario con criterios objetivos, redactar un contrato completo, acordar la garantía, y hacer un acta de entrega el día que se entregan las llaves. Cada uno de estos pasos reduce el riesgo de problemas futuros. El acta, en particular, es tu principal protección ante disputas al término del contrato. Hazla bien, con fotos y firma de ambas partes, y tendrás la tranquilidad de estar cubierto.`,
+Arrendar por primera vez requiere preparación: adecuar la propiedad, fijar un precio justo, publicar con buenas fotos, seleccionar al arrendatario con criterios objetivos, redactar un contrato completo, acordar la garantía, y hacer un acta de entrega el día que se entregan las llaves. Cada uno de estos pasos reduce el riesgo de problemas futuros. El acta, en particular, es tu principal protección ante disputas al término del contrato. Hazla bien, con fotos y firma de ambas partes, y tendrás la tranquilidad de estar cubierto.
+
+## Preguntas frecuentes
+
+### ¿Qué pasos básicos debo seguir para arrendar mi departamento por primera vez?
+
+Preparar y limpiar la propiedad, fijar un precio acorde al mercado de la zona, publicar con buenas fotos, filtrar a los interesados (screening), redactar un contrato completo y hacer un acta de entrega con fotos al momento de entregar las llaves. Ese último paso es el que más conflictos evita al término del arriendo.
+
+### ¿Cómo fijo el precio del arriendo?
+
+Compara propiedades similares en la misma comuna y sector (metros, dormitorios, estado, gastos comunes). El precio de mercado es referencial: durante el contrato solo podrás reajustarlo según lo pactado (IPC o UF), así que conviene partir con un valor realista en lugar de uno que tengas que corregir después.
+
+### ¿Qué documentos puedo pedir al interesado sin infringir la ley?
+
+Puedes solicitar antecedentes para evaluar capacidad de pago (liquidaciones, contrato de trabajo, informe comercial) y referencias, siempre tratando esos datos con la finalidad de evaluar el arriendo y resguardando la Ley 19.628 sobre protección de datos personales. No conviene conservar ni difundir esa información más allá de lo necesario.
+
+### ¿Por qué necesito un acta de entrega si ya tengo contrato?
+
+Porque el contrato prueba la relación de arriendo, pero no el estado del inmueble. El acta de entrega con fotos fechadas deja registro de cómo se entregó la propiedad, lo que protege la garantía y simplifica la discusión sobre daños cuando el arrendatario la devuelva.`,
   },
   {
     slug: "documentos-pedir-arrendatario-screening",
@@ -1304,7 +1502,25 @@ El día de la entrega de las llaves, no olvides hacer el acta de entrega con fot
 
 ## En resumen
 
-Un buen proceso de screening incluye cédula de identidad, liquidaciones de sueldo o acreditación de ingresos, contrato de trabajo o antecedentes de actividad independiente, informe comercial con el consentimiento del candidato, y referencias. Todo debe hacerse respetando la Ley 19.628 y evitando cualquier criterio discriminatorio. Documenta tu proceso y basa tu decisión en la capacidad de pago y la seriedad del candidato: es la mejor forma de protegerte y de actuar dentro de la ley.`,
+Un buen proceso de screening incluye cédula de identidad, liquidaciones de sueldo o acreditación de ingresos, contrato de trabajo o antecedentes de actividad independiente, informe comercial con el consentimiento del candidato, y referencias. Todo debe hacerse respetando la Ley 19.628 y evitando cualquier criterio discriminatorio. Documenta tu proceso y basa tu decisión en la capacidad de pago y la seriedad del candidato: es la mejor forma de protegerte y de actuar dentro de la ley.
+
+## Preguntas frecuentes
+
+### ¿Qué documentos puedo exigir antes de arrendar?
+
+Habitualmente se piden antecedentes que permitan evaluar la capacidad de pago y la seriedad del interesado: liquidaciones de sueldo o ingresos, contrato de trabajo o antecedentes de actividad, informe comercial y referencias de arriendos anteriores. La finalidad debe ser evaluar el arriendo, no acumular datos sin necesidad.
+
+### ¿La Ley 19.628 limita lo que puedo pedir o guardar?
+
+Sí. La Ley 19.628 sobre protección de la vida privada exige tratar los datos personales con una finalidad determinada y legítima. En la práctica esto significa pedir solo lo necesario para evaluar al arrendatario, usarlo para eso y no difundirlo ni conservarlo indefinidamente una vez tomada la decisión.
+
+### ¿Puedo rechazar a un postulante por su informe comercial?
+
+Puedes considerar el informe comercial como un antecedente más para decidir, ya que evalúas riesgo de pago. Lo que conviene evitar es usar criterios discriminatorios ajenos a la solvencia. Guardar coherencia entre lo que pides a todos los postulantes reduce el riesgo de reclamos.
+
+### ¿Sirve el screening si después no hago acta de entrega?
+
+El screening reduce el riesgo de impago, pero no prueba el estado del inmueble. Aunque elijas un buen arrendatario, conviene igual firmar el contrato y hacer un acta de entrega con fotos, porque las discusiones por daños y garantía surgen incluso con arrendatarios cumplidores.`,
   },
   {
     slug: "contrato-arriendo-plazo-fijo-vs-indefinido",
@@ -1433,7 +1649,25 @@ Independientemente del tipo de contrato que elijas, el acta de entrega es fundam
 
 ## En resumen
 
-El contrato a plazo fijo ofrece estabilidad y fecha cierta de término; el indefinido, flexibilidad de salida para ambas partes. La elección depende de tus circunstancias y de lo que más valoras. En ambos casos, cuida los detalles del contrato, conoce los plazos de aviso y documenta siempre el estado del inmueble con un acta de entrega.`,
+El contrato a plazo fijo ofrece estabilidad y fecha cierta de término; el indefinido, flexibilidad de salida para ambas partes. La elección depende de tus circunstancias y de lo que más valoras. En ambos casos, cuida los detalles del contrato, conoce los plazos de aviso y documenta siempre el estado del inmueble con un acta de entrega.
+
+## Preguntas frecuentes
+
+### ¿Cuál es la diferencia práctica entre plazo fijo e indefinido?
+
+El contrato a plazo fijo termina en una fecha determinada (sujeto a avisos de no renovación), lo que da certeza sobre cuándo concluye. El indefinido se mantiene hasta que una parte lo termine cumpliendo los plazos de aviso o desahucio de la Ley 18.101. La elección depende de cuánta estabilidad o flexibilidad busque cada parte.
+
+### ¿Qué es la tácita reconducción y a cuál afecta?
+
+La tácita reconducción ocurre cuando, vencido el plazo, el arrendatario sigue ocupando con el consentimiento del arrendador y este recibe la renta: el contrato se entiende prorrogado. Afecta sobre todo a los de plazo fijo cuando no se avisa la no renovación a tiempo, por lo que el aviso oportuno es clave.
+
+### ¿En cuál puedo recuperar antes la propiedad?
+
+En el plazo fijo sabes la fecha de término, pero igual debes avisar la no renovación. En el indefinido necesitas dar el desahucio con la anticipación legal. Ninguno permite recuperar el inmueble de inmediato: el desalojo, si el arrendatario no se va, siempre requiere vía judicial.
+
+### ¿Cuál conviene si quiero estabilidad de largo plazo?
+
+Si buscas estabilidad, un plazo fijo más largo o un indefinido bien redactado entrega previsibilidad. Lo importante, en cualquier caso, es dejar claros los plazos de aviso, el reajuste y las causales de término, y respaldar la entrega con un acta para evitar discusiones al final.`,
   },
   {
     slug: "clausulas-abusivas-contrato-arriendo",
@@ -1517,7 +1751,25 @@ Un contrato bien redactado protege tus intereses desde el inicio, pero el acta d
 
 ## En resumen
 
-Las cláusulas abusivas más comunes en contratos de arriendo incluyen renuncia anticipada de derechos, multas desproporcionadas, retención automática de la garantía, autorización de desalojo extrajudicial, corte de servicios y traspaso ilegal de reparaciones. Antes de firmar, lee todo el contrato, identifica estas cláusulas y negocia su eliminación. Un contrato equilibrado y un acta de entrega son tu mejor protección como arrendatario o arrendador.`,
+Las cláusulas abusivas más comunes en contratos de arriendo incluyen renuncia anticipada de derechos, multas desproporcionadas, retención automática de la garantía, autorización de desalojo extrajudicial, corte de servicios y traspaso ilegal de reparaciones. Antes de firmar, lee todo el contrato, identifica estas cláusulas y negocia su eliminación. Un contrato equilibrado y un acta de entrega son tu mejor protección como arrendatario o arrendador.
+
+## Preguntas frecuentes
+
+### ¿Qué se considera una cláusula abusiva en un arriendo?
+
+En términos prácticos, son cláusulas que renuncian a derechos que la ley reconoce al arrendatario o que imponen cargas desproporcionadas. Ejemplos típicos: renuncias generales "a todos los derechos", autorizaciones para cortar servicios básicos por mora o para ingresar al inmueble sin aviso. Aunque estén firmadas, el tribunal puede no hacerlas valer.
+
+### ¿Una cláusula abusiva invalida todo el contrato?
+
+No necesariamente. Por lo general la cláusula cuestionada puede no producir efecto sin afectar la validez del resto del contrato. Lo razonable es identificarla antes de firmar y pedir que se elimine o corrija, en lugar de asumir que "no se aplicará".
+
+### ¿Es abusivo que me cobren por desgaste normal al final?
+
+Cobrar al arrendatario por el desgaste normal del uso adecuado no corresponde, porque ese deterioro es de cargo del arrendador. Pretender descontarlo de la garantía es una causa frecuente de reclamos en el Juzgado de Policía Local. La forma de evitar la discusión es tener un acta de entrega que distinga el estado inicial.
+
+### ¿Qué hago si ya firmé un contrato con cláusulas dudosas?
+
+Conviene revisar el contrato con un abogado para identificar qué cláusulas podrían no tener efecto y cómo proceder. Mientras tanto, documenta por escrito tus comunicaciones con el arrendador y conserva evidencia (correos, fotos fechadas), porque la trazabilidad ayuda si la disputa llega a tribunales.`,
   },
   {
     slug: "renovacion-automatica-contrato-arriendo",
@@ -1601,7 +1853,25 @@ Si tu contrato se renueva, considera actualizar el acta de entrega. El estado de
 
 ## En resumen
 
-La renovación automática es una cláusula contractual que renueva el arriendo por un período igual al original si ninguna de las partes avisa a tiempo. La tácita reconducción, en cambio, convierte el contrato en indefinido cuando vence sin aviso. Para evitar renovaciones no deseadas, identifica el plazo de aviso en tu contrato, calcula la fecha límite y envía el aviso por escrito con tiempo. Si el contrato ya se renovó, la alternativa más simple es el acuerdo mutuo o esperar el próximo vencimiento.`,
+La renovación automática es una cláusula contractual que renueva el arriendo por un período igual al original si ninguna de las partes avisa a tiempo. La tácita reconducción, en cambio, convierte el contrato en indefinido cuando vence sin aviso. Para evitar renovaciones no deseadas, identifica el plazo de aviso en tu contrato, calcula la fecha límite y envía el aviso por escrito con tiempo. Si el contrato ya se renovó, la alternativa más simple es el acuerdo mutuo o esperar el próximo vencimiento.
+
+## Preguntas frecuentes
+
+### ¿Es lo mismo renovación automática que tácita reconducción?
+
+No. La renovación automática es una cláusula del contrato que lo prorroga por nuevos periodos salvo aviso en contrario. La tácita reconducción es una situación que surge de la ley cuando, vencido el plazo, el arrendatario sigue ocupando con el consentimiento del arrendador que recibe la renta. Ambas prolongan el arriendo, pero por causas distintas.
+
+### ¿Cómo evito que el contrato se renueve sin que yo quiera?
+
+Enviando el aviso de no renovación con la anticipación que indique el contrato o la ley, por un medio que deje constancia (carta certificada, notarial o correo si es válido). Guardar el comprobante de envío y la fecha es lo que permite acreditar que se avisó dentro de plazo.
+
+### ¿Con cuánta anticipación debo avisar?
+
+Depende del plazo de aviso pactado y de las reglas de la Ley 18.101 según el tipo de contrato. Lo prudente es revisar la cláusula respectiva apenas se acerque el vencimiento y enviar el aviso con margen, para no quedar obligado a un nuevo periodo por haberlo notificado tarde.
+
+### ¿La renovación automática puede cambiar la renta?
+
+Solo si el contrato lo establece (por ejemplo, prorrogando con el reajuste pactado). Si la cláusula nada dice sobre el monto, la renovación tiende a mantener las condiciones vigentes. Cualquier alza real del precio requiere acuerdo de las partes.`,
   },
   {
     slug: "subarriendo-chile-legal",
@@ -1693,7 +1963,25 @@ El contrato puede establecer condiciones para autorizar el subarriendo, incluyen
 
 El subarriendo en Chile no está prohibido per se, pero requiere la autorización del arrendador salvo que el contrato lo permita de forma expresa. Tanto el subarriendo total como el parcial tienen riesgos para ambas partes: el arrendador puede perder el control de quién ocupa su propiedad, y el arrendatario sigue siendo responsable de todo lo que ocurra aunque no sea él quien viva ahí. En el caso de los arriendos por días tipo Airbnb, hay que sumar las restricciones del reglamento de copropiedad del edificio, que pueden prohibirlos independientemente de lo que diga el contrato.
 
-Si vas a subarrendar, hazlo con papel: autorización por escrito, contrato firmado y acta de entrega documentada. [Crea tu acta de entrega en CertiFoto](/dashboard) antes de que el subarrendatario entre al inmueble —es gratis y te da el respaldo que necesitas si las cosas se complican.`,
+Si vas a subarrendar, hazlo con papel: autorización por escrito, contrato firmado y acta de entrega documentada. [Crea tu acta de entrega en CertiFoto](/dashboard) antes de que el subarrendatario entre al inmueble —es gratis y te da el respaldo que necesitas si las cosas se complican.
+
+## Preguntas frecuentes
+
+### ¿Necesito autorización del arrendador para subarrendar?
+
+Depende de lo pactado. Si el contrato lo prohíbe o exige autorización, subarrendar sin ella puede ser causal de término del arriendo. Si nada dice, conviene igual pedir autorización por escrito para evitar conflictos. Lo seguro es siempre dejar el acuerdo documentado.
+
+### ¿Qué riesgos corro si subarriendo sin permiso?
+
+El principal es perder el contrato: el arrendador puede pedir el término por incumplimiento. Además, sigues respondiendo frente al arrendador por las obligaciones del contrato original, incluido el estado del inmueble y la renta, aunque quien lo ocupe sea el subarrendatario.
+
+### ¿Cómo formalizo bien un subarriendo?
+
+Con la autorización escrita del arrendador y un contrato de subarriendo entre arrendatario y subarrendatario que individualice a las partes y el inmueble. Conviene hacer un acta de entrega con fotos al subarrendatario, porque tú sigues siendo responsable del estado de la propiedad frente al dueño.
+
+### ¿Quién responde por los daños en un subarriendo?
+
+Frente al arrendador, responde el arrendatario original conforme al contrato principal. A su vez, el subarrendatario responde frente al arrendatario según el contrato de subarriendo. Tener actas de entrega en ambos niveles permite atribuir los daños a quien corresponda y proteger las garantías.`,
   },
   {
     slug: "mascotas-en-arriendo-puede-prohibir",
@@ -1784,7 +2072,25 @@ Dicho eso, la vía judicial para terminar un arriendo no es rápida ni sencilla.
 
 El arrendador puede prohibir mascotas en el contrato de arriendo, y esa cláusula es válida. La Ley 21.020 de Tenencia Responsable no obliga a los propietarios a aceptar animales en sus inmuebles. Además, el reglamento de copropiedad del edificio puede añadir restricciones adicionales que aplican a todos los residentes.
 
-Cuando hay mascotas de por medio, la documentación del estado del inmueble es fundamental para evitar conflictos al momento de devolver la propiedad. Un acta fotográfica al inicio y al término del arriendo es la forma más concreta de proteger los intereses de ambas partes.`,
+Cuando hay mascotas de por medio, la documentación del estado del inmueble es fundamental para evitar conflictos al momento de devolver la propiedad. Un acta fotográfica al inicio y al término del arriendo es la forma más concreta de proteger los intereses de ambas partes.
+
+## Preguntas frecuentes
+
+### ¿Puede el arrendador prohibir mascotas en el contrato?
+
+Sí. Las partes pueden pactar que no se admitan mascotas o que se acepten bajo condiciones. Si el contrato lo prohíbe y el arrendatario igualmente las tiene, puede configurarse un incumplimiento. Por eso conviene aclarar este punto antes de firmar.
+
+### ¿El reglamento de copropiedad puede impedir tener mascotas?
+
+El reglamento de copropiedad regula la convivencia en el edificio y puede establecer condiciones sobre mascotas en espacios comunes. Conviene revisarlo junto con el contrato, porque las reglas del condominio aplican aunque el contrato de arriendo no diga nada al respecto.
+
+### ¿La Ley 21.020 me protege frente a un cobro por daños del animal?
+
+La Ley 21.020 (tenencia responsable de mascotas) establece deberes del dueño del animal, incluida la responsabilidad por los daños que cause. En un arriendo, eso significa que el arrendatario responde por los deterioros provocados por su mascota que excedan el desgaste normal, los que deben acreditarse.
+
+### ¿Cómo evito cobros injustos por una mascota al final del arriendo?
+
+Documentando el estado del inmueble al inicio con un acta de entrega y fotos, y otra al devolver. Así se distingue el desgaste normal de un daño atribuible a la mascota. Sin ese registro, la discusión sobre qué deterioro existía antes queda entregada a la apreciación del tribunal.`,
   },
   {
     slug: "aval-codeudor-solidario-arriendo",
@@ -1880,7 +2186,25 @@ En algunos casos, presentar documentación más completa —liquidaciones de sue
 
 El codeudor solidario en un arriendo es una figura legal que implica asumir la misma responsabilidad que el arrendatario principal, sin posibilidad de pedir que primero se cobre a él. No se trata solo de "poner el nombre": quien firma puede enfrentar demandas directas, ver afectado su historial crediticio y responder por rentas, daños y costos judiciales.
 
-Si te lo piden como condición para arrendar, evalúa bien antes de pedírselo a alguien. Y si eres tú quien firma como codeudor, lee el contrato de principio a fin y entiende exactamente de qué te estás haciendo responsable. Documentar el estado del inmueble al inicio del arriendo —con un acta certificada— también protege al codeudor, porque fija en un registro objetivo qué había antes y qué daños podrían cargársele. [Crea el acta en CertiFoto](/dashboard) antes de que el arrendatario entre al inmueble.`,
+Si te lo piden como condición para arrendar, evalúa bien antes de pedírselo a alguien. Y si eres tú quien firma como codeudor, lee el contrato de principio a fin y entiende exactamente de qué te estás haciendo responsable. Documentar el estado del inmueble al inicio del arriendo —con un acta certificada— también protege al codeudor, porque fija en un registro objetivo qué había antes y qué daños podrían cargársele. [Crea el acta en CertiFoto](/dashboard) antes de que el arrendatario entre al inmueble.
+
+## Preguntas frecuentes
+
+### ¿Qué significa ser codeudor solidario en un arriendo?
+
+Significa obligarse a responder por las mismas deudas del arrendatario (rentas, cuentas, daños) como si fueras tú quien arrienda. El arrendador puede cobrarte el total directamente, sin tener que perseguir primero al arrendatario, porque la solidaridad elimina el beneficio de excusión.
+
+### ¿Hay diferencia entre aval y codeudor solidario?
+
+En la práctica del arriendo, ambos términos suelen usarse para reforzar el cumplimiento, pero el codeudor solidario queda obligado de forma directa y por el total. Lo determinante es cómo esté redactada la cláusula: conviene leer exactamente a qué te obligas antes de firmar.
+
+### ¿Hasta cuándo responde el codeudor solidario?
+
+Responde mientras esté vigente la obligación que garantizó, según lo que diga el contrato. Si el arriendo se prorroga o renueva, conviene verificar si la garantía personal se mantiene o no, porque a veces se discute si cubre los nuevos periodos.
+
+### ¿Qué debo revisar antes de firmar como codeudor?
+
+Revisa el monto y tipo de obligaciones que garantizas, el plazo, si cubre renovaciones y si tu responsabilidad es solidaria. Como respondes con tu propio patrimonio, conviene exigir copia del contrato y, si tienes dudas, consultar con un abogado antes de comprometerte.`,
   },
   {
     slug: "comision-corredor-propiedades-arriendo",
@@ -1964,7 +2288,25 @@ Y el día de la entrega de las llaves, tanto si trabajaste con corredor como si 
 
 ## En resumen
 
-La comisión del corredor de propiedades en un arriendo en Chile no está fijada por ley, pero la práctica de mercado habitual es alrededor del 50% de un mes de arriendo más IVA a cada parte. El monto, las condiciones y quién paga deben quedar por escrito en una orden de corretaje antes de que el corredor empiece a trabajar. Exige transparencia desde el inicio, verifica las credenciales del corredor, y asegúrate de que el servicio incluya lo que realmente necesitas.`,
+La comisión del corredor de propiedades en un arriendo en Chile no está fijada por ley, pero la práctica de mercado habitual es alrededor del 50% de un mes de arriendo más IVA a cada parte. El monto, las condiciones y quién paga deben quedar por escrito en una orden de corretaje antes de que el corredor empiece a trabajar. Exige transparencia desde el inicio, verifica las credenciales del corredor, y asegúrate de que el servicio incluya lo que realmente necesitas.
+
+## Preguntas frecuentes
+
+### ¿Cuánto cobra normalmente un corredor por gestionar un arriendo?
+
+El monto lo acuerdan las partes con el corredor; en el mercado suele expresarse como un porcentaje de la renta o un equivalente a un mes. No hay una tarifa única fijada por ley, por lo que conviene dejar el monto y la forma de cobro por escrito en la orden de corretaje.
+
+### ¿Quién paga la comisión, el arrendador o el arrendatario?
+
+Depende de lo pactado. En la práctica puede pagarla una de las partes o repartirse, según lo que acuerden con el corredor. Lo importante es que quede claro antes de cerrar el negocio para evitar reclamos sobre quién asume el costo.
+
+### ¿Qué debe incluir la orden de corretaje?
+
+Debe individualizar a las partes y la propiedad, describir el servicio, indicar el monto de la comisión, quién la paga y en qué momento se devenga. Un documento claro evita discusiones posteriores sobre si el corredor cumplió y sobre cuánto se le debe.
+
+### ¿Tengo que pagar comisión si el negocio no se concreta?
+
+Por lo general la comisión se devenga cuando el corredor logra el resultado encargado (el arriendo cerrado), salvo que la orden de corretaje diga otra cosa. Por eso conviene leer en qué momento nace la obligación de pago antes de firmar el encargo.`,
   },
   {
     slug: "derechos-deberes-arrendatario-chile",
@@ -2058,7 +2400,25 @@ Algunos contratos incluyen cláusulas que intentan restringir derechos que la le
 
 Como arrendatario en Chile tienes derechos sólidos: uso pacífico del inmueble, reparaciones de parte del arrendador cuando corresponda, devolución de la garantía y privacidad. Pero también tienes deberes: pagar a tiempo, cuidar la propiedad, hacer las reparaciones que te tocan y devolver el inmueble en buen estado.
 
-Conocer este marco te pone en mejor posición para negociar, para exigir lo que te corresponde y para protegerte si surge un conflicto. Y documentar el estado del inmueble desde el primer día —con fotos certificadas y una fecha verificable— es la forma más concreta de respaldar tus derechos si las cosas se complican.`,
+Conocer este marco te pone en mejor posición para negociar, para exigir lo que te corresponde y para protegerte si surge un conflicto. Y documentar el estado del inmueble desde el primer día —con fotos certificadas y una fecha verificable— es la forma más concreta de respaldar tus derechos si las cosas se complican.
+
+## Preguntas frecuentes
+
+### ¿Cuáles son los derechos básicos del arrendatario en Chile?
+
+Entre otros, el derecho al goce pacífico del inmueble, a que el arrendador realice las reparaciones necesarias, a la devolución de la garantía cuando corresponda y al respeto de su privacidad. La Ley 18.101 y las normas del Código Civil sobre arrendamiento sirven de base a estos derechos.
+
+### ¿Puede el arrendador entrar al inmueble cuando quiera?
+
+No. El arrendatario tiene derecho a usar la propiedad sin perturbaciones, por lo que el arrendador no puede ingresar sin aviso ni autorización, salvo lo que el contrato razonablemente permita (por ejemplo, visitas acordadas para reparaciones o para mostrarla al final del arriendo). Una cláusula que autorice el ingreso libre y sin aviso es cuestionable.
+
+### ¿Qué deberes tiene el arrendatario?
+
+Pagar la renta y las cuentas pactadas a tiempo, cuidar la propiedad como un buen administrador, hacer las reparaciones locativas que le corresponden, no destinar el inmueble a un uso distinto al autorizado y restituirlo al término en el estado convenido, salvo el desgaste normal.
+
+### ¿Cómo hago valer mis derechos si el arrendador no cumple?
+
+Primero deja constancia escrita de tus reclamos (por ejemplo, por correo electrónico) para crear trazabilidad. Si no hay solución, puedes recurrir al Juzgado de Policía Local o al tribunal competente según el caso. Tener evidencia fechada y documentos ordenados fortalece tu posición.`,
   },
 
   {
@@ -2195,7 +2555,25 @@ CertiFoto fue diseñado exactamente para esto: cada foto queda con su hash SHA-2
 
 ## En resumen
 
-Cuando el arrendatario niega daños: organiza tu evidencia antes de hablar, comunícate por escrito, obtén cotizaciones formales, y notifica el descuento con detalle. El JPL es el último recurso, pero requiere evidencia sólida para prosperar. La mejor inversión es una acta de entrega bien hecha desde el primer día.`,
+Cuando el arrendatario niega daños: organiza tu evidencia antes de hablar, comunícate por escrito, obtén cotizaciones formales, y notifica el descuento con detalle. El JPL es el último recurso, pero requiere evidencia sólida para prosperar. La mejor inversión es una acta de entrega bien hecha desde el primer día.
+
+## Preguntas frecuentes
+
+### El arrendatario dice "eso ya estaba así". ¿Cómo lo desmiento?
+
+Con evidencia del estado inicial. Si tienes un acta de entrega con fotos fechadas al comienzo del arriendo y otra al momento de la devolución, puedes comparar y mostrar que el daño no existía antes. Sin ese registro, la afirmación queda como palabra contra palabra y el tribunal decide según la sana crítica.
+
+### ¿Puedo descontar los daños directamente de la garantía?
+
+Puedes imputar a la garantía los daños que excedan el desgaste normal, pero el descuento debe corresponder a deterioros reales y demostrables. Si el arrendatario los discute, conviene tener fotos, cotizaciones o boletas que respalden el monto, porque un descuento sin sustento puede terminar en reclamo ante el Juzgado de Policía Local.
+
+### ¿Cómo debo comunicar los descuentos al arrendatario?
+
+Por escrito y de forma detallada: qué daño, dónde, con qué evidencia y a qué costo. Enviarlo por un medio que deje constancia (correo electrónico) crea trazabilidad. Una comunicación clara y documentada reduce el conflicto y, si llega a tribunales, demuestra que actuaste de buena fe.
+
+### ¿Qué hago si no llegamos a acuerdo por los daños?
+
+Si la negociación no prospera, la vía es el Juzgado de Policía Local o el tribunal competente, donde presentarás tu evidencia. Por eso la documentación previa es decisiva: actas, fotos comparables y respaldos del costo de reparación son lo que inclina la balanza en una disputa de daños.`,
   },
   {
     slug: "como-recuperar-garantia-arriendo-chile",
@@ -2309,7 +2687,25 @@ CertiFoto te permite crear esa acta de devolución (o de entrega) gratis, sin re
 
 ## En resumen
 
-La Ley 18.101 te da 60 días de plazo. Reclama por escrito, guarda los comprobantes, y si no hay respuesta o los descuentos no corresponden, el JPL es tu vía. Para ir al JPL necesitas evidencia: contrato, comprobante de pago de garantía, registro de la restitución y ojalá un acta de devolución con fotos. La próxima vez, arma el acta de devolución el mismo día que devuelves las llaves.`,
+La Ley 18.101 te da 60 días de plazo. Reclama por escrito, guarda los comprobantes, y si no hay respuesta o los descuentos no corresponden, el JPL es tu vía. Para ir al JPL necesitas evidencia: contrato, comprobante de pago de garantía, registro de la restitución y ojalá un acta de devolución con fotos. La próxima vez, arma el acta de devolución el mismo día que devuelves las llaves.
+
+## Preguntas frecuentes
+
+### ¿En qué casos el arrendador puede retener mi garantía?
+
+Puede retenerla, total o parcialmente, para cubrir rentas o cuentas impagas y daños que excedan el desgaste normal por uso. No procede retenerla por deterioro razonable de la propiedad ni por conceptos que no estén respaldados. Cualquier descuento debería poder justificarse con evidencia.
+
+### ¿Qué dice la Ley 18.101 sobre la devolución de la garantía?
+
+La Ley 18.101 regula el arrendamiento de predios urbanos y el marco general de la relación. La devolución de la garantía se rige por lo pactado y por estas reglas: si el arrendador retiene sin causa justificada, el arrendatario puede reclamar la restitución por la vía judicial correspondiente.
+
+### ¿Qué hago si el arrendador no me devuelve la garantía?
+
+Primero, requiérelo por escrito dejando constancia (por correo electrónico) y pide el detalle de cualquier descuento. Si no hay respuesta o los descuentos no corresponden, puedes demandar en el Juzgado de Policía Local. Llevar fotos del estado de entrega y devolución y los comprobantes de pago fortalece tu caso.
+
+### ¿Cómo me aseguro de recuperar la garantía completa?
+
+Documentando el estado del inmueble al inicio y al final con actas y fotos fechadas, pagando las cuentas al día y entregando la propiedad limpia y sin daños imputables. Mientras mejor sea tu evidencia del estado en que devolviste, menos margen hay para descuentos discutibles.`,
   },
   {
     slug: "acta-entrega-propiedad-arriendo-que-incluir",
@@ -2837,7 +3233,25 @@ Todo en menos de 30 minutos, sin papeles y con un respaldo técnico que un acta 
 
 ## Conclusión
 
-Hacer una acta de entrega bien hecha no toma mucho más tiempo que hacerla mal, pero la diferencia se nota cuando llega el momento de devolver la propiedad. Una buena documentación al inicio es la mejor garantía para todas las partes.`,
+Hacer una acta de entrega bien hecha no toma mucho más tiempo que hacerla mal, pero la diferencia se nota cuando llega el momento de devolver la propiedad. Una buena documentación al inicio es la mejor garantía para todas las partes.
+
+## Preguntas frecuentes
+
+### ¿Qué debe contener un acta de entrega de arriendo?
+
+La individualización de las partes y del inmueble, una descripción del estado por ambiente (muros, pisos, baños, cocina), el inventario de bienes si está amoblado, las lecturas de medidores, las llaves y controles entregados, y fotos enumeradas que respalden cada punto. Cuanto más detalle, menos espacio para discutir al final.
+
+### ¿Es obligatorio que el acta sea ante notario?
+
+No es obligatorio. Un acta firmada por ambas partes ya tiene valor probatorio. El notario o un ministro de fe aporta una formalidad adicional, útil en propiedades de alto valor o cuando hay desconfianza, pero para la mayoría de los arriendos un acta bien hecha y firmada es suficiente.
+
+### ¿Tiene validez un acta de entrega digital?
+
+Sí. La Ley 19.799 reconoce validez a los documentos electrónicos, especialmente cuando incorporan elementos de integridad como hash y timestamp. Un acta digital bien estructurada suele aceptarse en el Juzgado de Policía Local, y su solidez técnica puede darle más peso que a un documento impreso.
+
+### ¿Qué pasa si el arrendatario se niega a firmar el acta?
+
+Si rechaza firmar, el acta pierde valor de mutuo acuerdo, pero conviene dejar constancia escrita de la negativa y enviar copia por un medio que deje trazabilidad antes de entregar las llaves. Lo prudente es no entregar la propiedad sin un acta firmada, porque sin ella se debilita la prueba del estado inicial.`,
   },
   {
     slug: "diferencia-acta-entrega-devolucion",
@@ -2903,7 +3317,25 @@ La idea es eliminar la conversación subjetiva y reemplazarla por evidencia visu
 
 ## Conclusión
 
-La acta de entrega y la acta de devolución son documentos hermanos pero distintos. Hacer ambas bien y poder compararlas es lo que convierte el arriendo en un proceso ordenado en lugar de un terreno fértil para conflictos.`,
+La acta de entrega y la acta de devolución son documentos hermanos pero distintos. Hacer ambas bien y poder compararlas es lo que convierte el arriendo en un proceso ordenado en lugar de un terreno fértil para conflictos.
+
+## Preguntas frecuentes
+
+### ¿Cuál es la diferencia entre acta de entrega y acta de devolución?
+
+El acta de entrega registra el estado del inmueble al inicio del arriendo, cuando el arrendador entrega las llaves. El acta de devolución registra el estado al término, cuando el arrendatario restituye la propiedad. Comparar ambas es lo que permite identificar qué cambió durante el arriendo.
+
+### ¿Por qué necesito las dos actas y no solo una?
+
+Porque una sola foto en el tiempo no prueba un cambio. La de entrega fija el punto de partida y la de devolución el punto final; sin las dos, es difícil sostener que un daño apareció durante el arriendo. Juntas, reducen al mínimo la discusión sobre la garantía.
+
+### ¿Cómo deben compararse ambas actas?
+
+Idealmente con la misma estructura por ambiente y fotos tomadas desde ángulos equivalentes, de modo que cada punto del inicio tenga su correlato al final. Mantener el mismo orden y nivel de detalle facilita ver diferencias reales y distinguir el desgaste normal del daño imputable.
+
+### ¿Tienen el mismo valor legal una y otra?
+
+Ambas tienen valor probatorio si están firmadas por las partes y bien documentadas. Si son digitales, la Ley 19.799 respalda su validez cuando incorporan integridad técnica. En una disputa, el tribunal valorará el conjunto de la evidencia según la sana crítica.`,
   },
   {
     slug: "respaldo-fotografico-arriendo",
@@ -2966,7 +3398,25 @@ Todo esto queda en el PDF del acta y puede verificarse posteriormente.
 
 ## Conclusión
 
-Si vas a documentar un arriendo, no basta con tomar fotos: hay que preservar su metadata y calcular su huella digital. Con eso, una foto se convierte en evidencia técnica sólida que es mucho más difícil de cuestionar que una simple imagen sin respaldo.`,
+Si vas a documentar un arriendo, no basta con tomar fotos: hay que preservar su metadata y calcular su huella digital. Con eso, una foto se convierte en evidencia técnica sólida que es mucho más difícil de cuestionar que una simple imagen sin respaldo.
+
+## Preguntas frecuentes
+
+### ¿Basta con tomar fotos del inmueble para tener prueba?
+
+No del todo. Una foto suelta prueba poco si no se puede acreditar cuándo se tomó y que no fue alterada. Para que tenga valor como evidencia conviene preservar la metadata (fecha, dispositivo) y, mejor aún, respaldarla con elementos de integridad como un hash y un timestamp verificables.
+
+### ¿Por qué se pierde la metadata al enviar fotos por WhatsApp?
+
+Porque las apps de mensajería suelen comprimir las imágenes y eliminar gran parte de los metadatos originales. Por eso una foto reenviada por chat pesa menos como prueba que el archivo original. Si necesitas compartir, envíala como "documento" o "archivo" para conservar el original.
+
+### ¿Qué hace que una foto sea más sólida ante un tribunal?
+
+Que se pueda demostrar su integridad y su fecha: el archivo original con su metadata, un hash que acredite que no se modificó y un timestamp que fije el momento. La Ley 19.799 respalda la validez de documentos electrónicos con estas características, y el tribunal los valora según la sana crítica.
+
+### ¿Cómo organizo el respaldo fotográfico de un arriendo?
+
+Toma fotos suficientes de cada ambiente al inicio y al final, consérvalas en su formato original y respáldalas con integridad técnica. Asociarlas a un acta de entrega y de devolución, ordenadas por ambiente, convierte un conjunto de imágenes en evidencia útil para discutir daños y garantía.`,
   },
   {
     slug: "ia-vision-actas-arriendo",
@@ -3042,7 +3492,25 @@ Todo manteniendo el principio de asistencia, no sustitución.
 
 ## Conclusión
 
-La IA puede hacer que documentar un arriendo sea mucho más rápido y ordenado, pero no reemplaza el ojo humano ni el criterio de las partes. Bien usada, es una ayuda enorme. Mal entendida, puede generar falsas certezas. En CertiFoto la usamos siempre como asistencia, nunca como juicio.`,
+La IA puede hacer que documentar un arriendo sea mucho más rápido y ordenado, pero no reemplaza el ojo humano ni el criterio de las partes. Bien usada, es una ayuda enorme. Mal entendida, puede generar falsas certezas. En CertiFoto la usamos siempre como asistencia, nunca como juicio.
+
+## Preguntas frecuentes
+
+### ¿Para qué sirve la inteligencia artificial en un acta de arriendo?
+
+Puede ayudar a describir lo que aparece en las fotos, ordenar la evidencia por ambiente y revisar que no falten registros importantes. Es una herramienta de apoyo que agiliza la redacción del acta, no un sustituto del criterio de las partes ni de la inspección presencial.
+
+### ¿La IA reemplaza el acta firmada por las partes?
+
+No. El valor probatorio del acta proviene de que las partes la firmen y de la evidencia que la respalda (fotos con integridad, lecturas, inventario). La IA puede facilitar el proceso, pero la conformidad de arrendador y arrendatario sigue siendo lo que le da fuerza al documento.
+
+### ¿Qué límites tiene usar IA para documentar daños?
+
+La IA puede equivocarse al interpretar una imagen o pasar por alto un detalle, por lo que sus descripciones deben revisarse. La decisión sobre qué es daño imputable o desgaste normal no se delega en la herramienta: es un análisis que, en disputa, evalúa el tribunal según la sana crítica.
+
+### ¿La IA afecta la validez legal del acta?
+
+No la afecta por sí sola. Lo relevante para la validez sigue siendo la firma de las partes y la integridad de la evidencia, que la Ley 19.799 reconoce en documentos electrónicos con hash y timestamp. La IA es un medio para preparar mejor ese documento, no un requisito legal.`,
   },
   {
     slug: "garantia-arriendo-discusion",
@@ -3116,7 +3584,25 @@ Todo gratis para uso personal y por una fracción del costo de un perito o notar
 
 ## Conclusión
 
-La garantía del arriendo no tiene por qué ser fuente de conflicto. Con buena documentación al inicio, mantenciones durante el contrato y una devolución ordenada, las dos partes pueden quedar tranquilas. La clave está en preparar la evidencia desde el primer día, no recolectarla cuando ya hay una disputa.`,
+La garantía del arriendo no tiene por qué ser fuente de conflicto. Con buena documentación al inicio, mantenciones durante el contrato y una devolución ordenada, las dos partes pueden quedar tranquilas. La clave está en preparar la evidencia desde el primer día, no recolectarla cuando ya hay una disputa.
+
+## Preguntas frecuentes
+
+### ¿Por qué la devolución de la garantía genera tantos conflictos?
+
+Porque al final del arriendo se discute qué deterioro es desgaste normal y qué es daño imputable, y sin un registro del estado inicial cada parte recuerda las cosas a su favor. La forma más simple de evitarlo es documentar desde el primer día con un acta de entrega y fotos fechadas.
+
+### ¿Qué descuentos a la garantía son legítimos?
+
+Los que correspondan a rentas o cuentas impagas y a daños que excedan el desgaste normal por uso. No es legítimo descontar por deterioro razonable ni por conceptos sin respaldo. Cualquier descuento debería poder justificarse con evidencia concreta.
+
+### ¿Cómo me preparo desde el inicio para no discutir al final?
+
+Haciendo un acta de entrega detallada con fotos por ambiente, lecturas de medidores e inventario si está amoblado. Al término, una acta de devolución comparable permite mostrar diferencias reales. Tener ambos registros reduce drásticamente el margen de discusión sobre la garantía.
+
+### ¿Qué hago si no logramos ponernos de acuerdo por la garantía?
+
+Si la negociación falla, la vía es el Juzgado de Policía Local o el tribunal competente. Llevar las actas, las fotos comparables y los comprobantes de pago fortalece tu posición, porque el tribunal valora la evidencia según la sana crítica y privilegia lo que esté bien documentado.`,
   },
   {
     slug: "humedad-hongos-departamento-chile",
@@ -3188,7 +3674,25 @@ En CertiFoto cada foto que subes queda con su huella SHA-256 y sus metadatos EXI
 
 ## En resumen
 
-La humedad casi siempre se previene, pocas veces es culpa única de una de las partes, y casi siempre se resuelve mucho mejor cuando hay buena evidencia desde el primer día. Ventila, observa, reporta a tiempo y documenta. Y si ya hay manchas, identifica la causa antes de pintar.`,
+La humedad casi siempre se previene, pocas veces es culpa única de una de las partes, y casi siempre se resuelve mucho mejor cuando hay buena evidencia desde el primer día. Ventila, observa, reporta a tiempo y documenta. Y si ya hay manchas, identifica la causa antes de pintar.
+
+## Preguntas frecuentes
+
+### ¿De quién es la responsabilidad por la humedad en un arriendo?
+
+Depende de la causa. Si la humedad proviene de una falla estructural o de una reparación necesaria del inmueble, suele ser de cargo del arrendador. Si se origina en la falta de ventilación o mal uso del arrendatario, puede ser responsabilidad de este. Documentar el estado al inicio ayuda a determinar el origen.
+
+### ¿Qué puedo prevenir yo mismo como arrendatario?
+
+Ventilar a diario, evitar tender ropa en exceso dentro del inmueble sin ventilación, revisar logia y baños, y avisar a tiempo cualquier filtración. Muchas situaciones de humedad por condensación se manejan con ventilación adecuada, lo que también evita que se te atribuya un daño al final del arriendo.
+
+### ¿Cuándo está obligado el arrendador a reparar?
+
+Cuando se trata de reparaciones necesarias para mantener el inmueble en estado de servir para el arriendo, como filtraciones por cañerías o problemas estructurales. Conviene notificar por escrito (correo electrónico) dejando constancia, para acreditar que se avisó y desde cuándo el arrendador conocía el problema.
+
+### ¿Cómo evito que me cobren la humedad al devolver el departamento?
+
+Registrando en el acta de entrega cualquier signo de humedad existente al inicio y documentando con fotos. Si surge durante el arriendo, deja trazabilidad de tus avisos. Así se distingue un problema preexistente o estructural de un daño atribuible a tu uso, evitando descuentos injustos de la garantía.`,
   },
   {
     slug: "mantenciones-arrendatario-arrendador-ley-chile",
@@ -3274,7 +3778,25 @@ Cuando hay evidencia objetiva, la mayoría de las discusiones se resuelven sin n
 
 ## En resumen
 
-La ley chilena distingue reparaciones locativas (arrendatario) y necesarias (arrendador), pero la zona gris es grande. Lo que decide en la práctica es la **documentación**: lo que está en una acta de entrega firmada con respaldo fotográfico es muy difícil de discutir, y lo que se reporta a tiempo deja de ser problema futuro. CertiFoto está pensado exactamente para eso: dejar la evidencia desde el primer día, con respaldo técnico que aguanta una conversación seria.`,
+La ley chilena distingue reparaciones locativas (arrendatario) y necesarias (arrendador), pero la zona gris es grande. Lo que decide en la práctica es la **documentación**: lo que está en una acta de entrega firmada con respaldo fotográfico es muy difícil de discutir, y lo que se reporta a tiempo deja de ser problema futuro. CertiFoto está pensado exactamente para eso: dejar la evidencia desde el primer día, con respaldo técnico que aguanta una conversación seria.
+
+## Preguntas frecuentes
+
+### ¿Qué reparaciones le corresponden al arrendatario?
+
+Por regla general, las reparaciones locativas: aquellos deterioros menores que provienen del uso normal y que la ley pone de cargo del arrendatario, como ciertos arreglos de uso corriente. El arrendatario debe cuidar la propiedad como un buen administrador y mantener lo que corresponde a la ocupación diaria.
+
+### ¿Qué reparaciones debe asumir el arrendador?
+
+Las reparaciones necesarias para que el inmueble siga sirviendo al fin del arriendo, como problemas estructurales o de instalaciones. El arrendador debe mantener la propiedad en estado de ser usada, salvo los deterioros que sean responsabilidad del arrendatario por su uso.
+
+### ¿Qué pasa con la "zona gris" donde no está claro quién paga?
+
+Existen casos intermedios donde la responsabilidad depende del origen del daño y de lo pactado. Lo prudente es definir estos puntos en el contrato y, ante una reparación dudosa, dejar por escrito la comunicación entre las partes. Si hay disputa, el tribunal evalúa caso a caso según la sana crítica.
+
+### ¿Cómo evito conflictos por mantenciones al final del arriendo?
+
+Documentando el estado inicial con un acta de entrega y avisando por escrito las reparaciones que surjan durante el arriendo. Tener trazabilidad de quién avisó qué y cuándo permite atribuir cada arreglo a la parte correcta y evita que todo se descuente de la garantía al final.`,
   },
   {
     slug: "checklist-mantencion-departamento-anual",
@@ -3358,7 +3880,25 @@ CertiFoto puede usarse no solo para actas de entrega o devolución: puedes crear
 
 ## En resumen
 
-Una propiedad bien mantenida sale gratis: lo que gastas en mantenciones simples lo ahorras en reparaciones grandes evitadas. Esta lista por temporada cubre lo esencial. Imprímela, pégala en el refrigerador y revisa qué te toca cada vez que cambia el clima.`,
+Una propiedad bien mantenida sale gratis: lo que gastas en mantenciones simples lo ahorras en reparaciones grandes evitadas. Esta lista por temporada cubre lo esencial. Imprímela, pégala en el refrigerador y revisa qué te toca cada vez que cambia el clima.
+
+## Preguntas frecuentes
+
+### ¿Por qué conviene hacer mantención anual a un departamento arrendado?
+
+Porque una propiedad bien mantenida se conserva mejor, se devuelve con menos discusiones y mantiene su valor. Revisar por temporada permite detectar a tiempo filtraciones, humedad o desgastes antes de que se conviertan en daños mayores y más caros de reparar.
+
+### ¿Quién debe hacer la mantención, el arrendador o el arrendatario?
+
+Depende del tipo de tarea. El arrendatario asume el cuidado de uso corriente y las reparaciones locativas; el arrendador, las reparaciones necesarias del inmueble. Una checklist ayuda a que cada parte cumpla lo suyo y a dejar registro de lo realizado.
+
+### ¿Cómo registro las mantenciones para evitar discusiones?
+
+Guarda fotos fechadas y comprobantes de los trabajos realizados, y deja constancia escrita de los avisos que envíes a la otra parte. Asociar estos registros al acta de entrega facilita demostrar, al término del arriendo, en qué estado se mantuvo la propiedad y quién hizo qué.
+
+### ¿La mantención influye en la devolución de la garantía?
+
+Sí. Llegar al término del arriendo con la propiedad mantenida y con respaldo de los cuidados realizados reduce el margen para descuentos por supuestos daños. La discusión por la garantía es más simple cuando hay evidencia de que el inmueble se cuidó durante todo el periodo.`,
   },
   {
     slug: "devolver-departamento-sin-perder-garantia",
@@ -3456,7 +3996,25 @@ A veces, a pesar de todo, el arrendador propone un descuento que no te parece. A
 
 ## En resumen
 
-La mejor estrategia para no perder la garantía empieza 60 días antes, no el día de la entrega. Inspecciona, arregla lo razonable, no pretendas arreglar lo que no sabes, comunícate temprano y haz una acta de devolución bien hecha. La diferencia entre recuperar tu garantía completa o quedar peleando casi siempre se construye en esas seis semanas finales.`,
+La mejor estrategia para no perder la garantía empieza 60 días antes, no el día de la entrega. Inspecciona, arregla lo razonable, no pretendas arreglar lo que no sabes, comunícate temprano y haz una acta de devolución bien hecha. La diferencia entre recuperar tu garantía completa o quedar peleando casi siempre se construye en esas seis semanas finales.
+
+## Preguntas frecuentes
+
+### ¿Cómo preparo la devolución del departamento para no perder la garantía?
+
+Limpia a fondo, repara los deterioros menores que te correspondan, paga las cuentas al día y reúne tus comprobantes. Lo más importante es comparar el estado actual con el acta de entrega del inicio y dejar registro con fotos al momento de devolver, para demostrar que restituyes en buenas condiciones.
+
+### ¿Qué descuentos puede hacerme el arrendador al devolver?
+
+Puede imputar a la garantía rentas o cuentas impagas y daños que excedan el desgaste normal. No corresponde que descuente por desgaste razonable del uso. Si hace descuentos, conviene pedir el detalle y la evidencia, porque un descuento sin respaldo puede reclamarse en el Juzgado de Policía Local.
+
+### ¿Por qué es clave el acta de devolución?
+
+Porque fija el estado final del inmueble y, comparada con el acta de entrega, demuestra qué cambió durante el arriendo. Sin ese registro, la discusión sobre daños queda como palabra contra palabra y el tribunal decide según la sana crítica de la evidencia disponible.
+
+### ¿Qué hago si el arrendador retiene la garantía sin justificación?
+
+Requiérelo por escrito (correo electrónico) pidiendo el detalle de los descuentos y la devolución. Si no hay respuesta o los descuentos no corresponden, puedes reclamar judicialmente. Tus fotos de entrega y devolución y los comprobantes de pago son la evidencia que respalda tu derecho a recuperarla.`,
   },
   {
     slug: "evidencia-whatsapp-juicios-familia-chile",
@@ -3696,7 +4254,25 @@ Una captura de pantalla sí sirve como prueba en Chile, pero su valor real lo de
 
 La diferencia entre ganar y perder un punto probatorio casi siempre se decide antes de pisar el tribunal: en el momento en que decides preservar bien la evidencia, o dejarla a su suerte en la galería del teléfono.
 
-CertiFoto te permite certificar capturas de pantalla y fotografías en minutos: la plataforma calcula el hash SHA-256 de cada archivo, registra la fecha y hora de la certificación y genera un PDF con todo el respaldo técnico necesario para presentar en tribunales chilenos. Es la forma más rápida y económica de convertir una captura común en evidencia digital sólida.`,
+CertiFoto te permite certificar capturas de pantalla y fotografías en minutos: la plataforma calcula el hash SHA-256 de cada archivo, registra la fecha y hora de la certificación y genera un PDF con todo el respaldo técnico necesario para presentar en tribunales chilenos. Es la forma más rápida y económica de convertir una captura común en evidencia digital sólida.
+
+## Preguntas frecuentes
+
+### ¿Una captura de pantalla sirve como prueba en un juicio en Chile?
+
+Puede servir, pero su peso depende de cómo se respalde. Una captura suelta e impresa es la forma más débil de evidencia, porque es fácil de cuestionar. Su valor aumenta cuando se acompaña de metadatos, un hash que acredite que no fue alterada y una cadena de custodia clara.
+
+### ¿Qué papel cumplen los metadatos y el hash?
+
+Los metadatos aportan información como la fecha y el origen, y el hash es una huella digital que permite verificar que el archivo no se modificó después. Juntos respaldan la integridad y la fecha de la captura. La Ley 19.799 reconoce validez a documentos electrónicos con estas características.
+
+### ¿Qué es la cadena de custodia digital y por qué importa?
+
+Es el registro de cómo se obtuvo, guardó y presentó la evidencia, de modo que se pueda confiar en que no fue manipulada en el camino. Una cadena de custodia ordenada hace que el tribunal valore mejor la captura, porque reduce las dudas sobre su autenticidad.
+
+### ¿Cómo logro que el tribunal le dé peso a mi captura?
+
+Preservando el archivo original, certificándolo con hash y timestamp lo antes posible y conservando la trazabilidad de su origen. Mientras mejor documentada esté la integridad y la fecha, mayor será el peso que el tribunal pueda darle al valorarla según la sana crítica.`,
   },
 ];
 
