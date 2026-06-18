@@ -47,6 +47,8 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   if (!post) notFound();
   const related = getRelatedPosts(params.slug);
 
+  const faqItems = extractFaqItems(post.content);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -74,12 +76,34 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     inLanguage: "es-CL",
   };
 
+  const faqJsonLd =
+    faqItems.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
     <div className="min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       <LandingHeader />
 
       <article className="max-w-3xl mx-auto px-4 py-12 sm:py-16">
@@ -183,4 +207,77 @@ function formatDate(iso: string): string {
     month: "long",
     day: "numeric",
   });
+}
+
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+/**
+ * Extrae pares pregunta/respuesta de la sección "## Preguntas frecuentes"
+ * del contenido Markdown de un post para emitir JSON-LD FAQPage.
+ *
+ * Reglas:
+ * - La sección empieza en "## Preguntas frecuentes" y termina en el siguiente
+ *   encabezado H2 ("## ...") o al final del contenido.
+ * - Cada pregunta es un encabezado H3 ("### ...").
+ * - La respuesta es el texto que sigue a la pregunta hasta el próximo H3/H2;
+ *   los párrafos contiguos se unen con un espacio.
+ * - Si no hay sección o no hay pares completos, devuelve [].
+ */
+function extractFaqItems(content: string): FaqItem[] {
+  const lines = content.split("\n");
+
+  const startIndex = lines.findIndex(
+    (line) => line.trim().toLowerCase() === "## preguntas frecuentes"
+  );
+  if (startIndex === -1) return [];
+
+  const items: FaqItem[] = [];
+  let currentQuestion: string | null = null;
+  let answerLines: string[] = [];
+
+  const flush = () => {
+    if (currentQuestion) {
+      const answer = answerLines.join(" ").replace(/\s+/g, " ").trim();
+      if (answer) {
+        items.push({ question: currentQuestion, answer });
+      }
+    }
+    currentQuestion = null;
+    answerLines = [];
+  };
+
+  for (let i = startIndex + 1; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+
+    // Fin de la sección FAQ: siguiente H2.
+    if (trimmed.startsWith("## ")) {
+      flush();
+      break;
+    }
+
+    if (trimmed.startsWith("### ")) {
+      flush();
+      currentQuestion = stripInlineMarkdown(trimmed.slice(4));
+      continue;
+    }
+
+    if (currentQuestion && trimmed !== "") {
+      answerLines.push(stripInlineMarkdown(trimmed));
+    }
+  }
+
+  flush();
+
+  return items;
+}
+
+/** Quita marcas inline de Markdown (**negrita**, [texto](href)) dejando texto plano. */
+function stripInlineMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+    .trim();
 }
