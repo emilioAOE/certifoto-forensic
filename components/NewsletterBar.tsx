@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ───────────────────────────────────────────────────────────────────────────
 // Barra de captura de newsletter → Analytics Hub de Expansiel.
@@ -26,10 +26,30 @@ export default function NewsletterBar() {
   const [hidden, setHidden] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try { if (localStorage.getItem(DISMISS)) setHidden(true); } catch {}
   }, []);
+
+  // Empuja hacia abajo headers fijos para que la barra no los tape ni choque.
+  useEffect(() => {
+    if (hidden) return;
+    const bar = barRef.current;
+    if (!bar) return;
+    const h = bar.offsetHeight;
+    if (!h) return;
+    const moved: { el: HTMLElement; prev: string }[] = [];
+    document.querySelectorAll<HTMLElement>("header, nav, [role='banner']").forEach((el) => {
+      const cs = window.getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      if (cs.position === "fixed" && r.top <= h + 2 && r.width > window.innerWidth * 0.5) {
+        moved.push({ el, prev: el.style.top });
+        el.style.top = (parseFloat(cs.top) || 0) + h + "px";
+      }
+    });
+    return () => { moved.forEach((m) => { m.el.style.top = m.prev; }); };
+  }, [hidden]);
 
   function dismiss() {
     setHidden(true);
@@ -69,7 +89,7 @@ export default function NewsletterBar() {
   if (hidden) return null;
 
   return (
-    <div style={{ background: BG, color: FG, width: "100%", fontFamily: "inherit" }}>
+    <div ref={barRef} style={{ background: BG, color: FG, width: "100%", fontFamily: "inherit", position: "relative", zIndex: 99999 }}>
       <div style={{ maxWidth: 1120, margin: "0 auto", padding: "9px 38px 9px 16px", position: "relative" }}>
         {status === "success" ? (
           <p style={{ textAlign: "center", fontSize: 14, fontWeight: 600, margin: 0 }}>
