@@ -84,7 +84,7 @@ export default function NewsletterBar() {
               <input
                 type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="tu@email.com" aria-label="Tu correo electrónico"
-                style={{ padding: "7px 11px", borderRadius: 6, border: "none", fontSize: 14, minWidth: 190, color: "#111827" }}
+                style={{ padding: "7px 11px", borderRadius: 6, border: "1px solid rgba(0,0,0,0.15)", fontSize: 14, minWidth: 190, color: "#111827", background: "#ffffff" }}
               />
               <button type="submit" disabled={status === "loading"}
                 style={{ padding: "7px 15px", borderRadius: 6, border: "none", background: BTN_BG, color: BTN_FG, fontWeight: 700, fontSize: 14, cursor: "pointer", whiteSpace: "nowrap" }}>
