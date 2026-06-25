@@ -8,6 +8,7 @@ import { StorageProvider } from "@/components/StorageProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import { ConfirmDialogProvider } from "@/components/ui/ConfirmDialog";
 import ExpansielAnalytics from "@/components/ExpansielAnalytics";
+import NewsletterBar from "@/components/NewsletterBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -112,6 +113,7 @@ export default function RootLayout({
   return (
     <html lang="es-CL">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans bg-white text-gray-900`}>
+        <NewsletterBar />
         <ToastProvider>
           <ConfirmDialogProvider>
             <StorageProvider>
