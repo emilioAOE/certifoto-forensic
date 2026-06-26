@@ -4218,7 +4218,7 @@ Las situaciones en que esta evidencia resulta decisiva son cada vez más frecuen
 
 - Conflictos laborales. Capturas de correos, mensajes del jefe fuera de horario, instrucciones por chat, comprobantes de pago o su ausencia. En sede laboral, donde rige la sana crítica, una conversación bien preservada puede acreditar acoso, despido injustificado o el contenido real de un acuerdo.
 
-- Accidentes y daños. Fotos del estado de un vehículo, de una propiedad inundada, de lesiones o de los daños tras un siniestro. Aquí los EXIF que acreditan fecha y lugar son especialmente valiosos para una compañía de seguros o un juicio civil.
+- Accidentes y daños. Fotos del estado de un vehículo, de una propiedad inundada, de lesiones o de los daños tras un siniestro. Aquí los EXIF que acreditan fecha y lugar son especialmente valiosos para una compañía de seguros o un juicio civil. Antes de demandar, conviene [estimar tu indemnización](https://www.cuantojuicio.cl/) para saber cuánto podrías reclamar por accidentes, lesiones o un despido laboral.
 
 - Juzgados de Policía Local. En infracciones de tránsito, choques menores, ruidos molestos o conflictos vecinales, las fotos y videos suelen ser la prueba principal. Una imagen certificada tiene mucho más peso que una mostrada desde el teléfono.
 
