@@ -132,6 +132,16 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           {post.title}
         </h1>
 
+        <p className="mt-4 text-sm text-gray-500">
+          <span className="inline-flex items-center gap-1.5">
+            <User className="h-3.5 w-3.5" />
+            Por <span className="font-medium text-gray-700">{post.author}</span>
+          </span>
+          {" · "}
+          Actualizado:{" "}
+          <time dateTime={post.date}>{formatDate(post.date)}</time>
+        </p>
+
         <p className="text-lg text-gray-600 mt-5 leading-relaxed">
           {post.excerpt}
         </p>
@@ -145,14 +155,44 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             <Clock className="h-3.5 w-3.5" />
             {post.readMinutes} min lectura
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <User className="h-3.5 w-3.5" />
-            {post.author}
-          </span>
         </div>
 
         <div className="mt-10">
           <BlogContent content={post.content} />
+        </div>
+
+        {/* Fuentes y legislación */}
+        <div className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            Fuentes y legislación
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Basado en la legislación chilena vigente:
+          </p>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <a
+                href="https://www.bcn.cl/leychile/navegar?idNorma=61438"
+                target="_blank"
+                rel="noopener"
+                className="text-accent-dark font-medium hover:underline"
+              >
+                Ley 19.496 — Protección de los Derechos de los Consumidores
+                (Biblioteca del Congreso Nacional)
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.bcn.cl/leychile/navegar?idNorma=22740"
+                target="_blank"
+                rel="noopener"
+                className="text-accent-dark font-medium hover:underline"
+              >
+                Código de Procedimiento Civil (Biblioteca del Congreso
+                Nacional)
+              </a>
+            </li>
+          </ul>
         </div>
 
         {/* CTA inline */}
