@@ -25,6 +25,70 @@ export interface BlogPost {
 }
 
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "fotos-estado-propiedad-compraventa-entrega",
+    title: "Compraventa de propiedades: cómo documentar el estado del inmueble antes de la entrega",
+    excerpt: "Entre la promesa y la entrega material de una propiedad pueden pasar meses, y el estado del inmueble puede cambiar. Fotos certificadas con fecha y hash en tres momentos clave te evitan la clásica disputa de 'así no estaba cuando la vi'.",
+    date: "2026-07-02",
+    author: "Equipo CertiFoto",
+    category: "Guías",
+    readMinutes: 7,
+    content: `Casi toda la atención en una compraventa se la llevan el precio, el crédito y la escritura. Pero hay una etapa donde nacen la mayoría de los conflictos y casi nadie documenta: la **entrega material** de la propiedad. Entre la visita en que decidiste comprar y el día en que te pasan las llaves pueden pasar tres, seis o más meses — estudio de títulos, aprobación del crédito, alzamiento de hipotecas — y en ese tiempo el inmueble puede cambiar: deterioros, artefactos que "ya no estaban incluidos", cierres perimetrales movidos, hasta ocupantes que no se han ido.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## El problema: la entrega es el punto ciego de la compraventa
+
+La escritura de compraventa transfiere el dominio, pero la **entrega material** — recibir la propiedad vacía, en el estado pactado y con lo que incluía la venta — es un hecho físico que ocurre después, a veces semanas después de la inscripción en el Conservador.
+
+Los conflictos típicos de esa brecha:
+
+- La propiedad se visitó impecable y se entrega con daños: vidrios quebrados, humedad nueva, jardín abandonado.
+- Desaparecen cosas que "se entendían incluidas": campana de cocina, termo, cortinas, lámparas, portones automáticos con su control.
+- Los medidores quedan con deudas de luz, agua o gastos comunes del período intermedio.
+- El vendedor (o su arrendatario) sigue ocupando la propiedad pasada la fecha comprometida.
+
+Cuando eso pasa, la discusión se reduce a lo de siempre: tu palabra contra la del otro. Salvo que hayas documentado.
+
+## Los tres momentos que conviene fotografiar
+
+**1. La visita decisiva / la oferta.** Cuando decides comprar, registra el estado general y aquello que motivó el precio: terminaciones, artefactos, bodega, estacionamiento. Si la venta incluye muebles o equipamiento, fotografía cada pieza.
+
+**2. La firma de la promesa.** La promesa suele describir la propiedad y lo que incluye. Un set de fotos certificadas de esa fecha fija el "estado de referencia" contra el cual se comparará la entrega. Si el inmueble se vende arrendado u ocupado, documenta también eso: será relevante para los plazos de desocupación.
+
+**3. La entrega material (la más importante).** El día de las llaves, recorre la propiedad completa con el vendedor o el corredor y levanta un **acta de entrega**: estado de cada recinto, artefactos presentes y funcionando, lectura de medidores de luz, agua y gas, número de llaves y controles entregados, y estado de deudas de gastos comunes. Cada punto, con su foto.
+
+## Qué hace la diferencia: fecha cierta y prueba de integridad
+
+Una foto suelta en tu teléfono prueba poco: la contraparte puede alegar que es de otra fecha o que está editada. Lo que le da peso probatorio al registro es poder acreditar **cuándo se tomó** y **que no fue alterada**. Con CertiFoto, cada imagen queda con sello de fecha y hora y **hash SHA-256**, de modo que cualquier tercero — un mediador, un juez, la otra parte — puede verificar su integridad.
+
+Con ese respaldo, las salidas prácticas mejoran mucho:
+
+- **Negociación directa**: un set de fotos certificadas de la promesa versus la entrega suele bastar para acordar una compensación o retener parte del precio pendiente, sin juicio.
+- **Gestión del corredor o abogado**: la evidencia ordenada acelera cualquier reclamo formal por incumplimiento de lo pactado.
+- **Juicio civil**: si el conflicto escala (incumplimiento de la promesa, daños, cosas faltantes), la evidencia con fecha cierta e integridad verificable es difícil de desconocer.
+
+## Checklist express para la entrega material
+
+- Fachada, techumbre visible y cierres perimetrales.
+- Cada recinto: muros, pisos, cielos, ventanas y puertas (abiertas y cerradas).
+- Cocina y baños: artefactos funcionando, griferías, presión de agua.
+- Calefont o caldera, calefacción, aire acondicionado: encendidos.
+- Enchufes e interruptores por recinto; tablero eléctrico.
+- Medidores de luz, agua y gas: primer plano de la lectura.
+- Llaves, controles y llaveros: todos sobre una mesa, contados.
+- Bodega y estacionamiento: estado y numeración.
+
+## Si la propiedad es "de las complicadas", documenta el doble
+
+Herencias con varios dueños, propiedades ocupadas, casas deterioradas o con deudas: en esas operaciones la documentación del estado importa todavía más, porque las probabilidades de disputa son mayores y los plazos, más largos. Si estás del otro lado del mostrador — necesitas [vender una propiedad con problemas legales](https://www.resuelvepropiedades.cl/blog/como-vender-propiedad-con-problemas-legales/) y quieres hacerlo rápido y sin sorpresas — existen compradores especializados justamente en ese tipo de inmuebles, y llegar con el estado del inmueble documentado acelera cualquier negociación seria.
+
+## Cómo hacerlo con CertiFoto
+
+Crea tu registro en minutos: saca las fotos desde el teléfono en el recorrido de entrega, súbelas a [CertiFoto](/dashboard) y genera tu acta con sello de fecha y hash de integridad. El mismo flujo que usamos para actas de arriendo — revisa [qué incluir en un acta de entrega](/blog/acta-entrega-propiedad-arriendo-que-incluir) — funciona perfecto para la entrega de una compraventa: recinto por recinto, con evidencia verificable.
+
+Comprar o vender una propiedad es probablemente la transacción más grande de tu vida. Documentar su estado cuesta veinte minutos. La disputa por no hacerlo puede costar meses.`,
+  },
   // ---- Artículos SEO de arriendo ----
   {
     slug: "contrato-arriendo-que-incluir-modelo",
