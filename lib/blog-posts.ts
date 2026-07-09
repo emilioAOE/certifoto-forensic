@@ -4338,6 +4338,97 @@ Es el registro de cómo se obtuvo, guardó y presentó la evidencia, de modo que
 
 Preservando el archivo original, certificándolo con hash y timestamp lo antes posible y conservando la trazabilidad de su origen. Mientras mejor documentada esté la integridad y la fecha, mayor será el peso que el tribunal pueda darle al valorarla según la sana crítica.`,
   },
+  {
+    slug: "fotos-danos-choque-como-documentar-prueba",
+    title: "Cómo documentar con fotos los daños de un choque para que sirvan de prueba",
+    excerpt:
+      "Después de un choque, las fotos que tomes en los primeros minutos pueden valer más que cualquier declaración. Qué fotografiar, cómo conservar los metadatos y por qué una imagen certificada resiste mucho mejor cuando la aseguradora o la contraparte la ponen en duda.",
+    date: "2026-07-09",
+    author: "Equipo CertiFoto",
+    category: "Evidencia Digital",
+    readMinutes: 9,
+    content: `Después de un choque, los primeros minutos son un caos: el susto, los ánimos caldeados, el tránsito, la pregunta de "¿y ahora qué hago?". Pero justo ahí, cuando menos ganas hay de sacar el teléfono con cabeza fría, se juega buena parte de lo que podrás reclamar después. Las fotos que tomes en la escena —o las que dejes de tomar— serán, semanas más tarde, la columna vertebral de tu caso frente a la aseguradora, el Juzgado de Policía Local o un juicio civil por los daños.
+
+Esta guía es concreta: qué fotografiar, cómo hacerlo para que la imagen conserve su valor y qué hacer para que "esa foto está editada" no sea un argumento que te tumbe la prueba.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## Por qué las fotos del momento son insustituibles
+
+Un choque deja una escena que dura minutos: la posición final de los vehículos, la marca del frenazo, los vidrios en el pavimento, el semáforo, la señalización. Todo eso se desarma apenas los autos se mueven para despejar la vía. Nadie puede reconstruirlo después con la misma fuerza. Por eso la fotografía tomada en la escena, con fecha y lugar, es una prueba que no se puede fabricar más tarde.
+
+A eso se suma un punto legal: en Chile los documentos electrónicos —y una fotografía digital lo es— tienen validez reconocida por la Ley 19.799, y se incorporan al juicio como prueba documental. El tribunal las admite; lo que está en discusión es cuánto peso les da. Y ese peso depende de cómo las tomaste y cómo las conservaste.
+
+## Qué fotografiar, en orden
+
+Cuando la situación es segura, dispara en este orden y sin apurarte:
+
+- **La escena completa, antes de mover los autos.** Posición de ambos vehículos, distancia entre ellos, orientación respecto de la calzada y de la señalización. Toma varias tomas desde distintos ángulos.
+- **Los daños de cada vehículo, de lejos y de cerca.** Primero una toma general que muestre de qué auto se trata (incluyendo la patente), luego los detalles del impacto.
+- **La patente de la contraparte**, nítida y legible. Es lo primero que "se pierde" si el otro conductor decide irse.
+- **El contexto del lugar:** semáforo o disco Pare, demarcación, estado del pavimento, condiciones de luz o lluvia. Todo lo que ayude a explicar cómo ocurrió.
+- **Las lesiones**, si las hay, y los daños a objetos personales.
+- **Documentos:** licencia, permiso de circulación, revisión técnica y el **SOAP** de la contraparte. Fotografíalos si te los facilitan.
+
+Si hay testigos, pídeles nombre y teléfono: una foto no reemplaza un testimonio, pero juntos son mucho más sólidos.
+
+## El detalle técnico que casi nadie cuida: los metadatos
+
+Las fotos tomadas con la cámara del teléfono guardan **metadatos EXIF**: la fecha y hora exactas, el modelo del equipo y, si tienes la geolocalización activada, las coordenadas GPS del lugar. Para un choque, eso es oro: acredita **cuándo y dónde** se tomó la imagen, que es justamente lo que se discute.
+
+El problema es que esos metadatos son frágiles. Si mandas la foto por WhatsApp, la aplicación la comprime y borra casi toda esa información. Si la subes a redes, pasa lo mismo. Cuando llega el momento de usarla, la imagen ya perdió lo que la hacía valiosa.
+
+La regla práctica: **conserva el archivo original tal como salió de la cámara.** No lo reenvíes como única copia, no lo recortes, no lo edites. Si necesitas compartirlo, hazlo como "documento" o "archivo" para evitar la compresión, y guarda siempre el original aparte.
+
+## Cómo blindar la foto contra el "está editada"
+
+La objeción más común frente a una fotografía es que fue manipulada. La forma de neutralizarla es la **cadena de custodia digital**, que se apoya en tres piezas:
+
+- **El hash (SHA-256):** una huella digital única del archivo. Si la imagen cambia aunque sea un píxel, el hash cambia. Calcularlo al momento de preservar la foto permite demostrar después que no la tocaste.
+- **El timestamp verificable:** un sello de tiempo que prueba que la foto existía en una fecha determinada, y no que la creaste más tarde a conveniencia.
+- **El registro de integridad:** un documento que reúne el hash, la fecha, la descripción y quién certificó, y que convierte un puñado de imágenes sueltas en un conjunto probatorio ordenado.
+
+Con esas tres piezas, para desacreditar tu foto la contraparte tendría que explicar cómo se fabricó una imagen con hash coincidente y sello de tiempo anterior al conflicto. Técnicamente, eso es muy difícil.
+
+## De la foto al reclamo
+
+Documentar bien es el primer paso; el segundo es usar esa evidencia para recuperar lo que perdiste. Con las fotos, el parte policial y los presupuestos de reparación en mano, puedes accionar contra el responsable por el **daño emergente** (reparación del vehículo, gastos médicos), el **lucro cesante** (lo que dejaste de ganar) y el **daño moral**. Si quieres ordenar los pasos y saber contra quién dirigir el reclamo, esta guía sobre [qué hacer y cómo reclamar los daños si te chocaron](https://www.xn--reclamadaos-9db.cl/blog/que-hacer-si-te-chocaron-en-chile.html) explica el camino según si hay seguro, quién tuvo la culpa y hasta dónde responde el SOAP.
+
+Ten presente el tiempo: la acción civil de indemnización por estos daños prescribe, por regla general, en **4 años** desde el hecho (art. 2332 del Código Civil). Mientras mejor preservada esté tu evidencia desde el día uno, más fuerte llegará tu reclamo.
+
+## El error más caro: "después la guardo bien"
+
+El patrón se repite: la persona toma las fotos, las manda por WhatsApp al seguro, cambia de teléfono y, cuando el caso escala meses después, ya no tiene el original con metadatos. Solo le queda una imagen comprimida y reenviada, fácil de objetar.
+
+La evidencia digital es perecible. En el mismo momento del choque, o esa misma noche, preserva los archivos originales y certifícalos con hash y timestamp. Es la diferencia entre una foto que el tribunal valora y una que la contraparte deja en nada.
+
+## En resumen
+
+- Fotografía la escena **antes de mover los autos**: posición, daños, patente, señalización y contexto.
+- Conserva el **archivo original** con sus metadatos: no lo reenvíes ni lo edites como única copia.
+- Blinda la prueba con **hash, timestamp y registro de integridad** para resistir la objeción de "está editada".
+- Usa esa evidencia para reclamar el daño emergente, el lucro cesante y el daño moral, dentro del plazo legal.
+
+CertiFoto certifica tus fotos y capturas en minutos: calcula el hash SHA-256, sella la fecha y hora, y genera un PDF con el respaldo técnico para presentar en tribunales chilenos. La forma más rápida y económica de convertir las fotos de un choque en evidencia sólida.
+
+## Preguntas frecuentes
+
+### ¿Las fotos de un choque sirven como prueba en Chile?
+
+Sí. Se incorporan al juicio como prueba documental y la Ley 19.799 reconoce validez a los documentos electrónicos. Su peso depende de cómo se tomaron y conservaron: una foto con metadatos, hash y sello de tiempo vale mucho más que una imagen suelta y reenviada.
+
+### ¿Por qué no debo mandar las fotos por WhatsApp?
+
+Porque WhatsApp comprime la imagen y elimina la mayoría de los metadatos EXIF (fecha, hora, ubicación). Si esa es tu única copia, pierdes justo la información que acredita cuándo y dónde tomaste la foto. Conserva siempre el archivo original.
+
+### ¿Qué hago si el otro conductor se va sin dejar datos?
+
+Fotografía de inmediato la patente y todo lo que puedas del vehículo y la escena, busca testigos y revisa si hay cámaras cercanas. Haz la denuncia correspondiente. Esa evidencia temprana es clave para identificar al responsable y perseguir los daños.
+
+### ¿Hasta cuándo puedo reclamar los daños del choque?
+
+La acción civil de indemnización prescribe, por regla general, en 4 años desde el accidente (art. 2332 del Código Civil). Conviene actuar mucho antes, mientras la evidencia está fresca y bien preservada.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | null {
