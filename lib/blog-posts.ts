@@ -4429,6 +4429,112 @@ Fotografía de inmediato la patente y todo lo que puedas del vehículo y la esce
 
 La acción civil de indemnización prescribe, por regla general, en 4 años desde el accidente (art. 2332 del Código Civil). Conviene actuar mucho antes, mientras la evidencia está fresca y bien preservada.`,
   },
+  {
+    slug: "producto-defectuoso-fotos-prueba-reclamo",
+    title: "Producto defectuoso: cómo fotografiarlo para que tu reclamo no quede en nada",
+    excerpt:
+      "Cuando un producto sale malo, la tienda suele responder con el clásico 'es mal uso'. Las fotos que tomes al recibirlo y al detectar la falla —bien conservadas y con fecha verificable— son la diferencia entre un cambio inmediato y un reclamo que muere en el mesón de servicio al cliente.",
+    date: "2026-07-16",
+    author: "Equipo CertiFoto",
+    category: "Legal",
+    readMinutes: 8,
+    content: `Compraste un refrigerador y a las tres semanas dejó de enfriar. O zapatillas que se descosieron al segundo uso. O un mueble que llegó con la cubierta trizada dentro de la caja. Vas a la tienda y la respuesta es un guion conocido: "hay que mandarlo al servicio técnico", "eso es mal uso", "la garantía no cubre eso". Y ahí empieza la parte que nadie te advirtió: la discusión no se gana con indignación, se gana con evidencia.
+
+Esta guía explica qué derechos tienes cuando un producto sale defectuoso, qué fotografiar y en qué momento, y cómo conservar esas imágenes para que sirvan de prueba si el reclamo escala.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## La garantía legal: lo que la tienda no siempre te cuenta
+
+En Chile, la Ley 19.496 sobre protección de los derechos de los consumidores establece la **garantía legal**: si el producto es nuevo y sale defectuoso, no sirve para lo que fue comprado o le faltan piezas, tienes derecho a elegir entre **la reparación gratuita, la reposición del producto o la devolución de lo pagado**. Desde la Ley 21.398 (conocida como "Ley Pro Consumidor"), ese derecho dura **6 meses** desde la recepción del producto.
+
+Tres puntos que las tiendas suelen "olvidar":
+
+- **La opción es tuya, no del vendedor.** Si eliges la devolución del dinero, no pueden obligarte a aceptar una nota de crédito ni mandarte primero al servicio técnico.
+- **El "ticket de cambio" no reemplaza la garantía legal.** Las políticas comerciales de la tienda se suman a tus derechos, no los sustituyen.
+- **Necesitas acreditar la compra**, con la boleta, factura, comprobante de la transacción o cualquier otro medio. Fotografía la boleta apenas te la entreguen: el papel térmico se borra en semanas.
+
+## Por qué la foto define el reclamo
+
+Cuando el producto falla, la controversia casi siempre gira en torno a dos preguntas: **¿el defecto es de origen o lo causaste tú?** y **¿cuándo apareció?**. El proveedor tiene su informe del servicio técnico; tú, en principio, solo tienes tu palabra. Las fotografías bien tomadas y bien conservadas equilibran esa cancha:
+
+- Una foto del producto **recién desembalado** demuestra el estado en que llegó.
+- Una foto de la falla **el día que apareció**, con fecha verificable, desmonta el argumento de que el daño es posterior o producto del uso.
+- Una secuencia de fotos coherente (compra, recepción, falla) construye una línea de tiempo que un informe técnico genérico no puede contradecir con facilidad.
+
+En Chile los documentos electrónicos, incluida una fotografía digital, tienen validez reconocida por la Ley 19.799 y se acompañan al reclamo o al juicio como prueba documental. La discusión no es si se admiten, sino cuánto pesan. Y eso depende de cómo las tomaste y conservaste.
+
+## Qué fotografiar, según el momento
+
+**Al recibir el producto (sobre todo en compras online):**
+
+- La caja o embalaje **antes de abrirlo**, por todos sus lados. Si viene golpeada o mojada, con mayor razón.
+- El desembalaje por etapas: producto envuelto, producto a la vista, accesorios y manuales.
+- La etiqueta con **modelo y número de serie**, nítida.
+- La boleta o el comprobante de compra, junto al correo de confirmación si fue online.
+
+**Cuando aparece la falla:**
+
+- Una toma general que muestre el producto completo e identificable, y luego primeros planos del defecto.
+- Si la falla es de funcionamiento (no se ve a simple vista), graba un **video** mostrando el producto encendido, el número de serie y el comportamiento anómalo en una misma toma continua.
+- El entorno de uso, si el proveedor pudiera alegar mal uso: dónde estaba instalado, cómo estaba conectado.
+
+**Si el problema es un servicio mal prestado** —una mudanza que llegó con muebles rayados, una tintorería que devolvió la ropa manchada, una instalación mal hecha—, la lógica es la misma: fotografía el estado **antes** de entregar tus cosas y el estado **después**. El antes es lo que casi nadie tiene, y es justamente lo que gana estas discusiones.
+
+## Conserva los originales (y las conversaciones)
+
+Las fotos del teléfono guardan metadatos EXIF: fecha, hora y equipo con que se tomaron. Esa información acredita el "cuándo", que es el corazón del reclamo. Pero se pierde con facilidad: WhatsApp y las redes sociales comprimen la imagen y borran los metadatos al enviarla.
+
+Reglas prácticas:
+
+- Conserva **el archivo original** tal como salió de la cámara. No lo edites ni lo recortes.
+- Si necesitas enviarlo a la tienda, mándalo como "documento" o "archivo", y guarda el original aparte.
+- Respalda también la conversación con el proveedor: los mensajes donde reconocen la falla o prometen una solución son prueba. Sobre cómo conservarlas bien, revisa nuestra guía sobre [el valor de una captura de pantalla como prueba](/blog/captura-de-pantalla-como-prueba-validez-chile).
+
+## Fecha cierta y hash: el blindaje contra "esa foto es de después"
+
+La objeción típica del proveedor es que la foto es posterior a los 6 meses, o que el daño se produjo después de la compra. La forma de neutralizarla es certificar la evidencia: calcular el **hash SHA-256** del archivo (su huella digital única) y sellarlo con un **timestamp verificable** que demuestre que la imagen existía en esa fecha, tal cual está.
+
+Con eso, la línea de tiempo queda fija: producto recibido en tal fecha, falla documentada en tal otra, ambas dentro del plazo de garantía. Para desconocer esa prueba, la empresa tendría que explicar cómo fabricaste una imagen con sello de tiempo anterior. Técnicamente, eso es muy difícil.
+
+## Si la tienda no responde: SERNAC y Juzgado de Policía Local
+
+Con la evidencia lista, el camino del reclamo tiene tres estaciones:
+
+- **Reclamo directo al proveedor**, por escrito y adjuntando las fotos certificadas. Muchos casos mueren aquí, a tu favor: ante evidencia sólida, a la empresa le sale más barato cambiar el producto que pelear.
+- **Reclamo ante el SERNAC**, que traslada tu caso a la empresa. No es obligatorio pasar por aquí, pero deja registro formal de tu intento de solución.
+- **Demanda en el Juzgado de Policía Local.** Si nada de lo anterior funciona, la Ley 19.496 te permite [demandar a la empresa en el Juzgado de Policía Local](https://www.teresponden.cl/juzgado-policia-local) sin necesidad de abogado, pidiendo tanto la multa a la empresa como la indemnización de tus perjuicios. Ahí tus fotos certificadas, la boleta y las conversaciones se presentan como prueba documental.
+
+Ojo con los plazos: además de los 6 meses de la garantía legal, las acciones para perseguir la responsabilidad infraccional del proveedor prescriben en **6 meses** desde que se incurrió en la infracción (art. 26 de la Ley 19.496). No dejes dormir el reclamo.
+
+## En resumen
+
+- La garantía legal dura **6 meses** y la opción —cambio, reparación o devolución— es **tuya**.
+- Fotografía el producto **al recibirlo** y la falla **el día que aparece**: la línea de tiempo es la mitad del caso.
+- Conserva los archivos originales con metadatos y respalda las conversaciones con el proveedor.
+- Certifica las fotos con **hash SHA-256 y timestamp** para fijar la fecha y neutralizar el "es mal uso" o "es de después".
+- Si la empresa no responde, el reclamo escala al SERNAC y, de ser necesario, al Juzgado de Policía Local.
+
+CertiFoto certifica tus fotos en minutos: calcula el hash SHA-256, sella fecha y hora, y genera un PDF con el respaldo técnico listo para adjuntar a tu reclamo o presentar en tribunales chilenos. Documentar bien cuesta cinco minutos; un reclamo sin pruebas puede costarte el producto completo.
+
+## Preguntas frecuentes
+
+### ¿Cuánto dura la garantía legal en Chile?
+
+Seis meses desde la recepción del producto, para productos nuevos (Ley 19.496, modificada por la Ley 21.398). Durante ese plazo puedes elegir entre reparación gratuita, cambio o devolución del dinero, acreditando la compra con la boleta u otro comprobante.
+
+### ¿La tienda puede obligarme a ir primero al servicio técnico?
+
+No. La elección entre reparación, cambio o devolución es del consumidor, no del vendedor. El paso previo por el servicio técnico solo aplica en los casos que la propia ley contempla, no como política general de la tienda para dilatar el reclamo.
+
+### ¿Qué pasa si boté la caja o perdí la boleta?
+
+La compra puede acreditarse por cualquier medio: cartola bancaria, correo de confirmación, registro de la transacción. Aun así, fotografiar la boleta el día de la compra evita el problema de raíz, porque el papel térmico se borra rápido.
+
+### ¿Sirven las fotos si compré por internet?
+
+Sí, y son incluso más importantes: fotografía el embalaje antes de abrirlo y el desembalaje por etapas. Si el producto llegó dañado por el despacho, esa secuencia con fecha verificable es la mejor prueba de que el defecto no lo causaste tú.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | null {
