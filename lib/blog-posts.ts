@@ -4535,6 +4535,92 @@ La compra puede acreditarse por cualquier medio: cartola bancaria, correo de con
 
 Sí, y son incluso más importantes: fotografía el embalaje antes de abrirlo y el desembalaje por etapas. Si el producto llegó dañado por el despacho, esa secuencia con fecha verificable es la mejor prueba de que el defecto no lo causaste tú.`,
   },
+  {
+    slug: "fotos-accidente-del-trabajo-como-documentar-el-lugar",
+    title: "Accidente del trabajo: cómo documentar el lugar antes de que lo ordenen",
+    excerpt:
+      "Después de un accidente laboral, la empresa suele reparar, limpiar y ordenar el lugar en cuestión de horas. Con eso desaparece la prueba de la condición insegura que causó todo. Qué fotografiar, en qué orden y cómo conservarlo para que sirva de evidencia meses después.",
+    date: "2026-08-10",
+    author: "Equipo CertiFoto",
+    category: "Legal",
+    readMinutes: 8,
+    content: `Hay un patrón que se repite en casi todos los accidentes laborales graves. Ocurre el accidente, llega la ambulancia, se lleva al trabajador… y en las horas siguientes el lugar cambia. Se instala la baranda que faltaba, aparece el resguardo de la máquina, se recoge el cable suelto, se seca el piso, se ordena la bodega. Cuando semanas después alguien pregunta cómo estaba todo, el lugar es otro y la respuesta es la palabra del trabajador contra el informe de la empresa.
+
+Esta guía es sobre esas primeras horas: qué fotografiar, en qué orden y cómo guardarlo para que tenga peso probatorio cuando haga falta.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## Por qué la escena importa tanto
+
+El seguro de la Ley 16.744 cubre la atención médica y el subsidio sin discutir de quién fue la culpa. Pero cuando el accidente ocurrió porque faltaron medidas de seguridad, la discusión cambia por completo: ahí hay que **probar** qué faltaba. Y lo que faltaba es, por definición, algo que ya no está en la foto de hoy.
+
+La condición insegura es efímera. El andamio sin protección se desarma, la máquina sin resguardo se repara, la escalera en mal estado se reemplaza, el pasillo obstruido se despeja. Nadie lo hace necesariamente de mala fe —muchas veces es la reacción natural al susto—, pero el efecto probatorio es el mismo: la evidencia desaparece.
+
+## Qué fotografiar, en orden de prioridad
+
+**1. El punto exacto donde ocurrió.** Antes de que se mueva nada. Una toma general que permita ubicar el lugar dentro de la faena, y luego el detalle.
+
+**2. Lo que faltaba.** Esta es la foto que gana o pierde el caso: la ausencia de la protección. El borde sin baranda, la máquina sin su resguardo, el enchufe sin tapa, el arnés que no estaba, la señalética que no existe, el piso mojado sin conos. Es más difícil de lo que parece, porque hay que fotografiar algo que **no está**: la solución es encuadrar el contexto completo para que se entienda la ausencia.
+
+**3. El equipo y la herramienta involucrada.** Su estado real: desgaste, reparaciones improvisadas, seguros anulados, mantención vencida.
+
+**4. Los elementos de protección personal.** Los que te entregaron y los que no. Si el casco estaba trizado o los guantes rotos, eso es parte de la prueba.
+
+**5. El entorno.** Iluminación, ventilación, orden, espacio de circulación, altura, superficies. Muchas veces el accidente no lo causó una sola falla, sino un ambiente completo.
+
+**6. Las lesiones.** Con el debido cuidado y respetando la privacidad: fotos del día del accidente y luego la evolución. Un moretón desaparece en dos semanas; una cicatriz no cuenta la historia del primer día.
+
+**7. Los documentos.** Registro de entrega de elementos de protección, capacitaciones firmadas (o su ausencia), reglamento interno, la denuncia individual de accidente del trabajo, el parte de la mutualidad, el turno y quiénes estaban.
+
+## Cómo tomarlas para que sirvan
+
+- **Generales antes que detalles.** Sin una toma amplia que ubique el lugar, un primer plano no prueba dónde fue.
+- **Referencia de escala.** Una huincha, una herramienta, un objeto conocido. La altura de una caída y la distancia a una protección son datos que después se discuten.
+- **Varias tomas del mismo punto** desde distintos ángulos. Una sola foto siempre admite la respuesta "está sacada para que se vea así".
+- **Sin filtros, sin recortes, sin edición.** Cualquier retoque, aunque sea inocente, abre la puerta a cuestionar todo el set.
+- **Video corto de recorrido.** Diez o quince segundos caminando por el lugar aportan continuidad espacial que las fotos sueltas no dan.
+- **Anota lo que la foto no muestra**: hora, quién estaba, qué se dijo, qué se hizo inmediatamente después.
+
+## El problema de la fecha
+
+Aquí es donde la mayoría de las pruebas fotográficas se debilita. Una imagen guardada en el teléfono, reenviada por WhatsApp y descargada meses después llega al expediente sin metadatos, comprimida y con la fecha del archivo alterada por cada reenvío. Cuando la contraparte pregunta "¿cómo sabemos que esta foto es del día del accidente y no de después?", no hay buena respuesta.
+
+Por eso conviene, el mismo día:
+
+- **Guardar los originales** tal como salieron de la cámara, sin reenviarlos por aplicaciones de mensajería que los recomprimen.
+- **Respaldarlos** en un servicio que registre la fecha de carga.
+- **Certificar el set** con un mecanismo que fije de manera verificable cuándo existía esa imagen y que no fue modificada después. Es exactamente el problema que CertiFoto resuelve: la foto deja de ser "una imagen en un teléfono" y pasa a ser un registro con fecha y contenido verificables.
+
+## Qué hacer además de fotografiar
+
+- **Atiéndete siempre por la mutualidad.** El registro médico del primer día es la columna vertebral de todo lo que venga después.
+- **Pide copia de la denuncia del accidente.** Es un documento al que tienes derecho.
+- **Identifica testigos** y anota sus nombres antes de que la cuadrilla rote o cambie de faena.
+- **Guarda las conversaciones**: mensajes con supervisores, grupos de trabajo, instrucciones recibidas. A veces la orden de trabajar sin la protección está escrita.
+- **Denuncia a la Dirección del Trabajo** si las condiciones eran inseguras. Una fiscalización cercana a la fecha del accidente vale muchísimo.
+
+## Para qué sirve después toda esta prueba
+
+Para dos cosas distintas. La primera es la fiscalización administrativa y el proceso ante la mutualidad. La segunda, más relevante en términos económicos, es la demanda por los perjuicios que el seguro no cubre —el daño moral y el lucro cesante— cuando el accidente ocurrió por incumplimiento del deber de seguridad del empleador. Esa acción está explicada en detalle en esta guía sobre [la indemnización que se puede reclamar cuando el accidente ocurrió por culpa del empleador](https://www.amparolaboral.cl/blog/accidente-trabajo-culpa-empleador-indemnizacion-perjuicios), y su punto más difícil es justamente el probatorio: acreditar qué medida faltaba. Ahí es donde las fotos del primer día valen más que cualquier declaración posterior.
+
+## Preguntas frecuentes
+
+### ¿Puedo tomar fotos dentro de la empresa sin autorización?
+
+Documentar las condiciones de tu propio puesto de trabajo tras un accidente es razonable y habitual. Conviene evitar registrar procesos confidenciales o a personas sin necesidad, y centrarse en el lugar, el equipo y la condición insegura.
+
+### ¿Y si ya repararon todo antes de que pudiera fotografiar?
+
+Sirve igual: fotografía cómo quedó y guarda evidencia de la reparación (órdenes de trabajo, mensajes, facturas de materiales). Que la medida se haya instalado justo después del accidente es en sí mismo un antecedente relevante.
+
+### ¿Las fotos de mi celular sirven como prueba?
+
+Sí, se valoran como cualquier otro medio de prueba, pero su fuerza depende de que se pueda sostener cuándo fueron tomadas y que no se alteraron. Guardar los originales y certificarlos apunta exactamente a eso.
+
+### ¿Hasta cuándo puedo reunir esta prueba?
+
+Mientras antes, mejor: el lugar cambia en horas y los testigos rotan en semanas. Las acciones legales, además, tienen plazos de prescripción acotados, así que la prueba tardía muchas veces llega cuando ya no sirve.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | null {
