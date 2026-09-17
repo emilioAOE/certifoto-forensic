@@ -4621,6 +4621,115 @@ Sí, se valoran como cualquier otro medio de prueba, pero su fuerza depende de q
 
 Mientras antes, mejor: el lugar cambia en horas y los testigos rotan en semanas. Las acciones legales, además, tienen plazos de prescripción acotados, así que la prueba tardía muchas veces llega cuando ya no sirve.`,
   },
+  {
+    slug: "casa-heredada-fotos-estado-antes-particion-venta",
+    title: "Casa heredada: cómo documentar con fotos su estado antes de la partición o la venta",
+    excerpt:
+      "Cuando una casa pasa a varios herederos, las discusiones rara vez parten por el precio: parten por lo que había adentro, por quién la deterioró y por quién pagó qué. Un registro fotográfico con fecha verificable, hecho a tiempo, evita que la sucesión se convierta en una guerra de versiones.",
+    date: "2026-09-17",
+    author: "Equipo CertiFoto",
+    category: "Guías",
+    readMinutes: 8,
+    content: `Muere el papá o la mamá, y la casa familiar queda a nombre de varios hermanos. Durante los primeros meses nadie quiere hablar de papeles. Uno de ellos se queda viviendo ahí "mientras tanto", otro se lleva algunos muebles "de recuerdo", un tercero paga la reparación del techo. Dos años después, cuando llega el momento de vender o repartir, cada uno recuerda la casa de manera distinta: cómo estaba, qué había adentro y cuánto valía antes de que alguien la ocupara.
+
+Esta guía es sobre cómo evitar ese escenario con algo muy simple: dejar registrado, con fecha verificable, el estado de la propiedad heredada desde el principio.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## Por qué el estado de la casa se vuelve un tema legal
+
+Mientras la herencia no se reparte, los herederos son dueños en común de todos los bienes. Es lo que se llama **comunidad hereditaria**. El Código Civil establece que nadie está obligado a permanecer en la indivisión (artículo 1317), así que tarde o temprano la casa se vende, se adjudica a uno de ellos o se reparte mediante una partición.
+
+En ese camino aparecen preguntas que dependen directamente del estado físico del inmueble:
+
+- **¿Quién deterioró la casa?** Si un heredero vivió ahí varios años, los demás pueden reclamar que la dejó en peor estado.
+- **¿Quién hizo mejoras y cuánto aportó?** El que pagó una ampliación, un techo nuevo o la remodelación del baño normalmente querrá que se le reconozca.
+- **¿Qué muebles y objetos había?** Los bienes muebles también forman parte de la herencia y suelen desaparecer primero.
+- **¿Cuánto vale la propiedad?** El estado de conservación influye en cualquier tasación.
+
+Sin un registro del punto de partida, todas estas discusiones se transforman en la palabra de un hermano contra la de otro.
+
+## El momento clave: lo antes posible después del fallecimiento
+
+La mejor foto es la que se toma antes de que cambie algo. Idealmente, antes de que alguien se mude a la casa, retire muebles o empiece reparaciones. En la práctica conviene hacerlo en paralelo a la **posesión efectiva**, que es el trámite con que se reconoce a los herederos: en las herencias sin testamento se tramita ante el Registro Civil (Ley 19.903) y en las testadas, ante el tribunal.
+
+La posesión efectiva incluye un inventario de bienes, pero ese inventario es un listado con valores, no una descripción de cómo estaba la casa. Las fotos complementan ese documento y le dan contenido concreto.
+
+Si ya pasó tiempo, no es tarde: el mejor momento siguiente es **hoy**, y en especial antes de cualquiera de estos hitos:
+
+- Que un heredero empiece a vivir en la propiedad o a arrendarla.
+- Que se retiren muebles, objetos de valor o documentos.
+- Que se hagan reparaciones o remodelaciones.
+- Que se contrate una tasación o se publique la venta.
+- Que se inicie una partición judicial o ante árbitro.
+
+## Qué fotografiar en una casa heredada
+
+**1. El exterior y los deslindes.** Fachada, techumbre visible, rejas, portones, antejardín y patio. Incluye los muros medianeros y cualquier construcción adosada. Si hay ampliaciones, fotografíalas con claridad: después se discutirá si estaban regularizadas y quién las pagó.
+
+**2. Cada recinto, con toma general y detalles.** Living, comedor, cocina, dormitorios, baños, bodega, logia. Primero una foto amplia desde la puerta, luego los detalles: pisos, muros, cielos, ventanas, puertas, enchufes.
+
+**3. Los daños existentes.** Humedad, filtraciones, grietas, termitas, vidrios rotos, artefactos que no funcionan. Esta es la parte más importante para proteger a quien después ocupe la casa, porque demuestra que el daño ya estaba.
+
+**4. Las instalaciones.** Medidores de luz, agua y gas con su lectura visible, calefont, tablero eléctrico, estanques. Las lecturas de medidores también sirven para separar consumos cuando alguien empieza a ocupar la propiedad.
+
+**5. Muebles y objetos de valor.** Uno por uno si tienen valor económico o afectivo: muebles antiguos, cuadros, joyas, herramientas, electrodomésticos, vehículos guardados en el garaje. Junto a la foto, anota una breve descripción.
+
+**6. Documentos que estén en la casa.** Escrituras, boletas de contribuciones, cuentas impagas, planos, permisos de edificación. Fotografíalos antes de que alguien los guarde en otro lugar.
+
+## Cómo tomarlas para que sirvan como prueba
+
+- **Recorrido ordenado.** Recinto por recinto, siempre en el mismo orden. Facilita comparar el antes y el después.
+- **Luz natural y sin filtros.** Nada de edición, recortes ni modo retrato. Un retoque inocente permite cuestionar todo el set.
+- **Referencias de escala** en grietas y manchas: una huincha o un objeto conocido.
+- **Video corto de recorrido** además de las fotos, para mostrar la continuidad entre espacios.
+- **Idealmente, con más de un heredero presente.** Si todos participan o al menos son invitados, es mucho más difícil que después alguno desconozca el registro. Deja constancia por escrito de esa invitación.
+- **Fecha y contenido verificables.** Las fotos reenviadas por WhatsApp pierden metadatos y se recomprimen. Guarda los originales y certifícalos con un mecanismo que acredite cuándo existían y que no fueron modificadas; es exactamente lo que hace CertiFoto con cada registro.
+
+## Compartir el registro con los demás herederos
+
+Un inventario fotográfico que solo tiene uno de los hermanos genera desconfianza. Uno compartido genera acuerdos. Algunas recomendaciones:
+
+- **Envía el enlace o el informe a todos** por un medio que deje constancia, como correo electrónico.
+- **Pide observaciones dentro de un plazo razonable.** Si nadie objeta, el registro gana fuerza como punto de partida común.
+- **Firma un acta simple** si hay buena disposición: fecha, quiénes estuvieron, qué se revisó y la referencia al registro fotográfico. La Ley 19.799 reconoce validez a los documentos firmados electrónicamente, lo que facilita hacerlo a distancia cuando los herederos viven en ciudades distintas.
+- **Repite el registro** cuando cambie algo relevante: ingreso de un ocupante, término de una reparación, retiro de muebles acordado.
+
+## Cuando llega el momento de vender o repartir
+
+El registro fotográfico sirve en tres escenarios muy distintos.
+
+**Venta de común acuerdo.** Un comprador serio pedirá información sobre el estado de la propiedad. Tener fotos fechadas, junto con los documentos de la posesión efectiva y de los impuestos de la herencia (Ley 16.271), acelera la negociación y reduce los reclamos posteriores. Si lo que buscan los herederos es cerrar pronto y sin tener que invertir en arreglos, esta guía explica las alternativas para [vender rápido la casa heredada](https://www.resuelvepropiedades.cl/blog/vender-casa-heredada-rapido-chile/) aunque la sucesión no esté perfectamente ordenada.
+
+**Adjudicación a uno de los herederos.** Si uno se queda con la casa y paga a los demás, el estado al momento de la adjudicación define el precio justo. Las fotos evitan que se discuta un valor basado en recuerdos.
+
+**Partición con conflicto.** Cuando no hay acuerdo, la partición la resuelve un juez árbitro. Ahí se discuten mejoras, deterioros, frutos (por ejemplo, arriendos cobrados por un solo heredero) y bienes muebles faltantes. Un registro con fecha verificable es prueba documental concreta frente a declaraciones contradictorias.
+
+## Errores frecuentes
+
+- **Esperar a que haya conflicto.** Cuando la pelea empezó, la casa ya cambió.
+- **Fotografiar solo lo bonito.** Las fotos para publicar la venta no sirven como inventario: omiten justamente los daños.
+- **Dejar el registro en un solo teléfono.** Se pierde, se cambia o se borra. Respalda y certifica.
+- **No incluir los muebles.** Son lo primero que desaparece y lo más difícil de probar después.
+
+## Preguntas frecuentes
+
+### ¿Puedo fotografiar la casa heredada si otro heredero vive ahí?
+
+Todos los herederos son copropietarios mientras no se haga la partición, pero entrar sin acuerdo a una casa habitada por otro genera conflictos innecesarios. Lo recomendable es coordinar la visita por escrito y, si hay negativa, pedir orientación legal antes de insistir.
+
+### ¿Sirven las fotos si las tomo yo solo?
+
+Sí, se valoran como cualquier otro medio de prueba. Su peso aumenta si se puede acreditar cuándo se tomaron, que no fueron alteradas y que los demás herederos tuvieron oportunidad de conocerlas.
+
+### ¿Tengo que esperar la posesión efectiva para documentar la casa?
+
+No. El registro puede y conviene hacerse antes, porque el estado de la propiedad puede cambiar mientras se tramitan los papeles.
+
+### ¿Cada cuánto conviene actualizar el registro?
+
+Cada vez que ocurra algo que cambie la propiedad: una reparación, el ingreso o la salida de un ocupante, el retiro de muebles o antes de una tasación. Si la casa queda deshabitada, una revisión periódica ayuda a detectar a tiempo daños, robos u ocupaciones.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | null {
