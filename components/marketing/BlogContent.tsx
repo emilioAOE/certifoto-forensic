@@ -14,20 +14,43 @@
  * - [texto](/ruta-interna) -> next/link  ·  [texto](https://externo) -> <a>
  */
 
+import { Fragment } from "react";
 import Link from "next/link";
 
 interface BlogContentProps {
   content: string;
+  /** CTA opcional insertado a mitad del articulo, justo antes de un H2. */
+  midCta?: React.ReactNode;
 }
 
-export function BlogContent({ content }: BlogContentProps) {
+export function BlogContent({ content, midCta }: BlogContentProps) {
   const blocks = parseContent(content);
+  const ctaIndex = midCta ? midCtaIndex(blocks) : -1;
 
   return (
     <div className="prose-content space-y-5">
-      {blocks.map((block, i) => renderBlock(block, i))}
+      {blocks.map((block, i) => (
+        <Fragment key={i}>
+          {i === ctaIndex && midCta}
+          {renderBlock(block, i)}
+        </Fragment>
+      ))}
     </div>
   );
+}
+
+/**
+ * Busca el H2 mas cercano al 45% del articulo para insertar ahi el CTA:
+ * lo suficientemente adentro para que el lector ya tenga contexto, y sin
+ * cortar un parrafo por la mitad. Devuelve -1 si el articulo es muy corto.
+ */
+function midCtaIndex(blocks: Block[]): number {
+  if (blocks.length < 10) return -1;
+  const target = Math.floor(blocks.length * 0.45);
+  for (let i = target; i < blocks.length - 3; i++) {
+    if (blocks[i].kind === "h2") return i;
+  }
+  return -1;
 }
 
 type Block =

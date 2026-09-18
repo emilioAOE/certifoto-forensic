@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, Clock, Calendar, User } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, User } from "lucide-react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { BlogContent } from "@/components/marketing/BlogContent";
+import { BlogCta } from "@/components/marketing/BlogCta";
+import { blogCtas } from "@/lib/blog-cta";
 import {
   BLOG_POSTS,
   getPostBySlug,
@@ -55,6 +57,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
   const related = getRelatedPosts(params.slug);
+  const { mid, end } = blogCtas(post.category);
 
   const faqItems = extractFaqItems(post.content);
 
@@ -158,7 +161,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
 
         <div className="mt-10">
-          <BlogContent content={post.content} />
+          <BlogContent
+            content={post.content}
+            midCta={<BlogCta config={mid} slug={post.slug} compact />}
+          />
         </div>
 
         {/* Fuentes y legislación */}
@@ -195,22 +201,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           </ul>
         </div>
 
-        {/* CTA inline */}
-        <div className="mt-12 rounded-2xl border border-accent-light bg-accent-softer p-6 sm:p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
-            ¿Te resultó útil este artículo?
-          </h3>
-          <p className="text-sm text-gray-600 mb-5">
-            Empieza a documentar tus arriendos con CertiFoto. Sin registro y
-            gratis para uso personal.
-          </p>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-5 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors"
-          >
-            Ingresar a la plataforma
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+        {/* CTA de cierre */}
+        <div className="mt-12">
+          <BlogCta config={end} slug={post.slug} />
         </div>
       </article>
 
