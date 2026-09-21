@@ -31,12 +31,14 @@ Cada foto recibe hash criptográfico SHA-256 (huella única), pHash (huella visu
 
 ## Precios (CLP, pago único)
 
-- 1 certificación: $2.990
-- 3 certificaciones: $7.990
-- 10 certificaciones: $24.900
-- 50 certificaciones: $99.900 (corredoras y administradoras con cartera grande)
+Precio de lanzamiento: 50% de descuento sobre el precio de lista (entre paréntesis).
 
-Los créditos no caducan. Detalle en https://www.certifoto.cl/precios
+- 1 certificación: $1.490 (lista $2.990)
+- 3 certificaciones: $3.990 (lista $7.990)
+- 10 certificaciones: $12.490 (lista $24.900)
+- 50 certificaciones: $49.900 (lista $99.900; corredoras y administradoras con cartera grande)
+
+Los créditos no caducan. Se paga con tarjeta o transferencia a través de Flow. Detalle en https://www.certifoto.cl/precios
 
 ## Validez legal
 

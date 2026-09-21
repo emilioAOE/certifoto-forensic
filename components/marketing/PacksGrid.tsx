@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
-import { PACKS, formatCLP, type Pack } from "@/lib/packs";
+import { PACKS, formatCLP, LAUNCH_PRICING_LABEL, type Pack } from "@/lib/packs";
 import { cn } from "@/lib/cn";
 import { useSupabaseUser } from "@/lib/supabase/use-user";
 
@@ -55,7 +55,17 @@ function PackCard({ pack, compact }: { pack: Pack; compact: boolean }) {
         </p>
       )}
 
-      <div className="mt-5 mb-1">
+      {pack.launchDiscountPercent > 0 && (
+        <div className="mt-4 flex items-center gap-2">
+          <span className="text-sm text-gray-400 line-through">
+            {formatCLP(pack.listPriceCLP)}
+          </span>
+          <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+            {LAUNCH_PRICING_LABEL} −{pack.launchDiscountPercent}%
+          </span>
+        </div>
+      )}
+      <div className={pack.launchDiscountPercent > 0 ? "mt-1 mb-1" : "mt-5 mb-1"}>
         <span className="text-3xl font-bold text-gray-900 tracking-tight">
           {formatCLP(pack.priceCLP)}
         </span>

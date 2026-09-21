@@ -38,7 +38,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cuánto cuesta?",
-        a: "Crear y editar actas es gratis e ilimitado. Solo pagas cuando certificas — es decir, cuando el acta queda lista para entregarse formalmente. Las certificaciones se compran en packs one-time desde $2.990 CLP (1 cert) hasta $99.900 CLP (50 certs). Ver detalle en /precios.",
+        a: "Crear y editar actas es gratis e ilimitado. Solo pagas cuando certificas — es decir, cuando el acta queda lista para entregarse formalmente. Las certificaciones se compran en packs one-time. Con el precio de lanzamiento (50% de descuento sobre la lista) van desde $1.490 CLP (1 cert) hasta $49.900 CLP (50 certs). Ver detalle en /precios.",
       },
       {
         q: "¿Funciona en celular?",

@@ -364,7 +364,7 @@ export function Landing() {
           <p className="text-gray-300 mt-4 max-w-xl mx-auto">
             Crea tu acta gratis en minutos. Pagas un pack solo cuando la
             certificas: el sello inmutable que la deja lista para entregar.
-            Desde $2.990, pago único.
+            Desde $1.490 con precio de lanzamiento (−50%), pago único.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
             <Link

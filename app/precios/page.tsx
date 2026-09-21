@@ -5,7 +5,7 @@ import { pricingProductSchema } from "@/lib/structured-data";
 export const metadata = {
   title: "Precios",
   description:
-    "Packs de certificaciones one-time. Crea actas gratis; paga solo cuando certificas. Desde $2.990 CLP (1 cert) hasta $99.900 (50 certs).",
+    "Packs de certificaciones one-time. Crea actas gratis; paga solo cuando certificas. Precio de lanzamiento −50%: desde $1.490 CLP (1 cert) hasta $49.900 (50 certs).",
   alternates: { canonical: "/precios" },
 };
 
