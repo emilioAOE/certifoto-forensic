@@ -1,24 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Fingerprint, Mail, CheckCircle, ArrowRight, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Proteccion anti-abuso del magic link. Un formulario de login es un vector
+ * para que un bot haga enviar correos a direcciones inventadas; esos rebotes
+ * golpean la reputacion de la cuenta SES compartida con otros sitios.
+ *  - Turnstile (Cloudflare): se activa solo si hay site key. Supabase valida
+ *    el token con la secret key configurada en Auth > Bot and Abuse Protection.
+ *  - Cooldown de reenvio: evita disparar N correos al mismo buzon en segundos.
+ * En Supabase ademas hay que bajar el rate limit de emails (Auth > Rate Limits).
+ */
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
+const RESEND_COOLDOWN_S = 60;
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+      reset: (id?: string) => void;
+      remove: (id: string) => void;
+    };
+  }
+}
+
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+  const [captcha, setCaptcha] = useState<string | null>(null);
+  // Los tokens de Turnstile son de un solo uso: remontamos el widget tras cada intento.
+  const [captchaNonce, setCaptchaNonce] = useState(0);
 
-  // Error que trae /auth/confirm si el link falló o expiró.
+  const captchaRequired = TURNSTILE_SITE_KEY !== "";
+  const onCaptchaToken = useCallback((t: string | null) => setCaptcha(t), []);
+
+  // Error que trae /auth/confirm si el link fallo o expiro.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const err = new URLSearchParams(window.location.search).get("error");
     if (err) setError(traducirError(err));
   }, []);
+
+  // Cuenta regresiva del cooldown.
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((c) => (c > 0 ? c - 1 : 0)), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +62,14 @@ export function LoginForm() {
     const clean = email.trim().toLowerCase();
     if (!EMAIL_RE.test(clean)) {
       setError("Ingresa un email válido.");
+      return;
+    }
+    if (cooldown > 0) {
+      setError(`Espera ${cooldown} s antes de pedir otro enlace.`);
+      return;
+    }
+    if (captchaRequired && !captcha) {
+      setError("Completa la verificación de seguridad.");
       return;
     }
     setSending(true);
@@ -36,6 +80,7 @@ export function LoginForm() {
         options: {
           emailRedirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
           shouldCreateUser: true,
+          ...(captcha ? { captchaToken: captcha } : {}),
         },
       });
       if (err) {
@@ -43,10 +88,13 @@ export function LoginForm() {
         return;
       }
       setSent(true);
+      setCooldown(RESEND_COOLDOWN_S);
     } catch {
       setError("No pudimos enviar el enlace. Intenta de nuevo en un momento.");
     } finally {
       setSending(false);
+      setCaptcha(null);
+      setCaptchaNonce((n) => n + 1);
     }
   };
 
@@ -66,11 +114,13 @@ export function LoginForm() {
           onClick={() => setSent(false)}
           className="mt-6 text-sm text-accent-dark hover:underline"
         >
-          Usar otro correo
+          {cooldown > 0 ? `Usar otro correo (reenvío en ${cooldown} s)` : "Usar otro correo"}
         </button>
       </div>
     );
   }
+
+  const submitDisabled = sending || cooldown > 0 || (captchaRequired && !captcha);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,6 +141,8 @@ export function LoginForm() {
         </div>
       </div>
 
+      {captchaRequired && <Turnstile key={captchaNonce} onToken={onCaptchaToken} />}
+
       {error && (
         <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
           {error}
@@ -99,11 +151,15 @@ export function LoginForm() {
 
       <button
         type="submit"
-        disabled={sending}
+        disabled={submitDisabled}
         className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-accent text-white px-4 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {sending ? "Enviando enlace…" : "Enviarme el enlace de acceso"}
-        {!sending && <ArrowRight className="h-4 w-4" />}
+        {sending
+          ? "Enviando enlace…"
+          : cooldown > 0
+            ? `Espera ${cooldown} s`
+            : "Enviarme el enlace de acceso"}
+        {!sending && cooldown === 0 && <ArrowRight className="h-4 w-4" />}
       </button>
 
       <p className="text-[11px] text-gray-500 text-center leading-relaxed">
@@ -115,8 +171,62 @@ export function LoginForm() {
   );
 }
 
+/** Widget de Cloudflare Turnstile (render explicito, compatible con React). */
+function Turnstile({ onToken }: { onToken: (token: string | null) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !ref.current) return;
+
+    const render = () => {
+      if (!window.turnstile || !ref.current || widgetId.current) return;
+      widgetId.current = window.turnstile.render(ref.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme: "light",
+        callback: (token: string) => onToken(token),
+        "expired-callback": () => onToken(null),
+        "error-callback": () => onToken(null),
+      });
+    };
+
+    if (window.turnstile) {
+      render();
+    } else {
+      const src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      let script = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+      if (!script) {
+        script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", render);
+      return () => {
+        script?.removeEventListener("load", render);
+        if (widgetId.current && window.turnstile) {
+          window.turnstile.remove(widgetId.current);
+          widgetId.current = null;
+        }
+      };
+    }
+
+    return () => {
+      if (widgetId.current && window.turnstile) {
+        window.turnstile.remove(widgetId.current);
+        widgetId.current = null;
+      }
+    };
+  }, [onToken]);
+
+  return <div ref={ref} className="min-h-[65px]" />;
+}
+
 function traducirError(msg: string): string {
   const m = msg.toLowerCase();
+  if (m.includes("captcha")) {
+    return "La verificación de seguridad falló. Inténtalo de nuevo.";
+  }
   if (m.includes("expired") || m.includes("invalid")) {
     return "El enlace expiró o ya fue usado. Pide uno nuevo.";
   }
@@ -129,7 +239,7 @@ function traducirError(msg: string): string {
   return "No pudimos completar el acceso. Pide un enlace nuevo.";
 }
 
-/** Bloque lateral: por qué crear cuenta. */
+/** Bloque lateral: por que crear cuenta. */
 export function LoginBenefits() {
   return (
     <div className="space-y-4">
