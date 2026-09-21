@@ -101,8 +101,9 @@ export function MisCreditosPage() {
           Mis créditos
         </h1>
         <p className="text-sm text-muted mt-1">
-          Cada vez que certificas un acta consumes 1 crédito. La app sigue
-          siendo gratis y los borradores son ilimitados.
+          Cada vez que certificas un acta consumes 1 crédito: es lo que
+          desbloquea la descarga del PDF y el envío por correo. Crear y editar
+          actas sigue siendo gratis e ilimitado.
         </p>
       </header>
 

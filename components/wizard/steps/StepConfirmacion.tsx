@@ -150,9 +150,9 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
           <ShieldCheck className="h-4 w-4 text-accent-dark shrink-0 mt-0.5" />
           <p className="text-xs text-gray-700 leading-relaxed">
             Al apretar <span className="font-semibold">Generar certificado</span>{" "}
-            se sella el documento (queda inmutable, con su huella digital), se
-            consume 1 crédito y el acta ya no se podrá editar. Después solo
-            podrás descargarlo.
+            se sella el documento (queda inmutable, con su huella digital) y se
+            consume 1 crédito. Ahí se desbloquean la descarga del PDF y el
+            envío por correo; el acta ya no se podrá editar.
           </p>
         </div>
       </div>

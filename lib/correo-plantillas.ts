@@ -71,7 +71,7 @@ ${paso(2, "Sube las fotos por ambiente", "La IA reconoce el ambiente y describe 
 ${paso(3, "Revisa y certifica", "Cada foto queda con su huella SHA-256 y fecha. El PDF final es auto-verificable por cualquiera, sin cuenta.")}
 </table>
 <p style="margin:0 0 22px">${boton(url("/dashboard", "bienvenida"), "Crear mi primera acta")}</p>
-<p style="margin:0 0 10px;color:${GRIS};font-size:14px">Crear y editar actas es gratis y sin límite. Solo pagas al certificar, y ahora con <strong style="color:${TINTA}">precio de lanzamiento (−50%)</strong>: ${enlace(url("/precios", "bienvenida"), "ver packs")}.</p>
+<p style="margin:0 0 10px;color:${GRIS};font-size:14px">Crear y editar actas es gratis y sin límite. Solo pagas al certificar, que es lo que desbloquea la descarga del PDF y el envío por correo, y ahora con <strong style="color:${TINTA}">precio de lanzamiento (−50%)</strong>: ${enlace(url("/precios", "bienvenida"), "ver packs")}.</p>
 <p style="margin:0 0 10px;color:${GRIS};font-size:14px">¿Prefieres partir en papel? ${enlace(url("/plantilla", "bienvenida"), "Descarga la plantilla de acta en PDF")}, gratis.</p>
 <p style="margin:0 0 10px;color:${GRIS};font-size:14px">Tus actas quedan respaldadas en tu cuenta: puedes seguir desde el celular o desde otro computador.</p>
 <p style="margin:18px 0 0">Si algo no te funciona o tienes una duda, responde este correo: te contesto yo.</p>
@@ -114,7 +114,7 @@ ${paso(3, "Compraventa", "Estado del inmueble antes de la entrega material (mese
   <li>Certifica cuando esté lista: PDF inmutable, auto-verificable en certifoto.cl/forensic.</li>
 </ul>
 <p style="margin:0 0 22px">${boton(url("/dashboard", "seguimiento"), "Entrar a CertiFoto")}</p>
-<p style="margin:0 0 10px;color:${GRIS};font-size:14px">Crear actas sigue siendo gratis. Certificar tiene precio de lanzamiento (−50%): ${enlace(url("/precios", "seguimiento"), "ver packs")}.</p>
+<p style="margin:0 0 10px;color:${GRIS};font-size:14px">Crear actas sigue siendo gratis. Certificar (lo que desbloquea la descarga y el envío del PDF) tiene precio de lanzamiento (−50%): ${enlace(url("/precios", "seguimiento"), "ver packs")}.</p>
 <p style="margin:18px 0 0">¿Algo no te funcionó o te faltó? Responde este correo y lo vemos: cada respuesta me sirve para mejorar la herramienta.</p>
 <p style="margin:6px 0 0">Emilio<br><span style="color:${GRIS};font-size:13px">CertiFoto</span></p>`,
     `Recibes este correo porque creaste una cuenta en certifoto.cl con ${escapeHtml(o.email)}. No enviamos boletines: este es el último aviso automático de la cuenta.`

@@ -7,7 +7,7 @@ CertiFoto es una aplicación web (mobile-first) que funciona sin necesidad de cr
 ## Cómo funciona
 
 - Crear y editar actas es **gratis e ilimitado**. La app no cobra por crear documentos.
-- Se paga **solo al certificar** un acta. Certificar sella el documento de forma inmutable (congela su hash criptográfico, quita la marca de agua de "BORRADOR" y lo deja como certificado descargable y verificable). Cada certificación consume 1 crédito.
+- Se paga **solo al certificar** un acta, y certificar es lo que la **desbloquea**: sin certificar, el acta se ve completa en la app y en una vista previa del PDF en pantalla (con marca de agua "BORRADOR"), pero no se puede descargar, enviar por correo ni exportar. Certificar sella el documento de forma inmutable (congela su hash criptográfico, quita la marca de agua) y habilita la descarga del PDF verificable, el envío por correo a las partes y el archivo `.certifoto`. Cada certificación consume 1 crédito.
 - Los créditos se compran en **packs one-time** (pago único, sin suscripciones).
 - Flujo: subir o completar los datos del contrato y la propiedad → subir fotos (la IA detecta los ambientes y describe el estado automáticamente) → agregar partes → revisar → generar certificado.
 

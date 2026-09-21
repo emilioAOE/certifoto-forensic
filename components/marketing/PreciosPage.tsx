@@ -43,13 +43,13 @@ export function PreciosPage() {
             icon={<Lock className="h-5 w-5" />}
             step="2"
             title="Trabaja gratis"
-            description="Crea, edita y revisa actas todo lo que necesites. Sube fotos, recolecta firmas. Sin límites mientras estén en borrador."
+            description="Crea, edita y revisa actas todo lo que necesites. Sube fotos, recolecta firmas y mira la vista previa en pantalla. Sin límites mientras estén en borrador."
           />
           <ExplainCard
             icon={<Award className="h-5 w-5" />}
             step="3"
             title="Certifica al final"
-            description="Cuando el acta está lista, la sellas con 1 crédito. El PDF queda sin marca de agua, con QR y sello inmutable, listo para tu cliente."
+            description="Cuando el acta está lista, la sellas con 1 crédito. Ahí se desbloquea: descarga del PDF sin marca de agua, envío por correo a las partes y archivo .certifoto, con QR y sello inmutable."
           />
         </div>
       </section>
@@ -71,11 +71,11 @@ export function PreciosPage() {
         <div className="space-y-6">
           <FaqMini
             q="¿Tengo que pagar para empezar?"
-            a="No. La app es gratis para crear, editar y revisar actas. Solo pagas cuando certificas — es decir, cuando el acta queda lista para entregarse formalmente."
+            a="No. La app es gratis para crear, editar y revisar actas, con vista previa del PDF en pantalla. Pagas al certificar: es lo que desbloquea la descarga del PDF, el envío por correo y el archivo .certifoto."
           />
           <FaqMini
             q="¿Qué significa exactamente certificar un acta?"
-            a="Sellar el documento. Se calcula un hash SHA-256 final, se elimina la marca de agua del PDF, se inserta un QR de verificación y el acta queda inmutable. También se puede compartir como archivo .certifoto verificable. Esto requiere 1 crédito."
+            a="Sellar el documento y desbloquearlo. Se calcula un hash SHA-256 final, se elimina la marca de agua, se inserta un QR de verificación y el acta queda inmutable. Desde ese momento puedes descargar el PDF, enviarlo por correo y compartirlo como archivo .certifoto verificable. Requiere 1 crédito."
           />
           <FaqMini
             q="¿Caducan los créditos?"
@@ -83,11 +83,11 @@ export function PreciosPage() {
           />
           <FaqMini
             q="¿Cómo me cobran?"
-            a="Por ahora estamos activando los packs manualmente. Cuando solicitas un pack desde el formulario de contacto, coordinamos el pago vía transferencia o WhatsApp y activamos tus créditos. Pronto vamos a integrar pago directo con tarjeta."
+            a="Con tarjeta o transferencia a través de Flow, directamente desde esta página. Los créditos quedan en tu cuenta al instante. Si prefieres coordinar el pago por otra vía, escríbenos desde el formulario de contacto."
           />
           <FaqMini
-            q="¿Qué pasa si limpio mi navegador?"
-            a="Hoy los créditos viven en tu navegador (igual que tus actas). Si limpias datos o cambias de dispositivo, perderías los créditos no usados. Por eso recomendamos certificar las actas a medida que se completan. En la siguiente fase agregaremos cuenta y respaldo en la nube."
+            q="¿Qué pasa si limpio mi navegador o cambio de equipo?"
+            a="Nada. Los créditos viven en tu cuenta, no en el navegador: inicias sesión con tu correo desde cualquier dispositivo y ahí están. Tus actas también se respaldan en la nube cuando inicias sesión."
           />
           <FaqMini
             q="¿Y si necesito más de 50 certificaciones al mes?"

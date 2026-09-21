@@ -729,6 +729,8 @@ interface PdfJsLib {
         render: (params: {
           canvasContext: CanvasRenderingContext2D;
           viewport: { width: number; height: number };
+          /** "print" evita requestAnimationFrame: sigue dibujando con la pestaña oculta. */
+          intent?: "display" | "print";
         }) => { promise: Promise<void> };
       }>;
     }>;
@@ -739,7 +741,8 @@ interface PdfJsLib {
 
 let pdfJsCache: PdfJsLib | null = null;
 
-async function loadPdfJs(): Promise<PdfJsLib> {
+/** Carga pdf.js desde /public (ESM nativo). La reutiliza la vista previa del acta. */
+export async function loadPdfJs(): Promise<PdfJsLib> {
   if (pdfJsCache) return pdfJsCache;
 
   // PDF.js v5 es ESM puro y rompe la interop de webpack/Next.js

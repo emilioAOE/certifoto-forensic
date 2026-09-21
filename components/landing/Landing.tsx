@@ -89,7 +89,7 @@ export function Landing() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Borradores ilimitados
+                Gratis hasta certificar
               </span>
             </div>
           </div>
@@ -307,8 +307,8 @@ export function Landing() {
           />
           <Step
             n={5}
-            title="Descarga el PDF"
-            description="Obtén un documento formal con fotos, descripciones, observaciones, firmas y registro técnico de cada evidencia."
+            title="Certifica y descarga"
+            description="Con 1 crédito el acta se sella y se desbloquea: PDF sin marca de agua con fotos, descripciones, firmas y registro técnico, listo para descargar o enviar por correo a las partes."
           />
         </div>
       </section>

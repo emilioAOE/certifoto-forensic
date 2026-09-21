@@ -403,6 +403,14 @@ export function ActaWizard() {
     return actaId;
   };
 
+  // Guardar sin certificar: el acta queda en borrador (se ve completa y con
+  // vista previa en pantalla; la descarga se desbloquea al certificar).
+  const handleSaveDraft = () => {
+    if (generating) return;
+    const actaId = createActa();
+    if (actaId) router.push(`/actas/${actaId}`);
+  };
+
   const handleGenerateCertificate = async () => {
     if (generating) return;
     setGenerating(true);
@@ -576,18 +584,28 @@ export function ActaWizard() {
             <ChevronRight className="h-4 w-4" />
           </button>
         ) : (
-          <button
-            onClick={handleGenerateCertificate}
-            disabled={generating}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {generating ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <ShieldCheck className="h-4 w-4" />
-            )}
-            {generating ? "Generando certificado…" : "Generar certificado"}
-          </button>
+          <div className="flex flex-wrap items-center gap-2 justify-end">
+            <button
+              onClick={handleSaveDraft}
+              disabled={generating}
+              className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-2 text-sm text-gray-800 hover:bg-gray-200 disabled:opacity-60 disabled:cursor-not-allowed"
+              title="Guarda el acta en borrador y ábrela: se puede seguir editando y ver la vista previa"
+            >
+              Guardar borrador
+            </button>
+            <button
+              onClick={handleGenerateCertificate}
+              disabled={generating}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {generating ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ShieldCheck className="h-4 w-4" />
+              )}
+              {generating ? "Generando certificado…" : "Generar certificado"}
+            </button>
+          </div>
         )}
       </div>
     </div>

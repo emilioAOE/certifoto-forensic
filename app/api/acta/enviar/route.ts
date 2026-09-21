@@ -63,6 +63,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "json inválido" }, { status: 400 });
   }
 
+  // Solo se envían actas certificadas (el borrador se ve en pantalla, no sale).
+  if (body.certificado !== true) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "not_certified",
+        message: "El envío por correo se desbloquea al certificar el acta.",
+      },
+      { status: 403 }
+    );
+  }
+
   const actaId = texto(body.actaId, 80);
   const ruta = texto(body.ruta, 300);
   const prefijo = `${user.id}/${actaId}/`;

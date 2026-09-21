@@ -38,7 +38,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cuánto cuesta?",
-        a: "Crear y editar actas es gratis e ilimitado. Solo pagas cuando certificas — es decir, cuando el acta queda lista para entregarse formalmente. Las certificaciones se compran en packs one-time. Con el precio de lanzamiento (50% de descuento sobre la lista) van desde $1.490 CLP (1 cert) hasta $49.900 CLP (50 certs). Ver detalle en /precios.",
+        a: "Crear y editar actas es gratis e ilimitado, con vista previa del PDF en pantalla. Solo pagas cuando certificas — y certificar es lo que desbloquea la descarga del PDF, el envío por correo y el archivo .certifoto. Las certificaciones se compran en packs one-time. Con el precio de lanzamiento (50% de descuento sobre la lista) van desde $1.490 CLP (1 cert) hasta $49.900 CLP (50 certs). Ver detalle en /precios.",
       },
       {
         q: "¿Funciona en celular?",
@@ -69,11 +69,11 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Se puede modificar un acta después de certificada?",
-        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua del PDF y queda lista para compartirse como certificado verificable. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento esté verdaderamente listo.",
+        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua y se desbloquean la descarga del PDF, el envío por correo y el archivo .certifoto verificable. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento esté verdaderamente listo.",
       },
       {
         q: "¿El certificado consume 1 crédito cada vez?",
-        a: "Sí. Cada vez que generas un certificado se consume 1 crédito. Crear y editar el acta es gratis e ilimitado — el cobro ocurre solo al sellarla. Los créditos no caducan.",
+        a: "Sí. Cada vez que generas un certificado se consume 1 crédito. Crear y editar el acta es gratis e ilimitado — el cobro ocurre solo al sellarla, y es lo que desbloquea la descarga del PDF y el envío por correo. Sin certificar, el acta se ve en pantalla pero no se descarga. Los créditos no caducan.",
       },
     ],
   },

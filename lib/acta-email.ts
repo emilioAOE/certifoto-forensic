@@ -23,7 +23,7 @@ export type EnviarActaResult =
   | { ok: true; enviados: string[]; fallidos: string[] }
   | {
       ok: false;
-      error: "login_required" | "too_large" | "server";
+      error: "login_required" | "not_certified" | "too_large" | "server";
       message?: string;
     };
 
@@ -48,6 +48,14 @@ export async function enviarActaPorCorreo(
   if (!user) return { ok: false, error: "login_required" };
 
   const { blob, fileName, certified } = await buildActaPdf(acta, property);
+  // El PDF solo sale de la app certificado: el borrador se ve, no se envía.
+  if (!certified) {
+    return {
+      ok: false,
+      error: "not_certified",
+      message: "El envío por correo se desbloquea al certificar el acta (1 crédito).",
+    };
+  }
   if (blob.size > MAX_PDF_BYTES) {
     return {
       ok: false,

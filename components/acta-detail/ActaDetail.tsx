@@ -15,6 +15,7 @@ import {
   Trash2,
   GitCompare,
   Mail,
+  Eye,
 } from "lucide-react";
 import { getActa, getProperty, saveActa, deleteActa, isActaCertified } from "@/lib/storage";
 import {
@@ -40,6 +41,7 @@ import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
 import { BulkPhotoUploader } from "./BulkPhotoUploader";
 import { SendActaDialog } from "./SendActaDialog";
+import { ActaPreviewDialog } from "./ActaPreviewDialog";
 import { InventorySection } from "@/components/inventory/InventorySection";
 import { generateActaPdf } from "@/lib/acta-pdf";
 import { useToast } from "@/components/ui/Toast";
@@ -68,6 +70,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
   const [credits, setCredits] = useState(0);
   const [showBulkUploader, setShowBulkUploader] = useState(false);
   const [sendOpen, setSendOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [validationModal, setValidationModal] =
     useState<ValidationModalState | null>(null);
 
@@ -224,6 +227,24 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     }
   };
 
+  // Descargar, enviar por correo y .certifoto se desbloquean al certificar:
+  // sin certificar solo hay vista previa en pantalla.
+  const handleSendClick = async () => {
+    if (!acta) return;
+    if (!isActaCertified(acta)) {
+      const ok = await confirm({
+        title: "Certifica el acta para enviarla",
+        message:
+          "El envío por correo, la descarga del PDF y el archivo .certifoto se desbloquean al certificar el acta (1 crédito). Mientras tanto puedes revisarla en la vista previa.",
+        variant: "default",
+        confirmLabel: "Certificar ahora",
+      });
+      if (ok) await handleCertify();
+      return;
+    }
+    setSendOpen(true);
+  };
+
   const handleDelete = async () => {
     if (!acta) return;
     const ok = await confirm({
@@ -335,28 +356,40 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               Eliminar
             </button>
           )}
+          {certified ? (
+            <button
+              onClick={handleGeneratePdf}
+              disabled={generatingPdf}
+              className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-medium hover:bg-emerald-700 disabled:opacity-50"
+            >
+              <FileDown className="h-3.5 w-3.5" />
+              {generatingPdf ? "Generando..." : "Descargar certificado"}
+            </button>
+          ) : (
+            <button
+              onClick={() => setPreviewOpen(true)}
+              disabled={!property}
+              className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+              title="Ver el PDF en pantalla, con marca de agua. Para descargarlo, certifica el acta."
+            >
+              <Eye className="h-3.5 w-3.5" />
+              Vista previa
+            </button>
+          )}
           <button
-            onClick={handleGeneratePdf}
-            disabled={generatingPdf}
-            className={cn(
-              "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium disabled:opacity-50",
-              certified
-                ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                : "bg-gray-100 border border-gray-200 text-gray-700 hover:bg-gray-200"
-            )}
-          >
-            <FileDown className="h-3.5 w-3.5" />
-            {generatingPdf
-              ? "Generando..."
-              : certified
-              ? "Descargar certificado"
-              : "Descargar PDF (borrador)"}
-          </button>
-          <button
-            onClick={() => setSendOpen(true)}
+            onClick={handleSendClick}
             disabled={!property}
-            className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-50"
-            title="Enviar el PDF por correo a las partes"
+            className={cn(
+              "inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium disabled:opacity-50",
+              certified
+                ? "bg-gray-100 border-gray-200 text-gray-700 hover:bg-gray-200"
+                : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
+            )}
+            title={
+              certified
+                ? "Enviar el PDF por correo a las partes"
+                : "Se desbloquea al certificar el acta"
+            }
           >
             <Mail className="h-3.5 w-3.5" />
             Enviar por correo
@@ -380,6 +413,20 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         />
       )}
 
+      {property && !certified && (
+        <ActaPreviewDialog
+          open={previewOpen}
+          onClose={() => setPreviewOpen(false)}
+          acta={acta}
+          property={property}
+          credits={credits}
+          onCertify={() => {
+            setPreviewOpen(false);
+            void handleCertify();
+          }}
+        />
+      )}
+
       {/* Banner de certificacion */}
       {certified ? (
         <section className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 flex items-start gap-2">
@@ -397,10 +444,11 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         <section className="rounded-lg border border-amber-200 bg-amber-50 p-3 flex items-start gap-2">
           <Lock className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
           <div className="flex-1 text-xs text-amber-900 leading-relaxed">
-            <strong className="font-semibold">Acta en borrador.</strong> El PDF
-            lleva marca de agua y no se puede compartir como{" "}
-            <span className="font-mono">.certifoto</span> hasta que la
-            certifiques. Cuando esté lista, certifica el acta para sellarla.{" "}
+            <strong className="font-semibold">Acta en borrador.</strong> La ves
+            completa aquí y en la vista previa, pero la descarga del PDF, el
+            envío por correo y el archivo{" "}
+            <span className="font-mono">.certifoto</span> se desbloquean al
+            certificarla (1 crédito).{" "}
             <Link
               href="/precios"
               className="underline font-semibold hover:text-amber-700"
