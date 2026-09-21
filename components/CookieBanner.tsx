@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Cookie, X } from "lucide-react";
+import { pixelActivo } from "@/lib/meta-pixel";
 
 const STORAGE_KEY = "certifoto:cookie-consent";
 
@@ -50,8 +51,9 @@ export function CookieBanner() {
             Usamos cookies técnicas
           </p>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Solo usamos cookies estrictamente necesarias para que la plataforma
-            funcione. No usamos cookies publicitarias ni de seguimiento.{" "}
+            {pixelActivo()
+              ? "Usamos cookies técnicas para que la plataforma funcione y el píxel de Meta para medir nuestras campañas en Instagram. No vendemos tus datos."
+              : "Solo usamos cookies estrictamente necesarias para que la plataforma funcione. No usamos cookies publicitarias ni de seguimiento."}{" "}
             <Link
               href="/privacidad"
               className="text-accent-dark hover:underline font-medium"

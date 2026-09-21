@@ -66,8 +66,9 @@ CertiFoto usa:
 - **Cookies técnicas estrictamente necesarias** para que el sitio funcione.
 - **LocalStorage** para guardar tus actas localmente (no es una cookie pero sirve a un propósito similar).
 - **Vercel Analytics** para métricas anónimas y agregadas. No identifica usuarios individuales y no requiere consentimiento bajo la mayoría de jurisdicciones.
+- **Píxel de Meta (Facebook/Instagram)**, solo mientras tengamos campañas activas, para saber si nuestros anuncios traen visitas y actas creadas. Meta puede usar esa información según su propia política de datos; puedes limitar los anuncios personalizados desde la configuración de tu cuenta de Meta.
 
-No usamos cookies de seguimiento publicitario, remarketing ni perfiles para ventas a terceros.
+No vendemos datos a terceros ni construimos perfiles de usuarios para venderlos.
 
 Puedes limpiar el almacenamiento del sitio en cualquier momento desde la configuración de tu navegador.
 

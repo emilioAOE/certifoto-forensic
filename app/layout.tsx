@@ -8,6 +8,7 @@ import { StorageProvider } from "@/components/StorageProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import { ConfirmDialogProvider } from "@/components/ui/ConfirmDialog";
 import ExpansielAnalytics from "@/components/ExpansielAnalytics";
+import MetaPixel from "@/components/MetaPixel";
 import NewsletterBar from "@/components/NewsletterBar";
 import { SessionBootstrap } from "@/components/auth/SessionBootstrap";
 
@@ -126,6 +127,7 @@ export default function RootLayout({
         </ToastProvider>
         <Analytics />
         <ExpansielAnalytics />
+        <MetaPixel />
       </body>
     </html>
   );

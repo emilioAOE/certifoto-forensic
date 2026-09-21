@@ -33,6 +33,8 @@ import {
 } from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
 import { certifyActa } from "@/lib/acta-certify";
+import { track } from "@/lib/expansiel-analytics";
+import { pixel } from "@/lib/meta-pixel";
 import { syncContactsFromActa } from "@/lib/contacts";
 import { getWizardMockData } from "@/lib/mock-data";
 import { StepTipo } from "./steps/StepTipo";
@@ -400,6 +402,9 @@ export function ActaWizard() {
     saveActa(withAudit);
     // Sincronizar partes con la agenda de contactos
     syncContactsFromActa(withAudit);
+    // La conversión que optimizan las campañas: acta creada.
+    track("acta_creada", { tipo: data.type, fotos: withAudit.photos.length });
+    pixel("ActaCreada", { content_name: data.type }, { custom: true });
     return actaId;
   };
 

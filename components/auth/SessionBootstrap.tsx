@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useSupabaseUser } from "@/lib/supabase/use-user";
 import { createClient } from "@/lib/supabase/client";
 import { track } from "@/lib/expansiel-analytics";
+import { pixel } from "@/lib/meta-pixel";
 import { refreshCredits } from "@/lib/credits";
 
 /**
@@ -63,6 +64,7 @@ export function SessionBootstrap() {
 
       if (esNuevo) {
         track("signup", { email: user.email, plan: "free" }, { userId: user.id });
+        pixel("CompleteRegistration", { content_name: "magic_link" });
       } else if (!visto) {
         track("login_first", { email: user.email }, { userId: user.id });
       } else {

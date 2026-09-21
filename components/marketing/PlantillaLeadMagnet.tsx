@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Download, CheckCircle, FileText, ArrowRight } from "lucide-react";
+import { pixel } from "@/lib/meta-pixel";
 
 const PDF_URL = "/plantilla-acta-entrega-certifoto.pdf";
 const LS_KEY = "certifoto_plantilla_descargada";
@@ -63,6 +64,7 @@ export function PlantillaLeadMagnet() {
     } catch {
       // No bloqueamos la descarga por un fallo de red.
     } finally {
+      pixel("Lead", { content_name: "plantilla-acta-entrega" });
       try {
         localStorage.setItem(LS_KEY, email.trim() || "1");
       } catch {

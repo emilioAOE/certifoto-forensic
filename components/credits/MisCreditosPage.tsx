@@ -22,6 +22,9 @@ import {
 } from "@/lib/credits";
 import { PacksGrid } from "@/components/marketing/PacksGrid";
 import { useToast } from "@/components/ui/Toast";
+import { createClient } from "@/lib/supabase/client";
+import { track } from "@/lib/expansiel-analytics";
+import { pixel } from "@/lib/meta-pixel";
 
 const REASON_LABEL: Record<CreditEntry["reason"], string> = {
   welcome: "Crédito de bienvenida",
@@ -59,6 +62,7 @@ export function MisCreditosPage() {
     if (!pago) return;
     if (pago === "pagado") {
       toast.success("Pago recibido", "Tus créditos ya están en tu cuenta.");
+      void registrarCompra(params.get("orden"));
     } else if (pago === "pendiente") {
       toast.info("Pago pendiente de confirmación");
     } else if (pago === "rechazado" || pago === "anulado") {
@@ -72,6 +76,54 @@ export function MisCreditosPage() {
     void refreshCredits();
     window.history.replaceState({}, "", "/mis-creditos");
   }, [toast]);
+
+  /**
+   * Conversión de compra para las campañas (píxel de Meta + Analytics Hub).
+   * Lee la orden con la sesión del comprador (RLS) para enviar el monto real
+   * y se guarda una marca por orden para no contarla dos veces si recarga.
+   */
+  const registrarCompra = async (orden: string | null) => {
+    if (!orden) return;
+    const clave = `cf_compra_registrada_${orden}`;
+    try {
+      if (localStorage.getItem(clave)) return;
+    } catch {
+      /* sin localStorage: se registra igual */
+    }
+    try {
+      const { data } = await createClient()
+        .from("cf_pagos")
+        .select("pack_id, creditos, monto_clp")
+        .eq("commerce_order", orden)
+        .maybeSingle();
+      if (!data) return;
+      const fila = data as { pack_id: string; creditos: number; monto_clp: number };
+      pixel(
+        "Purchase",
+        {
+          value: fila.monto_clp,
+          currency: "CLP",
+          content_ids: [fila.pack_id],
+          content_type: "product",
+          num_items: fila.creditos,
+        },
+        { eventID: orden }
+      );
+      track("pack_purchased", {
+        orden,
+        pack: fila.pack_id,
+        creditos: fila.creditos,
+        monto_clp: fila.monto_clp,
+      });
+      try {
+        localStorage.setItem(clave, "1");
+      } catch {
+        /* ignore */
+      }
+    } catch (err) {
+      console.warn("[compra] no se pudo registrar la conversión:", err);
+    }
+  };
 
   const handleDevSeed = (amount: number) => {
     const result = addCredits(

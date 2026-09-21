@@ -6,6 +6,7 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { PACKS, formatCLP, LAUNCH_PRICING_LABEL, type Pack } from "@/lib/packs";
 import { cn } from "@/lib/cn";
 import { useSupabaseUser } from "@/lib/supabase/use-user";
+import { pixel } from "@/lib/meta-pixel";
 
 interface PacksGridProps {
   /** marketing = vitrina con detalle; compact = version para Mis creditos. */
@@ -127,6 +128,12 @@ function ComprarPackButton({ pack }: { pack: Pack }) {
       return;
     }
     setBusy(true);
+    pixel("InitiateCheckout", {
+      value: pack.priceCLP,
+      currency: "CLP",
+      content_ids: [pack.id],
+      num_items: pack.size,
+    });
     try {
       const res = await fetch("/api/pagos/flow/crear", {
         method: "POST",
