@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { PACKS, formatCLP, LAUNCH_PRICING_LABEL, type Pack } from "@/lib/packs";
@@ -104,18 +104,26 @@ function PackCard({ pack, compact }: { pack: Pack; compact: boolean }) {
 
 /**
  * Compra con Flow. Sin sesion, primero al login (los creditos van a la
- * cuenta). Con sesion, pide la orden a /api/pagos/flow/crear y redirige a
- * Flow. Queda la via manual (transferencia) como alternativa.
+ * cuenta) y, al volver del magic link, la compra se retoma sola: el `next`
+ * del login trae `?comprar=<pack>` y el boton lo detecta al montar. Con
+ * sesion, pide la orden a /api/pagos/flow/crear y redirige a Flow.
  */
 function ComprarPackButton({ pack }: { pack: Pack }) {
   const { user, loading } = useSupabaseUser();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const retomada = useRef(false);
+
+  /** Vuelve a esta misma pagina (precios o mis-creditos) con el pack elegido. */
+  const irAlLogin = () => {
+    const volver = `${window.location.pathname}?comprar=${pack.id}`;
+    window.location.href = `/login?next=${encodeURIComponent(volver)}`;
+  };
 
   const comprar = async () => {
     setError(null);
     if (!user) {
-      window.location.href = `/login?next=${encodeURIComponent("/precios")}`;
+      irAlLogin();
       return;
     }
     setBusy(true);
@@ -131,7 +139,7 @@ function ComprarPackButton({ pack }: { pack: Pack }) {
         error?: string;
       };
       if (res.status === 401) {
-        window.location.href = `/login?next=${encodeURIComponent("/precios")}`;
+        irAlLogin();
         return;
       }
       if (!res.ok || !data.url) {
@@ -145,6 +153,19 @@ function ComprarPackButton({ pack }: { pack: Pack }) {
       setBusy(false);
     }
   };
+
+  // Retomar la compra tras el login: /precios?comprar=p3 → directo a Flow.
+  useEffect(() => {
+    if (loading || !user || retomada.current) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("comprar") !== pack.id) return;
+    retomada.current = true;
+    params.delete("comprar");
+    const qs = params.toString();
+    window.history.replaceState(null, "", window.location.pathname + (qs ? `?${qs}` : ""));
+    void comprar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, user, pack.id]);
 
   return (
     <div>
