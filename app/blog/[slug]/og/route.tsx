@@ -155,8 +155,9 @@ export async function GET(
               </div>
               <div style={{ fontSize: 20, color: "#6b7280" }}>· Blog</div>
             </div>
+            {/* Un solo nodo de texto: Satori exige flex en divs con >1 hijo. */}
             <div style={{ fontSize: 18, color: "#6b7280" }}>
-              {post.readMinutes} min de lectura
+              {`${post.readMinutes} min de lectura`}
             </div>
           </div>
         </div>
