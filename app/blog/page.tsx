@@ -3,6 +3,7 @@ import { Clock, ArrowRight } from "lucide-react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { BLOG_POSTS } from "@/lib/blog-posts";
+import { BlogCover } from "@/components/blog/BlogCover";
 
 export const metadata = {
   title: "Blog",
@@ -49,18 +50,11 @@ export default function BlogIndex() {
             className="group block rounded-2xl border border-gray-200 bg-white overflow-hidden hover:border-accent hover:shadow-md transition-all"
           >
             <div className="grid md:grid-cols-2 gap-0">
-              <div className="bg-gradient-to-br from-accent-softer to-accent-light/40 p-8 sm:p-12 flex items-center justify-center">
-                <div className="aspect-[4/3] w-full max-w-md rounded-xl bg-white border border-gray-200 shadow-sm p-6 flex items-center justify-center">
-                  <div className="text-center">
-                    <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-2">
-                      {featured.category}
-                    </p>
-                    <p className="text-xl font-bold text-gray-900 leading-tight">
-                      {featured.title}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <BlogCover
+                post={featured}
+                priority
+                className="aspect-[16/9] md:aspect-auto md:h-full md:min-h-[300px] border-b md:border-b-0 md:border-r border-gray-100"
+              />
               <div className="p-8 sm:p-10 flex flex-col justify-center">
                 <div className="text-xs text-accent-dark font-semibold uppercase tracking-wider mb-3">
                   Destacado · {featured.category}
@@ -98,23 +92,29 @@ export default function BlogIndex() {
             <Link
               key={p.slug}
               href={`/blog/${p.slug}`}
-              className="group block rounded-xl border border-gray-200 bg-white p-6 hover:border-accent hover:shadow-sm transition-all"
+              className="group flex flex-col rounded-xl border border-gray-200 bg-white overflow-hidden hover:border-accent hover:shadow-sm transition-all"
             >
-              <div className="text-xs text-accent-dark font-semibold uppercase tracking-wider mb-3">
-                {p.category}
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 tracking-tight group-hover:text-accent-dark transition-colors mb-2 leading-snug">
-                {p.title}
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">
-                {p.excerpt}
-              </p>
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>{formatDate(p.date)}</span>
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {p.readMinutes} min
-                </span>
+              <BlogCover
+                post={p}
+                className="aspect-[16/9] border-b border-gray-100"
+              />
+              <div className="flex flex-col flex-1 p-6">
+                <div className="text-xs text-accent-dark font-semibold uppercase tracking-wider mb-3">
+                  {p.category}
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 tracking-tight group-hover:text-accent-dark transition-colors mb-2 leading-snug">
+                  {p.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                  {p.excerpt}
+                </p>
+                <div className="mt-auto flex items-center justify-between text-xs text-gray-500">
+                  <span>{formatDate(p.date)}</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {p.readMinutes} min
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

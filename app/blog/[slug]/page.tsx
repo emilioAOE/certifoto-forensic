@@ -5,6 +5,7 @@ import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { BlogContent } from "@/components/marketing/BlogContent";
 import { BlogCta } from "@/components/marketing/BlogCta";
+import { BlogCover } from "@/components/blog/BlogCover";
 import { blogCtas } from "@/lib/blog-cta";
 import {
   BLOG_POSTS,
@@ -21,6 +22,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
   if (!post) return { title: "Artículo no encontrado" };
+  // Imagen OG propia de cada artículo (app/blog/[slug]/og/route.tsx).
+  const ogImage = `${SITE_URL}/blog/${post.slug}/og`;
   return {
     title: post.title,
     description: post.excerpt,
@@ -37,7 +40,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
       tags: [post.category],
       images: [
         {
-          url: "/opengraph-image",
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -48,7 +51,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: ["/opengraph-image"],
+      images: [ogImage],
     },
   };
 }
@@ -66,6 +69,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
+    image: [`${SITE_URL}/blog/${post.slug}/og`],
     datePublished: post.date,
     dateModified: post.date,
     author: {
@@ -160,6 +164,12 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           </span>
         </div>
 
+        <BlogCover
+          post={post}
+          priority
+          className="mt-8 -mx-4 sm:mx-0 sm:rounded-2xl sm:border sm:border-gray-100 aspect-[16/9] sm:aspect-[21/9]"
+        />
+
         <div className="mt-10">
           <BlogContent
             content={post.content}
@@ -219,17 +229,23 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                 <Link
                   key={p.slug}
                   href={`/blog/${p.slug}`}
-                  className="group block rounded-xl border border-gray-200 bg-white p-5 hover:border-accent hover:shadow-sm transition-all"
+                  className="group block rounded-xl border border-gray-200 bg-white overflow-hidden hover:border-accent hover:shadow-sm transition-all"
                 >
-                  <div className="text-xs text-accent-dark font-semibold uppercase tracking-wider mb-2">
-                    {p.category}
+                  <BlogCover
+                    post={p}
+                    className="aspect-[2/1] border-b border-gray-100"
+                  />
+                  <div className="p-5">
+                    <div className="text-xs text-accent-dark font-semibold uppercase tracking-wider mb-2">
+                      {p.category}
+                    </div>
+                    <h4 className="text-base font-bold text-gray-900 tracking-tight group-hover:text-accent-dark transition-colors mb-2">
+                      {p.title}
+                    </h4>
+                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+                      {p.excerpt}
+                    </p>
                   </div>
-                  <h4 className="text-base font-bold text-gray-900 tracking-tight group-hover:text-accent-dark transition-colors mb-2">
-                    {p.title}
-                  </h4>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-                    {p.excerpt}
-                  </p>
                 </Link>
               ))}
             </div>
