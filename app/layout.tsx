@@ -9,6 +9,7 @@ import { ToastProvider } from "@/components/ui/Toast";
 import { ConfirmDialogProvider } from "@/components/ui/ConfirmDialog";
 import ExpansielAnalytics from "@/components/ExpansielAnalytics";
 import NewsletterBar from "@/components/NewsletterBar";
+import { SessionBootstrap } from "@/components/auth/SessionBootstrap";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -119,6 +120,7 @@ export default function RootLayout({
             <StorageProvider>
               <AppShell>{children}</AppShell>
               <CookieBanner />
+              <SessionBootstrap />
             </StorageProvider>
           </ConfirmDialogProvider>
         </ToastProvider>

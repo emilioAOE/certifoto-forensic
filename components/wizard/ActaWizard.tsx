@@ -415,7 +415,10 @@ export function ActaWizard() {
     // sellada e inmutable. Al caer al detalle, ya esta certificada (solo
     // lectura + descarga). Sin creditos -> a comprar un pack.
     const result = await certifyActa(actaId);
-    if (result.error === "no_credits") {
+    if (result.error === "login_required") {
+      // El acta ya quedo guardada; tras el login vuelve al detalle y certifica.
+      router.push(`/login?next=/actas/${actaId}`);
+    } else if (result.error === "no_credits") {
       router.push(`/precios?from=certify`);
     } else {
       router.push(`/actas/${actaId}`);

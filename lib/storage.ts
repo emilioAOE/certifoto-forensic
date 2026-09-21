@@ -35,6 +35,7 @@ import {
   migrateFromLocalStorageIfNeeded,
 } from "./storage-idb";
 import { hydrateCredits } from "./credits";
+import * as cloud from "./cloud-sync";
 
 // ============================================
 // Cache en memoria
@@ -299,6 +300,7 @@ export function saveActa(acta: Acta): void {
   });
   broadcast({ type: "actas" });
   notifyListeners();
+  cloud.queueActa(updated);
 }
 
 export function deleteActa(id: string): void {
@@ -308,6 +310,7 @@ export function deleteActa(id: string): void {
   );
   broadcast({ type: "actas" });
   notifyListeners();
+  cloud.queueDelete("acta", id);
 }
 
 export function listActaSummaries(): ActaSummary[] {
@@ -355,6 +358,7 @@ export function saveProperty(property: Property): void {
   );
   broadcast({ type: "properties" });
   notifyListeners();
+  cloud.queueProperty(updated);
 }
 
 export function deleteProperty(id: string): void {
@@ -364,6 +368,7 @@ export function deleteProperty(id: string): void {
   );
   broadcast({ type: "properties" });
   notifyListeners();
+  cloud.queueDelete("propiedad", id);
 }
 
 // ============================================
@@ -388,6 +393,7 @@ export function saveContact(contact: Contact): void {
   );
   broadcast({ type: "contacts" });
   notifyListeners();
+  cloud.queueContact(updated);
 }
 
 export function deleteContact(id: string): void {
@@ -397,6 +403,7 @@ export function deleteContact(id: string): void {
   );
   broadcast({ type: "contacts" });
   notifyListeners();
+  cloud.queueDelete("contacto", id);
 }
 
 // ============================================

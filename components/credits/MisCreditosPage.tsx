@@ -13,14 +13,17 @@ import {
 import {
   getCreditsBalance,
   getCreditsHistory,
+  getCreditsMode,
   subscribeToCreditsChanges,
   addCredits,
   type CreditEntry,
+  type CreditsMode,
 } from "@/lib/credits";
 import { PacksGrid } from "@/components/marketing/PacksGrid";
 import { useToast } from "@/components/ui/Toast";
 
 const REASON_LABEL: Record<CreditEntry["reason"], string> = {
+  welcome: "Crédito de bienvenida",
   pack_purchased: "Compra de pack",
   redeem_code: "Canje de código",
   manual_grant: "Carga manual",
@@ -33,17 +36,18 @@ export function MisCreditosPage() {
   const toast = useToast();
   const [balance, setBalance] = useState(0);
   const [history, setHistory] = useState<CreditEntry[]>([]);
+  const [mode, setMode] = useState<CreditsMode>("anon");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    setBalance(getCreditsBalance());
-    setHistory(getCreditsHistory());
-    const unsub = subscribeToCreditsChanges(() => {
+    const refresh = () => {
       setBalance(getCreditsBalance());
       setHistory(getCreditsHistory());
-    });
-    return unsub;
+      setMode(getCreditsMode());
+    };
+    refresh();
+    return subscribeToCreditsChanges(refresh);
   }, []);
 
   const handleDevSeed = (amount: number) => {
@@ -79,29 +83,58 @@ export function MisCreditosPage() {
         </p>
       </header>
 
+      {/* Sin cuenta: los creditos viven en la cuenta, no en el navegador */}
+      {mode === "anon" && (
+        <section className="rounded-2xl border border-accent-light bg-accent-softer p-6 flex items-start justify-between gap-4 flex-wrap">
+          <div className="max-w-md">
+            <div className="flex items-center gap-2 text-xs font-mono text-accent-dark uppercase tracking-wider">
+              <Coins className="h-3.5 w-3.5" />
+              Créditos de tu cuenta
+            </div>
+            <p className="text-lg font-semibold text-gray-900 mt-1">
+              Inicia sesión para ver y usar tus créditos
+            </p>
+            <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+              Los créditos quedan en tu cuenta, no en este navegador: no se
+              pierden al limpiar datos y puedes certificar desde cualquier
+              dispositivo. Crear y editar actas sigue siendo gratis sin cuenta.
+            </p>
+          </div>
+          <Link
+            href="/login?next=/mis-creditos"
+            className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim transition-colors"
+          >
+            Iniciar sesión
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </section>
+      )}
+
       {/* Balance card */}
-      <section className="rounded-2xl border border-accent-light bg-accent-softer p-6 flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-accent-dark uppercase tracking-wider">
-            <Coins className="h-3.5 w-3.5" />
-            Saldo disponible
+      {mode === "server" && (
+        <section className="rounded-2xl border border-accent-light bg-accent-softer p-6 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono text-accent-dark uppercase tracking-wider">
+              <Coins className="h-3.5 w-3.5" />
+              Saldo disponible
+            </div>
+            <div className="text-5xl font-bold text-gray-900 mt-1 tracking-tight">
+              {balance}
+            </div>
+            <div className="text-sm text-gray-600 mt-1">
+              crédito{balance === 1 ? "" : "s"}
+              {balance === 0 && " · compra un pack para empezar a certificar"}
+            </div>
           </div>
-          <div className="text-5xl font-bold text-gray-900 mt-1 tracking-tight">
-            {balance}
-          </div>
-          <div className="text-sm text-gray-600 mt-1">
-            crédito{balance === 1 ? "" : "s"}
-            {balance === 0 && " · compra un pack para empezar a certificar"}
-          </div>
-        </div>
-        <Link
-          href="/precios"
-          className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim transition-colors"
-        >
-          Comprar pack
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </section>
+          <Link
+            href="/precios"
+            className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim transition-colors"
+          >
+            Comprar pack
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </section>
+      )}
 
       {/* Soporte / how to */}
       <section className="rounded-lg border border-info/30 bg-info/5 p-4">
@@ -111,13 +144,12 @@ export function MisCreditosPage() {
             <p className="mb-2">
               Por ahora los packs se activan manualmente. Cuando solicitas un
               pack desde el formulario de contacto, coordinamos el pago vía
-              transferencia o WhatsApp y luego cargamos los créditos en este
-              navegador.
+              transferencia o WhatsApp y cargamos los créditos en tu cuenta.
             </p>
             <p>
-              Limitación: si limpias el navegador o cambias de dispositivo, los
-              créditos no usados se pierden. Recomendamos certificar las actas
-              a medida que se completan. Pronto tendrás una cuenta en la nube.
+              Los créditos no caducan y quedan asociados a tu correo, así que
+              puedes usarlos desde cualquier dispositivo con solo iniciar
+              sesión.
             </p>
           </div>
         </div>

@@ -24,6 +24,7 @@ import {
   downloadBlob,
 } from "@/lib/export-import";
 import { StorageIndicator } from "@/components/dashboard/StorageIndicator";
+import { CloudBackupCard } from "@/components/settings/CloudBackupCard";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { cn } from "@/lib/cn";
@@ -388,6 +389,8 @@ function DataTab() {
   return (
     <div className="space-y-4">
       <StorageIndicator />
+
+      <CloudBackupCard />
 
       <div className="rounded-lg border border-gray-200 bg-white p-6">
         <h3 className="text-sm font-semibold text-gray-900 mb-1">

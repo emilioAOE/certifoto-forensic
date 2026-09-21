@@ -14,13 +14,13 @@ import {
   Search,
   Menu,
   X,
-  LogOut,
   Coins,
   Loader2,
   AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { GlobalSearch } from "./GlobalSearch";
+import { CurrentUserCard, SessionButton } from "./SessionControls";
 import { useStorageReady } from "@/components/StorageProvider";
 
 const NAV_ITEMS = [
@@ -48,7 +48,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname === "/sobre" ||
     pathname === "/contacto" ||
     pathname === "/terminos" ||
-    pathname === "/privacidad";
+    pathname === "/privacidad" ||
+    pathname === "/plantilla" ||
+    pathname === "/login" ||
+    pathname.startsWith("/auth");
 
   // Cmd+K / Ctrl+K abre la busqueda global
   useEffect(() => {
@@ -275,72 +278,9 @@ function SidebarContent({
       </div>
 
       <div className="px-3 py-3 border-t border-gray-100 space-y-2">
-        <Link
-          href="/"
-          className="flex items-center justify-center gap-2 w-full rounded-md bg-gray-50 border border-gray-200 hover:border-gray-300 px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
-          title="Volver al sitio público"
-        >
-          <LogOut className="h-3.5 w-3.5" />
-          Cerrar sesión
-        </Link>
+        <SessionButton />
         <p className="text-[10px] text-gray-400 text-center">v0.5 · Beta</p>
       </div>
     </>
-  );
-}
-
-function CurrentUserCard() {
-  const [name, setName] = useState<string>("");
-  const [role, setRole] = useState<string>("");
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    // Lazy import para evitar SSR
-    import("@/lib/storage").then(({ getCurrentUser, subscribeToStorageChanges }) => {
-      const refresh = () => {
-        const u = getCurrentUser();
-        setName(u.name);
-        setRole(u.role);
-      };
-      refresh();
-      subscribeToStorageChanges(refresh);
-    });
-  }, []);
-
-  if (!name) return null;
-
-  const initials = name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
-
-  const roleLabel: Record<string, string> = {
-    broker: "Corredor",
-    landlord: "Arrendador",
-    tenant: "Arrendatario",
-    property_manager: "Administrador",
-    admin: "Administrador",
-  };
-
-  return (
-    <Link
-      href="/configuracion"
-      className="block px-3 py-2.5 mx-2 mt-2 rounded-md bg-gray-50 border border-gray-100 hover:border-gray-200 transition-colors"
-      title="Editar perfil en configuración"
-    >
-      <div className="flex items-center gap-2.5">
-        <div className="h-8 w-8 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold">
-          {initials || "?"}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
-          <p className="text-[10px] text-gray-500 truncate">
-            {roleLabel[role] ?? role}
-          </p>
-        </div>
-      </div>
-    </Link>
   );
 }

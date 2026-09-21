@@ -124,6 +124,19 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       });
       return;
     }
+    // Certificar exige cuenta: el credito queda atado al usuario, no al navegador.
+    const { getCreditsMode } = await import("@/lib/credits");
+    if (getCreditsMode() === "anon") {
+      const ok = await confirm({
+        title: "Inicia sesión para certificar",
+        message:
+          "El crédito de certificación queda en tu cuenta, no en este navegador: no se pierde y puedes seguir desde otro dispositivo. Toma un minuto: te enviamos un enlace al correo.",
+        variant: "default",
+        confirmLabel: "Iniciar sesión",
+      });
+      if (ok) router.push(`/login?next=/actas/${acta.id}`);
+      return;
+    }
     if (getCreditsBalance() < 1) {
       const ok = await confirm({
         title: "Sin créditos disponibles",
@@ -148,6 +161,11 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     try {
       const result = await certifyActa(acta.id);
       if (!result.ok) {
+        if (result.error === "login_required") {
+          toast.info("Inicia sesión para certificar");
+          router.push(`/login?next=/actas/${acta.id}`);
+          return;
+        }
         if (result.error === "no_credits") {
           toast.error(
             "Sin créditos",
