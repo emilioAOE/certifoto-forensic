@@ -15,6 +15,7 @@ import {
   getCreditsHistory,
   getCreditsMode,
   subscribeToCreditsChanges,
+  refreshCredits,
   addCredits,
   type CreditEntry,
   type CreditsMode,
@@ -49,6 +50,28 @@ export function MisCreditosPage() {
     refresh();
     return subscribeToCreditsChanges(refresh);
   }, []);
+
+  // Resultado del pago cuando el usuario vuelve desde Flow (?pago=...).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const pago = params.get("pago");
+    if (!pago) return;
+    if (pago === "pagado") {
+      toast.success("Pago recibido", "Tus créditos ya están en tu cuenta.");
+    } else if (pago === "pendiente") {
+      toast.info("Pago pendiente de confirmación");
+    } else if (pago === "rechazado" || pago === "anulado") {
+      toast.error("Pago no completado", "No se cobró nada. Puedes intentar de nuevo.");
+    } else {
+      toast.error(
+        "No pudimos verificar el pago",
+        "Si el cargo se hizo, escríbenos desde /contacto y lo resolvemos."
+      );
+    }
+    void refreshCredits();
+    window.history.replaceState({}, "", "/mis-creditos");
+  }, [toast]);
 
   const handleDevSeed = (amount: number) => {
     const result = addCredits(

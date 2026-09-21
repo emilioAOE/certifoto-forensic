@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { PACKS, formatCLP, type Pack } from "@/lib/packs";
 import { cn } from "@/lib/cn";
+import { useSupabaseUser } from "@/lib/supabase/use-user";
 
 interface PacksGridProps {
-  /** Si true, los CTA son "Comprar pack" y van a /contacto?pack=N (vitrina). */
+  /** marketing = vitrina con detalle; compact = version para Mis creditos. */
   variant?: "marketing" | "compact";
 }
 
@@ -68,18 +70,7 @@ function PackCard({ pack, compact }: { pack: Pack; compact: boolean }) {
         )}
       </div>
 
-      <Link
-        href={`/contacto?pack=${pack.size}`}
-        className={cn(
-          "inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold transition-colors",
-          pack.highlighted
-            ? "bg-accent text-white hover:bg-accent-dim"
-            : "bg-gray-100 text-gray-900 border border-gray-200 hover:border-accent hover:text-accent-dark"
-        )}
-      >
-        Comprar pack
-        <ArrowRight className="h-3 w-3" />
-      </Link>
+      <ComprarPackButton pack={pack} />
 
       {!compact && (
         <ul className="mt-5 space-y-1.5 pt-4 border-t border-gray-100 text-[11px] text-gray-600">
@@ -97,6 +88,89 @@ function PackCard({ pack, compact }: { pack: Pack; compact: boolean }) {
           </li>
         </ul>
       )}
+    </div>
+  );
+}
+
+/**
+ * Compra con Flow. Sin sesion, primero al login (los creditos van a la
+ * cuenta). Con sesion, pide la orden a /api/pagos/flow/crear y redirige a
+ * Flow. Queda la via manual (transferencia) como alternativa.
+ */
+function ComprarPackButton({ pack }: { pack: Pack }) {
+  const { user, loading } = useSupabaseUser();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const comprar = async () => {
+    setError(null);
+    if (!user) {
+      window.location.href = `/login?next=${encodeURIComponent("/precios")}`;
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch("/api/pagos/flow/crear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packId: pack.id }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        url?: string;
+        error?: string;
+      };
+      if (res.status === 401) {
+        window.location.href = `/login?next=${encodeURIComponent("/precios")}`;
+        return;
+      }
+      if (!res.ok || !data.url) {
+        setError(data.error ?? "No pudimos iniciar el pago. Intenta de nuevo.");
+        setBusy(false);
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setError("Sin conexión. Revisa tu internet e intenta de nuevo.");
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div>
+      <button
+        onClick={() => void comprar()}
+        disabled={busy || loading}
+        className={cn(
+          "w-full inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
+          pack.highlighted
+            ? "bg-accent text-white hover:bg-accent-dim"
+            : "bg-gray-100 text-gray-900 border border-gray-200 hover:border-accent hover:text-accent-dark"
+        )}
+      >
+        {busy ? (
+          <>
+            <Loader2 className="h-3 w-3 animate-spin" />
+            Conectando con Flow…
+          </>
+        ) : (
+          <>
+            Comprar pack
+            <ArrowRight className="h-3 w-3" />
+          </>
+        )}
+      </button>
+      {error && (
+        <p role="alert" className="mt-2 text-[11px] text-red-700 leading-snug">
+          {error}
+        </p>
+      )}
+      <p className="mt-2 text-[10px] text-gray-400 text-center leading-snug">
+        Pago seguro con Flow (tarjeta o transferencia).{" "}
+        <Link href={`/contacto?pack=${pack.size}`} className="underline underline-offset-2">
+          ¿Prefieres coordinarlo por correo?
+        </Link>
+      </p>
     </div>
   );
 }
