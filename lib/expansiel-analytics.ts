@@ -76,6 +76,9 @@ export function track(
   opts: { userId?: string | null } = {}
 ): void {
   if (typeof window === "undefined") return;
+  // El desarrollo local no cuenta: contaminaba las métricas reales (actas y
+  // formularios de prueba desde localhost aparecían como actividad de usuarios).
+  if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname)) return;
   try {
     const geo = readGeo();
     fetch(ANALYTICS_URL, {
