@@ -10,8 +10,34 @@ import {
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { PlantillaLeadMagnet } from "@/components/marketing/PlantillaLeadMagnet";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { faqPageSchema } from "@/lib/structured-data";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
+
+/** Preguntas que la gente hace al buscar la plantilla; salen como FAQ en Google. */
+const FAQ_PLANTILLA = [
+  {
+    question: "¿La plantilla de acta de entrega es gratis?",
+    answer:
+      "Sí. Es un PDF gratuito para arriendos y compraventas en Chile, con checklist por ambiente, medidores, llaves, inventario y firmas. Se descarga al instante a cambio de tu correo.",
+  },
+  {
+    question: "¿Sirve para departamento, casa, oficina o local comercial?",
+    answer:
+      "Sirve para cualquier inmueble urbano: tiene secciones por ambiente que puedes repetir y una sección de inventario para propiedades amobladas o con equipamiento.",
+  },
+  {
+    question: "¿El acta de entrega tiene que ser notarial?",
+    answer:
+      "No. Es un documento privado que firman arrendador y arrendatario (o comprador y vendedor). Lo que le da valor es el detalle, la fecha correcta, las fotos y las firmas de ambas partes.",
+  },
+  {
+    question: "¿Cómo le doy validez a las fotos del acta?",
+    answer:
+      "Con fecha y huella digital verificables. En CertiFoto cada foto recibe una huella SHA-256 y una fecha verificable, y el PDF final se puede comprobar en certifoto.cl/forensic sin cuenta. Crear el acta es gratis.",
+  },
+];
 
 export const metadata = {
   title: "Plantilla gratis: acta de entrega de propiedad (PDF descargable)",
@@ -48,6 +74,7 @@ const INCLUYE = [
 export default function PlantillaPage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={faqPageSchema(FAQ_PLANTILLA)} />
       <LandingHeader />
 
       {/* Hero */}
@@ -159,6 +186,21 @@ export default function PlantillaPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* FAQ (mismo contenido que el JSON-LD: Google exige que sea visible) */}
+      <section className="max-w-3xl mx-auto px-4 py-16">
+        <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-8">
+          Preguntas frecuentes sobre la plantilla
+        </h2>
+        <dl className="space-y-6">
+          {FAQ_PLANTILLA.map((item) => (
+            <div key={item.question}>
+              <dt className="text-base font-semibold text-gray-900">{item.question}</dt>
+              <dd className="mt-1.5 text-sm text-gray-600 leading-relaxed">{item.answer}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
       <LandingFooter />

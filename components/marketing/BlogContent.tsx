@@ -45,8 +45,10 @@ export function BlogContent({ content, midCta }: BlogContentProps) {
  * cortar un parrafo por la mitad. Devuelve -1 si el articulo es muy corto.
  */
 function midCtaIndex(blocks: Block[]): number {
-  if (blocks.length < 10) return -1;
-  const target = Math.floor(blocks.length * 0.45);
+  if (blocks.length < 8) return -1;
+  // 30 % del artículo: la mayoría de los lectores de búsqueda no pasa de la
+  // mitad, así que al 45 % el CTA casi no se veía (1 clic en 480 sesiones).
+  const target = Math.floor(blocks.length * 0.3);
   for (let i = target; i < blocks.length - 3; i++) {
     if (blocks[i].kind === "h2") return i;
   }

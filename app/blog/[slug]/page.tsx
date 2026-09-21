@@ -6,7 +6,10 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { BlogContent } from "@/components/marketing/BlogContent";
 import { BlogCta } from "@/components/marketing/BlogCta";
 import { BlogCover } from "@/components/blog/BlogCover";
+import { BlogStickyCta } from "@/components/marketing/BlogStickyCta";
 import { blogCtas } from "@/lib/blog-cta";
+import { fuentesParaPost } from "@/lib/blog-fuentes";
+import { SITE_AUTHOR } from "@/lib/site-author";
 import {
   BLOG_POSTS,
   getPostBySlug,
@@ -60,7 +63,8 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
   const related = getRelatedPosts(params.slug);
-  const { mid, end } = blogCtas(post.category);
+  const { mid, end } = blogCtas(post.category, post.slug);
+  const fuentes = fuentesParaPost(post.slug, post.category);
 
   const faqItems = extractFaqItems(post.content);
 
@@ -73,8 +77,12 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     datePublished: post.date,
     dateModified: post.date,
     author: {
-      "@type": "Organization",
-      name: post.author,
+      "@type": "Person",
+      name: SITE_AUTHOR.name,
+      jobTitle: SITE_AUTHOR.jobTitle,
+      url: `${SITE_URL}${SITE_AUTHOR.path}`,
+      ...(SITE_AUTHOR.sameAs.length > 0 ? { sameAs: SITE_AUTHOR.sameAs } : {}),
+      worksFor: { "@type": "Organization", name: "CertiFoto", url: SITE_URL },
     },
     publisher: {
       "@type": "Organization",
@@ -142,7 +150,11 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <p className="mt-4 text-sm text-gray-500">
           <span className="inline-flex items-center gap-1.5">
             <User className="h-3.5 w-3.5" />
-            Por <span className="font-medium text-gray-700">{post.author}</span>
+            Por{" "}
+            <Link href={SITE_AUTHOR.path} className="font-medium text-gray-700 hover:text-accent-dark">
+              {SITE_AUTHOR.name}
+            </Link>
+            <span className="text-gray-400">· {SITE_AUTHOR.jobTitle}</span>
           </span>
           {" · "}
           Actualizado:{" "}
@@ -183,32 +195,39 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             Fuentes y legislación
           </h2>
           <p className="text-sm text-gray-600 mb-4">
-            Basado en la legislación chilena vigente:
+            Normativa chilena en que se basa este artículo (texto vigente en
+            Ley Chile, Biblioteca del Congreso Nacional):
           </p>
           <ul className="space-y-2 text-sm">
-            <li>
-              <a
-                href="https://www.bcn.cl/leychile/navegar?idNorma=61438"
-                target="_blank"
-                rel="noopener"
-                className="text-accent-dark font-medium hover:underline"
-              >
-                Ley 19.496 — Protección de los Derechos de los Consumidores
-                (Biblioteca del Congreso Nacional)
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.bcn.cl/leychile/navegar?idNorma=22740"
-                target="_blank"
-                rel="noopener"
-                className="text-accent-dark font-medium hover:underline"
-              >
-                Código de Procedimiento Civil (Biblioteca del Congreso
-                Nacional)
-              </a>
-            </li>
+            {fuentes.map((f) => (
+              <li key={f.url}>
+                <a
+                  href={f.url}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-accent-dark font-medium hover:underline"
+                >
+                  {f.label}
+                </a>
+              </li>
+            ))}
           </ul>
+        </div>
+
+        {/* Autor */}
+        <div className="mt-8 flex items-start gap-4 rounded-xl border border-gray-200 p-5">
+          <div className="h-12 w-12 shrink-0 rounded-full bg-accent text-white flex items-center justify-center text-lg font-bold">
+            {SITE_AUTHOR.name.charAt(0)}
+          </div>
+          <div className="text-sm">
+            <p className="font-semibold text-gray-900">
+              <Link href={SITE_AUTHOR.path} className="hover:text-accent-dark">
+                {SITE_AUTHOR.name}
+              </Link>{" "}
+              <span className="text-gray-400 font-normal">· {SITE_AUTHOR.jobTitle}</span>
+            </p>
+            <p className="text-gray-600 mt-1 leading-relaxed">{SITE_AUTHOR.bio}</p>
+          </div>
         </div>
 
         {/* CTA de cierre */}
@@ -216,6 +235,8 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           <BlogCta config={end} slug={post.slug} />
         </div>
       </article>
+
+      <BlogStickyCta slug={post.slug} />
 
       {/* Related */}
       {related.length > 0 && (

@@ -8,6 +8,7 @@
  */
 
 import { PACKS, formatCLP } from "./packs";
+import { SITE_AUTHOR } from "./site-author";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
@@ -38,6 +39,13 @@ export function organizationSchema(): Record<string, unknown> {
     },
     areaServed: { "@type": "Country", name: "Chile" },
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
+    founder: {
+      "@type": "Person",
+      name: SITE_AUTHOR.name,
+      jobTitle: SITE_AUTHOR.jobTitle,
+      url: `${SITE_URL}${SITE_AUTHOR.path}`,
+      ...(SITE_AUTHOR.sameAs.length > 0 ? { sameAs: SITE_AUTHOR.sameAs } : {}),
+    },
   };
 }
 

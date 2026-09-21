@@ -13,6 +13,8 @@
  * - lineas que empiezan con "> " son blockquotes
  */
 
+import { POSTS_2026_09 } from "./blog-posts-2026-09";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -24,7 +26,7 @@ export interface BlogPost {
   content: string;
 }
 
-export const BLOG_POSTS: BlogPost[] = [
+const POSTS_BASE: BlogPost[] = [
   {
     slug: "fotos-estado-propiedad-compraventa-entrega",
     title: "Compraventa de propiedades: cómo documentar el estado del inmueble antes de la entrega",
@@ -4731,6 +4733,12 @@ No. El registro puede y conviene hacerse antes, porque el estado de la propiedad
 Cada vez que ocurra algo que cambie la propiedad: una reparación, el ingreso o la salida de un ocupante, el retiro de muebles o antes de una tasación. Si la casa queda deshabitada, una revisión periódica ayuda a detectar a tiempo daños, robos u ocupaciones.`,
   },
 ];
+
+/**
+ * Los artículos nuevos viven en archivos aparte (este ya pesa 370 KB); los
+ * más recientes van primero para que el listado y el destacado los muestren.
+ */
+export const BLOG_POSTS: BlogPost[] = [...POSTS_2026_09, ...POSTS_BASE];
 
 export function getPostBySlug(slug: string): BlogPost | null {
   return BLOG_POSTS.find((p) => p.slug === slug) ?? null;
