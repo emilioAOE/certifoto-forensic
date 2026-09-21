@@ -14,6 +14,7 @@ import {
   FileDown,
   Trash2,
   GitCompare,
+  Mail,
 } from "lucide-react";
 import { getActa, getProperty, saveActa, deleteActa, isActaCertified } from "@/lib/storage";
 import {
@@ -38,6 +39,7 @@ import { cn } from "@/lib/cn";
 import { RoomEvidenceSection } from "./RoomEvidenceSection";
 import { PartiesSummary } from "./PartiesSummary";
 import { BulkPhotoUploader } from "./BulkPhotoUploader";
+import { SendActaDialog } from "./SendActaDialog";
 import { InventorySection } from "@/components/inventory/InventorySection";
 import { generateActaPdf } from "@/lib/acta-pdf";
 import { useToast } from "@/components/ui/Toast";
@@ -65,6 +67,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
   const [certifying, setCertifying] = useState(false);
   const [credits, setCredits] = useState(0);
   const [showBulkUploader, setShowBulkUploader] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
   const [validationModal, setValidationModal] =
     useState<ValidationModalState | null>(null);
 
@@ -349,8 +352,33 @@ export function ActaDetail({ actaId }: { actaId: string }) {
               ? "Descargar certificado"
               : "Descargar PDF (borrador)"}
           </button>
+          <button
+            onClick={() => setSendOpen(true)}
+            disabled={!property}
+            className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+            title="Enviar el PDF por correo a las partes"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            Enviar por correo
+          </button>
         </div>
       </header>
+
+      {property && (
+        <SendActaDialog
+          open={sendOpen}
+          onClose={() => setSendOpen(false)}
+          acta={acta}
+          property={property}
+          onSent={(destinatarios) =>
+            updateActa((a) =>
+              appendAuditLog(a, a.createdByName, a.createdByRole, null, "pdf_sent", {
+                destinatarios,
+              })
+            )
+          }
+        />
+      )}
 
       {/* Banner de certificacion */}
       {certified ? (

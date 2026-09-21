@@ -387,7 +387,8 @@ export type AuditAction =
   | "signature_invalidated"
   | "acta_closed"
   | "acta_certified"
-  | "pdf_generated";
+  | "pdf_generated"
+  | "pdf_sent";
 
 export interface AuditLogEntry {
   id: string;

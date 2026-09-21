@@ -154,3 +154,64 @@ export async function enviarCorreo(o: CorreoOpts): Promise<AvisoResult> {
     return { ok: false, error: msg };
   }
 }
+
+export interface AdjuntoCorreo {
+  nombre: string;
+  tipo: string;
+  datos: Uint8Array | ArrayBuffer | Blob;
+}
+
+/**
+ * Igual que enviarCorreo, pero con archivos adjuntos. Listmonk (v3+) acepta
+ * /api/tx como multipart/form-data: un campo `data` con el mismo JSON y uno o
+ * más campos `file`. Verificado contra la instancia de Expansiel (v6.1).
+ * El tamaño total lo limita SES (40 MB por mensaje, ya codificado).
+ */
+export async function enviarCorreoConAdjunto(
+  o: CorreoOpts & { adjuntos: AdjuntoCorreo[] }
+): Promise<AvisoResult> {
+  const url = env("LISTMONK_URL")?.replace(/\/+$/, "");
+  const user = env("LISTMONK_API_USER");
+  const token = env("LISTMONK_API_TOKEN");
+  if (!url || !user || !token) {
+    return { ok: false, error: "correo no configurado" };
+  }
+
+  const data = {
+    subscriber_email: o.para,
+    subscriber_mode: "external",
+    template_id: Number(env("LISTMONK_TX_TEMPLATE")) || 6,
+    from_email: env("LEAD_FROM") ?? "CertiFoto <hola@certifoto.cl>",
+    subject: o.asunto,
+    content_type: "html",
+    data: { cuerpo: o.html },
+    ...(o.texto ? { altbody: o.texto } : {}),
+    ...(o.responderA ? { headers: [{ "Reply-To": o.responderA }] } : {}),
+  };
+
+  const form = new FormData();
+  form.append("data", JSON.stringify(data));
+  for (const a of o.adjuntos) {
+    const blob = a.datos instanceof Blob ? a.datos : new Blob([a.datos], { type: a.tipo });
+    form.append("file", blob, a.nombre);
+  }
+
+  try {
+    const res = await fetch(`${url}/api/tx`, {
+      method: "POST",
+      headers: { Authorization: `token ${user}:${token}` },
+      body: form,
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      const detalle = await res.text().catch(() => "");
+      console.error("[correo] listmonk (adjunto) respondio", res.status, detalle.slice(0, 300));
+      return { ok: false, error: `listmonk ${res.status}` };
+    }
+    return { ok: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[correo] fallo de red (adjunto):", msg);
+    return { ok: false, error: msg };
+  }
+}

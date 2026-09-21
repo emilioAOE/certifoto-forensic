@@ -1,12 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { enviarBienvenidaSiCorresponde } from "@/lib/correo-ciclo";
 
 /**
  * Destino del magic link. Acepta los dos formatos que puede generar Supabase:
  *  - ?code=...                       (flujo PKCE, plantilla por defecto)
  *  - ?token_hash=...&type=email      (plantilla personalizada con TokenHash)
- * Si la verificación es exitosa deja la sesión en cookies y redirige a `next`.
+ * Si la verificación es exitosa deja la sesión en cookies, manda la
+ * bienvenida si es el primer login (idempotente, nunca bloquea) y redirige
+ * a `next`.
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -33,6 +36,9 @@ export async function GET(request: NextRequest) {
     url.searchParams.set("error", errorMessage);
     return NextResponse.redirect(url);
   }
+
+  // Primer login → correo de bienvenida (una vez por cuenta).
+  await enviarBienvenidaSiCorresponde(supabase);
 
   return NextResponse.redirect(new URL(next, origin));
 }

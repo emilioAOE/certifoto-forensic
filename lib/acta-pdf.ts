@@ -45,7 +45,24 @@ async function generateQrCodeDataUrl(text: string): Promise<string | null> {
   }
 }
 
+/** PDF del acta listo para descargar o enviar. */
+export interface ActaPdfFile {
+  blob: Blob;
+  fileName: string;
+  certified: boolean;
+}
+
+/** Genera el PDF y lo descarga al equipo del usuario. */
 export async function generateActaPdf(acta: Acta, property: Property): Promise<void> {
+  const { blob, fileName } = await buildActaPdf(acta, property);
+  downloadBlob(blob, fileName);
+}
+
+/**
+ * Genera el PDF en memoria (sin descargarlo): lo usan la descarga y el envío
+ * por correo (lib/acta-email.ts). Un acta certificada sale auto-verificable.
+ */
+export async function buildActaPdf(acta: Acta, property: Property): Promise<ActaPdfFile> {
   const { default: jsPDF } = await import("jspdf");
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
@@ -736,26 +753,22 @@ export async function generateActaPdf(acta: Acta, property: Property): Promise<v
     doc.text(`Página ${p} de ${totalPages}`, pageW - margin - 25, pageH - 8);
   }
 
-  // Save
+  // Archivo
   const suffix = certified ? "" : "-borrador";
   const fileName = `acta-${acta.type}-${acta.id.slice(0, 12)}${suffix}.pdf`;
 
+  const pdfBytes = new Uint8Array(doc.output("arraybuffer") as ArrayBuffer);
   if (certified) {
     // PDF certificado: lo hacemos auto-verificable anexando el contenido
     // canonico + huella despues del %%EOF (los lectores lo ignoran; nuestro
     // verificador lo lee). Asi se puede verificar el PDF, no solo el .certifoto.
-    const pdfBytes = new Uint8Array(doc.output("arraybuffer") as ArrayBuffer);
     const block = new TextEncoder().encode(buildEmbeddedBlock(acta, property));
     const combined = new Uint8Array(pdfBytes.byteLength + block.byteLength);
     combined.set(pdfBytes, 0);
     combined.set(block, pdfBytes.byteLength);
-    downloadBlob(
-      new Blob([combined], { type: "application/pdf" }),
-      fileName
-    );
-  } else {
-    doc.save(fileName);
+    return { blob: new Blob([combined], { type: "application/pdf" }), fileName, certified };
   }
+  return { blob: new Blob([pdfBytes], { type: "application/pdf" }), fileName, certified };
 }
 
 /**
