@@ -95,7 +95,7 @@ export function SendActaDialog({ open, onClose, acta, property, onSent }: SendAc
       if (!r.ok) {
         if (r.error === "login_required") {
           toast.info("Inicia sesión para enviar el acta por correo");
-          router.push(`/login?next=/actas/${acta.id}`);
+          router.push(`/login?next=${encodeURIComponent(`/actas/${acta.id}?enviar=1`)}`);
           return;
         }
         setError(

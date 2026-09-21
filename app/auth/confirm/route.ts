@@ -9,7 +9,9 @@ import { enviarBienvenidaSiCorresponde } from "@/lib/correo-ciclo";
  *  - ?token_hash=...&type=email      (plantilla personalizada con TokenHash)
  * Si la verificación es exitosa deja la sesión en cookies, manda la
  * bienvenida si es el primer login (idempotente, nunca bloquea) y redirige
- * a `next`.
+ * a `next`. Si falla (enlace usado o vencido), vuelve al login con el error y
+ * CONSERVA `next`: al pedir un enlace nuevo, la acción pendiente (por
+ * ejemplo, la compra de un pack) se retoma igual.
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -32,8 +34,10 @@ export async function GET(request: NextRequest) {
   }
 
   if (errorMessage) {
+    // El mensaje va tal cual: LoginForm lo traduce (traducirError).
     const url = new URL("/login", origin);
     url.searchParams.set("error", errorMessage);
+    if (next !== "/dashboard") url.searchParams.set("next", next);
     return NextResponse.redirect(url);
   }
 

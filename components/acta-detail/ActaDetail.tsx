@@ -34,7 +34,9 @@ import { certifyActa } from "@/lib/acta-certify";
 import {
   getCreditsBalance,
   subscribeToCreditsChanges,
+  refreshCredits,
 } from "@/lib/credits";
+import { useSupabaseUser } from "@/lib/supabase/use-user";
 import type { Acta, Property, PhotoEvidence } from "@/lib/acta-types";
 import { cn } from "@/lib/cn";
 import { RoomEvidenceSection } from "./RoomEvidenceSection";
@@ -94,6 +96,26 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     actaRef.current = acta;
   }, [acta]);
 
+  // Retomar la acción que quedó pendiente antes del login: el login vuelve a
+  // /actas/<id>?certificar=1 (o ?enviar=1) y aquí se abre el paso siguiente
+  // solo; sin esto el usuario tenía que volver a apretar el botón.
+  const { user: sesion, loading: sesionCargando } = useSupabaseUser();
+  const retomada = useRef(false);
+  useEffect(() => {
+    if (!mounted || !acta || !property || sesionCargando || !sesion || retomada.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const accion = params.has("certificar") ? "certificar" : params.has("enviar") ? "enviar" : null;
+    if (!accion) return;
+    retomada.current = true;
+    window.history.replaceState(null, "", window.location.pathname);
+    (async () => {
+      await refreshCredits(); // el saldo real antes de decidir si hay crédito
+      if (accion === "certificar") await handleCertify();
+      else setSendOpen(true);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, acta, property, sesion, sesionCargando]);
+
   const refresh = () => {
     const a = getActa(actaId);
     if (!a) {
@@ -140,7 +162,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         variant: "default",
         confirmLabel: "Iniciar sesión",
       });
-      if (ok) router.push(`/login?next=/actas/${acta.id}`);
+      if (ok) router.push(`/login?next=${encodeURIComponent(`/actas/${acta.id}?certificar=1`)}`);
       return;
     }
     if (getCreditsBalance() < 1) {
@@ -169,7 +191,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       if (!result.ok) {
         if (result.error === "login_required") {
           toast.info("Inicia sesión para certificar");
-          router.push(`/login?next=/actas/${acta.id}`);
+          router.push(`/login?next=${encodeURIComponent(`/actas/${acta.id}?certificar=1`)}`);
           return;
         }
         if (result.error === "no_credits") {

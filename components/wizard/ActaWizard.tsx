@@ -430,7 +430,7 @@ export function ActaWizard() {
     const result = await certifyActa(actaId);
     if (result.error === "login_required") {
       // El acta ya quedo guardada; tras el login vuelve al detalle y certifica.
-      router.push(`/login?next=/actas/${actaId}`);
+      router.push(`/login?next=${encodeURIComponent(`/actas/${actaId}?certificar=1`)}`);
     } else if (result.error === "no_credits") {
       router.push(`/precios?from=certify`);
     } else {
