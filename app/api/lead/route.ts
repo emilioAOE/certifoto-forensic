@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
+import { avisar, correoConfigurado, escapeHtml, renderAviso } from "@/lib/correo";
 
 /**
  * Captura de leads del lead magnet (plantilla PDF de acta de entrega).
  *
  * El sitio no tiene base de datos. Este endpoint entrega el lead por email
- * usando el proveedor que esté configurado por variable de entorno:
+ * usando el primer proveedor configurado por variable de entorno:
  *
- *  - WEB3FORMS_ACCESS_KEY  -> POST a Web3Forms (gratis, sin backend; el lead
- *                             llega a tu correo). Recomendado.
- *  - RESEND_API_KEY (+ LEAD_NOTIFY_EMAIL, opcional LEAD_FROM) -> Resend.
+ *  1. Listmonk (LISTMONK_URL/_API_USER/_API_TOKEN + LEAD_NOTIFY_EMAIL): la
+ *     infra de correo compartida de Expansiel. Es la via en produccion.
+ *  2. WEB3FORMS_ACCESS_KEY -> Web3Forms.
+ *  3. RESEND_API_KEY (+ LEAD_NOTIFY_EMAIL, opcional LEAD_FROM) -> Resend.
  *
  * Si no hay ninguna configurada, el lead se registra en los logs y el endpoint
  * igual responde ok: la descarga del PDF NUNCA se bloquea por un fallo de envío.
@@ -32,6 +34,25 @@ async function deliver(lead: {
 }): Promise<boolean> {
   const web3 = process.env.WEB3FORMS_ACCESS_KEY;
   const resend = process.env.RESEND_API_KEY;
+
+  if (correoConfigurado()) {
+    const { html, texto } = renderAviso(
+      "Nuevo lead: descargó la plantilla de acta de entrega",
+      [
+        ["Nombre", lead.name || "(sin nombre)"],
+        ["Email", lead.email],
+        ["Origen", lead.source],
+      ],
+      "Responde este correo y le llega directo al lead (Reply-To)."
+    );
+    const r = await avisar({
+      asunto: `Nuevo lead — plantilla acta de entrega (${lead.email})`,
+      html,
+      texto,
+      responderA: lead.email,
+    });
+    return r.ok;
+  }
 
   if (web3) {
     const res = await fetch("https://api.web3forms.com/submit", {
@@ -84,14 +105,6 @@ async function deliver(lead: {
     `[lead] (sin proveedor de email) ${lead.email} · ${lead.name} · ${lead.source}`
   );
   return false;
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 export async function POST(request: Request) {

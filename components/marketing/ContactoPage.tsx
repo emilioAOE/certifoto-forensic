@@ -15,6 +15,9 @@ export function ContactoPage() {
     type: "consulta",
     message: "",
   });
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [company, setCompany] = useState(""); // honeypot anti-bots
 
   // Leer ?pack=N de la URL (sin useSearchParams para no forzar Suspense
   // boundary y evitar la de-opt de Next). Pre-llena el form si viene de un CTA
@@ -38,11 +41,40 @@ export function ContactoPage() {
     }));
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Este formulario es el "checkout" mientras no hay pasarela: la solicitud
+  // de pack tiene que llegar. Solo mostramos exito si /api/contacto acepto el
+  // aviso; si no, error visible con reintento (antes decia "enviado" siempre).
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // En produccion: POST a un endpoint que envie el email via Resend
-    console.log("Contact form:", form);
-    setSubmitted(true);
+    if (sending) return;
+    setError(null);
+    setSending(true);
+    try {
+      const res = await fetch("/api/contacto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          pack: selectedPack?.size ?? null,
+          company,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setError(
+          data.error ?? "No pudimos enviar tu mensaje. Intenta de nuevo en un momento."
+        );
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Sin conexión. Revisa tu internet e intenta de nuevo.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -125,6 +157,20 @@ export function ContactoPage() {
                     </div>
                   </div>
                 )}
+                {/* Honeypot: oculto para humanos; los bots lo llenan */}
+                <div className="hidden" aria-hidden="true">
+                  <label>
+                    No completar
+                    <input
+                      type="text"
+                      name="company"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                    />
+                  </label>
+                </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Nombre completo
@@ -183,12 +229,21 @@ export function ContactoPage() {
                     placeholder="Cuéntanos en qué podemos ayudarte..."
                   />
                 </div>
+                {error && (
+                  <p
+                    role="alert"
+                    className="text-xs text-red-700 bg-red-50 border border-red-100 rounded-md px-3 py-2"
+                  >
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-accent text-white px-4 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors"
+                  disabled={sending}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-accent text-white px-4 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Enviar mensaje
-                  <Send className="h-4 w-4" />
+                  {sending ? "Enviando…" : "Enviar mensaje"}
+                  {!sending && <Send className="h-4 w-4" />}
                 </button>
                 <p className="text-xs text-gray-500 text-center">
                   Al enviar aceptas que te contactemos por el motivo indicado.
