@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Fingerprint, Mail, CheckCircle, ArrowRight, ShieldCheck } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -35,6 +34,7 @@ export function LoginForm() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
+  const [company, setCompany] = useState(""); // honeypot anti-bots
   const [captcha, setCaptcha] = useState<string | null>(null);
   // Los tokens de Turnstile son de un solo uso: remontamos el widget tras cada intento.
   const [captchaNonce, setCaptchaNonce] = useState(0);
@@ -74,17 +74,17 @@ export function LoginForm() {
     }
     setSending(true);
     try {
-      const supabase = createClient();
-      const { error: err } = await supabase.auth.signInWithOtp({
-        email: clean,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
-          shouldCreateUser: true,
-          ...(captcha ? { captchaToken: captcha } : {}),
-        },
+      // El enlace lo genera nuestro servidor y lo envia Listmonk (no Supabase).
+      const next = new URLSearchParams(window.location.search).get("next") ?? "/dashboard";
+      const res = await fetch("/api/auth/solicitar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: clean, next, company, captcha }),
       });
-      if (err) {
-        setError(traducirError(err.message));
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setError(data.error ?? traducirError(""));
+        if (res.status === 429) setCooldown(RESEND_COOLDOWN_S);
         return;
       }
       setSent(true);
@@ -124,6 +124,20 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Honeypot: oculto para humanos; los bots lo llenan */}
+      <div className="hidden" aria-hidden="true">
+        <label>
+          No completar
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+        </label>
+      </div>
       <div>
         <label className="block text-xs font-medium text-gray-700 mb-1.5">Email</label>
         <div className="relative">

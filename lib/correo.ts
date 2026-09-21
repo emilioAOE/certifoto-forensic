@@ -40,13 +40,14 @@ function env(name: string): string | undefined {
   return t === "" ? undefined : t;
 }
 
+/** Listmonk listo para enviar a cualquier destinatario (magic link, etc). */
+export function listmonkConfigurado(): boolean {
+  return Boolean(env("LISTMONK_URL") && env("LISTMONK_API_USER") && env("LISTMONK_API_TOKEN"));
+}
+
+/** Listmonk + buzon de avisos internos (contacto, packs, leads). */
 export function correoConfigurado(): boolean {
-  return Boolean(
-    env("LISTMONK_URL") &&
-      env("LISTMONK_API_USER") &&
-      env("LISTMONK_API_TOKEN") &&
-      env("LEAD_NOTIFY_EMAIL")
-  );
+  return listmonkConfigurado() && Boolean(env("LEAD_NOTIFY_EMAIL"));
 }
 
 export function escapeHtml(s: string): string {
@@ -91,21 +92,36 @@ export function renderAviso(
   return { html, texto };
 }
 
+export interface CorreoOpts extends AvisoOpts {
+  /** Destinatario. */
+  para: string;
+}
+
 /**
- * Envia un aviso a LEAD_NOTIFY_EMAIL. Nunca lanza: devuelve { ok:false } si
- * falta configuracion o Listmonk rechaza. Nunca registra el token.
+ * Envia un aviso interno a LEAD_NOTIFY_EMAIL (contacto, packs, leads).
  */
 export async function avisar(o: AvisoOpts): Promise<AvisoResult> {
+  const to = env("LEAD_NOTIFY_EMAIL");
+  if (!to) return { ok: false, error: "correo no configurado" };
+  return enviarCorreo({ ...o, para: to });
+}
+
+/**
+ * Envia un correo transaccional a cualquier destinatario via Listmonk
+ * (subscriber_mode external: no lo inscribe en ninguna lista). Nunca lanza:
+ * devuelve { ok:false } si falta configuracion o Listmonk rechaza. Nunca
+ * registra el token ni el cuerpo.
+ */
+export async function enviarCorreo(o: CorreoOpts): Promise<AvisoResult> {
   const url = env("LISTMONK_URL")?.replace(/\/+$/, "");
   const user = env("LISTMONK_API_USER");
   const token = env("LISTMONK_API_TOKEN");
-  const to = env("LEAD_NOTIFY_EMAIL");
-  if (!url || !user || !token || !to) {
+  if (!url || !user || !token) {
     return { ok: false, error: "correo no configurado" };
   }
 
   const body = {
-    subscriber_email: to,
+    subscriber_email: o.para,
     subscriber_mode: "external",
     template_id: Number(env("LISTMONK_TX_TEMPLATE")) || 6,
     from_email: env("LEAD_FROM") ?? "CertiFoto <hola@certifoto.cl>",

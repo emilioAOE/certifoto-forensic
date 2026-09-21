@@ -6,8 +6,10 @@
  * en lib/expansiel-analytics.ts), por eso pueden tener fallback aquí. Las
  * variables de entorno permiten apuntar a otro proyecto sin tocar código.
  *
- * NO hay service role key: el cobro de créditos corre en Postgres con
- * security definer bajo auth.uid(), así que el servidor no necesita secretos.
+ * El service role (SUPABASE_SERVICE_ROLE_KEY, solo servidor) se usa únicamente
+ * para generar el token del magic link y el rate limit de login (ver
+ * lib/supabase/admin.ts). Los datos de usuarios siempre van por RLS: el cobro
+ * de créditos corre en Postgres con security definer bajo auth.uid().
  */
 
 export const SUPABASE_URL =
