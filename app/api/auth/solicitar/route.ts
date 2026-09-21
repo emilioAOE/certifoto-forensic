@@ -1,27 +1,25 @@
 import { NextResponse } from "next/server";
-import { adminConfigurado, createAdminClient } from "@/lib/supabase/admin";
 import { enviarCorreo, escapeHtml, listmonkConfigurado } from "@/lib/correo";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase/env";
 
 /**
  * Magic link con envio propio.
  *
- * Supabase Auth NO manda correo aqui: le pedimos el token del enlace con la
- * API admin (generateLink) y lo enviamos nosotros por Listmonk (SES). Asi no
- * hay que configurar SMTP, plantillas ni redirect URLs en el dashboard, y el
- * proyecto compartido no se ve afectado. El enlace cae en /auth/confirm, que
- * verifica el token_hash y deja la sesion en cookies.
+ * Supabase Auth NO manda correo aqui, y CertiFoto NO tiene la service role
+ * key del proyecto compartido (es la llave maestra de todos los productos).
+ * El token lo genera la Edge Function `cf-magic-link` dentro de Supabase,
+ * a la que llamamos con un secreto acotado (CERTIFOTO_LINK_SECRET) que solo
+ * sirve para "pedir un enlace para el correo X"; la funcion ademas rechaza
+ * correos de usuarios de otros productos y aplica el rate limit. Nosotros
+ * armamos el enlace a /auth/confirm y lo enviamos por Listmonk.
  *
- * Anti-abuso (el correo sale por la cuenta SES compartida):
- *  - honeypot `company`;
- *  - rate limit en cf_login_solicitudes: 3 por correo / 15 min, 10 por IP / hora;
- *  - Turnstile opcional (TURNSTILE_SECRET_KEY) verificado contra Cloudflare.
+ * Anti-abuso de este lado: honeypot `company` y Turnstile opcional
+ * (TURNSTILE_SECRET_KEY) verificado contra Cloudflare.
  */
 
 export const runtime = "nodejs";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MAX_POR_EMAIL_15MIN = 3;
-const MAX_POR_IP_HORA = 10;
 
 type Body = {
   email?: string;
@@ -53,6 +51,11 @@ async function verificarTurnstile(token: string | undefined, ip: string | null):
   }
 }
 
+interface LinkOk {
+  hashed_token: string;
+  verification_type?: string;
+}
+
 export async function POST(request: Request) {
   let body: Body;
   try {
@@ -80,10 +83,11 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!adminConfigurado() || !listmonkConfigurado()) {
+  const secret = process.env.CERTIFOTO_LINK_SECRET?.trim();
+  if (!secret || !listmonkConfigurado()) {
     console.error(
       "[auth] login no disponible:",
-      !adminConfigurado() ? "falta SUPABASE_SERVICE_ROLE_KEY" : "falta LISTMONK_*"
+      !secret ? "falta CERTIFOTO_LINK_SECRET" : "falta LISTMONK_*"
     );
     return NextResponse.json(
       { ok: false, error: "El acceso por correo no está disponible en este momento." },
@@ -91,68 +95,72 @@ export async function POST(request: Request) {
     );
   }
 
-  const admin = createAdminClient();
+  // ---- Token del enlace (Edge Function dentro de Supabase) ----
+  let edge: Response;
+  try {
+    edge = await fetch(`${SUPABASE_URL}/functions/v1/cf-magic-link`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-certifoto-secret": secret,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({ email, ip }),
+      cache: "no-store",
+    });
+  } catch (err) {
+    console.error("[auth] edge function inalcanzable:", (err as Error).message);
+    return NextResponse.json(
+      { ok: false, error: "No pudimos generar tu enlace. Intenta de nuevo." },
+      { status: 502 }
+    );
+  }
 
-  // ---- Rate limit (tabla sin policies: solo service role) ----
-  const hace15 = new Date(Date.now() - 15 * 60_000).toISOString();
-  const hace60 = new Date(Date.now() - 60 * 60_000).toISOString();
-  const [porEmail, porIp] = await Promise.all([
-    admin
-      .from("cf_login_solicitudes")
-      .select("id", { count: "exact", head: true })
-      .eq("email", email)
-      .gte("creado_en", hace15),
-    ip
-      ? admin
-          .from("cf_login_solicitudes")
-          .select("id", { count: "exact", head: true })
-          .eq("ip", ip)
-          .gte("creado_en", hace60)
-      : Promise.resolve({ count: 0, error: null }),
-  ]);
-  if ((porEmail.count ?? 0) >= MAX_POR_EMAIL_15MIN || (porIp.count ?? 0) >= MAX_POR_IP_HORA) {
+  if (edge.status === 429) {
     return NextResponse.json(
       { ok: false, error: "Demasiadas solicitudes. Espera unos minutos y vuelve a intentar." },
       { status: 429 }
     );
   }
-  await admin.from("cf_login_solicitudes").insert({ email, ip });
-  // Limpieza oportunista: no acumulamos historial.
-  void admin
-    .from("cf_login_solicitudes")
-    .delete()
-    .lt("creado_en", new Date(Date.now() - 24 * 60 * 60_000).toISOString());
-
-  // ---- Token del enlace (sin que Supabase envie nada) ----
-  let link = await admin.auth.admin.generateLink({ type: "magiclink", email });
-  if (link.error && /not found|no user|does not exist/i.test(link.error.message)) {
-    const creado = await admin.auth.admin.createUser({ email, email_confirm: true });
-    if (creado.error) {
-      console.error("[auth] createUser:", creado.error.message);
-      return NextResponse.json(
-        { ok: false, error: "No pudimos crear tu acceso. Intenta de nuevo." },
-        { status: 500 }
-      );
-    }
-    link = await admin.auth.admin.generateLink({ type: "magiclink", email });
-  }
-  if (link.error || !link.data.properties?.hashed_token) {
-    console.error("[auth] generateLink:", link.error?.message ?? "sin hashed_token");
+  if (edge.status === 403) {
+    // Correo de un usuario de otro producto del proyecto compartido.
+    console.warn("[auth] correo rechazado por pertenecer a otro producto");
     return NextResponse.json(
-      { ok: false, error: "No pudimos generar tu enlace. Intenta de nuevo." },
-      { status: 500 }
+      {
+        ok: false,
+        error:
+          "No pudimos habilitar el acceso para ese correo. Escríbenos desde /contacto y lo resolvemos.",
+      },
+      { status: 400 }
     );
   }
-  const { hashed_token, verification_type } = link.data.properties;
+  if (!edge.ok) {
+    const detalle = await edge.text().catch(() => "");
+    console.error("[auth] edge function respondio", edge.status, detalle.slice(0, 200));
+    return NextResponse.json(
+      { ok: false, error: "No pudimos generar tu enlace. Intenta de nuevo." },
+      { status: 502 }
+    );
+  }
+
+  const data = (await edge.json().catch(() => null)) as LinkOk | null;
+  if (!data?.hashed_token) {
+    console.error("[auth] edge function sin hashed_token");
+    return NextResponse.json(
+      { ok: false, error: "No pudimos generar tu enlace. Intenta de nuevo." },
+      { status: 502 }
+    );
+  }
 
   const origin = new URL(request.url).origin;
   const url = new URL("/auth/confirm", origin);
-  url.searchParams.set("token_hash", hashed_token);
-  url.searchParams.set("type", verification_type || "magiclink");
+  url.searchParams.set("token_hash", data.hashed_token);
+  url.searchParams.set("type", data.verification_type || "magiclink");
   url.searchParams.set("next", safeNext(body.next));
   const enlace = url.toString();
 
-  // ---- Envio por Listmonk ----
+  // ---- Envio por Listmonk (nunca se registra el enlace) ----
   const html = `<div style="font-family:Inter,Arial,sans-serif;max-width:520px;margin:0 auto;color:#111827">
   <h2 style="font-size:18px;margin:0 0 12px">Tu enlace de acceso a CertiFoto</h2>
   <p style="font-size:14px;line-height:1.5">Haz clic para entrar. El enlace es de un solo uso y vence en 1 hora.</p>
