@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
@@ -159,7 +159,29 @@ export function ActaWizard() {
   const updateData = (patch: Partial<WizardData>) =>
     setData((prev) => ({ ...prev, ...patch }));
 
+  // Embudo del asistente (Analytics Hub): el asistente es una sola ruta, así
+  // que sin esto solo se veía la llegada y el final (acta_creada). Ahora cada
+  // paso alcanzado queda registrado una vez por visita; con eso se ve si la
+  // gente del anuncio toca el primer botón y dónde se va.
+  const pasosVistos = useRef(new Set<number>());
+  useEffect(() => {
+    if (pasosVistos.current.has(step)) return;
+    pasosVistos.current.add(step);
+    track("asistente_paso", {
+      paso: step,
+      nombre: STEPS[step - 1]?.label ?? String(step),
+      tipo: data.type,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  const elegirTipo = (type: ActaType) => {
+    if (!data.type) track("asistente_tipo", { tipo: type });
+    updateData({ type });
+  };
+
   const handleAutoFill = () => {
+    track("asistente_autollenar");
     const mock = getWizardMockData();
     setData({
       type: mock.type,
@@ -495,10 +517,7 @@ export function ActaWizard() {
       {/* Step content */}
       <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 mb-4 min-h-[400px]">
         {step === 1 && (
-          <StepTipo
-            value={data.type}
-            onChange={(type) => updateData({ type })}
-          />
+          <StepTipo value={data.type} onChange={elegirTipo} />
         )}
         {step === 2 && (
           <StepPropiedad
