@@ -33,7 +33,7 @@ export function Landing() {
 
       {/* Hero */}
       <section className="border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24 grid lg:grid-cols-12 gap-10 items-center">
+        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-24 grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent-softer border border-accent-light px-3 py-1 text-xs font-medium text-accent-dark mb-5">
               <Shield className="h-3.5 w-3.5" />
@@ -44,6 +44,24 @@ export function Landing() {
               No entregues ni recibas una propiedad{" "}
               <span className="text-accent">a ciegas</span>.
             </h1>
+
+            {/* Celular: el botón va en la primera pantalla, antes del texto.
+                Antes quedaba bajo un párrafo largo y el aviso de cookies. */}
+            <div className="sm:hidden mt-5">
+              <Link
+                href="/actas/nueva"
+                className="flex w-full items-center justify-center gap-2 rounded-md bg-accent text-white px-6 py-3.5 text-base font-semibold shadow-sm"
+              >
+                Crear mi acta gratis
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                Fotos con fecha y huella verificable · pagas solo si certificas ·{" "}
+                <Link href="/precios" className="underline">
+                  ver packs
+                </Link>
+              </p>
+            </div>
 
             <p className="text-lg text-gray-600 mt-5 leading-relaxed max-w-xl">
               El estado en que se entrega un inmueble —en un arriendo o en una
@@ -62,7 +80,7 @@ export function Landing() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3 mt-8">
+            <div className="hidden sm:flex flex-wrap gap-3 mt-8">
               <Link
                 href="/dashboard"
                 className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"

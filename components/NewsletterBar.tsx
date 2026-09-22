@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { esVisitaPagada } from "@/lib/visita-pagada";
 
 // ───────────────────────────────────────────────────────────────────────────
 // Barra de captura de newsletter → Analytics Hub de Expansiel.
@@ -22,19 +24,27 @@ const FG = "#ffffff";
 const BTN_BG = "#16a34a";
 const BTN_FG = "#ffffff";
 
+/**
+ * Dentro de la app (crear acta, login, pagos…) la barra distrae de la acción
+ * principal: ahí no se muestra. Tampoco a quien llegó por un anuncio.
+ */
+const RUTAS_APP = /^\/(actas|dashboard|propiedades|contactos|mis-creditos|configuracion|login|auth|pagos)(\/|$)/;
+
 export default function NewsletterBar() {
+  const pathname = usePathname() ?? "";
   const [hidden, setHidden] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const barRef = useRef<HTMLDivElement>(null);
+  const enApp = RUTAS_APP.test(pathname);
 
   useEffect(() => {
-    try { if (localStorage.getItem(DISMISS)) setHidden(true); } catch {}
+    try { if (localStorage.getItem(DISMISS) || esVisitaPagada()) setHidden(true); } catch {}
   }, []);
 
   // Empuja hacia abajo headers fijos para que la barra no los tape ni choque.
   useEffect(() => {
-    if (hidden) return;
+    if (hidden || enApp) return;
     const bar = barRef.current;
     if (!bar) return;
     const h = bar.offsetHeight;
@@ -49,7 +59,7 @@ export default function NewsletterBar() {
       }
     });
     return () => { moved.forEach((m) => { m.el.style.top = m.prev; }); };
-  }, [hidden]);
+  }, [hidden, enApp]);
 
   function dismiss() {
     setHidden(true);
@@ -86,7 +96,7 @@ export default function NewsletterBar() {
     } catch { setStatus("error"); }
   }
 
-  if (hidden) return null;
+  if (hidden || enApp) return null;
 
   return (
     <div ref={barRef} style={{ background: BG, color: FG, width: "100%", fontFamily: "inherit", position: "relative", zIndex: 99999 }}>
