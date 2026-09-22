@@ -45,6 +45,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/blog") ||
     pathname === "/faq" ||
     pathname === "/precios" ||
+    pathname === "/corredores" ||
     pathname === "/sobre" ||
     pathname === "/contacto" ||
     pathname === "/terminos" ||

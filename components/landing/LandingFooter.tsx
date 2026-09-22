@@ -57,6 +57,11 @@ export function LandingFooter() {
                   Precios
                 </Link>
               </li>
+              <li>
+                <Link href="/corredores" className="hover:text-accent-dark">
+                  Para corredores
+                </Link>
+              </li>
             </ul>
           </div>
 

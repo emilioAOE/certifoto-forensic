@@ -48,6 +48,7 @@ CertiFoto entrega un respaldo documental con huella criptográfica y trazabilida
 
 - [Inicio](https://www.certifoto.cl/): qué es CertiFoto y cómo funciona.
 - [Precios](https://www.certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
+- [Para corredores y administradoras](https://www.certifoto.cl/corredores): la entrega profesional en 10 minutos, acta con el nombre del corredor, envío a las partes por correo, packs de 10 y 50.
 - [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, evidencia, IA y certificado.
 - [Plantilla de acta de entrega (PDF gratis)](https://www.certifoto.cl/plantilla): descarga gratuita de una plantilla de acta de entrega para arriendo o compraventa (checklist por ambiente, medidores, llaves, inventario y firmas).
 - [Verificar certificado](https://www.certifoto.cl/forensic): subir un PDF o `.certifoto` y comprobar autenticidad.

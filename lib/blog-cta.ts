@@ -81,8 +81,8 @@ const POR_SLUG: Record<string, Partial<{ mid: CtaConfig; end: CtaConfig }>> = {
       title: "Para corredores: la entrega profesional en 10 minutos",
       description:
         "Sube el contrato, la IA completa las partes, tomas las fotos por ambiente y el acta sale sellada con tu nombre, lista para enviar a arrendador y arrendatario por correo.",
-      primary: { href: "/dashboard", label: "Probar con una entrega" },
-      secondary: { href: "/precios", label: "Ver packs para corredores" },
+      primary: { href: "/corredores", label: "Ver cómo funciona para corredores" },
+      secondary: { href: "/dashboard", label: "Probar con una entrega" },
     },
   },
   "documentos-pedir-arrendatario-screening": {
