@@ -29,12 +29,12 @@ export const FAQ_CORREDORES = [
   {
     question: "¿El acta sale con mi nombre y el de mi corredora?",
     answer:
-      "Sí. El acta registra quién la emite (tú, como corredor o corredora) y las partes: arrendador y arrendatario, o comprador y vendedor. Cada parte puede firmar en pantalla, conforme o con observaciones.",
+      "Sí. El acta registra quién la emite (tú, como corredor o corredora) y las partes: arrendador y arrendatario, o comprador y vendedor, con RUT y correo tomados del contrato.",
   },
   {
     question: "¿El propietario o el arrendatario necesitan cuenta?",
     answer:
-      "No. Solo tú usas la plataforma. Al certificar, el PDF se les envía por correo desde CertiFoto con tu nombre como remitente, y cualquiera puede comprobar su autenticidad en certifoto.cl/forensic sin registrarse.",
+      "No. Solo tú usas la plataforma. Cuando certificas, les envías el PDF por correo desde CertiFoto con tu nombre (si responden, te llega a ti), y cualquiera puede comprobar su autenticidad en certifoto.cl/forensic sin registrarse.",
   },
   {
     question: "¿Cuánto cuesta por entrega?",
@@ -117,12 +117,12 @@ export function CorredoresPage() {
           <Beneficio
             icon={<Clock className="h-5 w-5" />}
             title="10 minutos, no una tarde"
-            text="El contrato en PDF o foto se lee solo. Las fotos se ordenan por ambiente y la IA escribe la descripción objetiva de cada una. Tú revisas y firmas."
+            text="El contrato en PDF o foto se lee solo. Las fotos se ordenan por ambiente y la IA escribe la descripción objetiva de cada una. Tú revisas y certificas."
           />
           <Beneficio
             icon={<FileCheck className="h-5 w-5" />}
             title="Un acta que se ve profesional"
-            text="PDF con portada, datos de la propiedad y las partes, fotos por ambiente, inventario, firmas y anexo técnico. Lleva tu nombre como quien la emite."
+            text="PDF con portada, datos de la propiedad y las partes, fotos por ambiente, inventario, QR de verificación y anexo técnico. Lleva tu nombre como quien la emite."
           />
           <Beneficio
             icon={<ShieldCheck className="h-5 w-5" />}
@@ -132,7 +132,7 @@ export function CorredoresPage() {
           <Beneficio
             icon={<Mail className="h-5 w-5" />}
             title="Enviada a las partes en un clic"
-            text="Al certificar, el PDF se envía por correo al propietario y al arrendatario, con tu nombre como remitente. Sin descargar ni adjuntar nada."
+            text="Tras certificar, la envías por correo al propietario y al arrendatario en un clic, con tu nombre; las respuestas te llegan a ti. Sin descargar ni adjuntar nada."
           />
         </div>
       </section>
@@ -154,9 +154,9 @@ export function CorredoresPage() {
               el ambiente, describe el estado y marca posibles hallazgos. Tú
               corriges lo que quieras.
             </Paso>
-            <Paso n={3} icon={<Users className="h-5 w-5" />} title="Firmas en pantalla">
-              Cada parte firma con el dedo, conforme o con observaciones. Queda
-              registrado quién firmó, cuándo y desde qué equipo.
+            <Paso n={3} icon={<Users className="h-5 w-5" />} title="Confirma las partes">
+              Arrendador y arrendatario ya vienen del contrato, con RUT y correo.
+              Agregas al corredor o a un testigo si hace falta.
             </Paso>
             <Paso n={4} icon={<FileCheck className="h-5 w-5" />} title="Certifica y envía">
               Con 1 crédito el acta se sella y se desbloquea: PDF verificable,

@@ -43,13 +43,13 @@ export function PreciosPage() {
             icon={<Lock className="h-5 w-5" />}
             step="2"
             title="Trabaja gratis"
-            description="Crea, edita y revisa actas todo lo que necesites. Sube fotos, recolecta firmas y mira la vista previa en pantalla. Sin límites mientras estén en borrador."
+            description="Crea, edita y revisa actas todo lo que necesites. Sube el contrato y las fotos, y mira la vista previa en pantalla. Sin límites mientras estén en borrador."
           />
           <ExplainCard
             icon={<Award className="h-5 w-5" />}
             step="3"
             title="Certifica al final"
-            description="Cuando el acta está lista, la sellas con 1 crédito. Ahí se desbloquea: descarga del PDF sin marca de agua, envío por correo a las partes y archivo .certifoto, con QR y sello inmutable."
+            description="Cuando el acta está lista, la sellas con 1 crédito. Ahí se desbloquea: descarga del PDF sin marca de agua, envío por correo a las partes, QR de verificación y sello inmutable."
           />
         </div>
       </section>
@@ -71,11 +71,11 @@ export function PreciosPage() {
         <div className="space-y-6">
           <FaqMini
             q="¿Tengo que pagar para empezar?"
-            a="No. La app es gratis para crear, editar y revisar actas, con vista previa del PDF en pantalla. Pagas al certificar: es lo que desbloquea la descarga del PDF, el envío por correo y el archivo .certifoto."
+            a="No. La app es gratis para crear, editar y revisar actas, con vista previa del PDF en pantalla. Pagas al certificar: es lo que desbloquea la descarga del PDF y el envío por correo."
           />
           <FaqMini
             q="¿Qué significa exactamente certificar un acta?"
-            a="Sellar el documento y desbloquearlo. Se calcula un hash SHA-256 final, se elimina la marca de agua, se inserta un QR de verificación y el acta queda inmutable. Desde ese momento puedes descargar el PDF, enviarlo por correo y compartirlo como archivo .certifoto verificable. Requiere 1 crédito."
+            a="Sellar el documento y desbloquearlo. Se calcula un hash SHA-256 final, se elimina la marca de agua, se inserta un QR de verificación y el acta queda inmutable. Desde ese momento puedes descargar el PDF y enviarlo por correo; cualquiera puede verificarlo en certifoto.cl/forensic. Requiere 1 crédito."
           />
           <FaqMini
             q="¿Caducan los créditos?"

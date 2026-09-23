@@ -38,7 +38,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cuánto cuesta?",
-        a: "Crear y editar actas es gratis e ilimitado, con vista previa del PDF en pantalla. Solo pagas cuando certificas — y certificar es lo que desbloquea la descarga del PDF, el envío por correo y el archivo .certifoto. Las certificaciones se compran en packs one-time. Con el precio de lanzamiento (50% de descuento sobre la lista) van desde $1.490 CLP (1 cert) hasta $49.900 CLP (50 certs). Ver detalle en /precios.",
+        a: "Crear y editar actas es gratis e ilimitado, con vista previa del PDF en pantalla. Solo pagas cuando certificas — y certificar es lo que desbloquea la descarga del PDF y el envío por correo. Las certificaciones se compran en packs one-time. Con el precio de lanzamiento (50% de descuento sobre la lista) van desde $1.490 CLP (1 cert) hasta $49.900 CLP (50 certs). Ver detalle en /precios.",
       },
       {
         q: "¿Funciona en celular?",
@@ -69,7 +69,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Se puede modificar un acta después de certificada?",
-        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua y se desbloquean la descarga del PDF, el envío por correo y el archivo .certifoto verificable. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento esté verdaderamente listo.",
+        a: "No. Al certificar, el acta queda inmutable: se sella el hash del documento, se elimina la marca de agua y se desbloquean la descarga del PDF verificable y el envío por correo. Si necesitas hacer cambios, debes crear una nueva acta complementaria. Por eso recomendamos certificar solo cuando el documento esté verdaderamente listo.",
       },
       {
         q: "¿El certificado consume 1 crédito cada vez?",
@@ -131,7 +131,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cómo se verifica un certificado de CertiFoto?",
-        a: "En /forensic cualquiera sube el PDF (o el archivo .certifoto) y el verificador recalcula la huella embebida en el documento. Si la huella coincide, el certificado es auténtico e íntegro. Si fue alterado, el verificador lo detecta. La verificación es local en el navegador — no guardamos ni el archivo ni los datos.",
+        a: "En /forensic cualquiera sube el PDF y el verificador recalcula la huella embebida en el documento. Si la huella coincide, el certificado es auténtico e íntegro. Si fue alterado, el verificador lo detecta. La verificación es local en el navegador — no guardamos ni el archivo ni los datos.",
       },
       {
         q: "¿Qué tan seguro es el certificado frente a falsificación?",

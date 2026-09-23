@@ -177,8 +177,8 @@ export function Dashboard() {
           Actas Digitales con respaldo forense
         </h1>
         <p className="text-muted text-sm mt-2 max-w-2xl">
-          Documenta el estado de propiedades arrendadas con fotos, descripciones
-          asistidas con IA y firma de las partes. Cada foto incluye respaldo
+          Documenta el estado de propiedades arrendadas con fotos y descripciones
+          asistidas con IA. Cada foto incluye respaldo
           forense de metadata para verificar su autenticidad.
         </p>
 
@@ -300,7 +300,7 @@ export function Dashboard() {
             />
             <StatCard
               icon={<CheckCircle className="h-4 w-4" />}
-              label="Firmadas"
+              label="Cerradas"
               value={stats.signed + stats.closed}
               color="text-emerald-600"
             />
@@ -358,7 +358,7 @@ export function Dashboard() {
           <FeatureCard
             icon={<TrendingUp className="h-5 w-5" />}
             title="Descripciones con IA"
-            description="Cada foto recibe una descripción objetiva y posibles hallazgos. Las partes pueden revisar antes de firmar."
+            description="Cada foto recibe una descripción objetiva y posibles hallazgos. Tú revisas y corriges antes de certificar."
           />
           <FeatureCard
             icon={<Shield className="h-5 w-5" />}
@@ -438,7 +438,7 @@ function ActaListItem({ acta }: { acta: ActaSummary }) {
               title={
                 acta.certified
                   ? "Acta certificada e inmutable"
-                  : "Borrador editable, no se puede compartir como .certifoto"
+                  : "Borrador editable: certifícala para descargar o enviar el PDF"
               }
             >
               {acta.certified ? (
@@ -463,9 +463,6 @@ function ActaListItem({ acta }: { acta: ActaSummary }) {
           <div className="text-[11px] text-muted mt-1 flex flex-wrap gap-3">
             <span>{acta.roomsCount} ambiente(s)</span>
             <span>{acta.photosCount} foto(s)</span>
-            <span>
-              {acta.signaturesCount}/{acta.signaturesRequired} firma(s)
-            </span>
             <span>
               {new Date(acta.updatedAt).toLocaleDateString("es-CL")}
             </span>

@@ -144,7 +144,7 @@ function telefonoActa(x, y, w, id) {
   const items = [
     "Contrato leído por la IA",
     "Fotos por ambiente, con huella",
-    "Firmada por las partes",
+    "Verificable con código QR",
     "Enviada al propietario y arrendatario",
   ];
   const listY = sy + 262 * k;

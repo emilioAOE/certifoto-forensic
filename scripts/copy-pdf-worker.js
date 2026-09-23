@@ -17,9 +17,14 @@ const path = require("path");
  *                         para sortear el bug de webpack con ESM en pdfjs v5)
  *  2. pdf.worker.min.mjs - el worker, requerido por el bundle principal
  */
+// Build "legacy" primero: trae polyfills (core-js) de Promise.try y
+// Uint8Array.prototype.toHex, que la build moderna usa sin guardas y que no
+// existen antes de Safari 18.2 / Chrome 128. Sin esto, en un iPhone con iOS 17
+// fallaban la vista previa del acta y la lectura de contratos en PDF.
 const FILES = [
   {
     sources: [
+      "node_modules/pdfjs-dist/legacy/build/pdf.min.mjs",
       "node_modules/pdfjs-dist/build/pdf.min.mjs",
       "node_modules/pdfjs-dist/build/pdf.mjs",
     ],
@@ -27,6 +32,7 @@ const FILES = [
   },
   {
     sources: [
+      "node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs",
       "node_modules/pdfjs-dist/build/pdf.worker.min.mjs",
       "node_modules/pdfjs-dist/build/pdf.worker.mjs",
     ],

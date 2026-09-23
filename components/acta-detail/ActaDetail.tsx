@@ -258,7 +258,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       const ok = await confirm({
         title: "Certifica el acta para enviarla",
         message:
-          "El envío por correo, la descarga del PDF y el archivo .certifoto se desbloquean al certificar el acta (1 crédito). Mientras tanto puedes revisarla en la vista previa.",
+          "El envío por correo y la descarga del PDF se desbloquean al certificar el acta (1 crédito). Mientras tanto puedes revisarla en la vista previa.",
         variant: "default",
         confirmLabel: "Certificar ahora",
       });
@@ -273,7 +273,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     const ok = await confirm({
       title: "Eliminar acta",
       message:
-        "Esta acción no se puede deshacer. Las fotos, observaciones y firmas se borrarán.",
+        "Esta acción no se puede deshacer. Las fotos y observaciones se borrarán.",
       variant: "danger",
       confirmLabel: "Sí, eliminar",
     });
@@ -459,8 +459,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             {acta.certifiedAt
               ? `Sellada el ${new Date(acta.certifiedAt).toLocaleString("es-CL")}.`
               : "Acta importada con sello previo."}{" "}
-            El documento es inmutable y se puede compartir como{" "}
-            <span className="font-mono">.certifoto</span>.
+            El documento es inmutable y cualquiera puede verificar el PDF en
+            certifoto.cl/forensic.
           </div>
         </section>
       ) : (
@@ -468,10 +468,8 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           <Lock className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
           <div className="flex-1 text-xs text-amber-900 leading-relaxed">
             <strong className="font-semibold">Acta en borrador.</strong> La ves
-            completa aquí y en la vista previa, pero la descarga del PDF, el
-            envío por correo y el archivo{" "}
-            <span className="font-mono">.certifoto</span> se desbloquean al
-            certificarla (1 crédito).{" "}
+            completa aquí y en la vista previa, pero la descarga del PDF y el
+            envío por correo se desbloquean al certificarla (1 crédito).{" "}
             <Link
               href="/precios"
               className="underline font-semibold hover:text-amber-700"

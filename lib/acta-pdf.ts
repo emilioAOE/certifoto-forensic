@@ -31,6 +31,39 @@ import { fechaLocal } from "./format";
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
+/**
+ * Foto lista para el PDF: máx. 1200 px y JPEG 0,72. En el acta se dibuja a
+ * ~87 mm de ancho (~350 dpi a 1200 px), así que no se pierde detalle; a 2000 px
+ * y 0,85 un acta de 40 fotos pesaba 15-40 MB y no pasaba el límite de 20 MB
+ * del envío por correo. Devuelve también las dimensiones para no deformarla.
+ */
+async function fotoParaPdf(
+  dataUrl: string
+): Promise<{ dataUrl: string; w: number; h: number } | null> {
+  if (typeof document === "undefined") return null;
+  try {
+    const img = new Image();
+    img.src = dataUrl;
+    await img.decode();
+    const escala = Math.min(1, 1200 / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.max(1, Math.round(img.naturalWidth * escala));
+    const h = Math.max(1, Math.round(img.naturalHeight * escala));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    ctx.fillStyle = "#ffffff"; // PNG con transparencia -> fondo blanco
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0, w, h);
+    const out = canvas.toDataURL("image/jpeg", 0.72);
+    canvas.width = 0; // libera memoria del canvas (límite de iOS)
+    return { dataUrl: out, w, h };
+  } catch {
+    return null;
+  }
+}
+
 async function generateQrCodeDataUrl(text: string): Promise<string | null> {
   try {
     const QRCode = (await import("qrcode")).default;
@@ -356,23 +389,35 @@ export async function buildActaPdf(acta: Acta, property: Property): Promise<Acta
 
         const x = margin + col * (photoW + 5);
 
-        try {
+        const reducida = await fotoParaPdf(photo.dataUrl);
+        if (reducida) {
+          // Encajar sin deformar (antes toda foto se estiraba a 4:3 y las
+          // verticales salían aplastadas) y centrar en la caja.
+          const k = Math.min(photoW / reducida.w, photoH / reducida.h);
+          const dw = reducida.w * k;
+          const dh = reducida.h * k;
+          doc.setFillColor(245, 245, 245);
+          doc.rect(x, y, photoW, photoH, "F");
           doc.addImage(
-            photo.dataUrl,
+            reducida.dataUrl,
             "JPEG",
-            x,
-            y,
-            photoW,
-            photoH,
+            x + (photoW - dw) / 2,
+            y + (photoH - dh) / 2,
+            dw,
+            dh,
             undefined,
             "FAST"
           );
-        } catch {
-          // dataUrl might be PNG or fail
+        } else {
           try {
-            doc.addImage(photo.dataUrl, "PNG", x, y, photoW, photoH);
+            doc.addImage(photo.dataUrl, "JPEG", x, y, photoW, photoH, undefined, "FAST");
           } catch {
-            // skip
+            // dataUrl might be PNG or fail
+            try {
+              doc.addImage(photo.dataUrl, "PNG", x, y, photoW, photoH);
+            } catch {
+              // skip
+            }
           }
         }
 

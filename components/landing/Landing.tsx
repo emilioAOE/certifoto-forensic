@@ -67,7 +67,7 @@ export function Landing() {
               El estado en que se entrega un inmueble —en un arriendo o en una
               compraventa— casi siempre queda a la palabra de las partes.
               CertiFoto lo deja documentado: fotos con respaldo forense,
-              descripciones con IA y firma de cada parte. Créala gratis; pagas
+              descripciones con IA y un PDF verificable con QR. Créala gratis; pagas
               solo cuando la certificas.
             </p>
 
@@ -133,8 +133,8 @@ export function Landing() {
           />
           <TrustItem
             icon={<FileSignature className="h-5 w-5" />}
-            label="Firma digital"
-            value="Conforme u observada"
+            label="Verificable"
+            value="Con código QR"
           />
           <TrustItem
             icon={<Lock className="h-5 w-5" />}
@@ -168,7 +168,7 @@ export function Landing() {
           <Audience
             icon={<Eye className="h-6 w-6" />}
             title="Arrendatarios y compradores"
-            description="Protege lo que recibes con un registro fotográfico fechado y firmado por ambas partes el día de la entrega."
+            description="Protege lo que recibes con un registro fotográfico fechado y verificable, hecho el día de la entrega."
           />
           <Audience
             icon={<Building2 className="h-6 w-6" />}
@@ -250,8 +250,7 @@ export function Landing() {
                   disponible
                 </Bullet>
                 <Bullet>
-                  Firma digital simple para cada parte, con opciones de
-                  conformidad u observaciones
+                  Partes cargadas desde el contrato, con RUT y correo
                 </Bullet>
                 <Bullet>Generación de PDF formal listo para compartir</Bullet>
               </div>
@@ -276,7 +275,7 @@ export function Landing() {
               />
               <FeatureCard
                 icon={<FileSignature className="h-5 w-5" />}
-                title="Firma digital"
+                title="QR de verificación"
               />
               <FeatureCard
                 icon={<Lock className="h-5 w-5" />}
@@ -294,7 +293,7 @@ export function Landing() {
             Cómo funciona
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-            En cinco pasos tienes tu acta firmada
+            En cinco pasos tienes tu acta certificada
           </h2>
           <p className="text-gray-600 mt-3">
             Desde la creación hasta el PDF final. Sin papeles, sin reuniones
@@ -306,7 +305,7 @@ export function Landing() {
           <Step
             n={1}
             title="Crea el acta"
-            description="Elige el tipo (entrega, devolución, inspección o inventario) e ingresa los datos de la propiedad y de las partes que participan."
+            description="Elige el tipo (entrega, devolución, inspección o inventario) y sube el contrato: la IA completa la propiedad y las partes."
           />
           <Step
             n={2}
@@ -320,13 +319,13 @@ export function Landing() {
           />
           <Step
             n={4}
-            title="Firma digital"
-            description="Cada parte firma con el dedo o el cursor. Puede firmar conforme, firmar con observaciones o rechazar dejando constancia."
+            title="Confirma las partes"
+            description="Arrendador y arrendatario quedan cargados desde el contrato, con RUT y correo. Agregas al corredor o a un testigo si hace falta."
           />
           <Step
             n={5}
             title="Certifica y descarga"
-            description="Con 1 crédito el acta se sella y se desbloquea: PDF sin marca de agua con fotos, descripciones, firmas y registro técnico, listo para descargar o enviar por correo a las partes."
+            description="Con 1 crédito el acta se sella y se desbloquea: PDF sin marca de agua con fotos, descripciones, QR de verificación y registro técnico, listo para descargar o enviar por correo a las partes."
           />
         </div>
       </section>
@@ -368,7 +367,7 @@ export function Landing() {
         <div className="grid md:grid-cols-4 gap-6 text-center">
           <Stat number="5 min" label="Para crear el acta" />
           <Stat number="0" label="Apps que instalar" />
-          <Stat number="100%" label="Procesamiento privado" />
+          <Stat number="SHA-256" label="Huella de cada foto" />
           <Stat number="PDF" label="Listo para adjuntar" />
         </div>
       </section>
@@ -481,7 +480,7 @@ function HeroVisual() {
             <div className="flex items-center gap-2">
               <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
               <span className="text-[11px] text-gray-600">
-                Firmado por ambas partes
+                Certificada con QR
               </span>
             </div>
             <span className="text-[10px] font-mono text-gray-400">
