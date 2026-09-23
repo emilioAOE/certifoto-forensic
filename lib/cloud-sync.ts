@@ -27,6 +27,15 @@ const DEBOUNCE_MS = 600;
 let userId: string | null = null;
 let suppress = false;
 let authBound = false;
+/**
+ * Instante de una fecha ISO. Comparar como texto fallaba: el navegador guarda
+ * "…T21:05:00.000Z" y Postgres devuelve "…T21:05:00+00:00".
+ */
+const ms = (iso: string | null | undefined): number => (iso ? Date.parse(iso) || 0 : 0);
+
+/** Actas subiéndose ahora, y la última versión pedida mientras tanto. */
+const subiendo = new Map<string, Acta | null>();
+
 /** Fotos confirmadas en cf_fotos (evita re-subir en cada guardado). */
 const uploaded = new Set<string>();
 const timers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -214,9 +223,32 @@ export function queueDelete(kind: "acta" | "propiedad" | "contacto", id: string)
 async function pushActa(acta: Acta): Promise<void> {
   const uid = userId;
   if (!uid) return;
+  // Una subida por acta a la vez: dos guardados seguidos subían las mismas
+  // fotos en paralelo. La versión nueva espera y sale al terminar la actual.
+  if (subiendo.has(acta.id)) {
+    subiendo.set(acta.id, acta);
+    return;
+  }
+  subiendo.set(acta.id, null);
   beginWork();
   try {
     const supabase = createClient();
+    // No pisar la nube con una copia más vieja (un celular con el acta
+    // desactualizada revertía lo hecho en el computador) ni una certificada
+    // con una que no lo está.
+    const { data: enNube } = await supabase
+      .from("cf_actas")
+      .select("actualizado_en, certificada_en")
+      .eq("id", acta.id)
+      .maybeSingle();
+    if (
+      enNube &&
+      ((enNube.certificada_en && !acta.certifiedAt) ||
+        ms(enNube.actualizado_en as string) > ms(acta.updatedAt))
+    ) {
+      endWork();
+      return;
+    }
     const { error } = await supabase.from("cf_actas").upsert(
       {
         id: acta.id,
@@ -236,6 +268,10 @@ async function pushActa(acta: Acta): Promise<void> {
     endWork();
   } catch (err) {
     endWork(err);
+  } finally {
+    const siguiente = subiendo.get(acta.id);
+    subiendo.delete(acta.id);
+    if (siguiente) void pushActa(siguiente);
   }
 }
 
@@ -414,14 +450,14 @@ export async function restoreAll(
 
     for (const row of (props.data ?? []) as CfRow<Property>[]) {
       const local = apply.localUpdatedAt("propiedad", row.id);
-      if (!local || local < row.actualizado_en) {
+      if (!local || ms(local) < ms(row.actualizado_en)) {
         apply.property(row.datos);
         result.properties++;
       }
     }
     for (const row of (contacts.data ?? []) as CfRow<Contact>[]) {
       const local = apply.localUpdatedAt("contacto", row.id);
-      if (!local || local < row.actualizado_en) {
+      if (!local || ms(local) < ms(row.actualizado_en)) {
         apply.contact(row.datos);
         result.contacts++;
       }
@@ -432,7 +468,7 @@ export async function restoreAll(
     for (const row of rows) {
       i++;
       const local = apply.localUpdatedAt("acta", row.id);
-      if (local && local >= row.actualizado_en) continue;
+      if (local && ms(local) >= ms(row.actualizado_en)) continue;
       onProgress?.(`Restaurando acta ${i} de ${rows.length}…`);
 
       const acta = row.datos;

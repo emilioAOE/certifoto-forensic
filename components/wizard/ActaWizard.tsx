@@ -34,6 +34,7 @@ import {
 } from "@/lib/storage";
 import { appendAuditLog } from "@/lib/acta-helpers";
 import { certifyActa } from "@/lib/acta-certify";
+import { guardarCertificacionPendiente } from "@/lib/certificar-pendiente";
 import { track } from "@/lib/expansiel-analytics";
 import { pixel } from "@/lib/meta-pixel";
 import { syncContactsFromActa } from "@/lib/contacts";
@@ -490,6 +491,7 @@ export function ActaWizard() {
       // El acta ya quedo guardada; tras el login vuelve al detalle y certifica.
       router.push(`/login?next=${encodeURIComponent(`/actas/${actaId}?certificar=1`)}`);
     } else if (result.error === "no_credits") {
+      guardarCertificacionPendiente(actaId);
       router.push(`/precios?from=certify`);
     } else {
       router.push(`/actas/${actaId}`);

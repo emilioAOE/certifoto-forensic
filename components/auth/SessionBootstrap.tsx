@@ -42,12 +42,11 @@ export function SessionBootstrap() {
         p_nombre: nombreLocal,
         p_rol: null,
       });
-      if (error) {
-        console.error("[session] cf_asegurar_perfil:", error.message);
-        return;
-      }
+      // Si falla, igual seguimos: antes se cortaba aquí y ni los créditos ni el
+      // respaldo en la nube arrancaban en toda la visita.
+      if (error) console.error("[session] cf_asegurar_perfil:", error.message);
 
-      const perfil = data as { creado_en?: string; nombre?: string | null } | null;
+      const perfil = (error ? null : data) as { creado_en?: string; nombre?: string | null } | null;
       const creadoHaceMs = perfil?.creado_en
         ? Date.now() - new Date(perfil.creado_en).getTime()
         : Number.POSITIVE_INFINITY;
@@ -62,7 +61,9 @@ export function SessionBootstrap() {
         /* sin localStorage */
       }
 
-      if (esNuevo) {
+      if (error) {
+        /* sin perfil confirmado: no registrar analítica de alta/login */
+      } else if (esNuevo) {
         track("signup", { email: user.email, plan: "free" }, { userId: user.id });
         pixel("CompleteRegistration", { content_name: "magic_link" });
       } else if (!visto) {
@@ -77,26 +78,31 @@ export function SessionBootstrap() {
       try {
         const cloud = await import("@/lib/cloud-sync");
         const storage = await import("@/lib/storage");
+        // En páginas públicas el almacenamiento no se carga solo: sin esto la
+        // sincronización vería el dispositivo vacío y bajaría todo de nuevo.
+        await storage.hydrateStorage();
         cloud.initCloudSync(user.id);
         const findUpdatedAt = (kind: "acta" | "propiedad" | "contacto", id: string) => {
           if (kind === "acta") return storage.getActa(id)?.updatedAt ?? null;
           if (kind === "propiedad") return storage.getProperty(id)?.updatedAt ?? null;
           return storage.getContact(id)?.updatedAt ?? null;
         };
-        if (storage.listActas().length === 0) {
-          await cloud.restoreAll({
+        // Primero traer lo que sea más nuevo en la nube (antes solo se hacía
+        // con el dispositivo vacío: un celular con actas nunca veía las
+        // creadas en el computador), después subir lo que sea más nuevo aquí.
+        await cloud
+          .restoreAll({
             acta: storage.saveActa,
             property: storage.saveProperty,
             contact: storage.saveContact,
             localUpdatedAt: findUpdatedAt,
-          });
-        } else {
-          void cloud.backupAll({
-            actas: storage.listActas(),
-            properties: storage.listProperties(),
-            contacts: storage.listContacts(),
-          });
-        }
+          })
+          .catch((err) => console.error("[session] restaurar desde la nube:", err));
+        void cloud.backupAll({
+          actas: storage.listActas(),
+          properties: storage.listProperties(),
+          contacts: storage.listContacts(),
+        });
       } catch (err) {
         console.error("[session] cloud sync:", err);
       }

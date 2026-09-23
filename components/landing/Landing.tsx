@@ -13,9 +13,7 @@ import {
   Lock,
   MapPin,
   Eye,
-  Hash,
-  Quote,
-  Star,
+  Hash,
   Award,
   Home,
   KeyRound,
@@ -334,38 +332,6 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-accent-softer border-y border-accent-light/40">
-        <div className="max-w-6xl mx-auto px-4 py-20">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <p className="text-xs font-semibold text-accent-dark uppercase tracking-wider mb-3">
-              Quiénes lo usan
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-              Pensado para quienes documentan en serio
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5">
-            <Testimonial
-              quote="Antes de cada entrega imprimía un cuadernillo con fotos. Ahora todo queda en un PDF firmado por las dos partes en menos de 30 minutos."
-              name="María F."
-              role="Corredora de propiedades, Providencia"
-            />
-            <Testimonial
-              quote="Como administradora de 80 unidades, tener un mismo estándar de inspección para todas marcaba la diferencia. CertiFoto nos lo dio."
-              name="Carolina M."
-              role="Administradora, Las Condes"
-            />
-            <Testimonial
-              quote="Lo usé el día que recibí el departamento que compré. Tener fotos firmadas del estado de entrega me dejó tranquilo frente a la inmobiliaria."
-              name="Diego S."
-              role="Comprador, Ñuñoa"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* Stats */}
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="grid md:grid-cols-4 gap-6 text-center">
@@ -643,31 +609,6 @@ function Bullet({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Testimonial({
-  quote,
-  name,
-  role,
-}: {
-  quote: string;
-  name: string;
-  role: string;
-}) {
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <Quote className="h-5 w-5 text-accent mb-4" />
-      <p className="text-sm text-gray-700 leading-relaxed mb-5">&ldquo;{quote}&rdquo;</p>
-      <div className="flex items-center gap-1 text-amber-500 mb-2">
-        <Star className="h-3.5 w-3.5 fill-current" />
-        <Star className="h-3.5 w-3.5 fill-current" />
-        <Star className="h-3.5 w-3.5 fill-current" />
-        <Star className="h-3.5 w-3.5 fill-current" />
-        <Star className="h-3.5 w-3.5 fill-current" />
-      </div>
-      <p className="text-sm font-semibold text-gray-900">{name}</p>
-      <p className="text-xs text-gray-500">{role}</p>
-    </div>
-  );
-}
 
 function Stat({ number, label }: { number: string; label: string }) {
   return (

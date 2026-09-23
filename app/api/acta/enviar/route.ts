@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { enviarCorreoConAdjunto, listmonkConfigurado } from "@/lib/correo";
 import { correoActa } from "@/lib/correo-plantillas";
+import { dentroDelLimite } from "@/lib/limite";
 
 /**
  * POST /api/acta/enviar — manda el PDF de un acta por correo a las partes.
@@ -63,8 +64,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "json inválido" }, { status: 400 });
   }
 
-  // Solo se envían actas certificadas (el borrador se ve en pantalla, no sale).
-  if (body.certificado !== true) {
+  const actaId = texto(body.actaId, 80);
+
+  // Solo se envían actas certificadas, y eso lo decide el SERVIDOR: antes se
+  // confiaba en `certificado: true` y en el hash que mandaba el navegador, así
+  // que cualquier cuenta podía mandar un PDF cualquiera presentado como
+  // "certificado". La certificación real es el cobro en cf_creditos
+  // (cf_certificar), que además guarda la huella sellada.
+  const { data: cert } = await supabase
+    .from("cf_creditos")
+    .select("metadata")
+    .eq("user_id", user.id)
+    .eq("acta_id", actaId)
+    .eq("motivo", "certify_acta")
+    .limit(1)
+    .maybeSingle();
+  if (!actaId || !cert) {
     return NextResponse.json(
       {
         ok: false,
@@ -74,8 +89,11 @@ export async function POST(req: Request) {
       { status: 403 }
     );
   }
+  const hashSellado =
+    typeof (cert.metadata as { hash?: unknown } | null)?.hash === "string"
+      ? ((cert.metadata as { hash: string }).hash)
+      : null;
 
-  const actaId = texto(body.actaId, 80);
   const ruta = texto(body.ruta, 300);
   const prefijo = `${user.id}/${actaId}/`;
   if (
@@ -109,6 +127,23 @@ export async function POST(req: Request) {
     );
   }
 
+  // Cupo por cuenta (el remitente es compartido: el abuso afecta a todos).
+  if (
+    !(await dentroDelLimite(
+      { clave: `envio:${user.id}:hora`, max: 30, ventanaSeg: 3600, cantidad: destinatarios.length },
+      { clave: `envio:${user.id}:dia`, max: 100, ventanaSeg: 86400, cantidad: destinatarios.length }
+    ))
+  ) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "rate_limited",
+        message: "Llegaste al máximo de envíos por ahora. Intenta de nuevo en una hora.",
+      },
+      { status: 429 }
+    );
+  }
+
   // El PDF, con la sesión del usuario: RLS solo deja bajar lo suyo.
   const { data: archivo, error: errDescarga } = await supabase.storage
     .from("certifoto")
@@ -138,8 +173,8 @@ export async function POST(req: Request) {
     tipoLabel: texto(body.tipoLabel, 60) || "Acta",
     direccion: texto(body.direccion, 200) || "la propiedad",
     fechaInspeccion: texto(body.fechaInspeccion, 60) || null,
-    certificado: body.certificado === true,
-    hash: texto(body.hash, 128) || null,
+    certificado: true,
+    hash: hashSellado,
     mensaje: texto(body.mensaje, 1000) || null,
   });
 

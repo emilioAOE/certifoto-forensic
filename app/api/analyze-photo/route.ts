@@ -20,6 +20,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 
+import { dentroDelLimite, ipDe, reglasIA, RESPUESTA_LIMITE } from "@/lib/limite";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
@@ -84,6 +85,11 @@ const SEVERITIES = ["minor", "moderate", "severe", "review_required"];
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<AnalyzePhotoResponse>> {
+  // Cupo por IP y techo global diario (lib/limite.ts): sin esto cualquiera
+  // podía gastar la cuenta de Anthropic llamando esta ruta en bucle.
+  if (!(await dentroDelLimite(...reglasIA("analizar", ipDe(req))))) {
+    return NextResponse.json({ ok: false, error: RESPUESTA_LIMITE.message }, { status: 429 });
+  }
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json(
       {

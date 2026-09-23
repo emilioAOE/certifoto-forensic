@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 
+import { dentroDelLimite, ipDe, reglasIA, RESPUESTA_LIMITE } from "@/lib/limite";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
@@ -54,6 +55,11 @@ const MAX_BASE64_BYTES = 6 * 1024 * 1024; // ~4.5 MB descomprimido
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<ClassifyResponse>> {
+  // Cupo por IP y techo global diario (lib/limite.ts): sin esto cualquiera
+  // podía gastar la cuenta de Anthropic llamando esta ruta en bucle.
+  if (!(await dentroDelLimite(...reglasIA("clasificar", ipDe(req))))) {
+    return NextResponse.json({ ok: false, error: RESPUESTA_LIMITE.message }, { status: 429 });
+  }
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json(
       {

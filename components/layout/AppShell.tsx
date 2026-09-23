@@ -22,6 +22,7 @@ import { cn } from "@/lib/cn";
 import { GlobalSearch } from "./GlobalSearch";
 import { CurrentUserCard, SessionButton } from "./SessionControls";
 import { useStorageReady } from "@/components/StorageProvider";
+import { esRutaPublica } from "@/lib/rutas";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
@@ -40,19 +41,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Si la pagina es la landing publica, no mostrar el shell de la app
-  const isLanding =
-    pathname === "/" ||
-    pathname.startsWith("/blog") ||
-    pathname === "/faq" ||
-    pathname === "/precios" ||
-    pathname === "/corredores" ||
-    pathname === "/sobre" ||
-    pathname === "/contacto" ||
-    pathname === "/terminos" ||
-    pathname === "/privacidad" ||
-    pathname === "/plantilla" ||
-    pathname === "/login" ||
-    pathname.startsWith("/auth");
+  const isLanding = esRutaPublica(pathname);
 
   // Cmd+K / Ctrl+K abre la busqueda global
   useEffect(() => {

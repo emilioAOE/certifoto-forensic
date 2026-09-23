@@ -25,6 +25,7 @@ import { useToast } from "@/components/ui/Toast";
 import { createClient } from "@/lib/supabase/client";
 import { track } from "@/lib/expansiel-analytics";
 import { pixel } from "@/lib/meta-pixel";
+import { tomarCertificacionPendiente } from "@/lib/certificar-pendiente";
 
 const REASON_LABEL: Record<CreditEntry["reason"], string> = {
   welcome: "Crédito de bienvenida",
@@ -61,8 +62,17 @@ export function MisCreditosPage() {
     const pago = params.get("pago");
     if (!pago) return;
     if (pago === "pagado") {
-      toast.success("Pago recibido", "Tus créditos ya están en tu cuenta.");
       void registrarCompra(params.get("orden"));
+      // Venía de certificar un acta: volver a ella y retomar la certificación.
+      const pendiente = tomarCertificacionPendiente();
+      if (pendiente) {
+        toast.success("Pago recibido", "Volviendo a tu acta para certificarla…");
+        void refreshCredits().finally(() =>
+          window.location.assign(`/actas/${encodeURIComponent(pendiente)}?certificar=1`)
+        );
+        return;
+      }
+      toast.success("Pago recibido", "Tus créditos ya están en tu cuenta.");
     } else if (pago === "pendiente") {
       toast.info("Pago pendiente de confirmación");
     } else if (pago === "rechazado" || pago === "anulado") {

@@ -34,6 +34,7 @@ import {
 } from "@/lib/acta-helpers";
 import { SignaturesPanel } from "./SignaturesPanel";
 import { certifyActa } from "@/lib/acta-certify";
+import { guardarCertificacionPendiente } from "@/lib/certificar-pendiente";
 import {
   getCreditsBalance,
   subscribeToCreditsChanges,
@@ -170,6 +171,9 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     }
     // Certificar exige cuenta: el credito queda atado al usuario, no al navegador.
     const { getCreditsMode } = await import("@/lib/credits");
+    // Antes de mandar a iniciar sesión, reintentar: una falla de red al
+    // cargar la página deja en modo anon a alguien que sí tiene sesión.
+    if (getCreditsMode() === "anon") await refreshCredits();
     if (getCreditsMode() === "anon") {
       const ok = await confirm({
         title: "Inicia sesión para certificar",
@@ -189,7 +193,10 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         variant: "default",
         confirmLabel: "Ver packs",
       });
-      if (ok) router.push("/precios");
+      if (ok) {
+        guardarCertificacionPendiente(acta.id);
+        router.push("/precios");
+      }
       return;
     }
     if (acta.photos.some((p) => p.aiStatus === "pending" || p.aiStatus === "processing")) {
@@ -231,6 +238,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
             "Sin créditos",
             result.errorMessage ?? "No tienes créditos disponibles."
           );
+          guardarCertificacionPendiente(acta.id);
           router.push("/precios");
           return;
         }

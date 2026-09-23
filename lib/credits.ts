@@ -116,18 +116,25 @@ export function hydrateCredits(): Promise<void> {
     applyLocal();
     cache.hydrated = true;
 
-    // 2. Si hay sesion, el servidor manda.
-    try {
-      const supabase = createClient();
-      const { data } = await supabase.auth.getUser();
-      if (data.user) await loadServerCredits(data.user.id);
-      bindAuthListener();
-    } catch (err) {
-      // Sin red o sin Supabase: seguimos en modo anon.
+    // 2. Si hay sesion, el servidor manda. El listener va primero y siempre:
+    // antes solo se registraba si getUser respondía, y un fallo pasajero
+    // dejaba a alguien con sesión atascado en modo anon ("Inicia sesión").
+    bindAuthListener();
+    // Hasta 4 s: la app espera esta hidratación para salir de "Cargando tu
+    // plataforma…". Si Supabase tarda más, sigue en segundo plano y avisa a
+    // los suscriptores cuando llega.
+    const carga = cargarDesdeSesion().catch((err) => {
       console.warn("[credits] no se pudo consultar la sesión:", err);
-    }
+    });
+    await Promise.race([carga, new Promise((r) => setTimeout(r, 4000))]);
   })();
   return hydrationPromise;
+}
+
+async function cargarDesdeSesion(): Promise<void> {
+  const supabase = createClient();
+  const { data } = await supabase.auth.getUser();
+  if (data.user) await loadServerCredits(data.user.id);
 }
 
 function bindAuthListener() {
@@ -135,7 +142,10 @@ function bindAuthListener() {
   authListenerBound = true;
   const supabase = createClient();
   supabase.auth.onAuthStateChange((event, session) => {
-    if (session?.user && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
+    if (
+      session?.user &&
+      (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION")
+    ) {
       if (cache.userId !== session.user.id) void loadServerCredits(session.user.id);
     } else if (event === "SIGNED_OUT") {
       cache.mode = "anon";
@@ -203,9 +213,10 @@ async function loadServerCredits(userId: string): Promise<void> {
 
 /** Vuelve a leer saldo/historial del servidor (tras certificar o comprar). */
 export async function refreshCredits(): Promise<void> {
-  if (cache.mode !== "server" || !cache.userId) return;
   try {
-    await loadServerCredits(cache.userId);
+    if (cache.mode === "server" && cache.userId) await loadServerCredits(cache.userId);
+    // En modo anon puede haber una sesión que no se detectó al cargar (red).
+    else await cargarDesdeSesion();
   } catch (err) {
     console.error("[credits] refresh failed:", err);
   }
