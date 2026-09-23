@@ -43,7 +43,7 @@ export function PreciosPage() {
             icon={<Lock className="h-5 w-5" />}
             step="2"
             title="Trabaja gratis"
-            description="Crea, edita y revisa actas todo lo que necesites. Sube el contrato y las fotos, y mira la vista previa en pantalla. Sin límites mientras estén en borrador."
+            description="Crea, edita y revisa actas todo lo que necesites. Sube el contrato y las fotos, recoge las firmas y mira la vista previa en pantalla. Sin límites mientras estén en borrador."
           />
           <ExplainCard
             icon={<Award className="h-5 w-5" />}

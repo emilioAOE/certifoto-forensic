@@ -8,6 +8,7 @@ import {
   Sparkles,
   ShieldCheck,
   Loader2,
+  PenTool,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type {
@@ -464,6 +465,15 @@ export function ActaWizard() {
     if (actaId) router.push(`/actas/${actaId}`);
   };
 
+  // Con partes que firman, el camino es: guardar → firmar en la ficha →
+  // certificar ahí (antes se certificaba directo y no había dónde firmar).
+  const hayFirmantes = data.parties.some((p) => p.canSign);
+  const handleContinuarFirmas = () => {
+    if (generating || fotosDescribiendo > 0) return;
+    const actaId = createActa();
+    if (actaId) router.push(`/actas/${actaId}?firmar=1`);
+  };
+
   const handleGenerateCertificate = async () => {
     if (generating || fotosDescribiendo > 0) return;
     setGenerating(true);
@@ -669,6 +679,16 @@ export function ActaWizard() {
             >
               Guardar borrador
             </button>
+            {hayFirmantes ? (
+              <button
+                onClick={handleContinuarFirmas}
+                disabled={generating || fotosDescribiendo > 0}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <PenTool className="h-4 w-4" />
+                Continuar a las firmas
+              </button>
+            ) : (
             <button
               onClick={handleGenerateCertificate}
               disabled={generating || fotosDescribiendo > 0}
@@ -681,6 +701,7 @@ export function ActaWizard() {
               )}
               {generating ? "Generando certificado…" : "Generar certificado"}
             </button>
+            )}
           </div>
         )}
       </div>

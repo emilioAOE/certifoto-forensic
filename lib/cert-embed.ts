@@ -58,7 +58,9 @@ function fromBase64Utf8(b64: string): string {
 export function buildEmbeddedBlock(acta: Acta, property: Property | null): string {
   const payload: EmbeddedPayload = {
     app: "CertiFoto",
-    v: 1,
+    // v2: huella con firmas y descripciones de IA (computeDocumentHash);
+    // v1: computeDocumentHashV1. El verificador elige segun este campo.
+    v: 2,
     documentHash: acta.documentHash,
     certifiedAt: acta.certifiedAt,
     acta: stripActaImages(acta),

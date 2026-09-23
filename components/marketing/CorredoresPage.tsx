@@ -29,7 +29,7 @@ export const FAQ_CORREDORES = [
   {
     question: "¿El acta sale con mi nombre y el de mi corredora?",
     answer:
-      "Sí. El acta registra quién la emite (tú, como corredor o corredora) y las partes: arrendador y arrendatario, o comprador y vendedor, con RUT y correo tomados del contrato.",
+      "Sí. El acta registra quién la emite (tú, como corredor o corredora) y las partes: arrendador y arrendatario, o comprador y vendedor, con RUT y correo tomados del contrato. Cada parte firma en tu celular: conforme, con observaciones o no conforme.",
   },
   {
     question: "¿El propietario o el arrendatario necesitan cuenta?",
@@ -117,12 +117,12 @@ export function CorredoresPage() {
           <Beneficio
             icon={<Clock className="h-5 w-5" />}
             title="10 minutos, no una tarde"
-            text="El contrato en PDF o foto se lee solo. Las fotos se ordenan por ambiente y la IA escribe la descripción objetiva de cada una. Tú revisas y certificas."
+            text="El contrato en PDF o foto se lee solo. Las fotos se ordenan por ambiente y la IA escribe la descripción objetiva de cada una. Las partes firman en tu celular y certificas."
           />
           <Beneficio
             icon={<FileCheck className="h-5 w-5" />}
             title="Un acta que se ve profesional"
-            text="PDF con portada, datos de la propiedad y las partes, fotos por ambiente, inventario, QR de verificación y anexo técnico. Lleva tu nombre como quien la emite."
+            text="PDF con portada, datos de la propiedad y las partes, fotos por ambiente, inventario, firmas, QR de verificación y anexo técnico. Lleva tu nombre como quien la emite."
           />
           <Beneficio
             icon={<ShieldCheck className="h-5 w-5" />}
@@ -154,9 +154,10 @@ export function CorredoresPage() {
               el ambiente, describe el estado y marca posibles hallazgos. Tú
               corriges lo que quieras.
             </Paso>
-            <Paso n={3} icon={<Users className="h-5 w-5" />} title="Confirma las partes">
-              Arrendador y arrendatario ya vienen del contrato, con RUT y correo.
-              Agregas al corredor o a un testigo si hace falta.
+            <Paso n={3} icon={<Users className="h-5 w-5" />} title="Firmas en pantalla">
+              Arrendador y arrendatario ya vienen del contrato. Cada uno firma con el
+              dedo en tu celular: conforme, con observaciones o no conforme. Si cambias
+              algo después, vuelven a firmar.
             </Paso>
             <Paso n={4} icon={<FileCheck className="h-5 w-5" />} title="Certifica y envía">
               Con 1 crédito el acta se sella y se desbloquea: PDF verificable,

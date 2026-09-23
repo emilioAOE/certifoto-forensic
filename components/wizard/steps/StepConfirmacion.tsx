@@ -150,10 +150,21 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
         <div className="flex items-start gap-2">
           <ShieldCheck className="h-4 w-4 text-accent-dark shrink-0 mt-0.5" />
           <p className="text-xs text-gray-700 leading-relaxed">
-            Al apretar <span className="font-semibold">Generar certificado</span>{" "}
-            se sella el documento (queda inmutable, con su huella digital) y se
-            consume 1 crédito. Ahí se desbloquean la descarga del PDF y el
-            envío por correo; el acta ya no se podrá editar.
+            {data.parties.some((p) => p.canSign) ? (
+              <>
+                Sigue <span className="font-semibold">Continuar a las firmas</span>: cada
+                parte firma en esta pantalla y después certificas. Al certificar se sella
+                el documento (queda inmutable, con su huella digital) y se consume 1
+                crédito; ahí se desbloquean la descarga del PDF y el envío por correo.
+              </>
+            ) : (
+              <>
+                Al apretar <span className="font-semibold">Generar certificado</span>{" "}
+                se sella el documento (queda inmutable, con su huella digital) y se
+                consume 1 crédito. Ahí se desbloquean la descarga del PDF y el
+                envío por correo; el acta ya no se podrá editar.
+              </>
+            )}
           </p>
         </div>
       </div>

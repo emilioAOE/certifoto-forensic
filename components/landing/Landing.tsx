@@ -67,7 +67,7 @@ export function Landing() {
               El estado en que se entrega un inmueble —en un arriendo o en una
               compraventa— casi siempre queda a la palabra de las partes.
               CertiFoto lo deja documentado: fotos con respaldo forense,
-              descripciones con IA y un PDF verificable con QR. Créala gratis; pagas
+              descripciones con IA, firma de cada parte en pantalla y un PDF verificable con QR. Créala gratis; pagas
               solo cuando la certificas.
             </p>
 
@@ -168,7 +168,7 @@ export function Landing() {
           <Audience
             icon={<Eye className="h-6 w-6" />}
             title="Arrendatarios y compradores"
-            description="Protege lo que recibes con un registro fotográfico fechado y verificable, hecho el día de la entrega."
+            description="Protege lo que recibes con un registro fotográfico fechado, firmado por ambas partes y verificable, hecho el día de la entrega."
           />
           <Audience
             icon={<Building2 className="h-6 w-6" />}
@@ -252,6 +252,10 @@ export function Landing() {
                 <Bullet>
                   Partes cargadas desde el contrato, con RUT y correo
                 </Bullet>
+                <Bullet>
+                  Firma en pantalla de cada parte: conforme, con observaciones o
+                  no conforme
+                </Bullet>
                 <Bullet>Generación de PDF formal listo para compartir</Bullet>
               </div>
             </div>
@@ -319,13 +323,13 @@ export function Landing() {
           />
           <Step
             n={4}
-            title="Confirma las partes"
-            description="Arrendador y arrendatario quedan cargados desde el contrato, con RUT y correo. Agregas al corredor o a un testigo si hace falta."
+            title="Firman las partes"
+            description="Cada parte firma con el dedo en tu celular: conforme, con observaciones o no conforme. Si después cambias algo, vuelve a firmar."
           />
           <Step
             n={5}
             title="Certifica y descarga"
-            description="Con 1 crédito el acta se sella y se desbloquea: PDF sin marca de agua con fotos, descripciones, QR de verificación y registro técnico, listo para descargar o enviar por correo a las partes."
+            description="Con 1 crédito el acta se sella y se desbloquea: PDF sin marca de agua con fotos, descripciones, firmas, QR de verificación y registro técnico, listo para descargar o enviar por correo a las partes."
           />
         </div>
       </section>

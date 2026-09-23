@@ -15,6 +15,7 @@ import type {
   AuditLogEntry,
   EvidenceStrength,
   PartyRole,
+  Signature,
 } from "./acta-types";
 import { generateId } from "./storage";
 
@@ -209,11 +210,105 @@ export function appendAuditLog(
 }
 
 // ============================================
-// Calcular hash del documento (para firmas)
+// Huellas del documento
 // ============================================
 
+async function sha256Hex(text: string): Promise<string> {
+  if (typeof crypto === "undefined" || !crypto.subtle) return "no-crypto-available";
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+/**
+ * Huella del CONTENIDO del acta: lo que las partes revisan y firman. Incluye
+ * lo que se imprime en el PDF (descripciones y hallazgos de la IA, RUT de las
+ * partes, inventario), no las firmas. Cada firma guarda esta huella
+ * (documentVersionHash): si el contenido cambia despues, la firma queda
+ * desactualizada y no entra al certificado.
+ */
+export async function computeContentHash(acta: Acta): Promise<string> {
+  const payload = {
+    v: 2,
+    type: acta.type,
+    propertyId: acta.propertyId,
+    inspectionDate: acta.inspectionDate,
+    parties: acta.parties.map((p) => ({
+      id: p.id,
+      name: p.name,
+      role: p.role,
+      email: p.email,
+      documentId: p.documentId,
+    })),
+    rooms: acta.rooms.map((r) => ({
+      name: r.name,
+      condition: r.generalCondition,
+      observations: r.manualObservations,
+      aiSummary: r.aiSummary,
+      photoIds: r.photoIds,
+    })),
+    photos: acta.photos.map((p) => ({
+      id: p.id,
+      roomId: p.roomId,
+      fileName: p.fileName,
+      forensicSha256: p.forensic?.file.sha256 ?? null,
+      caption: p.userCaption,
+      ai: p.aiAnalysis
+        ? {
+            caption: p.aiAnalysis.caption,
+            condition: p.aiAnalysis.conditionSummary,
+            findings: p.aiAnalysis.damageFindings.map((d) => [d.type, d.severity, d.description]),
+          }
+        : null,
+    })),
+    inventory: acta.inventoryItems.map((i) => ({
+      name: i.name,
+      category: i.category,
+      quantity: i.quantity,
+      condition: i.condition,
+      notes: i.manualObservations,
+      ai: i.aiDescription,
+    })),
+    aiSummary: acta.aiSummary,
+    manualSummary: acta.manualSummary,
+  };
+  return sha256Hex(JSON.stringify(payload));
+}
+
+/** Firma hecha sobre la versión actual del contenido. */
+export function firmaVigente(sig: Signature, contentHash: string | null): boolean {
+  return contentHash !== null && sig.documentVersionHash === contentHash;
+}
+
+/**
+ * Huella del DOCUMENTO certificado (v2): contenido + firmas vigentes. Es la
+ * que se sella en el servidor (cf_certificar) y la que recalcula /forensic.
+ */
 export async function computeDocumentHash(acta: Acta): Promise<string> {
-  // Hash determinista del contenido relevante
+  const contenido = await computeContentHash(acta);
+  const firmas = await Promise.all(
+    acta.signatures
+      .filter((s) => firmaVigente(s, contenido))
+      .sort((a, b) => a.partyId.localeCompare(b.partyId))
+      .map(async (s) => ({
+        partyId: s.partyId,
+        name: s.signerName,
+        status: s.status,
+        observations: s.observations,
+        rejectionReason: s.rejectionReason,
+        signedAt: s.signedAt,
+        imagen: s.signatureImageDataUrl ? await sha256Hex(s.signatureImageDataUrl) : null,
+      }))
+  );
+  return sha256Hex(JSON.stringify({ v: 2, contenido, firmas }));
+}
+
+/**
+ * Huella v1 (hasta sept-2026, sin firmas ni IA). Solo para verificar
+ * certificados emitidos con esa versión (payload.v === 1).
+ */
+export async function computeDocumentHashV1(acta: Acta): Promise<string> {
   const payload = {
     type: acta.type,
     propertyId: acta.propertyId,
@@ -238,21 +333,8 @@ export async function computeDocumentHash(acta: Acta): Promise<string> {
     aiSummary: acta.aiSummary,
     manualSummary: acta.manualSummary,
   };
-
-  const text = JSON.stringify(payload);
-  if (typeof crypto !== "undefined" && crypto.subtle) {
-    const enc = new TextEncoder().encode(text);
-    const hash = await crypto.subtle.digest("SHA-256", enc);
-    return Array.from(new Uint8Array(hash))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-  }
-  return "no-crypto-available";
+  return sha256Hex(JSON.stringify(payload));
 }
-
-// ============================================
-// Helpers de busqueda
-// ============================================
 
 export function getPhotosForRoom(acta: Acta, roomId: string): PhotoEvidence[] {
   return acta.photos.filter((p) => p.roomId === roomId);

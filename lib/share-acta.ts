@@ -8,7 +8,7 @@
  */
 
 import type { Acta, Property } from "./acta-types";
-import { computeDocumentHash } from "./acta-helpers";
+import { computeDocumentHash, computeDocumentHashV1 } from "./acta-helpers";
 import { extractEmbeddedPayload } from "./cert-embed";
 
 /** Estructura del manifest dentro de un archivo .certifoto. */
@@ -103,7 +103,8 @@ export async function verifyCertifotoFile(
   }
 
   const storedHash = acta.documentHash ?? manifest.documentHash ?? null;
-  const recomputedHash = await computeDocumentHash(acta);
+  // Los .certifoto se generaron solo con la huella v1 (el export se retiró).
+  const recomputedHash = await computeDocumentHashV1(acta);
   const documentHashPresent = !!storedHash;
   const integrityValid = documentHashPresent && storedHash === recomputedHash;
 
@@ -171,7 +172,10 @@ export async function verifyCertificateFile(
           "Este PDF no tiene datos de verificación embebidos. Asegúrate de que sea un certificado emitido por CertiFoto (no un borrador, ni un PDF re-guardado por otro programa).",
       };
     }
-    const recomputedHash = await computeDocumentHash(payload.acta);
+    const recomputedHash =
+      payload.v >= 2
+        ? await computeDocumentHash(payload.acta)
+        : await computeDocumentHashV1(payload.acta);
     const storedHash = payload.documentHash;
     const documentHashPresent = !!storedHash;
     const integrityValid = documentHashPresent && storedHash === recomputedHash;

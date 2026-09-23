@@ -17,6 +17,7 @@ import {
   ACTA_TYPE_LABEL,
   ACTA_STATUS_LABEL,
   PARTY_ROLE_LABEL,
+  STANDARD_ACCEPTANCE_TEXT,
   PROPERTY_TYPE_LABEL,
   CONDITION_LABEL,
   DAMAGE_TYPE_LABEL,
@@ -28,6 +29,7 @@ import { buildEmbeddedBlock } from "./cert-embed";
 import { downloadBlob } from "./export-import";
 
 import { fechaLocal } from "./format";
+import { computeContentHash, firmaVigente } from "./acta-helpers";
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
@@ -505,40 +507,58 @@ export async function buildActaPdf(acta: Acta, property: Property): Promise<Acta
   // ============================================
   // SIGNATURES
   // ============================================
-  if (acta.signatures.length > 0) {
+  // Firmas: una fila por parte que firma. Solo cuentan las firmas hechas
+  // sobre esta versión del contenido; las demás salen como "Sin firma".
+  const firmantes = acta.parties.filter((p) => p.canSign);
+  if (firmantes.length > 0) {
+    const contenido = await computeContentHash(acta);
     doc.addPage();
     y = margin;
     drawSectionTitle("Firmas");
 
-    for (const sig of acta.signatures) {
-      checkPage(45);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(110, 110, 110);
+    drawText(`Declaración aceptada por quienes firman: ${STANDARD_ACCEPTANCE_TEXT}`, 7.5);
+    y += 2;
+
+    for (const party of firmantes) {
+      const sig = acta.signatures.find((s) => s.partyId === party.id);
+      const valida = sig && firmaVigente(sig, contenido) ? sig : null;
+      checkPage(valida?.signatureImageDataUrl ? 52 : 26);
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
       doc.setTextColor(10, 14, 23);
-      doc.text(sig.signerName, margin, y);
+      doc.text(party.name || "(sin nombre)", margin, y);
       y += 4;
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(110, 110, 110);
       doc.text(
-        `${PARTY_ROLE_LABEL[sig.signerRole]} · ${new Date(sig.signedAt).toLocaleString("es-CL")}`,
+        [
+          PARTY_ROLE_LABEL[party.role],
+          party.documentId ? `RUT ${party.documentId}` : null,
+          valida ? new Date(valida.signedAt).toLocaleString("es-CL") : null,
+        ]
+          .filter(Boolean)
+          .join(" · "),
         margin,
         y
       );
       y += 4;
 
-      let statusLabel = "";
-      let statusColor: [number, number, number] = [110, 110, 110];
-      if (sig.status === "signed_conformity") {
+      let statusLabel = "SIN FIRMA";
+      let statusColor: [number, number, number] = [140, 140, 140];
+      if (valida?.status === "signed_conformity") {
         statusLabel = "FIRMADO CONFORME";
         statusColor = [40, 150, 90];
-      } else if (sig.status === "signed_with_observations") {
+      } else if (valida?.status === "signed_with_observations") {
         statusLabel = "FIRMADO CON OBSERVACIONES";
         statusColor = [200, 140, 40];
-      } else {
-        statusLabel = "RECHAZADO";
+      } else if (valida?.status === "rejected") {
+        statusLabel = "NO CONFORME";
         statusColor = [200, 50, 50];
       }
       doc.setFont("helvetica", "bold");
@@ -547,42 +567,43 @@ export async function buildActaPdf(acta: Acta, property: Property): Promise<Acta
       doc.text(statusLabel, margin, y);
       y += 5;
 
-      // Signature image
-      if (sig.signatureImageDataUrl) {
+      if (valida?.signatureImageDataUrl) {
         try {
-          doc.addImage(sig.signatureImageDataUrl, "PNG", margin, y, 60, 22);
-          y += 24;
+          // Encajar la firma (PNG recortado) en 60 x 22 mm sin deformarla.
+          const props = doc.getImageProperties(valida.signatureImageDataUrl);
+          const k = Math.min(60 / props.width, 22 / props.height);
+          doc.addImage(valida.signatureImageDataUrl, "PNG", margin, y, props.width * k, props.height * k);
+          y += props.height * k + 2;
         } catch {
           y += 2;
         }
+        doc.setDrawColor(200, 200, 200);
+        doc.line(margin, y, margin + 60, y);
+        y += 4;
       }
 
-      if (sig.observations) {
+      if (valida?.observations) {
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(180, 130, 40);
         doc.text("Observaciones:", margin, y);
         y += 3.5;
-        drawText(sig.observations, 8);
+        drawText(valida.observations, 8);
       }
-      if (sig.rejectionReason) {
+      if (valida?.rejectionReason) {
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(180, 50, 50);
-        doc.text("Motivo de rechazo:", margin, y);
+        doc.text("Motivo:", margin, y);
         y += 3.5;
-        drawText(sig.rejectionReason, 8);
+        drawText(valida.rejectionReason, 8);
       }
 
-      if (sig.documentVersionHash) {
+      if (valida?.documentVersionHash) {
         doc.setFont("courier", "normal");
         doc.setFontSize(6);
         doc.setTextColor(140, 140, 140);
-        doc.text(
-          `Hash al firmar: ${sig.documentVersionHash}`,
-          margin,
-          y
-        );
+        doc.text(`Contenido firmado: ${valida.documentVersionHash}`, margin, y);
         y += 3;
       }
 

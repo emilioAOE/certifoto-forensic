@@ -20,7 +20,9 @@ import type { Acta } from "./acta-types";
 import { getActa, saveActa, isActaCertified } from "./storage";
 import {
   appendAuditLog,
+  computeContentHash,
   computeDocumentHash,
+  firmaVigente,
   validateActaForReview,
 } from "./acta-helpers";
 import { refreshCredits } from "./credits";
@@ -98,7 +100,12 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
       };
     }
 
-    const hash = await computeDocumentHash(acta);
+    // Solo entran las firmas hechas sobre esta versión del contenido: una
+    // firma anterior a un cambio no respalda lo que se está sellando.
+    const contenido = await computeContentHash(acta);
+    const firmasVigentes = acta.signatures.filter((s) => firmaVigente(s, contenido));
+    const aSellar: Acta = { ...acta, signatures: firmasVigentes };
+    const hash = await computeDocumentHash(aSellar);
 
     const { data, error } = await supabase.rpc("cf_certificar", {
       p_acta_id: acta.id,
@@ -138,7 +145,7 @@ export async function certifyActa(actaId: string): Promise<CertifyResult> {
 
     const now = new Date().toISOString();
     const certified: Acta = {
-      ...acta,
+      ...aSellar,
       certifiedAt: now,
       legacyCertified: false,
       documentHash: hash,

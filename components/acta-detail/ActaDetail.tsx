@@ -29,7 +29,10 @@ import {
   validateActaForReview,
   calculateActaProgress,
   appendAuditLog,
+  computeContentHash,
+  firmaVigente,
 } from "@/lib/acta-helpers";
+import { SignaturesPanel } from "./SignaturesPanel";
 import { certifyActa } from "@/lib/acta-certify";
 import {
   getCreditsBalance,
@@ -117,6 +120,18 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted, acta, property, sesion, sesionCargando]);
 
+  // Desde el asistente ("Continuar a las firmas") se llega con ?firmar=1.
+  const irAFirmas = useRef(false);
+  useEffect(() => {
+    if (!mounted || !acta || irAFirmas.current) return;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("firmar") && window.location.hash !== "#firmas") return;
+    irAFirmas.current = true;
+    if (params.has("firmar")) window.history.replaceState(null, "", window.location.pathname);
+    // Después del scroll al inicio que hace Next al navegar.
+    setTimeout(() => document.getElementById("firmas")?.scrollIntoView({ block: "start" }), 600);
+  }, [mounted, acta]);
+
   const refresh = () => {
     const a = getActa(actaId);
     if (!a) {
@@ -177,12 +192,28 @@ export function ActaDetail({ actaId }: { actaId: string }) {
       if (ok) router.push("/precios");
       return;
     }
+    if (acta.photos.some((p) => p.aiStatus === "pending" || p.aiStatus === "processing")) {
+      toast.info(
+        "La IA sigue describiendo fotos",
+        "Espera a que termine: si certificas ahora, esas fotos quedan sin descripción."
+      );
+      return;
+    }
+    const contenido = await computeContentHash(acta);
+    const faltan = acta.parties.filter((p) => {
+      if (!p.canSign) return false;
+      const s = acta.signatures.find((x) => x.partyId === p.id);
+      return !s || !firmaVigente(s, contenido);
+    });
+    const avisoFirmas =
+      faltan.length > 0
+        ? `Faltan firmas de: ${faltan.map((p) => p.name || "(sin nombre)").join(", ")}. El certificado indicará «Sin firma» para ${faltan.length === 1 ? "esa parte" : "esas partes"}. `
+        : "Todas las partes firmaron. ";
     const ok = await confirm({
-      title: "Generar el certificado",
-      message:
-        "Se sella el documento (queda inmutable, con su huella digital), se quita la marca de agua del PDF y se consume 1 crédito. Después de generarlo ya no podrás editarlo. Esta acción no se puede deshacer.",
+      title: faltan.length > 0 ? "Certificar sin todas las firmas" : "Generar el certificado",
+      message: `${avisoFirmas}Se sella el documento (queda inmutable, con su huella digital), se quita la marca de agua del PDF y se consume 1 crédito. Después de generarlo ya no podrás editarlo. Esta acción no se puede deshacer.`,
       variant: "default",
-      confirmLabel: "Sí, generar certificado (1 crédito)",
+      confirmLabel: faltan.length > 0 ? "Certificar igual (1 crédito)" : "Sí, generar certificado (1 crédito)",
     });
     if (!ok) return;
 
@@ -273,7 +304,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
     const ok = await confirm({
       title: "Eliminar acta",
       message:
-        "Esta acción no se puede deshacer. Las fotos y observaciones se borrarán.",
+        "Esta acción no se puede deshacer. Las fotos, observaciones y firmas se borrarán.",
       variant: "danger",
       confirmLabel: "Sí, eliminar",
     });
@@ -620,6 +651,9 @@ export function ActaDetail({ actaId }: { actaId: string }) {
         </h3>
         <PartiesSummary parties={acta.parties} />
       </section>
+
+      {/* Firmas de las partes (en persona, en esta pantalla) */}
+      <SignaturesPanel acta={acta} readOnly={isReadOnly} onUpdate={updateActa} />
 
       {/* Rooms / Evidence */}
       <section>

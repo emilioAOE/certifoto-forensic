@@ -177,8 +177,8 @@ export function Dashboard() {
           Actas Digitales con respaldo forense
         </h1>
         <p className="text-muted text-sm mt-2 max-w-2xl">
-          Documenta el estado de propiedades arrendadas con fotos y descripciones
-          asistidas con IA. Cada foto incluye respaldo
+          Documenta el estado de propiedades arrendadas con fotos, descripciones
+          asistidas con IA y firma de las partes. Cada foto incluye respaldo
           forense de metadata para verificar su autenticidad.
         </p>
 
@@ -463,6 +463,11 @@ function ActaListItem({ acta }: { acta: ActaSummary }) {
           <div className="text-[11px] text-muted mt-1 flex flex-wrap gap-3">
             <span>{acta.roomsCount} ambiente(s)</span>
             <span>{acta.photosCount} foto(s)</span>
+            {acta.signaturesRequired > 0 && (
+              <span>
+                {acta.signaturesCount}/{acta.signaturesRequired} firma(s)
+              </span>
+            )}
             <span>
               {new Date(acta.updatedAt).toLocaleDateString("es-CL")}
             </span>
