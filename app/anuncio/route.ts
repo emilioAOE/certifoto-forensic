@@ -1,8 +1,12 @@
 /**
  * certifoto.cl/anuncio — destino de los anuncios pagados (Meta/Instagram Ads).
  *
- * Lleva DIRECTO a crear el acta (lo que promete el anuncio). Redirección
- * temporal (307) para poder cambiar el destino sin tocar los anuncios.
+ * Lleva a /corredores: se renderiza en el servidor (se ve al instante en el
+ * navegador de Instagram), explica el producto y tiene el botón para crear el
+ * acta en la primera pantalla. Antes llevaba directo a /actas/nueva, que en el
+ * celular mostraba una pantalla blanca de carga y luego un formulario sin
+ * contexto. Redirección temporal (307) para poder cambiar el destino sin tocar
+ * los anuncios.
  *
  * Conserva TODO lo que agrega Meta (fbclid y sus utm_*): el fbclid es lo que
  * el píxel convierte en la cookie _fbc para atribuir la conversión al anuncio;
@@ -21,7 +25,7 @@ const PROPIOS = new Set(["f", "c"]);
 
 export function GET(request: NextRequest) {
   const entrada = new URL(request.url).searchParams;
-  const destino = new URL("/actas/nueva", SITE_URL);
+  const destino = new URL("/corredores", SITE_URL);
 
   // 1. Reenviar lo que venga (fbclid, utm_* de Meta, etc.), saneado.
   entrada.forEach((valor, clave) => {

@@ -2,16 +2,19 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  // Anuncios pagados que apuntan a la portada → directo a crear el acta, que
-  // es lo que promete el anuncio. La campaña de Instagram de sept-2026 quedó
-  // configurada con certifoto.cl como destino y 82 de 85 visitas se fueron
-  // sin tocar nada: en el celular la portada no mostraba ningún botón en la
-  // primera pantalla. Se conservan todos los parámetros (fbclid y utm_* de
-  // Meta) para que el píxel atribuya la conversión al anuncio.
+  // Anuncios pagados que apuntan a la portada → /corredores. En el celular la
+  // portada no mostraba ningún botón en la primera pantalla (82 de 85 visitas
+  // se fueron). Mandarlos directo a /actas/nueva fue peor: esa ruta no trae
+  // contenido en el HTML (pantalla blanca con "Cargando tu plataforma..."
+  // hasta ejecutar ~320 KB de JS en el navegador de Instagram) y cuando carga
+  // es un formulario sin explicación. /corredores se renderiza en el servidor,
+  // explica el producto y tiene el botón en la primera pantalla. Se conservan
+  // todos los parámetros (fbclid y utm_* de Meta) para que el píxel atribuya
+  // la conversión al anuncio.
   const url = request.nextUrl;
   if (url.pathname === "/" && url.searchParams.get("utm_medium") === "paid") {
     const destino = url.clone();
-    destino.pathname = "/actas/nueva";
+    destino.pathname = "/corredores";
     return NextResponse.redirect(destino, 307);
   }
   return updateSession(request);
