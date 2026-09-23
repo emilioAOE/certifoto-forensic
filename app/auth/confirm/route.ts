@@ -7,6 +7,7 @@ import { enviarBienvenidaSiCorresponde } from "@/lib/correo-ciclo";
  * Destino del magic link. Acepta los dos formatos que puede generar Supabase:
  *  - ?code=...                       (flujo PKCE, plantilla por defecto)
  *  - ?token_hash=...&type=email      (plantilla personalizada con TokenHash)
+ * y ?sesion=1 cuando el usuario ya entró con el código del correo.
  * Si la verificación es exitosa deja la sesión en cookies, manda la
  * bienvenida si es el primer login (idempotente, nunca bloquea) y redirige
  * a `next`. Si falla (enlace usado o vencido), vuelve al login con el error y
@@ -23,7 +24,13 @@ export async function GET(request: NextRequest) {
   const supabase = createClient();
   let errorMessage: string | null = null;
 
-  if (code) {
+  if (searchParams.get("sesion") === "1") {
+    // Entró con el código de 6 dígitos (LoginForm verifica en el navegador,
+    // así el límite de intentos de Supabase es por IP del usuario): la sesión
+    // ya está en cookies; solo falta la bienvenida y el redirect.
+    const { data } = await supabase.auth.getUser();
+    errorMessage = data.user ? null : "Sesión no encontrada";
+  } else if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     errorMessage = error?.message ?? null;
   } else if (tokenHash && type) {

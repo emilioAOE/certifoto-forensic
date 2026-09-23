@@ -178,9 +178,24 @@ export function ActaWizard() {
   const elegirTipo = (type: ActaType) => {
     if (!data.type) track("asistente_tipo", { tipo: type });
     updateData({ type });
+    // Paso de una sola elección: avanzar solo. En el celular el botón
+    // "Siguiente" quedaba bajo el borde de la pantalla.
+    if (step === 1) setTimeout(() => setStep((s) => (s === 1 ? 2 : s)), 180);
   };
 
   const handleAutoFill = () => {
+    // Reemplaza TODO el borrador por datos de ejemplo: no pisar sin avisar
+    // lo que la persona ya cargó (contrato, partes, fotos).
+    const hayDatos =
+      data.property.address.trim() !== "" ||
+      data.parties.length > 0 ||
+      data.pendingPhotos.length > 0;
+    if (
+      hayDatos &&
+      !window.confirm("Esto reemplaza lo que llevas cargado por un acta de ejemplo. ¿Seguir?")
+    ) {
+      return;
+    }
     track("asistente_autollenar");
     const mock = getWizardMockData();
     setData({
@@ -470,10 +485,10 @@ export function ActaWizard() {
             <button
               onClick={handleAutoFill}
               className="inline-flex items-center gap-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 px-2 py-1 text-[11px] hover:bg-purple-100 transition-colors"
-              title="Llena el wizard con datos de ejemplo y salta a la revisión"
+              title="Llena el asistente con un acta de ejemplo y salta a la revisión"
             >
               <Sparkles className="h-3 w-3" />
-              Auto-llenar
+              Ver ejemplo
             </button>
           </div>
           <span className="text-xs text-muted">

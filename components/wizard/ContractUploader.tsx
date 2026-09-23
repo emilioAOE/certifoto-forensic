@@ -126,7 +126,7 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
             </div>
             <div className="text-xs text-gray-500 mt-1 leading-relaxed">
               PDF nativo, PDF escaneado o foto del contrato (JPG, PNG, WebP,
-              HEIC). Si es escaneo o imagen, hacemos OCR en español localmente.
+              HEIC). La IA lo lee aunque sea un escaneo o una foto.
             </div>
           </button>
           <input
@@ -212,8 +212,9 @@ export function ContractUploader({ onExtracted, onClose }: ContractUploaderProps
       )}
 
       <p className="text-[10px] text-gray-400 mt-3 leading-relaxed">
-        El PDF se procesa localmente en tu navegador. No se envía a ningún servidor.
-        Los datos extraídos son una sugerencia y debes revisarlos antes de continuar.
+        Para leerlo enviamos las primeras páginas a nuestro proveedor de IA, que no
+        las usa para entrenar modelos; CertiFoto no las guarda. Los datos extraídos
+        son una sugerencia y debes revisarlos antes de continuar.
       </p>
     </div>
   );
@@ -243,9 +244,12 @@ function ExtractionPreview({
       <div className="flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
         <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
         <div className="text-xs text-emerald-800 flex-1">
-          Archivo procesado: {extraction.extractedFrom.pages} página(s),{" "}
-          {extraction.extractedFrom.chars.toLocaleString()} caracteres
-          extraídos
+          Contrato leído
+          {extraction.extractedFrom.pages > 0 &&
+            ` · ${extraction.extractedFrom.pages} página${extraction.extractedFrom.pages === 1 ? "" : "s"}`}
+          {/* La IA lee imágenes: "0 caracteres" parecía un error aunque todo salió bien. */}
+          {extraction.extractedFrom.chars > 0 &&
+            ` · ${extraction.extractedFrom.chars.toLocaleString("es-CL")} caracteres`}
         </div>
         <span className={`text-xs font-semibold ${confidenceColor}`}>
           Confianza {confidenceLabel}

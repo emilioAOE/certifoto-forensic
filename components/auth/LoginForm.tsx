@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Fingerprint, Mail, CheckCircle, ArrowRight, ShieldCheck } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -38,6 +39,13 @@ export function LoginForm() {
   const [captcha, setCaptcha] = useState<string | null>(null);
   // Los tokens de Turnstile son de un solo uso: remontamos el widget tras cada intento.
   const [captchaNonce, setCaptchaNonce] = useState(0);
+  // Código de 6 dígitos del correo (0 = el servidor solo mandó enlace). Es la
+  // vía para quien abrió CertiFoto dentro de Instagram/Facebook: el enlace se
+  // abre en otro navegador, donde no está el acta que creó sin cuenta.
+  const [largoCodigo, setLargoCodigo] = useState(0);
+  const [codigo, setCodigo] = useState("");
+  const [verificando, setVerificando] = useState(false);
+  const [errorCodigo, setErrorCodigo] = useState<string | null>(null);
 
   const captchaRequired = TURNSTILE_SITE_KEY !== "";
   const onCaptchaToken = useCallback((t: string | null) => setCaptcha(t), []);
@@ -81,12 +89,19 @@ export function LoginForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: clean, next, company, captcha }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        largoCodigo?: number;
+      };
       if (!res.ok || !data.ok) {
         setError(data.error ?? traducirError(""));
         if (res.status === 429) setCooldown(RESEND_COOLDOWN_S);
         return;
       }
+      setLargoCodigo(data.largoCodigo ?? 0);
+      setCodigo("");
+      setErrorCodigo(null);
       setSent(true);
       setCooldown(RESEND_COOLDOWN_S);
     } catch {
@@ -98,6 +113,31 @@ export function LoginForm() {
     }
   };
 
+  const verificarCodigo = async (valor: string) => {
+    if (verificando || valor.length < 6) return;
+    setErrorCodigo(null);
+    setVerificando(true);
+    try {
+      const { error: err } = await createClient().auth.verifyOtp({
+        email: email.trim().toLowerCase(),
+        token: valor,
+        type: "email",
+      });
+      if (err) {
+        setErrorCodigo(traducirErrorCodigo(err.message));
+        setVerificando(false);
+        return;
+      }
+      // La sesión ya quedó en cookies: /auth/confirm manda la bienvenida y
+      // redirige a `next` (recarga completa, así toda la app ve la sesión).
+      const next = new URLSearchParams(window.location.search).get("next") ?? "/dashboard";
+      window.location.assign(`/auth/confirm?sesion=1&next=${encodeURIComponent(next)}`);
+    } catch {
+      setErrorCodigo("No pudimos verificar el código. Revisa tu conexión e inténtalo de nuevo.");
+      setVerificando(false);
+    }
+  };
+
   if (sent) {
     return (
       <div className="text-center">
@@ -105,11 +145,62 @@ export function LoginForm() {
           <CheckCircle className="h-8 w-8 text-accent-dark" />
         </div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Revisa tu correo</h2>
-        <p className="text-sm text-gray-600 leading-relaxed">
-          Te enviamos un enlace a <span className="font-medium text-gray-900">{email}</span>.
-          Ábrelo desde este mismo dispositivo para entrar. Si no llega en un par de
-          minutos, revisa la carpeta de spam.
-        </p>
+        {largoCodigo > 0 ? (
+          <>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Te enviamos un código de {largoCodigo} dígitos a{" "}
+              <span className="font-medium text-gray-900">{email}</span>. Escríbelo aquí
+              para entrar sin salir de esta pantalla.
+            </p>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void verificarCodigo(codigo);
+              }}
+              className="mt-5 space-y-3"
+            >
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                autoFocus
+                aria-label="Código de acceso"
+                maxLength={largoCodigo}
+                value={codigo}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, "").slice(0, largoCodigo);
+                  setCodigo(v);
+                  if (v.length === largoCodigo) void verificarCodigo(v);
+                }}
+                placeholder={"0".repeat(largoCodigo)}
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-3 text-center text-2xl font-semibold tracking-[0.4em] text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+              />
+              {errorCodigo && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
+                  {errorCodigo}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={verificando || codigo.length < largoCodigo}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-accent text-white px-4 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {verificando ? "Entrando…" : "Entrar"}
+                {!verificando && <ArrowRight className="h-4 w-4" />}
+              </button>
+            </form>
+            <p className="mt-4 text-xs text-gray-500 leading-relaxed">
+              También puedes tocar el botón del correo desde este mismo navegador. Si no
+              llega en un par de minutos, revisa la carpeta de spam.
+            </p>
+          </>
+        ) : (
+          <p className="text-sm text-gray-600 leading-relaxed">
+            Te enviamos un enlace a <span className="font-medium text-gray-900">{email}</span>.
+            Ábrelo desde este mismo dispositivo para entrar. Si no llega en un par de
+            minutos, revisa la carpeta de spam.
+          </p>
+        )}
         <button
           onClick={() => setSent(false)}
           className="mt-6 text-sm text-accent-dark hover:underline"
@@ -251,6 +342,17 @@ function traducirError(msg: string): string {
     return "El enlace está incompleto. Pide uno nuevo.";
   }
   return "No pudimos completar el acceso. Pide un enlace nuevo.";
+}
+
+function traducirErrorCodigo(msg: string): string {
+  const m = msg.toLowerCase();
+  if (m.includes("rate") || m.includes("too many")) {
+    return "Demasiados intentos. Espera unos minutos y vuelve a probar.";
+  }
+  if (m.includes("expired") || m.includes("invalid")) {
+    return "El código no es correcto o ya venció. Usa el del último correo o pide uno nuevo.";
+  }
+  return "No pudimos verificar el código. Inténtalo de nuevo.";
 }
 
 /** Bloque lateral: por que crear cuenta. */

@@ -101,8 +101,13 @@ Deno.serve(async (req: Request) => {
     if (perfil.error) return json(500, { error: "perfil" });
   }
 
+  // email_otp: el codigo de 6 digitos del MISMO token. Va en el correo para
+  // quien abrio CertiFoto dentro de Instagram/Facebook: el enlace se abre en
+  // otro navegador (donde no esta su acta local) y el codigo lo deja entrar
+  // en el mismo. Tan sensible como hashed_token: nunca se registra.
   return json(200, {
     hashed_token: link.data.properties.hashed_token,
     verification_type: link.data.properties.verification_type ?? "magiclink",
+    email_otp: link.data.properties.email_otp ?? null,
   });
 });

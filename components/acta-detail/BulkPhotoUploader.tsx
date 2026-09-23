@@ -34,6 +34,8 @@ import { cn } from "@/lib/cn";
 
 /** Prefijo de ids sinteticos para templates que la AI puede sugerir crear. */
 const TEMPLATE_PREFIX = "__tpl__";
+/** Clasificaciones de ambiente simultaneas contra /api/classify-room. */
+const AI_CLASSIFY_CONCURRENCY = 4;
 
 interface BulkPhotoUploaderProps {
   acta: Acta;
@@ -99,6 +101,11 @@ export function BulkPhotoUploader({
    * Tienen id real (no de template) para que el dropdown pueda mostrarlos.
    */
   const [extraRooms, setExtraRooms] = useState<Room[]>([]);
+  // Espejo sincrono de extraRooms: runAIClassification corre en un closure
+  // creado al elegir las fotos, donde `extraRooms` queda congelado en []. Sin
+  // esto cada foto de un ambiente nuevo creaba su propio Room ("Cocina",
+  // "Cocina", "Baño principal", "Baño principal"...).
+  const extraRoomsRef = useRef<Room[]>([]);
   const [saving, setSaving] = useState(false);
 
   /** Combinacion de rooms del acta + los materializados durante esta sesion. */
@@ -167,10 +174,20 @@ export function BulkPhotoUploader({
       )
     );
 
-    // Procesar en serie para que el prompt cache haga hit a partir de la 2da
-    // (Haiku tiene cache de 5min para prefijos > 4096 tokens; con muchos
-    // ambientes el system prompt entra al cache despues de la primera).
-    for (const target of targets) {
+    // Varias en paralelo. (Antes iba en serie "para el prompt cache", pero el
+    // system prompt de classify-room ronda los 800 tokens y Haiku solo cachea
+    // desde 4096: nunca hacia hit y 36 fotos tardaban ~3 minutos.)
+    const cola = [...targets];
+    const trabajador = async () => {
+      for (let target = cola.shift(); target; target = cola.shift()) {
+        await clasificarUna(target);
+      }
+    };
+    await Promise.all(
+      Array.from({ length: Math.min(AI_CLASSIFY_CONCURRENCY, cola.length) }, trabajador)
+    );
+
+    async function clasificarUna(target: ProcessedPhoto) {
       const result = await classifyRoomWithAI(target.dataUrl, roomsForAI);
 
       // Si la IA respondio con un id de template (ambiente que no existia
@@ -233,7 +250,7 @@ export function BulkPhotoUploader({
     const existing = acta.rooms.find((r) => r.type === templateType);
     if (existing) return existing.id;
     // 2. Si ya lo materializamos en esta sesion, reutilizar
-    const materialized = extraRooms.find((r) => r.type === templateType);
+    const materialized = extraRoomsRef.current.find((r) => r.type === templateType);
     if (materialized) return materialized.id;
     // 3. Crear desde template
     const template = ROOM_TEMPLATES.find((t) => t.type === templateType);
@@ -242,7 +259,7 @@ export function BulkPhotoUploader({
       id: generateId("room"),
       type: template.type,
       name: template.name,
-      order: acta.rooms.length + extraRooms.length,
+      order: acta.rooms.length + extraRoomsRef.current.length,
       required: false,
       minPhotos: template.minPhotos,
       generalCondition: "no_evaluado" as ConditionLevel,
@@ -250,7 +267,8 @@ export function BulkPhotoUploader({
       manualObservations: null,
       photoIds: [],
     };
-    setExtraRooms((prev) => [...prev, newRoom]);
+    extraRoomsRef.current = [...extraRoomsRef.current, newRoom];
+    setExtraRooms(extraRoomsRef.current);
     return newRoom.id;
   };
 

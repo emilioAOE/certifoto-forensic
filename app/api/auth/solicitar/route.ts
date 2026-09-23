@@ -54,6 +54,8 @@ async function verificarTurnstile(token: string | undefined, ip: string | null):
 interface LinkOk {
   hashed_token: string;
   verification_type?: string;
+  /** Codigo de 6 digitos del mismo token (null si la funcion es anterior). */
+  email_otp?: string | null;
 }
 
 export async function POST(request: Request) {
@@ -159,17 +161,29 @@ export async function POST(request: Request) {
   url.searchParams.set("type", data.verification_type || "magiclink");
   url.searchParams.set("next", safeNext(body.next));
   const enlace = url.toString();
+  const codigo = /^\d{6,10}$/.test(data.email_otp ?? "") ? data.email_otp! : null;
 
   // ---- Envio por Listmonk (nunca se registra el enlace) ----
+  // El codigo va primero y en el asunto: quien abrio CertiFoto dentro de
+  // Instagram/Facebook lo lee en la notificacion y lo escribe en la misma
+  // pantalla. El enlace abriria otro navegador, donde no esta su acta local.
+  const bloqueCodigo = codigo
+    ? `<p style="font-size:14px;line-height:1.5;margin:0 0 8px">Escribe este código en la pantalla de CertiFoto:</p>
+  <p style="font-size:32px;font-weight:700;letter-spacing:6px;margin:0 0 20px;font-family:Menlo,Consolas,monospace">${escapeHtml(codigo)}</p>
+  <p style="font-size:14px;line-height:1.5">O entra con este botón. Si abriste CertiFoto desde Instagram o Facebook, mejor usa el código: el botón abre otro navegador.</p>`
+    : `<p style="font-size:14px;line-height:1.5">Haz clic para entrar. El enlace es de un solo uso y vence en 1 hora.</p>`;
   const html = `<div style="font-family:Inter,Arial,sans-serif;max-width:520px;margin:0 auto;color:#111827">
-  <h2 style="font-size:18px;margin:0 0 12px">Tu enlace de acceso a CertiFoto</h2>
-  <p style="font-size:14px;line-height:1.5">Haz clic para entrar. El enlace es de un solo uso y vence en 1 hora.</p>
+  <h2 style="font-size:18px;margin:0 0 12px">Tu acceso a CertiFoto</h2>
+  ${bloqueCodigo}
   <p style="margin:20px 0"><a href="${escapeHtml(enlace)}" style="display:inline-block;background:#16a34a;color:#ffffff;padding:12px 20px;border-radius:6px;text-decoration:none;font-weight:600">Entrar a CertiFoto</a></p>
   <p style="font-size:12px;color:#6b7280;line-height:1.5">Si no pediste este acceso, ignora este correo. Este mensaje se envía desde una dirección que no recibe respuestas.</p>
   <p style="font-size:11px;color:#9ca3af;word-break:break-all">Si el botón no funciona, copia este enlace en tu navegador:<br>${escapeHtml(enlace)}</p>
 </div>`;
-  const texto = `Tu enlace de acceso a CertiFoto
-
+  const texto = `Tu acceso a CertiFoto
+${codigo ? `
+Tu código: ${codigo}
+Escríbelo en la pantalla de CertiFoto (un solo uso, vence en 1 hora).
+` : ""}
 Abre este enlace para entrar (un solo uso, vence en 1 hora):
 ${enlace}
 
@@ -177,7 +191,7 @@ Si no pediste este acceso, ignora este correo.`;
 
   const envio = await enviarCorreo({
     para: email,
-    asunto: "Tu enlace de acceso a CertiFoto",
+    asunto: codigo ? `${codigo} es tu código de acceso a CertiFoto` : "Tu enlace de acceso a CertiFoto",
     html,
     texto,
   });
@@ -189,5 +203,7 @@ Si no pediste este acceso, ignora este correo.`;
     );
   }
 
-  return NextResponse.json({ ok: true });
+  // `largoCodigo` le dice al formulario si mostrar el campo para escribirlo
+  // (0 = solo enlace) y cuántos dígitos esperar para entrar solo.
+  return NextResponse.json({ ok: true, largoCodigo: codigo?.length ?? 0 });
 }
