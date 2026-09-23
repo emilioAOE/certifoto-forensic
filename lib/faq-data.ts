@@ -135,7 +135,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Qué tan seguro es el certificado frente a falsificación?",
-        a: "Cada certificación queda registrada en nuestro servidor con su huella SHA-256 al momento de sellarla, así que un certificado fabricado no pasa la verificación aunque tenga una huella coherente. Cambiar los datos sellados de un certificado real también se detecta. Lo que el verificador no compara hoy es la apariencia de cada página del PDF: ante una disputa, pide el PDF original o verifica el acta desde su código QR.",
+        a: "Cada certificación queda registrada en nuestro servidor con su huella SHA-256 al momento de sellarla, así que un certificado fabricado no pasa la verificación aunque tenga una huella coherente. Cambiar los datos sellados de un certificado real también se detecta. Lo que el verificador no compara hoy es la apariencia de cada página del PDF: ante una disputa, pide el PDF original y súbelo al verificador.",
       },
       {
         q: "¿Puedo usar el certificado como evidencia en un juicio?",

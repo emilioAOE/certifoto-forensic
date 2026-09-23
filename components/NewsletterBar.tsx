@@ -112,11 +112,11 @@ export default function NewsletterBar() {
             </p>
             {/* En celular el form ocupa toda la fila y el input se encoge (antes:
                 input minWidth 190 + botón no cabían en 320 px y se salía por la izquierda). */}
-            <form onSubmit={submit} style={{ display: "flex", gap: 8, flex: "1 1 280px", maxWidth: 420 }}>
+            <form onSubmit={submit} style={{ display: "flex", gap: 8, flex: "1 1 280px", maxWidth: 420, minWidth: 0 }}>
               <input
                 type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="tu@email.com" aria-label="Tu correo electrónico"
-                style={{ padding: "7px 11px", borderRadius: 6, border: "1px solid rgba(0,0,0,0.15)", fontSize: 14, flex: "1 1 auto", minWidth: 0, color: "#111827", background: "#ffffff" }}
+                style={{ padding: "7px 11px", borderRadius: 6, border: "1px solid rgba(0,0,0,0.15)", fontSize: 14, flex: "1 1 0%", minWidth: 0, width: 0, color: "#111827", background: "#ffffff" }}
               />
               <button type="submit" disabled={status === "loading"}
                 style={{ padding: "7px 15px", borderRadius: 6, border: "none", background: BTN_BG, color: BTN_FG, fontWeight: 700, fontSize: 14, cursor: "pointer", whiteSpace: "nowrap" }}>
