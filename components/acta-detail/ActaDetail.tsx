@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/ValidationModal";
 import { Award, Lock, ImagePlus, Sparkles, Shield, Hash } from "lucide-react";
 
+import { fechaLocal } from "@/lib/format";
 interface ValidationModalState {
   title: string;
   items: ValidationItem[];
@@ -348,7 +349,7 @@ export function ActaDetail({ actaId }: { actaId: string }) {
           {acta.inspectionDate && (
             <p className="text-xs text-muted mt-1 flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              {new Date(acta.inspectionDate).toLocaleDateString("es-CL", {
+              {fechaLocal(acta.inspectionDate).toLocaleDateString("es-CL", {
                 weekday: "long",
                 day: "numeric",
                 month: "long",

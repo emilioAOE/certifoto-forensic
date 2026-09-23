@@ -170,6 +170,13 @@ function sha256Of(forensic: unknown): string | null {
   if (!forensic || typeof forensic !== "object") return null;
   const o = forensic as Record<string, unknown>;
   if (typeof o.sha256 === "string") return o.sha256;
+  // Forma real (PhotoAnalysis): forensic.file.sha256. Sin esto cf_fotos.sha256
+  // quedaba siempre en NULL.
+  const file = o.file;
+  if (file && typeof file === "object") {
+    const s = (file as Record<string, unknown>).sha256;
+    if (typeof s === "string") return s;
+  }
   const h = o.hashes;
   if (h && typeof h === "object") {
     const s = (h as Record<string, unknown>).sha256;

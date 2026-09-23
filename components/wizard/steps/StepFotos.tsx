@@ -31,6 +31,7 @@ interface StepFotosProps {
   /** Rooms creados por IA durante el bulk upload (Rooms reales con id). */
   detectedRooms: Room[];
   onChangeDetectedRooms: (rooms: Room[]) => void;
+  onRevisionPendiente?: (pendiente: boolean) => void;
 }
 
 export function StepFotos({
@@ -40,6 +41,7 @@ export function StepFotos({
   onChangePhotos,
   detectedRooms,
   onChangeDetectedRooms,
+  onRevisionPendiente,
 }: StepFotosProps) {
   const [mode, setMode] = useState<"uploading" | "done">(
     pendingPhotos.length > 0 ? "done" : "uploading"
@@ -199,6 +201,7 @@ export function StepFotos({
           acta={draftActa}
           onUpdate={handleUpdate}
           onClose={handleBulkDone}
+          onRevisionPendiente={onRevisionPendiente}
         />
 
         {/* Pre-seleccion manual de ambientes (opcional) */}

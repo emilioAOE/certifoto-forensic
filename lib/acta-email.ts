@@ -17,6 +17,7 @@ import { ACTA_TYPE_LABEL } from "./acta-constants";
 import { track } from "./expansiel-analytics";
 import type { Acta, Property } from "./acta-types";
 
+import { fechaLocal } from "./format";
 export const MAX_PDF_BYTES = 20 * 1024 * 1024;
 
 export type EnviarActaResult =
@@ -85,7 +86,7 @@ export async function enviarActaPorCorreo(
         tipoLabel: ACTA_TYPE_LABEL[acta.type] ?? "Acta",
         direccion: direccionCompleta(property),
         fechaInspeccion: acta.inspectionDate
-          ? new Date(acta.inspectionDate).toLocaleDateString("es-CL", {
+          ? fechaLocal(acta.inspectionDate).toLocaleDateString("es-CL", {
               day: "numeric",
               month: "long",
               year: "numeric",

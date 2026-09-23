@@ -106,10 +106,12 @@ export function downloadBlob(blob: Blob, fileName: string): void {
   a.download = fileName;
   document.body.appendChild(a);
   a.click();
+  // En iOS revocar a los 100 ms cortaba la descarga ("WebKitBlobResource
+  // error 1") aunque la app mostraba "Se descargó". Un minuto sobra.
   setTimeout(() => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, 100);
+  }, 60_000);
 }
 
 export interface ImportResult {

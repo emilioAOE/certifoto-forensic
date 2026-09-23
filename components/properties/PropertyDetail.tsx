@@ -37,6 +37,7 @@ import { cn } from "@/lib/cn";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 
+import { fechaLocal } from "@/lib/format";
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
   ssr: false,
   loading: () => (
@@ -236,7 +237,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
                 {property.contractStartDate && (
                   <Info
                     label="Inicio"
-                    value={new Date(property.contractStartDate).toLocaleDateString(
+                    value={fechaLocal(property.contractStartDate).toLocaleDateString(
                       "es-CL"
                     )}
                   />
@@ -244,7 +245,7 @@ export function PropertyDetail({ propertyId }: { propertyId: string }) {
                 {property.contractEndDate && (
                   <Info
                     label="Término"
-                    value={new Date(property.contractEndDate).toLocaleDateString(
+                    value={fechaLocal(property.contractEndDate).toLocaleDateString(
                       "es-CL"
                     )}
                   />

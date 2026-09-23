@@ -55,9 +55,40 @@ function getDB(): Promise<IDBPDatabase<CertiFotoDB>> {
           db.createObjectStore(STORE_META);
         }
       },
+      // iOS corta la conexion al mandar la pestaña a segundo plano ("Connection
+      // to Indexed Database server lost"). Antes la promesa muerta quedaba
+      // cacheada y cada guardado posterior fallaba en silencio.
+      terminated() {
+        dbPromise = null;
+      },
+    }).catch((err) => {
+      dbPromise = null;
+      throw err;
     });
+    // Almacenamiento persistente: sin esto Safari puede borrar a los 7 dias el
+    // borrador de alguien sin cuenta. Si el navegador lo niega, sigue igual.
+    void navigator.storage?.persist?.().catch(() => undefined);
   }
   return dbPromise;
+}
+
+/** Errores de conexion caida/cerrandose: reabrir y reintentar una vez. */
+function esConexionPerdida(err: unknown): boolean {
+  const e = err as { name?: string; message?: string } | null;
+  return (
+    e?.name === "InvalidStateError" ||
+    /connection.*(lost|closing|closed)|database.*closed/i.test(e?.message ?? "")
+  );
+}
+
+async function escribir(fn: (db: IDBPDatabase<CertiFotoDB>) => Promise<unknown>): Promise<void> {
+  try {
+    await fn(await getDB());
+  } catch (err) {
+    if (!esConexionPerdida(err)) throw err;
+    dbPromise = null;
+    await fn(await getDB());
+  }
 }
 
 // ============================================
@@ -99,43 +130,35 @@ export async function idbGetMeta<T>(key: string): Promise<T | null> {
 // ============================================
 
 export async function idbPutActa(acta: Acta): Promise<void> {
-  const db = await getDB();
-  await db.put(STORE_ACTAS, acta);
+  await escribir((db) => db.put(STORE_ACTAS, acta));
 }
 
 export async function idbDeleteActa(id: string): Promise<void> {
-  const db = await getDB();
-  await db.delete(STORE_ACTAS, id);
+  await escribir((db) => db.delete(STORE_ACTAS, id));
 }
 
 export async function idbPutProperty(property: Property): Promise<void> {
-  const db = await getDB();
-  await db.put(STORE_PROPERTIES, property);
+  await escribir((db) => db.put(STORE_PROPERTIES, property));
 }
 
 export async function idbDeleteProperty(id: string): Promise<void> {
-  const db = await getDB();
-  await db.delete(STORE_PROPERTIES, id);
+  await escribir((db) => db.delete(STORE_PROPERTIES, id));
 }
 
 export async function idbPutOrganization(org: Organization): Promise<void> {
-  const db = await getDB();
-  await db.put(STORE_ORGANIZATIONS, org);
+  await escribir((db) => db.put(STORE_ORGANIZATIONS, org));
 }
 
 export async function idbPutContact(contact: Contact): Promise<void> {
-  const db = await getDB();
-  await db.put(STORE_CONTACTS, contact);
+  await escribir((db) => db.put(STORE_CONTACTS, contact));
 }
 
 export async function idbDeleteContact(id: string): Promise<void> {
-  const db = await getDB();
-  await db.delete(STORE_CONTACTS, id);
+  await escribir((db) => db.delete(STORE_CONTACTS, id));
 }
 
 export async function idbSetMeta(key: string, value: unknown): Promise<void> {
-  const db = await getDB();
-  await db.put(STORE_META, value, key);
+  await escribir((db) => db.put(STORE_META, value, key));
 }
 
 // ============================================

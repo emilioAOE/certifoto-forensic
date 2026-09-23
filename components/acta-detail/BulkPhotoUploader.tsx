@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Upload,
   Loader2,
@@ -48,6 +48,8 @@ interface BulkPhotoUploaderProps {
    *   wizard sobre un acta-borrador.
    */
   variant?: "modal" | "inline";
+  /** Avisa si hay fotos procesadas esperando "Guardar N fotos". */
+  onRevisionPendiente?: (pendiente: boolean) => void;
 }
 
 interface ProcessedPhoto {
@@ -84,6 +86,7 @@ export function BulkPhotoUploader({
   onUpdate,
   onClose,
   variant = "modal",
+  onRevisionPendiente,
 }: BulkPhotoUploaderProps) {
   const inline = variant === "inline";
   const inputRef = useRef<HTMLInputElement>(null);
@@ -107,6 +110,13 @@ export function BulkPhotoUploader({
   // "Cocina", "Baño principal", "Baño principal"...).
   const extraRoomsRef = useRef<Room[]>([]);
   const [saving, setSaving] = useState(false);
+
+  // En el asistente, "Siguiente" con fotos en revision las descartaba en
+  // silencio: el paso avisa hacia arriba para bloquear el avance.
+  useEffect(() => {
+    onRevisionPendiente?.(stage !== "select");
+    return () => onRevisionPendiente?.(false);
+  }, [stage, onRevisionPendiente]);
 
   /** Combinacion de rooms del acta + los materializados durante esta sesion. */
   const allAvailableRooms: Room[] = [...acta.rooms, ...extraRooms];
@@ -438,7 +448,9 @@ export function BulkPhotoUploader({
       height: number | null;
     }[]
   ) => {
-    for (const job of jobs) {
+    // En paralelo: analyzePhotoVision limita a 4 llamadas simultaneas en
+    // toda la app, y onUpdate usa actualizaciones funcionales.
+    await Promise.all(jobs.map(async (job) => {
       try {
         onUpdate((a) => ({
           ...a,
@@ -501,7 +513,7 @@ export function BulkPhotoUploader({
           ),
         }));
       }
-    }
+    }));
   };
 
   const updateAssignment = (tempId: string, roomId: string | null) => {

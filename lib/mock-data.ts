@@ -30,6 +30,7 @@ import {
 import { appendAuditLog } from "./acta-helpers";
 import { analyzePhotoWithAI, summarizeRoom } from "./ai-stub";
 
+import { hoyLocal } from "./format";
 // ============================================
 // Datos de ejemplo
 // ============================================
@@ -279,7 +280,7 @@ export function getWizardMockData(): WizardMockData {
       ownerId: null,
       organizationId: null,
       contractMonthlyAmount: 450000,
-      contractStartDate: new Date().toISOString().slice(0, 10),
+      contractStartDate: hoyLocal(),
       contractEndDate: null,
       contractDeposit: 1,
       petsAllowed: false,
@@ -327,7 +328,7 @@ export function getWizardMockData(): WizardMockData {
       },
     ],
     rooms,
-    inspectionDate: new Date().toISOString().slice(0, 10),
+    inspectionDate: hoyLocal(),
   };
 }
 

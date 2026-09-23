@@ -205,9 +205,17 @@ export async function extractContractData(
       message: "Enviando imagen a la IA...",
     });
     try {
-      const imgBase64 = await fileToBase64(file);
+      // Achicar antes de enviar: una foto de celular de >3,3 MB superaba el
+      // límite de 4,5 MB de Vercel y caía en silencio al OCR local (~12 MB de
+      // descarga). A 2000 px el texto del contrato sigue perfectamente legible.
+      const { compressImage } = await import("./image-compression");
+      const reducida = await compressImage(file, { maxWidth: 2000, maxHeight: 2000, quality: 0.85 })
+        .catch(() => null);
+      const imgBase64 = reducida
+        ? reducida.dataUrl.slice(reducida.dataUrl.indexOf(",") + 1)
+        : await fileToBase64(file);
       const aiResult = await tryParseImagesWithAI([
-        { base64: imgBase64, mime: fileType },
+        { base64: imgBase64, mime: reducida ? reducida.format : fileType },
       ]);
       if (aiResult) {
         onProgress?.({ stage: "done", pct: 1, message: "Listo" });

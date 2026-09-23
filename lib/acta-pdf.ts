@@ -27,6 +27,7 @@ import { isActaCertified } from "./storage";
 import { buildEmbeddedBlock } from "./cert-embed";
 import { downloadBlob } from "./export-import";
 
+import { fechaLocal } from "./format";
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
 
@@ -178,7 +179,7 @@ export async function buildActaPdf(acta: Acta, property: Property): Promise<Acta
   if (acta.inspectionDate) {
     drawRow(
       "Fecha de inspección",
-      new Date(acta.inspectionDate).toLocaleDateString("es-CL", {
+      fechaLocal(acta.inspectionDate).toLocaleDateString("es-CL", {
         weekday: "long",
         year: "numeric",
         month: "long",

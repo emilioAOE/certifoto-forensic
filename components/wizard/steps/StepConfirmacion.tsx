@@ -17,6 +17,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import { fechaLocal } from "@/lib/format";
 interface StepConfirmacionProps {
   data: WizardData;
 }
@@ -80,7 +81,7 @@ export function StepConfirmacion({ data }: StepConfirmacionProps) {
           title="Fecha de inspección"
         >
           <p className="text-sm text-gray-800">
-            {new Date(data.inspectionDate).toLocaleDateString("es-CL", {
+            {fechaLocal(data.inspectionDate).toLocaleDateString("es-CL", {
               weekday: "long",
               year: "numeric",
               month: "long",

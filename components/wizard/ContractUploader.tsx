@@ -21,8 +21,9 @@ interface ContractUploaderProps {
   onClose?: () => void;
 }
 
-const ACCEPTED_TYPES =
-  "application/pdf,.pdf,image/jpeg,image/png,image/webp,image/heic,image/heif,image/tiff";
+// Sin image/heic: si se pide explícitamente, el iPhone manda el HEIC original
+// (que la IA rechaza); con los tipos comunes, iOS lo convierte a JPEG.
+const ACCEPTED_TYPES = "application/pdf,.pdf,image/jpeg,image/png,image/webp";
 
 /**
  * Componente para subir un contrato (PDF o imagen) y extraer datos

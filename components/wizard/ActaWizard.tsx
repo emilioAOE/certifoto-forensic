@@ -44,6 +44,7 @@ import { StepFotos } from "./steps/StepFotos";
 import { StepConfirmacion } from "./steps/StepConfirmacion";
 import type { ContractExtraction } from "@/lib/contract-parser";
 
+import { hoyLocal } from "@/lib/format";
 interface WizardData {
   type: ActaType | null;
   property: Omit<Property, "id" | "createdAt" | "updatedAt"> & { id?: string };
@@ -98,13 +99,14 @@ const initialData: WizardData = {
   rooms: [],
   pendingPhotos: [],
   detectedRooms: [],
-  inspectionDate: new Date().toISOString().slice(0, 10),
+  inspectionDate: hoyLocal(),
 };
 
 export function ActaWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
+  const [revisionFotosPendiente, setRevisionFotosPendiente] = useState(false);
   const [data, setData] = useState<WizardData>(initialData);
   const [creatorName, setCreatorName] = useState("Usuario");
   const [creatorRole, setCreatorRole] = useState<PartyRole>("broker");
@@ -214,11 +216,10 @@ export function ActaWizard() {
     // Componer observaciones: lo que ya habia + las notas que devolvio la IA
     // (ej: "monto en UF", "incluye gastos comunes", "garantia en X meses").
     const aiNote = extraction.notes?.trim();
+    // Solo cuando aporta: "en pesos" es lo obvio y ensuciaba el acta.
     const depositNote =
-      extraction.contract.depositKind === "amount"
-        ? "Garantia expresada como monto en pesos."
-        : extraction.contract.depositKind === "months"
-        ? "Garantia expresada en meses de renta."
+      extraction.contract.depositKind === "months"
+        ? "Garantía expresada en meses de renta."
         : null;
     const extraNotes = [aiNote, depositNote].filter(Boolean).join(" ");
 
@@ -270,9 +271,11 @@ export function ActaWizard() {
         // Step 3 (Fotos) ahora es opcional — la IA crea los ambientes
         // dinamicamente cuando se suben fotos despues. El usuario puede
         // pre-seleccionar ambientes manualmente, pero no es requerido.
-        return true;
+        // Pero si hay fotos procesadas sin guardar, avanzar las perdia.
+        return !revisionFotosPendiente;
       case 4:
-        return data.parties.length >= 1;
+        // Sin nombre, la parte sale "(sin nombre)" en un acta sellada.
+        return data.parties.length >= 1 && data.parties.every((p) => p.name.trim() !== "");
       default:
         return true;
     }
@@ -447,14 +450,22 @@ export function ActaWizard() {
 
   // Guardar sin certificar: el acta queda en borrador (se ve completa y con
   // vista previa en pantalla; la descarga se desbloquea al certificar).
+  // Fotos que la IA aun esta describiendo. Si se guarda o certifica antes,
+  // los resultados llegan a un estado del asistente que ya no existe y esas
+  // fotos quedan selladas sin descripcion.
+  const fotosDescribiendo = data.pendingPhotos.filter(
+    (p) => p.aiStatus === "pending" || p.aiStatus === "processing"
+  ).length;
+  const fotosSinDescripcion = data.pendingPhotos.filter((p) => p.aiStatus === "error").length;
+
   const handleSaveDraft = () => {
-    if (generating) return;
+    if (generating || fotosDescribiendo > 0) return;
     const actaId = createActa();
     if (actaId) router.push(`/actas/${actaId}`);
   };
 
   const handleGenerateCertificate = async () => {
-    if (generating) return;
+    if (generating || fotosDescribiendo > 0) return;
     setGenerating(true);
     const actaId = createActa();
     if (!actaId) {
@@ -591,6 +602,7 @@ export function ActaWizard() {
             onChangeDetectedRooms={(detectedRooms) =>
               updateData({ detectedRooms })
             }
+            onRevisionPendiente={setRevisionFotosPendiente}
           />
         )}
         {step === 4 && (
@@ -601,6 +613,31 @@ export function ActaWizard() {
         )}
         {step === 5 && <StepConfirmacion data={data} />}
       </div>
+
+      {/* Por qué no se puede seguir (antes el botón solo quedaba gris). */}
+      {step === 3 && revisionFotosPendiente && (
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mb-3">
+          Toca «Guardar fotos» para agregarlas al acta antes de seguir.
+        </p>
+      )}
+      {step === 4 && data.parties.some((p) => p.name.trim() === "") && (
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mb-3">
+          Completa el nombre de cada parte, o quita la que no uses, para seguir.
+        </p>
+      )}
+      {step === STEPS.length && fotosDescribiendo > 0 && (
+        <p className="text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-3 py-2 mb-3 flex items-center gap-2">
+          <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+          La IA está describiendo {fotosDescribiendo} foto{fotosDescribiendo === 1 ? "" : "s"}. Espera
+          un momento para que queden en el acta.
+        </p>
+      )}
+      {step === STEPS.length && fotosDescribiendo === 0 && fotosSinDescripcion > 0 && (
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mb-3">
+          {fotosSinDescripcion} foto{fotosSinDescripcion === 1 ? "" : "s"} quedó sin descripción
+          automática. Irá{fotosSinDescripcion === 1 ? "" : "n"} al acta igual, con su huella y fecha.
+        </p>
+      )}
 
       {/* Navigation */}
       <div className="flex items-center justify-between gap-3">
@@ -626,7 +663,7 @@ export function ActaWizard() {
           <div className="flex flex-wrap items-center gap-2 justify-end">
             <button
               onClick={handleSaveDraft}
-              disabled={generating}
+              disabled={generating || fotosDescribiendo > 0}
               className="inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-3 py-2 text-sm text-gray-800 hover:bg-gray-200 disabled:opacity-60 disabled:cursor-not-allowed"
               title="Guarda el acta en borrador y ábrela: se puede seguir editando y ver la vista previa"
             >
@@ -634,7 +671,7 @@ export function ActaWizard() {
             </button>
             <button
               onClick={handleGenerateCertificate}
-              disabled={generating}
+              disabled={generating || fotosDescribiendo > 0}
               className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {generating ? (
