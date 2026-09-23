@@ -131,11 +131,11 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cómo se verifica un certificado de CertiFoto?",
-        a: "En /forensic cualquiera sube el PDF y el verificador recalcula la huella embebida en el documento. Si la huella coincide, el certificado es auténtico e íntegro. Si fue alterado, el verificador lo detecta. La verificación es local en el navegador — no guardamos ni el archivo ni los datos.",
+        a: "En /forensic cualquiera sube el PDF. El verificador recalcula en el navegador la huella de los datos sellados y la consulta en el registro de CertiFoto: si coincide y figura en el registro, el certificado es auténtico y sus datos no fueron alterados. El archivo no sale de tu equipo; solo se consulta la huella.",
       },
       {
         q: "¿Qué tan seguro es el certificado frente a falsificación?",
-        a: "El certificado detecta alteraciones (cualquier cambio rompe el hash). Sin embargo, hoy la huella es keyless y la lógica de generación es pública, por lo que el sistema demuestra integridad pero no es a prueba de falsificación absoluta. Una firma criptográfica infalsificable requiere un backend que firme con llave privada — está diseñado y queda como próximo paso, junto con la pasarela de pago.",
+        a: "Cada certificación queda registrada en nuestro servidor con su huella SHA-256 al momento de sellarla, así que un certificado fabricado no pasa la verificación aunque tenga una huella coherente. Cambiar los datos sellados de un certificado real también se detecta. Lo que el verificador no compara hoy es la apariencia de cada página del PDF: ante una disputa, pide el PDF original o verifica el acta desde su código QR.",
       },
       {
         q: "¿Puedo usar el certificado como evidencia en un juicio?",

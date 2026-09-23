@@ -125,6 +125,26 @@ export async function verifyCertifotoFile(
 }
 
 /**
+ * Pregunta al servidor si esa huella fue sellada de verdad por CertiFoto
+ * (cf_verificar_hash). La verificacion local solo prueba que el JSON embebido
+ * es coherente consigo mismo: un certificado fabricado, con su hash calculado
+ * a mano, tambien pasaba. null = no se pudo consultar (sin conexion).
+ */
+export async function consultarRegistro(
+  hash: string
+): Promise<{ registrado: boolean; certificadaEn: string | null } | null> {
+  try {
+    const { createClient } = await import("./supabase/client");
+    const { data, error } = await createClient().rpc("cf_verificar_hash", { p_hash: hash });
+    if (error || !data) return null;
+    const d = data as { registrado?: boolean; certificada_en?: string | null };
+    return { registrado: d.registrado === true, certificadaEn: d.certificada_en ?? null };
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Verifica un certificado emitido por CertiFoto. Acepta el PDF (con datos de
  * verificacion embebidos) o el archivo .certifoto. Detecta el tipo por los
  * bytes magicos del archivo.

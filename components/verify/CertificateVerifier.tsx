@@ -13,9 +13,12 @@ import {
   Camera,
 } from "lucide-react";
 import {
+  consultarRegistro,
   verifyCertificateFile,
   type CertifotoVerifyResult,
 } from "@/lib/share-acta";
+
+type Registro = { registrado: boolean; certificadaEn: string | null } | null;
 import { ACTA_TYPE_LABEL } from "@/lib/acta-constants";
 
 /**
@@ -27,14 +30,18 @@ export function CertificateVerifier() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [verifying, setVerifying] = useState(false);
   const [result, setResult] = useState<CertifotoVerifyResult | null>(null);
+  const [registro, setRegistro] = useState<Registro>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
   const handleFile = async (file: File) => {
     setFileName(file.name);
     setResult(null);
+    setRegistro(null);
     setVerifying(true);
     try {
       const r = await verifyCertificateFile(file);
+      // Solo si la huella es coherente vale la pena preguntar si existe.
+      if (r.integrityValid && r.storedHash) setRegistro(await consultarRegistro(r.storedHash));
       setResult(r);
     } catch {
       setResult({
@@ -63,8 +70,8 @@ export function CertificateVerifier() {
           Sube el <span className="font-medium">PDF del certificado</span> (o un
           archivo <span className="font-mono">.certifoto</span>) emitido por
           CertiFoto para comprobar que es auténtico y que su contenido no fue
-          alterado desde que se selló. No se guarda nada: la verificación es
-          local.
+          alterado desde que se selló. El archivo no sale de tu equipo: solo
+          consultamos su huella en nuestro registro.
         </p>
       </div>
 
@@ -105,17 +112,28 @@ export function CertificateVerifier() {
         }}
       />
 
-      {result && <ResultCard result={result} />}
+      {result && <ResultCard result={result} registro={registro} />}
     </div>
   );
 }
 
-function ResultCard({ result }: { result: CertifotoVerifyResult }) {
-  // 4 estados: no-certifoto / autentico / alterado / sin-huella
+function ResultCard({
+  result,
+  registro,
+}: {
+  result: CertifotoVerifyResult;
+  registro: Registro;
+}) {
+  // Estados: no-certifoto / auténtico (registrado) / no registrado / sin
+  // confirmar (sin conexión) / alterado / sin huella.
   const state = !result.isCertifoto
     ? "invalid"
     : result.integrityValid
-    ? "authentic"
+    ? registro === null
+      ? "unconfirmed"
+      : registro.registrado
+      ? "authentic"
+      : "not_registered"
     : result.documentHashPresent
     ? "altered"
     : "no_hash";
@@ -124,9 +142,27 @@ function ResultCard({ result }: { result: CertifotoVerifyResult }) {
     authentic: {
       icon: <ShieldCheck className="h-6 w-6" />,
       title: "Certificado auténtico",
-      desc: "Es un certificado emitido por CertiFoto y su contenido coincide con el sello original. No fue alterado.",
+      desc: `Figura en el registro de CertiFoto${
+        registro?.certificadaEn
+          ? `, sellado el ${new Date(registro.certificadaEn).toLocaleString("es-CL")}`
+          : ""
+      }, y los datos del certificado coinciden con el sello original.`,
       cls: "border-emerald-200 bg-emerald-50 text-emerald-900",
       iconCls: "text-emerald-600",
+    },
+    not_registered: {
+      icon: <ShieldAlert className="h-6 w-6" />,
+      title: "No figura en el registro de CertiFoto",
+      desc: "La huella del archivo es coherente, pero CertiFoto nunca selló un certificado con ella. No lo emitimos nosotros: trátalo como no auténtico.",
+      cls: "border-red-200 bg-red-50 text-red-900",
+      iconCls: "text-red-600",
+    },
+    unconfirmed: {
+      icon: <ShieldQuestion className="h-6 w-6" />,
+      title: "Huella coherente, sin confirmar",
+      desc: "Los datos coinciden con su sello, pero no pudimos consultar el registro de CertiFoto (¿sin conexión?). Vuelve a intentarlo para confirmar que lo emitimos nosotros.",
+      cls: "border-amber-200 bg-amber-50 text-amber-900",
+      iconCls: "text-amber-600",
     },
     altered: {
       icon: <ShieldAlert className="h-6 w-6" />,
