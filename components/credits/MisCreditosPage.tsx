@@ -74,7 +74,12 @@ export function MisCreditosPage() {
       }
       toast.success("Pago recibido", "Tus créditos ya están en tu cuenta.");
     } else if (pago === "pendiente") {
-      toast.info("Pago pendiente de confirmación");
+      // Flow devuelve "pendiente" también cuando la persona sale sin pagar;
+      // "pendiente de confirmación" hacía creer que ya había pagado.
+      toast.info(
+        "El pago no se completó",
+        "No se cobró nada. Si elegiste transferencia, puede tardar unos minutos en confirmarse; si no, puedes intentarlo de nuevo."
+      );
     } else if (pago === "rechazado" || pago === "anulado") {
       toast.error("Pago no completado", "No se cobró nada. Puedes intentar de nuevo.");
     } else {
