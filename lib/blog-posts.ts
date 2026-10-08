@@ -4732,6 +4732,112 @@ No. El registro puede y conviene hacerse antes, porque el estado de la propiedad
 
 Cada vez que ocurra algo que cambie la propiedad: una reparación, el ingreso o la salida de un ocupante, el retiro de muebles o antes de una tasación. Si la casa queda deshabitada, una revisión periódica ayuda a detectar a tiempo daños, robos u ocupaciones.`,
   },
+  {
+    slug: "filtracion-departamento-vecino-fotos-prueba-danos",
+    title: "Filtración desde el departamento del vecino: cómo documentar los daños con fotos que sirvan de prueba",
+    excerpt:
+      "El agua se seca, la mancha se pinta y el vecino dice que eso ya estaba. Si una filtración del departamento de arriba dañó tu cielo, tus muros o tus muebles, lo que fotografíes en las primeras horas define buena parte de lo que podrás reclamar después.",
+    date: "2026-10-08",
+    author: "Equipo CertiFoto",
+    category: "Mantención",
+    readMinutes: 8,
+    content: `Llegas a tu departamento y hay una mancha oscura en el cielo del baño. Al día siguiente gotea. A la semana, la pintura está englobada, el closet huele a humedad y el piso flotante del pasillo se levantó. Subes a hablar con el vecino de arriba y la respuesta es la de siempre: "acá no hay nada, eso debe venir de otro lado".
+
+Una filtración es de los daños más difíciles de probar, por una razón simple: la evidencia cambia sola. El agua se seca, la mancha se aclara, alguien repara la cañería y el origen desaparece. Por eso esta guía se concentra en una sola cosa: cómo registrar con fotos lo que pasó, de manera que el registro siga sirviendo semanas o meses después.
+
+> Esta nota es informativa y no constituye asesoría legal. Para tu caso particular, consulta a un abogado.
+
+## Por qué en una filtración la prueba se juega en las primeras horas
+
+En un reclamo por filtración se discuten casi siempre las mismas tres cosas:
+
+- **De dónde viene el agua.** Si el origen está en una instalación del departamento vecino o en un bien común del edificio, como una matriz o una bajada de aguas.
+- **Qué daños causó y cuáles ya existían.** La contraparte suele sostener que la mancha o la grieta eran anteriores.
+- **Cuánto cuesta dejarlo como estaba.** Reparaciones, pintura, muebles y objetos dañados.
+
+La base legal es conocida: el Código Civil obliga a reparar el daño a quien lo causa con culpa o negligencia (artículos 2314 y 2329). Pero quien reclama tiene que probar el daño y su origen. Y en un edificio, la Ley 21.442 sobre copropiedad inmobiliaria distingue entre las unidades de cada propietario y los bienes comunes que mantiene la comunidad, de modo que el responsable cambia según dónde esté la falla. Tus fotos tienen que ayudar a responder justamente esa pregunta.
+
+## Qué fotografiar, en orden
+
+**1. La filtración activa.** Si gotea, fotografía y graba el goteo antes de poner el balde. Un video corto donde se vea caer el agua vale más que diez fotos de una mancha seca.
+
+**2. La toma general del recinto.** Desde la puerta, mostrando el recinto completo y dónde está el daño dentro de él. Sirve para que cualquiera entienda de qué habitación se trata y qué hay justo encima.
+
+**3. El detalle del daño.** Manchas, pintura englobada, hongos, cielo descascarado, piso levantado, guardapolvos hinchados. Usa una huincha o un objeto conocido como referencia de escala.
+
+**4. El recorrido del agua.** Sigue la mancha: del cielo al muro, del muro al piso, del piso al closet. Ese trayecto es lo que permite sostener que el agua viene de arriba y no de una cañería propia.
+
+**5. Los bienes dañados.** Muebles, colchones, ropa, libros, electrodomésticos, alfombras. Uno por uno, con una toma general y otra de cerca, antes de botarlos o mandarlos a reparar. Si conservas la boleta o una foto antigua del objeto, guárdala junto al registro.
+
+**6. Tus propias instalaciones.** Fotografía tus llaves de paso, el calefont, el sifón y las conexiones de la lavadora, secos y en buen estado. Descartar que el origen esté en tu departamento es parte de la prueba.
+
+**7. El medidor de agua.** Una foto de tu medidor con la lectura visible, con todas las llaves cerradas. Si no se mueve, es un indicio de que la fuga no es tuya.
+
+**8. El origen, si te dejan verlo.** Si el vecino o la administración permiten revisar el departamento de arriba, el shaft o la sala de bombas, fotografía la cañería, el flexible o el sello dañado **antes** de que lo reparen. Después de la reparación, la pieza cambiada es la mejor evidencia: pide que te dejen fotografiarla.
+
+## Repite el registro: la evolución también es prueba
+
+Una sola sesión de fotos muestra un instante. Una filtración es un proceso. Conviene repetir el mismo recorrido:
+
+- El día en que la detectas.
+- Cada vez que el daño aumente o vuelva a gotear.
+- Después de que el vecino o la administración digan que "ya está reparado".
+- Cuando el muro esté seco, antes de pintar o reparar.
+- Al terminar tus propias reparaciones.
+
+Fotografía siempre desde los mismos puntos. Una serie comparable, con fechas verificables, muestra si la filtración siguió activa después de los avisos, y eso suele ser decisivo cuando la otra parte afirma que reparó a tiempo.
+
+## Cómo tomarlas para que nadie pueda decir que están arregladas
+
+- **Sin filtros, sin recortes y sin edición.** Un retoque inocente para "que se vea mejor" abre la puerta a cuestionar todo el set.
+- **Con buena luz.** Enciende las luces y, para marcar el relieve de la pintura englobada, ilumina de lado con una linterna.
+- **Conserva los archivos originales.** Las fotos reenviadas por WhatsApp se recomprimen y pierden metadatos. Lo que mandas por chat sirve para avisar, no para probar.
+- **Fecha y contenido verificables.** Certifica los originales con un mecanismo que acredite cuándo existían y que no fueron modificados; es exactamente lo que hace CertiFoto con cada registro.
+- **Respalda fuera del teléfono.** Un registro que vive en un solo celular se pierde el día en que el celular se cambia.
+
+La Ley 19.799 reconoce validez a los documentos electrónicos, y una fotografía digital lo es: lo que se discute no es si se admite, sino cuánto peso darle.
+
+## Lo que acompaña a las fotos
+
+Las imágenes solas no cuentan la historia completa. Arma una carpeta con:
+
+- **El aviso por escrito al vecino y a la administración**, con fecha. Un correo electrónico o una anotación en el libro de novedades del edificio dejan constancia de cuándo supieron del problema.
+- **La respuesta que recibiste**, o la falta de respuesta.
+- **El informe de un gásfiter o de un técnico** que indique el origen probable de la filtración.
+- **Presupuestos de reparación**, idealmente más de uno, y las boletas de lo que ya pagaste.
+- **El acta de entrega**, si arriendas o si compraste hace poco. Un acta con fotos del estado original del departamento es la mejor respuesta al argumento de que "esa mancha ya estaba".
+
+## A quién se le reclama y por qué vía
+
+Con el registro en la mano, el camino habitual parte por lo más simple:
+
+- **El vecino y la administración.** Muchas filtraciones se resuelven cuando el responsable ve fotos fechadas y un presupuesto concreto. Si el origen está en un bien común, quien debe responder es la comunidad, a través de la administración.
+- **Los seguros.** Si tú, el vecino o el condominio tienen una póliza que cubra daños por agua, da aviso apenas detectes el daño: las pólizas fijan plazos para denunciar el siniestro y el liquidador pedirá, antes que nada, fotos.
+- **El Juzgado de Policía Local.** La Ley 21.442 le entrega competencia para conocer de las infracciones a esa ley y al reglamento de copropiedad, por ejemplo cuando un copropietario se niega a reparar o a permitir una revisión.
+- **La demanda de indemnización de perjuicios.** Cuando no hay acuerdo, se puede demandar la reparación de los daños. Si quieres entender cómo se determina la responsabilidad en cada caso, esta guía explica [quién responde por los daños de una filtración que viene del departamento vecino](https://www.xn--reclamadaos-9db.cl/blog/filtracion-incendio-departamento-vecino-quien-responde.html) y qué se puede cobrar.
+
+Ten presente el plazo: la acción para reclamar perjuicios por responsabilidad extracontractual prescribe en cuatro años contados desde el hecho (artículo 2332 del Código Civil). Parece mucho tiempo, pero la prueba se deteriora bastante antes.
+
+## Si arriendas el departamento
+
+El arrendatario tiene dos frentes. Frente al vecino o a la comunidad, puede reclamar los daños a sus propios bienes. Frente al arrendador, lo que corresponde es avisar de inmediato y por escrito, porque las reparaciones estructurales son, por regla general, de cargo del dueño.
+
+Ese aviso con fotos también te protege a ti: al devolver el departamento, nadie podrá atribuirte el cielo manchado ni el piso levantado ni descontarlos de la garantía. Si eres el arrendador, pide a tu arrendatario que te envíe el registro apenas aparezca el daño y súmalo a los antecedentes del arriendo.
+
+## Preguntas frecuentes
+
+### ¿Sirven las fotos tomadas con mi celular?
+
+Sí, se valoran como cualquier otro medio de prueba. Su peso aumenta si conservas los archivos originales y puedes acreditar cuándo se tomaron y que no fueron alteradas.
+
+### ¿Qué hago si el vecino no me deja entrar a revisar?
+
+No puedes entrar por tu cuenta. Deja el aviso por escrito, pide la intervención de la administración y documenta todo lo que sí está a tu alcance: tus daños, tus instalaciones en buen estado y tu medidor. Si la negativa se mantiene, consulta a un abogado sobre las vías que entrega la Ley 21.442.
+
+### ¿Tengo que esperar para reparar?
+
+No tienes que vivir con el daño indefinidamente, pero antes de reparar registra todo, consigue un informe técnico y presupuestos. Si hay un seguro involucrado, pregunta primero si el liquidador necesita inspeccionar.`,
+  },
 ];
 
 /**
