@@ -2,6 +2,27 @@
 
 import Link from "next/link";
 import { Fingerprint, Mail, MapPin } from "lucide-react";
+import { INSTAGRAM_URL, INSTAGRAM_USUARIO } from "@/lib/redes";
+
+/** Glifo de Instagram (lucide 1.x ya no trae íconos de marcas). */
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.6" cy="6.4" r="0.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
 
 export function LandingFooter() {
   return (
@@ -28,6 +49,18 @@ export function LandingFooter() {
               <p className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5" />
                 <a href="/contacto" className="hover:text-gray-700 transition-colors">Contáctanos</a>
+              </p>
+              <p className="flex items-center gap-2">
+                <InstagramIcon className="h-3.5 w-3.5" />
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer me"
+                  className="hover:text-gray-700 transition-colors"
+                  aria-label={`CertiFoto en Instagram (${INSTAGRAM_USUARIO})`}
+                >
+                  {INSTAGRAM_USUARIO}
+                </a>
               </p>
             </div>
           </div>

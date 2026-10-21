@@ -9,6 +9,7 @@
 
 import { PACKS, formatCLP } from "./packs";
 import { SITE_AUTHOR } from "./site-author";
+import { PERFILES_OFICIALES } from "./redes";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.certifoto.cl";
@@ -39,6 +40,7 @@ export function organizationSchema(): Record<string, unknown> {
     },
     areaServed: { "@type": "Country", name: "Chile" },
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
+    sameAs: PERFILES_OFICIALES,
     founder: {
       "@type": "Person",
       name: SITE_AUTHOR.name,
