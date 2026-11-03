@@ -28,7 +28,7 @@ const BTN_FG = "#ffffff";
  * Dentro de la app (crear acta, login, pagos…) la barra distrae de la acción
  * principal: ahí no se muestra. Tampoco a quien llegó por un anuncio.
  */
-const RUTAS_APP = /^\/(actas|dashboard|propiedades|contactos|mis-creditos|configuracion|login|auth|pagos)(\/|$)/;
+const RUTAS_APP = /^\/(actas|dashboard|propiedades|contactos|mis-creditos|configuracion|login|auth|pagos|certificar)(\/|$)/;
 
 export default function NewsletterBar() {
   const pathname = usePathname() ?? "";

@@ -34,16 +34,16 @@ const POR_SLUG: Record<string, Partial<{ mid: CtaConfig; end: CtaConfig }>> = {
       icon: "acta",
       title: "¿Quién debe reparar? Primero deja constancia del estado",
       description:
-        "La discusión sobre si un daño es desgaste normal o mal uso se resuelve con evidencia fechada. Crea un acta de estado con fotos (huella SHA-256 y fecha verificable) en 10 minutos, gratis.",
-      primary: { href: "/dashboard", label: "Crear acta de estado gratis" },
+        "La discusión sobre si un daño es desgaste normal o mal uso se resuelve con evidencia fechada. Sube las fotos y en 10 minutos tienes un acta de estado certificada (huella SHA-256 y fecha verificable en cada foto). $2.000, sin cuenta.",
+      primary: { href: "/certificar", label: "Hacer mi acta de estado ($2.000)" },
       secondary: { href: "/plantilla", label: "O descarga la plantilla PDF" },
     },
     end: {
       icon: "acta",
       title: "La próxima reparación no debería ser una pelea",
       description:
-        "Un acta de entrega bien hecha fija quién recibió qué y en qué estado. Con CertiFoto cada foto queda con fecha y huella, y el PDF se puede verificar. Crear el acta es gratis.",
-      primary: { href: "/dashboard", label: "Crear mi acta gratis" },
+        "Un acta de entrega bien hecha fija quién recibió qué y en qué estado. Con CertiFoto cada foto queda con fecha y huella, y el PDF se puede verificar. Subes el contrato y las fotos: $2.000, sin cuenta.",
+      primary: { href: "/certificar", label: "Certificar mi acta por $2.000" },
       secondary: { href: "/blog/acta-entrega-propiedad-arriendo-que-incluir", label: "Qué debe incluir un acta" },
     },
   },
@@ -53,15 +53,15 @@ const POR_SLUG: Record<string, Partial<{ mid: CtaConfig; end: CtaConfig }>> = {
       title: "Después del aviso viene la devolución: prepárala",
       description:
         "Al terminar el contrato se compara el estado actual con el de la entrega. Si no hay acta de entrega, haz hoy un acta de estado con fotos fechadas para tener una base clara el día de las llaves.",
-      primary: { href: "/dashboard", label: "Crear acta de devolución gratis" },
+      primary: { href: "/certificar", label: "Hacer mi acta de devolución ($2.000)" },
       secondary: { href: "/plantilla", label: "O descarga la plantilla PDF" },
     },
     end: {
       icon: "acta",
       title: "Que la devolución de la garantía no sea tu palabra contra la suya",
       description:
-        "El acta de devolución con fotos certificadas es lo que cierra el contrato sin discusión. Cada foto lleva fecha y huella SHA-256; el PDF se verifica sin cuenta. Gratis crear, pagas solo al certificar.",
-      primary: { href: "/dashboard", label: "Crear mi acta gratis" },
+        "El acta de devolución con fotos certificadas es lo que cierra el contrato sin discusión. Cada foto lleva fecha y huella SHA-256; el PDF se verifica sin cuenta. Subes las fotos y lo recibes por $2.000.",
+      primary: { href: "/certificar", label: "Certificar mi acta por $2.000" },
       secondary: { href: "/blog/devolver-departamento-sin-perder-garantia", label: "Cómo devolver sin perder la garantía" },
     },
   },
@@ -70,8 +70,8 @@ const POR_SLUG: Record<string, Partial<{ mid: CtaConfig; end: CtaConfig }>> = {
       icon: "acta",
       title: "Si vas a entregar antes, entrega con acta",
       description:
-        "Una salida anticipada termina en discusión por la garantía si no hay registro del estado. Documenta la devolución con fotos fechadas y huella verificable. Crear el acta es gratis.",
-      primary: { href: "/dashboard", label: "Crear acta de devolución gratis" },
+        "Una salida anticipada termina en discusión por la garantía si no hay registro del estado. Documenta la devolución con fotos fechadas y huella verificable: subes las fotos y recibes el PDF por $2.000.",
+      primary: { href: "/certificar", label: "Hacer mi acta de devolución ($2.000)" },
       secondary: { href: "/plantilla", label: "O descarga la plantilla PDF" },
     },
   },
@@ -90,8 +90,8 @@ const POR_SLUG: Record<string, Partial<{ mid: CtaConfig; end: CtaConfig }>> = {
       icon: "acta",
       title: "Ya elegiste arrendatario: ahora entrega con acta",
       description:
-        "El filtro evita el mal pagador; el acta de entrega evita la pelea por los daños. Fotos por ambiente con fecha y huella verificable, en 10 minutos, gratis.",
-      primary: { href: "/dashboard", label: "Crear acta de entrega gratis" },
+        "El filtro evita el mal pagador; el acta de entrega evita la pelea por los daños. Fotos por ambiente con fecha y huella verificable, en 10 minutos, por $2.000 y sin cuenta.",
+      primary: { href: "/certificar", label: "Hacer mi acta de entrega ($2.000)" },
       secondary: { href: "/plantilla", label: "O descarga la plantilla PDF" },
     },
   },
@@ -121,18 +121,18 @@ function ctasPorCategoria(category: string): { mid: CtaConfig; end: CtaConfig } 
   const end: CtaConfig = quiereActa
     ? {
         icon: "acta",
-        title: "Hazla con respaldo forense, gratis",
+        title: "Hazla certificada por $2.000",
         description:
-          "Sube las fotos y CertiFoto le calcula el hash SHA-256 a cada una, extrae los metadatos EXIF y arma un PDF auto-verificable. Crear el acta es gratis y no necesitas registrarte.",
-        primary: { href: "/dashboard", label: "Crear mi acta gratis" },
+          "Sube el contrato y las fotos: CertiFoto le calcula el hash SHA-256 a cada una, extrae los metadatos EXIF y arma un PDF auto-verificable. $2.000, sin cuenta, en 10 minutos.",
+        primary: { href: "/certificar", label: "Certificar mi acta por $2.000" },
         secondary: { href: "/plantilla", label: "O descarga la plantilla PDF" },
       }
     : {
         icon: "acta",
         title: "La mayoría de estos conflictos se evitan con un acta",
         description:
-          "Dejar constancia del estado de la propiedad el día de la entrega es lo que convierte una discusión en una prueba. En CertiFoto cada foto queda con su huella SHA-256 y fecha verificable. Gratis, sin registro.",
-        primary: { href: "/dashboard", label: "Crear mi acta gratis" },
+          "Dejar constancia del estado de la propiedad el día de la entrega es lo que convierte una discusión en una prueba. En CertiFoto cada foto queda con su huella SHA-256 y fecha verificable. $2.000, sin cuenta.",
+        primary: { href: "/certificar", label: "Certificar mi acta por $2.000" },
         secondary: { href: "/plantilla", label: "O descarga la plantilla PDF" },
       };
 

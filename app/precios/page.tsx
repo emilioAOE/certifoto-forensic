@@ -5,7 +5,7 @@ import { pricingProductSchema } from "@/lib/structured-data";
 export const metadata = {
   title: "Precios",
   description:
-    "Packs de certificaciones one-time. Crea actas gratis; paga solo cuando certificas. Precio de lanzamiento −50%: desde $1.490 CLP (1 cert) hasta $49.900 (50 certs).",
+    "Certificado de entrega por $2.000, sin cuenta: subes el contrato y las fotos y recibes el PDF. Para corredores, packs de 10 y 50 certificaciones desde $998 por acta.",
   alternates: { canonical: "/precios" },
 };
 

@@ -44,12 +44,18 @@ async function fotoParaPdf(
 ): Promise<{ dataUrl: string; w: number; h: number } | null> {
   if (typeof document === "undefined") return null;
   try {
-    const img = new Image();
-    img.src = dataUrl;
-    await img.decode();
-    const escala = Math.min(1, 1200 / Math.max(img.naturalWidth, img.naturalHeight));
-    const w = Math.max(1, Math.round(img.naturalWidth * escala));
-    const h = Math.max(1, Math.round(img.naturalHeight * escala));
+    // Sin img.decode(): en Chromium a veces no resuelve nunca y el PDF se
+    // quedaba "generando" para siempre. createImageBitmap decodifica fuera
+    // del hilo principal; si no existe, onload. Y un tope: si en 15 s no hay
+    // imagen, se devuelve null y la foto va al PDF sin reducir.
+    const bitmap = await Promise.race([
+      cargarImagen(dataUrl),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 15_000)),
+    ]);
+    if (!bitmap) return null;
+    const escala = Math.min(1, 1200 / Math.max(bitmap.width, bitmap.height));
+    const w = Math.max(1, Math.round(bitmap.width * escala));
+    const h = Math.max(1, Math.round(bitmap.height * escala));
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
@@ -57,13 +63,32 @@ async function fotoParaPdf(
     if (!ctx) return null;
     ctx.fillStyle = "#ffffff"; // PNG con transparencia -> fondo blanco
     ctx.fillRect(0, 0, w, h);
-    ctx.drawImage(img, 0, 0, w, h);
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    if ("close" in bitmap) bitmap.close();
     const out = canvas.toDataURL("image/jpeg", 0.72);
     canvas.width = 0; // libera memoria del canvas (límite de iOS)
     return { dataUrl: out, w, h };
   } catch {
     return null;
   }
+}
+
+/** Imagen decodificada a partir de un data URL (ImageBitmap o, si no, <img>). */
+async function cargarImagen(dataUrl: string): Promise<ImageBitmap | HTMLImageElement | null> {
+  if (typeof createImageBitmap === "function") {
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      return await createImageBitmap(blob);
+    } catch {
+      /* formato no soportado por createImageBitmap: probar con <img> */
+    }
+  }
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
 }
 
 async function generateQrCodeDataUrl(text: string): Promise<string | null> {

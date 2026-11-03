@@ -623,15 +623,18 @@ export function BulkPhotoUploader({
               </button>
               <button
                 onClick={handleSave}
-                disabled={saving || photos.length === 0}
+                // Mientras la IA ordena, guardar mandaba todo a "Sin clasificar".
+                disabled={saving || photos.length === 0 || photos.some((p) => p.aiStatus === "running")}
                 className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-semibold hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {saving ? (
+                {saving || photos.some((p) => p.aiStatus === "running") ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
                   <CheckCircle2 className="h-3.5 w-3.5" />
                 )}
-                Guardar {photos.length} foto{photos.length === 1 ? "" : "s"}
+                {photos.some((p) => p.aiStatus === "running")
+                  ? "La IA está ordenando…"
+                  : `Guardar ${photos.length} foto${photos.length === 1 ? "" : "s"}`}
               </button>
             </div>
           </div>

@@ -47,16 +47,16 @@ export function Landing() {
                 Antes quedaba bajo un párrafo largo y el aviso de cookies. */}
             <div className="sm:hidden mt-5">
               <Link
-                href="/actas/nueva"
+                href="/certificar"
                 className="flex w-full items-center justify-center gap-2 rounded-md bg-accent text-white px-6 py-3.5 text-base font-semibold shadow-sm"
               >
-                Crear mi acta gratis
+                Certificar mi entrega por $2.000
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <p className="text-xs text-gray-500 mt-2 text-center">
-                Fotos con fecha y huella verificable · pagas solo si certificas ·{" "}
-                <Link href="/precios" className="underline">
-                  ver packs
+                Subes el contrato y las fotos · sin cuenta · PDF al instante ·{" "}
+                <Link href="/corredores" className="underline">
+                  ¿eres corredor?
                 </Link>
               </p>
             </div>
@@ -83,14 +83,14 @@ export function Landing() {
                 href="/dashboard"
                 className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"
               >
-                Crear mi acta gratis
+                Certificar mi entrega por $2.000
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/precios"
+                href="/corredores"
                 className="inline-flex items-center gap-2 rounded-md bg-white border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 hover:border-accent hover:text-accent transition-colors"
               >
-                Ver packs
+                Para corredores
               </Link>
             </div>
 
@@ -349,23 +349,22 @@ export function Landing() {
             El mejor momento para documentar es antes de entregar las llaves.
           </h2>
           <p className="text-gray-300 mt-4 max-w-xl mx-auto">
-            Crea tu acta gratis en minutos. Pagas un pack solo cuando la
-            certificas: el sello inmutable que la deja lista para entregar.
-            Desde $1.490 con precio de lanzamiento (−50%), pago único.
+            Sube el contrato y las fotos: en 10 minutos tienes el acta certificada,
+            con fecha y huella en cada foto. $2.000, pago único, sin cuenta.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
             <Link
-              href="/dashboard"
+              href="/certificar"
               className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors"
             >
-              Ingresar a la plataforma
+              Certificar mi entrega
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/precios"
+              href="/corredores"
               className="inline-flex items-center gap-2 rounded-md bg-white/10 border border-white/20 text-white px-6 py-3 text-sm font-semibold hover:bg-white/20 transition-colors"
             >
-              Ver packs
+              Para corredores
             </Link>
           </div>
         </div>

@@ -95,15 +95,17 @@ export function PlantillaLeadMagnet() {
           <Download className="h-4 w-4" />
           Descargar plantilla (PDF)
         </button>
-        <div className="mt-6 pt-5 border-t border-accent-light/60">
-          <p className="text-sm text-gray-600 mb-3">
-            ¿Quieres que tu acta tenga respaldo forense y firma de las partes?
+        <div className="mt-6 pt-5 border-t border-accent-light/60 text-left">
+          <p className="text-sm font-semibold text-gray-900 mb-1">¿Prefieres que te la hagamos? $2.000</p>
+          <p className="text-xs text-gray-600 mb-3">
+            Subes el contrato y las fotos; la IA arma el acta y recibes el PDF certificado, con fecha y huella en
+            cada foto. Sin cuenta.
           </p>
           <Link
-            href="/dashboard"
+            href="/certificar"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-dark hover:text-accent"
           >
-            Crear un acta en CertiFoto, gratis
+            Hacer mi certificado por $2.000
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -213,6 +215,16 @@ export function PlantillaLeadMagnet() {
           PDF · 6 páginas · listo para imprimir o completar en pantalla.
         </p>
       </form>
+      <div className="mt-5 pt-4 border-t border-gray-100">
+        <p className="text-sm font-semibold text-gray-900">¿Prefieres que te la hagamos? $2.000</p>
+        <p className="text-xs text-gray-600 mt-1 mb-2">
+          Subes el contrato y las fotos y recibes el acta certificada en PDF, con fecha y huella en cada foto. Sin cuenta.
+        </p>
+        <Link href="/certificar" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-dark hover:text-accent">
+          Hacer mi certificado
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   );
 }

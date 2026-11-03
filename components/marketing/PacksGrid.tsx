@@ -19,8 +19,8 @@ export function PacksGrid({ variant = "marketing" }: PacksGridProps) {
       className={cn(
         "grid gap-4",
         variant === "marketing"
-          ? "md:grid-cols-2 lg:grid-cols-4"
-          : "sm:grid-cols-2 lg:grid-cols-4"
+          ? "md:grid-cols-2 max-w-3xl mx-auto"
+          : "sm:grid-cols-2"
       )}
     >
       {PACKS.map((pack) => (

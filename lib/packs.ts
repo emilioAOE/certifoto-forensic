@@ -47,6 +47,9 @@ const LIST_PRICES: Record<Pack["id"], number> = {
   p50: 99900,
 };
 
+/** Certificado express (sin cuenta): un acta, un pago. */
+export const PRECIO_EXPRESS_CLP = 2000;
+
 const LAUNCH_PRICES: Record<Pack["id"], number> = {
   p1: 1490,
   p3: 3990,
@@ -68,7 +71,8 @@ function makePack(
     ? Math.round((1 - priceCLP / listPriceCLP) * 100)
     : 0;
   const unitPriceCLP = Math.round(priceCLP / size);
-  const baseUnit = LAUNCH_PRICING_ACTIVE ? LAUNCH_PRICES.p1 : LIST_PRICES.p1;
+  // El ahorro se compara con el certificado express ($2.000 por acta, sin cuenta).
+  const baseUnit = PRECIO_EXPRESS_CLP;
   const savingsPercent = size === 1 ? 0 : Math.round((1 - unitPriceCLP / baseUnit) * 100);
   return {
     id,
@@ -86,20 +90,15 @@ function makePack(
 }
 
 export const PACKS: Pack[] = [
-  makePack("p1", 1, "1 certificación", "Para una entrega o devolución puntual"),
-  makePack(
-    "p3",
-    3,
-    "3 certificaciones",
-    "Ideal para arrendadores con varios contratos al año",
-    true,
-    "Popular"
-  ),
+  // Los packs de 1 y 3 se retiraron (2026-11): para una entrega está el
+  // certificado express, sin cuenta. Los packs son para corredores.
   makePack(
     "p10",
     10,
     "10 certificaciones",
-    "Para corredores que documentan varias propiedades al mes"
+    "Para corredores que documentan varias propiedades al mes",
+    true,
+    "Más elegido"
   ),
   makePack(
     "p50",

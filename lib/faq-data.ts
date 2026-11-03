@@ -38,7 +38,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       },
       {
         q: "¿Cuánto cuesta?",
-        a: "Crear y editar actas es gratis e ilimitado, con vista previa del PDF en pantalla. Solo pagas cuando certificas — y certificar es lo que desbloquea la descarga del PDF y el envío por correo. Las certificaciones se compran en packs one-time. Con el precio de lanzamiento (50% de descuento sobre la lista) van desde $1.490 CLP (1 cert) hasta $49.900 CLP (50 certs). Ver detalle en /precios.",
+        a: "Para una entrega: el certificado express cuesta $2.000, pago único y sin cuenta (subes el contrato y las fotos y recibes el PDF). Para corredores y administradoras hay packs de 10 y 50 certificaciones ($12.490 y $49.900 con precio de lanzamiento) con cuenta, firmas en pantalla y comparación entrega/devolución; crear y editar actas ahí es gratis y se paga al certificar. Ver detalle en /precios.",
       },
       {
         q: "¿Funciona en celular?",

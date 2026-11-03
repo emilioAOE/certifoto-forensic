@@ -1,7 +1,6 @@
 /**
- * Páginas públicas (marketing, blog, login): se renderizan en el servidor,
- * sin el marco de la app (AppShell) y sin cargar el almacenamiento local
- * (StorageProvider). Una sola lista para los dos.
+ * Páginas públicas (marketing, blog, login, certificado express): se
+ * renderizan en el servidor y sin el marco de la app (AppShell).
  */
 export function esRutaPublica(pathname: string): boolean {
   return (
@@ -16,6 +15,16 @@ export function esRutaPublica(pathname: string): boolean {
     pathname === "/privacidad" ||
     pathname === "/plantilla" ||
     pathname === "/login" ||
-    pathname.startsWith("/auth")
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/certificar")
   );
+}
+
+/**
+ * Dónde cargar el almacenamiento local (IndexedDB con actas y fotos): en la
+ * app, y en el certificado express, que arma y guarda un acta aunque no
+ * lleve el marco de la app. En el resto de páginas públicas no hace falta.
+ */
+export function cargaAlmacenamientoLocal(pathname: string): boolean {
+  return !esRutaPublica(pathname) || pathname.startsWith("/certificar");
 }

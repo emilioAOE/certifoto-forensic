@@ -7,7 +7,7 @@
  * CertiFoto, la oferta, y el FAQ aumenta la probabilidad de ser citado.
  */
 
-import { PACKS, formatCLP } from "./packs";
+import { PACKS, PRECIO_EXPRESS_CLP, formatCLP } from "./packs";
 import { SITE_AUTHOR } from "./site-author";
 import { PERFILES_OFICIALES } from "./redes";
 
@@ -123,25 +123,34 @@ export function pricingProductSchema(): Record<string, unknown> {
     "@type": "Product",
     name: "Certificaciones CertiFoto",
     description:
-      "Packs de certificaciones para sellar actas digitales en CertiFoto. La app es gratis; solo se paga al certificar un acta.",
+      "Certificado de entrega express por $2.000 sin cuenta (subes el contrato y las fotos y recibes el PDF), y packs de certificaciones con cuenta para corredores.",
     brand: { "@type": "Brand", name: "CertiFoto" },
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "CLP",
-      lowPrice: Math.min(...PACKS.map((p) => p.priceCLP)),
-      highPrice: Math.max(...PACKS.map((p) => p.priceCLP)),
-      offerCount: PACKS.length,
-      offers: PACKS.map((p) => ({
-        "@type": "Offer",
-        name: p.label,
-        price: p.priceCLP,
-        priceCurrency: "CLP",
-        description: `${p.size} certificación(es) · ${formatCLP(
-          p.unitPriceCLP
-        )} por certificación`,
-        url: `${SITE_URL}/precios`,
-        availability: "https://schema.org/InStock",
-      })),
+      lowPrice: Math.min(PRECIO_EXPRESS_CLP, ...PACKS.map((p) => p.priceCLP)),
+      highPrice: Math.max(PRECIO_EXPRESS_CLP, ...PACKS.map((p) => p.priceCLP)),
+      offerCount: PACKS.length + 1,
+      offers: [
+        {
+          "@type": "Offer",
+          name: "Certificado express",
+          price: PRECIO_EXPRESS_CLP,
+          priceCurrency: "CLP",
+          description: "1 acta de entrega certificada, sin cuenta: contrato y fotos → PDF con fecha y huella verificables",
+          url: `${SITE_URL}/certificar`,
+          availability: "https://schema.org/InStock",
+        },
+        ...PACKS.map((p) => ({
+          "@type": "Offer",
+          name: p.label,
+          price: p.priceCLP,
+          priceCurrency: "CLP",
+          description: `${p.size} certificaciones con cuenta · ${formatCLP(p.unitPriceCLP)} por certificación`,
+          url: `${SITE_URL}/precios`,
+          availability: "https://schema.org/InStock",
+        })),
+      ],
     },
   };
 }

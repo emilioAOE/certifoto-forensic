@@ -47,7 +47,8 @@ CertiFoto entrega un respaldo documental con huella criptográfica y trazabilida
 ## Páginas principales
 
 - [Inicio](https://www.certifoto.cl/): qué es CertiFoto y cómo funciona.
-- [Precios](https://www.certifoto.cl/precios): packs de certificaciones y comparativa de ahorro.
+- [Certificado express](https://www.certifoto.cl/certificar): acta de entrega certificada por $2.000, sin cuenta: subes el contrato y las fotos, la IA arma el acta, pagas y recibes el PDF con fecha y huella en cada foto.
+- [Precios](https://www.certifoto.cl/precios): certificado express $2.000 y packs de 10 y 50 para corredores.
 - [Para corredores y administradoras](https://www.certifoto.cl/corredores): la entrega profesional en 10 minutos, acta con el nombre del corredor, envío a las partes por correo, packs de 10 y 50.
 - [Preguntas frecuentes](https://www.certifoto.cl/faq): dudas sobre actas, evidencia, IA y certificado.
 - [Plantilla de acta de entrega (PDF gratis)](https://www.certifoto.cl/plantilla): descarga gratuita de una plantilla de acta de entrega para arriendo o compraventa (checklist por ambiente, medidores, llaves, inventario y firmas).

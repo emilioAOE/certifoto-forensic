@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { hydrateStorage, getHydrationError } from "@/lib/storage";
-import { esRutaPublica } from "@/lib/rutas";
+import { cargaAlmacenamientoLocal } from "@/lib/rutas";
 
 /**
  * Hidrata el cache de storage desde IndexedDB y expone el estado de
@@ -38,7 +38,7 @@ export function StorageProvider({ children }: { children: React.ReactNode }) {
   // actas con sus fotos incluso en /corredores o el blog (pesado en iPhone
   // para quien ya tiene actas). Se carga al entrar a una ruta de la app;
   // SessionBootstrap la pide él mismo antes de sincronizar con la nube.
-  const necesita = !esRutaPublica(pathname);
+  const necesita = cargaAlmacenamientoLocal(pathname);
 
   useEffect(() => {
     if (!necesita || ready) return;

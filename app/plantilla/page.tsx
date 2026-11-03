@@ -35,7 +35,7 @@ const FAQ_PLANTILLA = [
   {
     question: "¿Cómo le doy validez a las fotos del acta?",
     answer:
-      "Con fecha y huella digital verificables. En CertiFoto cada foto recibe una huella SHA-256 y una fecha verificable, y el PDF final se puede comprobar en certifoto.cl/forensic sin cuenta. Crear el acta es gratis.",
+      "Con fecha y huella digital verificables. En CertiFoto cada foto recibe una huella SHA-256 y una fecha verificable, y el PDF final se puede comprobar en certifoto.cl/forensic sin cuenta. El certificado express cuesta $2.000: subes el contrato y las fotos y recibes el PDF.",
   },
 ];
 
@@ -157,22 +157,22 @@ export default function PlantillaPage() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-2">
-                  ¿Y si la quieres con respaldo forense?
+                  ¿Prefieres que te la hagamos? Certificado por $2.000
                 </h2>
                 <p className="text-gray-600 leading-relaxed mb-5">
-                  La plantilla en papel es un gran punto de partida. Pero una
+                  La plantilla en papel es un buen punto de partida. Pero una
                   foto pegada en un documento pierde su fecha y se puede
-                  cuestionar. Con CertiFoto cada foto queda con su huella
-                  criptográfica SHA-256, metadatos EXIF y fecha verificable, y
-                  obtienes un PDF auto-verificable que prueba que nada se alteró.
-                  Crear el acta es gratis y no necesitas registrarte.
+                  cuestionar. Con el certificado express solo subes el contrato
+                  y las fotos: la IA arma el acta, cada foto queda con fecha y
+                  huella SHA-256 verificables, y recibes el PDF sellado al
+                  instante y en tu correo. Sin cuenta, pago único.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href="/dashboard"
+                    href="/certificar"
                     className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-5 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors"
                   >
-                    Crear mi acta gratis
+                    Hacer mi certificado por $2.000
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link

@@ -179,3 +179,65 @@ ${
     .join("\n");
   return { asunto, html, texto };
 }
+
+// ---------------------------------------------------------------- express
+
+/**
+ * Pago recibido (lo manda el servidor al confirmar el pago de un pedido
+ * express). Lleva el enlace del pedido: si la pestaña se cerró después de
+ * pagar (típico en el navegador de Instagram), desde ahí se recupera todo.
+ */
+export function correoPedidoPagado(o: {
+  nombre?: string | null;
+  direccion?: string | null;
+  enlace: string;
+  montoCLP: number;
+}) {
+  const monto = `$${o.montoCLP.toLocaleString("es-CL")}`;
+  const donde = o.direccion ? ` de la propiedad en <strong>${escapeHtml(o.direccion)}</strong>` : "";
+  const asunto = "Pago recibido: tu certificado de entrega está listo";
+  const html = marco(
+    `<h1 style="font-size:22px;line-height:1.3;margin:0 0 14px">Pago recibido</h1>
+<p style="margin:0 0 14px">${saludo(o.nombre)} recibimos tu pago de <strong>${monto}</strong>. Tu certificado${donde} se genera en tu navegador al abrir este enlace, y te lo mandamos adjunto en cuanto esté listo.</p>
+<p style="margin:20px 0">${boton(o.enlace, "Abrir mi certificado")}</p>
+<p style="margin:0 0 14px;color:${GRIS};font-size:14px">¿Se cerró la pestaña después de pagar? No se perdió nada: este mismo enlace lo recupera desde cualquier navegador.</p>
+<p style="margin:0;color:${GRIS};font-size:14px">Guarda este correo: es tu comprobante.</p>`,
+    "Enviado por CertiFoto (certifoto.cl). Si no hiciste este pago, responde este correo y lo revisamos."
+  );
+  const texto = `Pago recibido: ${monto}.\n\nAbre tu certificado aquí: ${o.enlace}\n\nSi la pestaña se cerró después de pagar, este enlace lo recupera desde cualquier navegador. Guarda este correo como comprobante.`;
+  return { asunto, html, texto };
+}
+
+/** El certificado express, adjunto en PDF. */
+export function correoCertificadoExpress(o: {
+  nombre?: string | null;
+  direccion: string;
+  hash: string | null;
+  certificadaEn?: string | null;
+}) {
+  const asunto = `Tu certificado de entrega: ${o.direccion}`;
+  const html = marco(
+    `<h1 style="font-size:22px;line-height:1.3;margin:0 0 14px">Tu certificado de entrega</h1>
+<p style="margin:0 0 14px">${saludo(o.nombre)} va adjunto el certificado de la propiedad en <strong>${escapeHtml(o.direccion)}</strong>${o.certificadaEn ? `, sellado el ${escapeHtml(new Date(o.certificadaEn).toLocaleString("es-CL", { timeZone: "America/Santiago" }))}` : ""}.</p>
+<div style="margin:0 0 18px;padding:12px 14px;border:1px solid #bbf7d0;border-radius:8px;background:#f0fdf4;font-size:14px;line-height:1.5">
+  <strong style="color:${VERDE_OSCURO}">Documento certificado.</strong> Cada foto lleva fecha y huella SHA-256, y el PDF completo tiene su propia huella registrada en CertiFoto. Si alguien altera el archivo, la huella deja de coincidir.${o.hash ? `<br><span style="color:${GRIS}">Huella del documento:</span> <code style="font-size:12px;word-break:break-all">${escapeHtml(o.hash)}</code>` : ""}<br>Cualquiera puede comprobar su autenticidad subiendo el PDF en ${enlace(url("/forensic", "express"), "certifoto.cl/forensic")}, sin cuenta.
+</div>
+<p style="margin:0 0 10px"><strong>Qué hacer ahora</strong></p>
+<table style="border-collapse:collapse">
+${paso(1, "Guarda el PDF original", "Es el archivo que se verifica. Si lo editas o lo vuelves a guardar con otro programa, deja de coincidir con la huella.")}
+${paso(2, "Compártelo con la otra parte", "Reenvía este correo o el PDF al arrendador, arrendatario o corredor, para que ambos tengan el mismo registro desde el día uno.")}
+${paso(3, "Al terminar el contrato", "Vuelve a certificar el estado de salida y compara: lo que cambió queda a la vista, con fechas.")}
+</table>`,
+    "Enviado por CertiFoto (certifoto.cl). Este certificado es un registro con fecha y huella de las fotos que subiste; no reemplaza la firma de la otra parte ni una pericia judicial."
+  );
+  const texto = [
+    `Va adjunto tu certificado de entrega de ${o.direccion}.`,
+    o.hash ? `Huella del documento (SHA-256): ${o.hash}` : "",
+    `Verifícalo en ${url("/forensic", "express")}`,
+    "",
+    "Guarda el PDF original, compártelo con la otra parte y, al terminar el contrato, certifica el estado de salida.",
+  ]
+    .filter((l) => l !== "")
+    .join("\n");
+  return { asunto, html, texto };
+}
