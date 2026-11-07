@@ -44,7 +44,7 @@ export function FaqPage() {
             ¿Quedaste con dudas?
           </h3>
           <p className="text-sm text-gray-600 mb-5">
-            Ingresa a la plataforma y empieza a probar gratis, o{" "}
+            Certifica tu entrega sin cuenta por $2.000, o{" "}
             <a href="/contacto" className="text-accent-dark hover:underline">escríbenos</a>.
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -55,10 +55,10 @@ export function FaqPage() {
               Contáctanos
             </Link>
             <Link
-              href="/dashboard"
+              href="/certificar"
               className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-medium hover:bg-accent-dim transition-colors"
             >
-              Ingresar a la plataforma
+              Certificar mi entrega · $2.000
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>

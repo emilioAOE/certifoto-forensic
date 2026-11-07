@@ -111,13 +111,13 @@ export function SobrePage() {
             ¿Quieres probar CertiFoto?
           </h3>
           <p className="text-sm text-gray-600 mb-5">
-            Crea tu primera acta digital ahora. Gratis y sin registro.
+            Sube el contrato y las fotos y recibe el acta certificada. Sin cuenta, $2.000.
           </p>
           <Link
-            href="/dashboard"
+            href="/certificar"
             className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-5 py-2.5 text-sm font-semibold hover:bg-accent-dim transition-colors"
           >
-            Ingresar a la plataforma
+            Certificar mi entrega
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

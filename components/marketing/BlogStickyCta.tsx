@@ -50,20 +50,20 @@ export function BlogStickyCta({ slug }: { slug: string }) {
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0">
           <p className="text-xs font-semibold text-gray-900 leading-tight">
-            Crea tu acta de entrega gratis
+            Certifica tu entrega por $2.000
           </p>
           <p className="text-[11px] text-gray-500 leading-tight">
-            Fotos con fecha y huella verificable · 10 min
+            Sin cuenta · contrato y fotos · PDF al instante
           </p>
         </div>
         <Link
-          href="/dashboard"
+          href="/certificar"
           onClick={() =>
-            track("blog_cta_click", { destino: "/dashboard", articulo: slug, posicion: "sticky" })
+            track("blog_cta_click", { destino: "/certificar", articulo: slug, posicion: "sticky" })
           }
           className="inline-flex items-center gap-1 rounded-md bg-accent text-white px-3 py-2 text-xs font-semibold whitespace-nowrap"
         >
-          Crear acta
+          Certificar
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
         <button

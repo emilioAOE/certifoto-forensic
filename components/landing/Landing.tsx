@@ -64,9 +64,9 @@ export function Landing() {
             <p className="text-lg text-gray-600 mt-5 leading-relaxed max-w-xl">
               El estado en que se entrega un inmueble —en un arriendo o en una
               compraventa— casi siempre queda a la palabra de las partes.
-              CertiFoto lo deja documentado: fotos con respaldo forense,
-              descripciones con IA, firma de cada parte en pantalla y un PDF verificable con QR. Créala gratis; pagas
-              solo cuando la certificas.
+              CertiFoto lo deja documentado: subes el contrato y las fotos, la IA
+              ordena y describe cada ambiente, y recibes un PDF certificado con
+              fecha y huella en cada foto. Sin cuenta ni contraseña: $2.000 y listo.
             </p>
 
             <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 max-w-xl">
@@ -80,7 +80,7 @@ export function Landing() {
 
             <div className="hidden sm:flex flex-wrap gap-3 mt-8">
               <Link
-                href="/dashboard"
+                href="/certificar"
                 className="inline-flex items-center gap-2 rounded-md bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-accent-dim transition-colors shadow-sm"
               >
                 Certificar mi entrega por $2.000
@@ -97,15 +97,15 @@ export function Landing() {
             <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-gray-500">
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Sin registro previo
+                Sin cuenta ni contraseña
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Pago único, sin suscripción
+                Pago único de $2.000
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                Gratis hasta certificar
+                PDF al instante y por correo
               </span>
             </div>
           </div>

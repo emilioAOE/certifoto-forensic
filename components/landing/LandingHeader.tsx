@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Fingerprint, ArrowRight, Menu, X } from "lucide-react";
 
 const PUBLIC_LINKS = [
@@ -14,6 +15,8 @@ const PUBLIC_LINKS = [
 
 export function LandingHeader() {
   const [open, setOpen] = useState(false);
+  // En /certificar el botón del encabezado apuntaría a la misma página.
+  const enCertificar = (usePathname() ?? "").startsWith("/certificar");
 
   return (
     <header className="border-b border-gray-100 bg-white sticky top-0 z-30 backdrop-blur-sm bg-white/90">
@@ -27,7 +30,7 @@ export function LandingHeader() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 text-sm">
+        <nav className="hidden lg:flex items-center gap-6 text-sm">
           {PUBLIC_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -39,17 +42,26 @@ export function LandingHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/dashboard"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-1.5 text-sm font-medium hover:bg-accent-dim transition-colors"
+            className="hidden sm:inline text-sm text-gray-600 hover:text-accent-dark transition-colors"
           >
             Ingresar
+          </Link>
+          {!enCertificar && (
+          <Link
+            href="/certificar"
+            className="inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-3 sm:px-4 py-1.5 text-sm font-semibold hover:bg-accent-dim transition-colors whitespace-nowrap"
+          >
+            <span className="lg:hidden">Certificar · $2.000</span>
+            <span className="hidden lg:inline">Certificar sin cuenta · $2.000</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+          )}
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden p-1.5 text-gray-700"
+            className="lg:hidden p-1.5 text-gray-700"
             aria-label="Menú"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -58,7 +70,7 @@ export function LandingHeader() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
+        <div className="lg:hidden border-t border-gray-100 bg-white">
           <div className="max-w-6xl mx-auto px-4 py-3 space-y-1">
             {PUBLIC_LINKS.map((link) => (
               <Link
@@ -71,12 +83,19 @@ export function LandingHeader() {
               </Link>
             ))}
             <Link
+              href="/certificar"
+              onClick={() => setOpen(false)}
+              className="mt-2 flex items-center justify-center gap-1.5 rounded-md bg-accent text-white px-4 py-2.5 text-sm font-semibold"
+            >
+              Certificar mi entrega sin cuenta · $2.000
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <Link
               href="/dashboard"
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-accent text-white px-4 py-2 text-sm font-medium"
+              className="block py-2 text-center text-sm text-gray-600 hover:text-accent-dark"
             >
-              Ingresar a la plataforma
-              <ArrowRight className="h-3.5 w-3.5" />
+              Ingresar (corredores con cuenta)
             </Link>
           </div>
         </div>

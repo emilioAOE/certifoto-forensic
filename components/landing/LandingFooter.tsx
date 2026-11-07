@@ -71,13 +71,13 @@ export function LandingFooter() {
             </h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <Link href="/dashboard" className="hover:text-accent-dark">
-                  Ingresar
+                <Link href="/certificar" className="hover:text-accent-dark">
+                  Certificar sin cuenta ($2.000)
                 </Link>
               </li>
               <li>
-                <Link href="/actas/nueva" className="hover:text-accent-dark">
-                  Crear acta
+                <Link href="/dashboard" className="hover:text-accent-dark">
+                  Ingresar
                 </Link>
               </li>
               <li>
