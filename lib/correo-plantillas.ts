@@ -74,8 +74,8 @@ ${paso(3, "Revisa y certifica", "Cada foto queda con su huella SHA-256 y fecha. 
 <p style="margin:0 0 10px;color:${GRIS};font-size:14px">Crear y editar actas es gratis y sin límite. Solo pagas al certificar, que es lo que desbloquea la descarga del PDF y el envío por correo, y ahora con <strong style="color:${TINTA}">precio de lanzamiento (−50%)</strong>: ${enlace(url("/precios", "bienvenida"), "ver packs")}.</p>
 <p style="margin:0 0 10px;color:${GRIS};font-size:14px">¿Prefieres partir en papel? ${enlace(url("/plantilla", "bienvenida"), "Descarga la plantilla de acta en PDF")}, gratis.</p>
 <p style="margin:0 0 10px;color:${GRIS};font-size:14px">Tus actas quedan respaldadas en tu cuenta: puedes seguir desde el celular o desde otro computador.</p>
-<p style="margin:18px 0 0">Si algo no te funciona o tienes una duda, responde este correo: te contesto yo.</p>
-<p style="margin:6px 0 0">Emilio<br><span style="color:${GRIS};font-size:13px">CertiFoto</span></p>`,
+<p style="margin:18px 0 0">Si algo no te funciona o tienes una duda, responde este correo y te ayudamos.</p>
+<p style="margin:6px 0 0">Equipo CertiFoto</p>`,
     `Recibes este correo porque creaste una cuenta en certifoto.cl con ${escapeHtml(o.email)}. Es un aviso único de bienvenida.`
   );
   const texto = [
@@ -89,7 +89,7 @@ ${paso(3, "Revisa y certifica", "Cada foto queda con su huella SHA-256 y fecha. 
     `Plantilla PDF gratis: ${url("/plantilla", "bienvenida")}`,
     `Precios de lanzamiento (-50%): ${url("/precios", "bienvenida")}`,
     "",
-    "¿Dudas? Responde este correo. — Emilio, CertiFoto",
+    "¿Dudas? Responde este correo. — Equipo CertiFoto",
   ].join("\n");
   return { asunto, html, texto };
 }
@@ -101,7 +101,7 @@ export function correoSeguimiento(o: { email: string; nombre?: string | null }) 
   const html = marco(
     `<h1 style="font-size:22px;line-height:1.3;margin:0 0 14px">Una semana con CertiFoto</h1>
 <p style="margin:0 0 14px">${saludo(o.nombre)}</p>
-<p style="margin:0 0 18px">Hace una semana creaste tu cuenta. Te cuento cómo la usan hoy corredores, arrendadores y administradoras, por si te sirve de idea:</p>
+<p style="margin:0 0 18px">Hace una semana creaste tu cuenta. Te contamos cómo la usan hoy corredores, arrendadores y administradoras, por si te sirve de idea:</p>
 <table style="border-collapse:collapse;margin:0 0 20px">
 ${paso(1, "Entrega de un arriendo", "Acta con fotos por ambiente, lectura de medidores, llaves e inventario. Es lo que evita la discusión por la garantía al final del contrato.")}
 ${paso(2, "Devolución de la propiedad", "Se crea el acta de devolución vinculada a la de entrega y se comparan: los daños nuevos quedan documentados con fecha y huella.")}
@@ -115,8 +115,8 @@ ${paso(3, "Compraventa", "Estado del inmueble antes de la entrega material (mese
 </ul>
 <p style="margin:0 0 22px">${boton(url("/dashboard", "seguimiento"), "Entrar a CertiFoto")}</p>
 <p style="margin:0 0 10px;color:${GRIS};font-size:14px">Crear actas sigue siendo gratis. Certificar (lo que desbloquea la descarga y el envío del PDF) tiene precio de lanzamiento (−50%): ${enlace(url("/precios", "seguimiento"), "ver packs")}.</p>
-<p style="margin:18px 0 0">¿Algo no te funcionó o te faltó? Responde este correo y lo vemos: cada respuesta me sirve para mejorar la herramienta.</p>
-<p style="margin:6px 0 0">Emilio<br><span style="color:${GRIS};font-size:13px">CertiFoto</span></p>`,
+<p style="margin:18px 0 0">¿Algo no te funcionó o te faltó? Responde este correo y lo vemos: cada respuesta nos sirve para mejorar la herramienta.</p>
+<p style="margin:6px 0 0">Equipo CertiFoto</p>`,
     `Recibes este correo porque creaste una cuenta en certifoto.cl con ${escapeHtml(o.email)}. No enviamos boletines: este es el último aviso automático de la cuenta.`
   );
   const texto = [
@@ -129,7 +129,7 @@ ${paso(3, "Compraventa", "Estado del inmueble antes de la entrega material (mese
     `Entrar a CertiFoto: ${url("/dashboard", "seguimiento")}`,
     `Precios de lanzamiento (-50%): ${url("/precios", "seguimiento")}`,
     "",
-    "¿Algo no te funcionó? Responde este correo. — Emilio, CertiFoto",
+    "¿Algo no te funcionó? Responde este correo. — Equipo CertiFoto",
   ].join("\n");
   return { asunto, html, texto };
 }

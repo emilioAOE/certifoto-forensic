@@ -8,7 +8,6 @@
  */
 
 import { PACKS, PRECIO_EXPRESS_CLP, formatCLP } from "./packs";
-import { SITE_AUTHOR } from "./site-author";
 import { PERFILES_OFICIALES } from "./redes";
 
 const SITE_URL =
@@ -41,13 +40,6 @@ export function organizationSchema(): Record<string, unknown> {
     areaServed: { "@type": "Country", name: "Chile" },
     foundingLocation: { "@type": "Place", name: "Santiago, Chile" },
     sameAs: PERFILES_OFICIALES,
-    founder: {
-      "@type": "Person",
-      name: SITE_AUTHOR.name,
-      jobTitle: SITE_AUTHOR.jobTitle,
-      url: `${SITE_URL}${SITE_AUTHOR.path}`,
-      ...(SITE_AUTHOR.sameAs.length > 0 ? { sameAs: SITE_AUTHOR.sameAs } : {}),
-    },
   };
 }
 
